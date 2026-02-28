@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "save-file.schema.json",
+  "title": "Planet Crafter — Save File (parsée)",
+  "description": "Représentation d'une sauvegarde Planet Crafter après parsing. Tableau de 12 sections (indices 0 à 11), chaque section étant un tableau d'entrées JSON.",
+  "type": "array",
+  "minItems": 12,
+  "maxItems": 12,
+  "items": [
+    {
+      "title": "Section 0 — Progression du joueur",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": { "$ref": "section0-player-progression.schema.json" }
+    },
+    {
+      "title": "Section 1 — Niveaux de terraformation",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": { "$ref": "section1-terraformation-levels.schema.json" }
+    },
+    {
+      "title": "Section 2 — Joueurs",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "section2-players.schema.json" }
+    },
+    {
+      "title": "Section 3 — World Objects",
+      "type": "array",
+      "items": { "$ref": "section3-world-objects.schema.json" }
+    },
+    {
+      "title": "Section 4 — Inventaires & Équipements",
+      "type": "array",
+      "items": { "$ref": "section4-inventories.schema.json" }
+    },
+    {
+      "title": "Section 5 — Statistiques",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": { "$ref": "section5-statistics.schema.json" }
+    },
+    {
+      "title": "Section 6 — Messages lus",
+      "type": "array",
+      "items": { "$ref": "section6-messages.schema.json" }
+    },
+    {
+      "title": "Section 7 — Story Events déclenchés",
+      "type": "array",
+      "items": { "$ref": "section7-story-events.schema.json" }
+    },
+    {
+      "title": "Section 8 — Configuration de la sauvegarde",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": { "$ref": "section8-save-config.schema.json" }
+    },
+    {
+      "title": "Section 9 — Terrain Layers",
+      "type": "array",
+      "items": { "$ref": "section9-terrain-layers.schema.json" }
+    },
+    {
+      "title": "Section 10 — World Events",
+      "type": "array",
+      "items": { "$ref": "section10-world-events.schema.json" }
+    },
+    {
+      "title": "Section 11 — Réservée",
+      "type": "array",
+      "maxItems": 0
+    }
+  ]
+}
+

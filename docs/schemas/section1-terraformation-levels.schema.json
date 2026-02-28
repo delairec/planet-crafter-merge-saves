@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section1-terraformation-levels.schema.json",
+  "title": "Section 1 — Niveaux de terraformation",
+  "description": "Indicateurs de progression de terraformation de la planète. Contient une seule entrée.",
+  "type": "object",
+  "required": ["planetId", "unitOxygenLevel", "unitHeatLevel", "unitPressureLevel", "unitPlantsLevel", "unitInsectsLevel", "unitAnimalsLevel", "unitPurificationLevel"],
+  "additionalProperties": false,
+  "properties": {
+    "planetId": {
+      "type": "string",
+      "description": "Identifiant textuel de la planète (ex: 'Toxicity')"
+    },
+    "unitOxygenLevel": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Niveau d'oxygène en unités brutes (float Unity — sérialisé avec .0)"
+    },
+    "unitHeatLevel": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Niveau de chaleur en unités brutes (float Unity — sérialisé avec .0)"
+    },
+    "unitPressureLevel": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Niveau de pression atmosphérique en unités brutes (float Unity — sérialisé avec .0)"
+    },
+    "unitPlantsLevel": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Niveau de végétation en unités brutes (float Unity — sérialisé avec .0)"
+    },
+    "unitInsectsLevel": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Niveau d'insectes en unités brutes (float Unity — sérialisé avec .0)"
+    },
+    "unitAnimalsLevel": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Niveau d'animaux en unités brutes (float Unity — sérialisé avec .0)"
+    },
+    "unitPurificationLevel": {
+      "type": "number",
+      "minimum": -1,
+      "description": "Niveau de purification en unités brutes (float Unity — sérialisé avec .0). -1 est une valeur sentinelle indiquant que la purification n'est pas encore débloquée."
+    }
+  }
+}
+

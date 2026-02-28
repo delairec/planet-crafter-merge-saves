@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section0-player-progression.schema.json",
+  "title": "Section 0 — Progression du joueur",
+  "description": "Tokens de terraformation et groupes de recherche débloqués. Contient une seule entrée.",
+  "type": "object",
+  "required": ["terraTokens", "allTimeTerraTokens", "unlockedGroups", "openedInstanceSeed", "openedInstanceTimeLeft"],
+  "additionalProperties": false,
+  "properties": {
+    "terraTokens": {
+      "type": "integer",
+      "description": "Tokens de terraformation disponibles actuellement"
+    },
+    "allTimeTerraTokens": {
+      "type": "integer",
+      "description": "Cumul total de tokens gagnés depuis le début"
+    },
+    "unlockedGroups": {
+      "type": "string",
+      "description": "Liste CSV des groupes de recherche débloqués (ex: 'BootsSpeed1,Jetpack2')"
+    },
+    "openedInstanceSeed": {
+      "type": "integer",
+      "description": "Graine de l'instance de donjon ouverte (0 = aucune instance active)"
+    },
+    "openedInstanceTimeLeft": {
+      "type": "integer",
+      "description": "Temps restant sur l'instance de donjon ouverte, en secondes"
+    }
+  }
+}
+

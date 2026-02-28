@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section10-world-events.schema.json",
+  "title": "Section 10 — World Events",
+  "description": "Événement mondial déclenché sur la planète. Clé de domaine : planet + seed + pos. Peut être vide. Lors du merge, save A est prioritaire.",
+  "type": "object",
+  "required": ["planet", "seed", "pos"],
+  "additionalProperties": false,
+  "properties": {
+    "planet": {
+      "type": "integer",
+      "description": "Id numérique de la planète où l'événement s'est produit"
+    },
+    "seed": {
+      "type": "integer",
+      "description": "Graine de génération de l'événement"
+    },
+    "pos": {
+      "type": "string",
+      "pattern": "^-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*$",
+      "description": "Position 3D de l'événement au format 'x,y,z'"
+    },
+    "owner": {
+      "type": "integer",
+      "description": "Identifiant du propriétaire de l'événement (0 = world)"
+    },
+    "index": {
+      "type": "integer",
+      "description": "Index de l'événement"
+    },
+    "rot": {
+      "type": "string",
+      "description": "Rotation 3D de l'objet épave au format 'x,y,z,w'"
+    },
+    "wrecksWOGenerated": {
+      "type": "boolean",
+      "description": "Indique si les objets d'une épave ont déjà été générés"
+    },
+    "woIdsGenerated": {
+      "type": "string",
+      "description": "Liste des ids d'objets générés par l'événement, séparés par des virgules"
+    },
+    "woIdsDropped": {
+      "type": "string",
+      "description": "Liste des ids d'objets droppés par l'événement, séparés par des virgules"
+    },
+    "version": {
+      "type": "integer",
+      "description": "Version du format de l'événement"
+    }
+  }
+}
+

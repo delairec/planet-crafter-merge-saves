@@ -1,0 +1,121 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section8-save-config.schema.json",
+  "title": "Section 8 — Configuration de la sauvegarde",
+  "description": "Paramètres et modificateurs de la partie. Contient une seule entrée. saveDisplayName est défini par le paramètre de la fonction de merge.",
+  "type": "object",
+  "required": [
+    "saveDisplayName", "planetId", "unlockedSpaceTrading", "unlockedOreExtrators",
+    "unlockedTeleporters", "unlockedDrones", "unlockedAutocrafter", "unlockedEverything",
+    "freeCraft", "preInterplanetarySave", "randomizeMineables", "modifierTerraformationPace",
+    "modifierPowerConsumption", "modifierGaugeDrain", "modifierMeteoOccurence",
+    "modifierMultiplayerTerraformationFactor", "modded", "version", "mode",
+    "dyingConsequencesLabel", "startLocationLabel", "worldSeed", "hasPlayedIntro",
+    "gameStartLocation"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "saveDisplayName": {
+      "type": "string",
+      "description": "Nom affiché de la sauvegarde (paramètre de la fonction de merge)"
+    },
+    "planetId": {
+      "type": "string",
+      "description": "Identifiant textuel de la planète (ex: 'Toxicity')"
+    },
+    "unlockedSpaceTrading": {
+      "type": "boolean",
+      "description": "Commerce spatial débloqué"
+    },
+    "unlockedOreExtrators": {
+      "type": "boolean",
+      "description": "Extracteurs de minerai débloqués (typo conservée du jeu)"
+    },
+    "unlockedTeleporters": {
+      "type": "boolean",
+      "description": "Téléporteurs débloqués"
+    },
+    "unlockedDrones": {
+      "type": "boolean",
+      "description": "Drones débloqués"
+    },
+    "unlockedAutocrafter": {
+      "type": "boolean",
+      "description": "Autocrafter débloqué"
+    },
+    "unlockedEverything": {
+      "type": "boolean",
+      "description": "Tout débloqué (mode développeur)"
+    },
+    "freeCraft": {
+      "type": "boolean",
+      "description": "Craft gratuit activé"
+    },
+    "preInterplanetarySave": {
+      "type": "boolean",
+      "description": "Sauvegarde créée avant l'introduction du système interplanétaire"
+    },
+    "randomizeMineables": {
+      "type": "boolean",
+      "description": "Ressources minables placées aléatoirement"
+    },
+    "modifierTerraformationPace": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Multiplicateur de vitesse de terraformation (float Unity — sérialisé avec .0 ; 1.0 = normal)"
+    },
+    "modifierPowerConsumption": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Multiplicateur de consommation d'énergie (float Unity — sérialisé avec .0 ; 1.0 = normal)"
+    },
+    "modifierGaugeDrain": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Multiplicateur de vidage des jauges joueur (float Unity — sérialisé avec .0 ; 1.0 = normal)"
+    },
+    "modifierMeteoOccurence": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Multiplicateur de fréquence des événements météo (float Unity — sérialisé avec .0 ; 1.0 = normal)"
+    },
+    "modifierMultiplayerTerraformationFactor": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Facteur de contribution à la terraformation en mode multijoueur (float Unity — sérialisé avec .0)"
+    },
+    "modded": {
+      "type": "boolean",
+      "description": "La partie a été jouée avec des mods actifs"
+    },
+    "version": {
+      "type": "string",
+      "description": "Version du jeu au moment de la sauvegarde (ex: '1.618')"
+    },
+    "mode": {
+      "type": "string",
+      "description": "Mode de jeu (ex: 'Standard', 'Survival')"
+    },
+    "dyingConsequencesLabel": {
+      "type": "string",
+      "description": "Conséquences de la mort du joueur (ex: 'DropSomeItems', 'DropAll', 'NoDrop')"
+    },
+    "startLocationLabel": {
+      "type": "string",
+      "description": "Zone de départ de la partie (ex: 'Standard')"
+    },
+    "worldSeed": {
+      "type": "integer",
+      "description": "Graine de génération procédurale du monde"
+    },
+    "hasPlayedIntro": {
+      "type": "boolean",
+      "description": "L'intro cinématique a déjà été jouée"
+    },
+    "gameStartLocation": {
+      "type": "string",
+      "description": "Localisation initiale du joueur en début de partie"
+    }
+  }
+}
+

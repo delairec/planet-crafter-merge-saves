@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section2-players.schema.json",
+  "title": "Section 2 — Joueurs",
+  "description": "Données d'un joueur. Clé de déduplication : id (Steam ID) et name.",
+  "type": "object",
+  "required": ["id", "name", "inventoryId", "equipmentId", "playerPosition", "playerRotation", "playerGaugeOxygen", "playerGaugeThirst", "playerGaugeHealth", "playerGaugeToxic", "host", "planetId"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Steam ID du joueur (clé primaire, int64)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nom Steam du joueur (clé de déduplication)"
+    },
+    "inventoryId": {
+      "type": "integer",
+      "description": "→ Section 4 Inventory.id — inventaire personnel du joueur"
+    },
+    "equipmentId": {
+      "type": "integer",
+      "description": "→ Section 4 Inventory.id — équipement porté par le joueur"
+    },
+    "playerPosition": {
+      "type": "string",
+      "pattern": "^-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*$",
+      "description": "Position 3D du joueur au format 'x,y,z'"
+    },
+    "playerRotation": {
+      "type": "string",
+      "pattern": "^-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*$",
+      "description": "Rotation quaternion du joueur au format 'x,y,z,w'"
+    },
+    "playerGaugeOxygen": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Niveau de la jauge d'oxygène (float Unity — sérialisé avec .0)"
+    },
+    "playerGaugeThirst": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Niveau de la jauge d'hydratation (float Unity — sérialisé avec .0)"
+    },
+    "playerGaugeHealth": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Niveau de la jauge de santé (float Unity — sérialisé avec .0)"
+    },
+    "playerGaugeToxic": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Niveau de toxicité du joueur (float Unity — sérialisé avec .0 ; plus bas = mieux)"
+    },
+    "host": {
+      "type": "boolean",
+      "description": "true si ce joueur est l'hôte de la session. Un seul joueur peut être host."
+    },
+    "planetId": {
+      "type": "string",
+      "description": "Planète actuelle du joueur (doit correspondre à la planète de l'hôte)"
+    }
+  }
+}
+

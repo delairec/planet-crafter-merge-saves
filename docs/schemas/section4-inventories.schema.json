@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section4-inventories.schema.json",
+  "title": "Section 4 — Inventaires & Équipements",
+  "description": "Inventaire ou équipement d'un joueur ou d'un WorldObject (bâtiment, machine…). Clé de domaine : id. Peut être référencé par Player.inventoryId, Player.equipmentId, ou WorldObject.siIds. Seuls les inventaires référencés par un joueur sont filtrés lors du merge des joueurs.",
+  "type": "object",
+  "required": ["id", "woIds", "size"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Identifiant unique de l'inventaire (référencé par Player.inventoryId ou Player.equipmentId)"
+    },
+    "woIds": {
+      "type": "string",
+      "description": "Ids CSV des WorldObjects contenus dans l'inventaire ('' si vide). → Section 3 WorldObject.id"
+    },
+    "size": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Capacité maximale de l'inventaire (nombre de slots)"
+    },
+    "demandGrps": {
+      "type": "string",
+      "description": "(optionnel) Groupes de demande pour le trade automatique logistique"
+    },
+    "supplyGrps": {
+      "type": "string",
+      "description": "(optionnel) Groupes d'offre pour le trade automatique logistique"
+    },
+    "priority": {
+      "type": "integer",
+      "description": "(optionnel) Priorité dans le système logistique"
+    }
+  }
+}
+

@@ -1,0 +1,16 @@
+{
+  "name": "planet-crafter-merge-saves",
+  "version": "1.0.0",
+  "description": "Merge Planet Crafter save files",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node --test src/**/*.spec.js",
+    "test:watch": "node --test --watch src/**/*.spec.js",
+    "merge": "node src/index.js",
+    "validate": "node src/validate-cli.js"
+  },
+  "devDependencies": {
+    "ajv": "^8.18.0"
+  }
+}

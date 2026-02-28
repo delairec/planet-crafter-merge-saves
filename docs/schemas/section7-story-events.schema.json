@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section7-story-events.schema.json",
+  "title": "Section 7 — Story Events déclenchés",
+  "description": "Événement narratif déclenché dans la partie. Clé de domaine : stringId.",
+  "type": "object",
+  "required": ["stringId"],
+  "additionalProperties": false,
+  "properties": {
+    "stringId": {
+      "type": "string",
+      "description": "Identifiant unique de l'événement narratif (ex: 'StoryEvent-FirstMessageClick')"
+    }
+  }
+}
+

@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section3-world-objects.schema.json",
+  "title": "Section 3 — World Objects",
+  "description": "Objet du monde (bâtiment, ressource, plante, animal…). Clé de domaine : id. Seuls id et gId sont systématiquement présents.",
+  "type": "object",
+  "required": ["id", "gId"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Identifiant unique de l'objet dans la sauvegarde"
+    },
+    "gId": {
+      "type": "string",
+      "description": "Game ID — type/prefab de l'objet (ex: 'WindTurbineT1', 'EscapePodToxicity')"
+    },
+    "pos": {
+      "type": "string",
+      "pattern": "^-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*$",
+      "description": "Position 3D de l'objet au format 'x,y,z'"
+    },
+    "rot": {
+      "type": "string",
+      "description": "Rotation quaternion de l'objet au format 'x,y,z,w'"
+    },
+    "planet": {
+      "type": "integer",
+      "description": "Id numérique de la planète (ex: 110910045 pour Toxicity)"
+    },
+    "count": {
+      "type": "string",
+      "description": "Quantité ou état cumulé (ex: '0,125' pour un gisement de minerai)"
+    },
+    "grwth": {
+      "type": "integer",
+      "description": "Progression de croissance (plantes) — stocké comme integer par Unity"
+    },
+    "pnls": {
+      "type": "string",
+      "description": "Puissance produite (panneaux solaires, générateurs)"
+    },
+    "color": {
+      "type": "string",
+      "description": "Couleur RGBA de l'objet"
+    },
+    "trtInd": {
+      "type": "integer",
+      "description": "Index de l'étape de terraformation associée"
+    },
+    "liId": {
+      "type": "integer",
+      "description": "Id d'une liste interne (logistique, drones)"
+    },
+    "text": {
+      "type": "string",
+      "description": "Texte affiché sur l'objet (panneaux, enseignes)"
+    },
+    "liGrps": {
+      "type": "string",
+      "description": "Groupes logistiques associés à l'objet"
+    },
+    "linkedWo": {
+      "type": "integer",
+      "description": "→ WorldObject.id — id de l'objet WorldObject lié (ex: machine ↔ inventaire)"
+    },
+    "siIds": {
+      "type": "string",
+      "description": "Ids CSV de sous-inventaires internes à l'objet"
+    },
+    "trtVal": {
+      "type": "integer",
+      "description": "Contribution numérique à la terraformation — stocké comme integer par Unity"
+    },
+    "hunger": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Niveau de faim d'un animal (float Unity — sérialisé avec .0)"
+    },
+    "set": {
+      "type": "integer",
+      "description": "Identifiant de set d'équipement"
+    }
+  }
+}
+

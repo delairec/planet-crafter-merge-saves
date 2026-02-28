@@ -1,0 +1,12 @@
+# IDE
+*.iml
+.idea/**
+
+# package manager
+node_modules/
+
+# generated
+output/
+
+# user input
+input/

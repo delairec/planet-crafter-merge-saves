@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section9-terrain-layers.schema.json",
+  "title": "Section 9 — Terrain Layers",
+  "description": "Layer visuel du terrain (couleurs, biomes). Clé de domaine : layerId + planet. Lors du merge, les doublons de la save B sont ignorés.",
+  "type": "object",
+  "required": ["layerId", "planet", "colorBase", "colorCustom", "colorBaseLerp", "colorCustomLerp"],
+  "additionalProperties": false,
+  "properties": {
+    "layerId": {
+      "type": "string",
+      "description": "Identifiant du layer visuel (ex: 'PC-Toxicity-Layer2')"
+    },
+    "planet": {
+      "type": "integer",
+      "description": "Id numérique de la planète à laquelle appartient ce layer"
+    },
+    "colorBase": {
+      "type": "string",
+      "pattern": "^[0-9.]+(-[0-9.]+){3}$",
+      "description": "Couleur de base du terrain au format 'R-G-B-A' (valeurs 0.0–1.0)"
+    },
+    "colorCustom": {
+      "type": "string",
+      "pattern": "^[0-9.]+(-[0-9.]+){3}$",
+      "description": "Couleur personnalisée du terrain au format 'R-G-B-A' (valeurs 0.0–1.0)"
+    },
+    "colorBaseLerp": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Intensité d'application de colorBase (0 = invisible, 100 = pleine, peut dépasser 100)"
+    },
+    "colorCustomLerp": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Intensité d'application de colorCustom (0 = invisible, 100 = pleine, peut dépasser 100)"
+    }
+  }
+}
+
