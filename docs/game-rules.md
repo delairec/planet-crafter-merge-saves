@@ -208,5 +208,7 @@
 
 **Rule GR-ID-4:** Id conflict resolution runs on the raw serialized string produced by the main merge, re-parses it, and returns a new serialized string. It is the last step before the output is written.
 
-**Implementation:** `src/utils/resolveIdConflicts.js`
+**Rule GR-ID-5:** `WorldObject.liId` and `WorldObject.siIds` remapping is **save-origin-aware**. When an inventory id was duplicated across both saves (save A's inventory keeps the original id; save B's gets a new id), a world object from save A must keep its `liId`/`siIds` pointing to the original id, while a world object from save B must point to the remapped (new) id. To enable this, `mergeWorldObjects` collects the set of world object ids that originated from save A (`saveAWorldObjectIds`) and passes it through `merge()` to `resolveIdConflicts()`. A world object whose id is in `saveAWorldObjectIds` is treated as an A-origin object; all others are treated as B-origin.
+
+**Implementation:** `src/utils/resolveIdConflicts.js`, `src/merge/mergeWorldObjects.js`, `src/merge/merge.js`
 
