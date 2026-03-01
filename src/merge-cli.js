@@ -34,14 +34,14 @@ export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirec
       readTextFile(joinPath(folderPath, files[0])),
       readTextFile(joinPath(folderPath, files[1]))
     ]);
-    const {mergeSaves, indexFileA, indexFileB} = merge(contentA, contentB, saveDisplayName);
+    const {mergeSaves, saveAWorldObjectIds, indexFileA, indexFileB} = merge(contentA, contentB, saveDisplayName);
     const fileA = files[indexFileA];
     const fileB = files[indexFileB];
     console.log(`  Merging ${fileB} (save B) into ${fileA} (save A)...`);
     const merged = mergeSaves();
     console.log(`  ✓ Sections merged`);
     console.log(`  Resolving id conflicts...`);
-    const resolved = resolveIdConflicts(merged);
+    const resolved = resolveIdConflicts(merged, saveAWorldObjectIds);
     console.log(`  ✓ Id conflicts resolved`);
     await writeOutput(folder, fileA, fileB, resolved);
   }

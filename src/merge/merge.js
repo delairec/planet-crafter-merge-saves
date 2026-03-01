@@ -25,7 +25,7 @@ function* EMPTY_GENERATOR() {
  * @param {string} saveA
  * @param {string} saveB
  * @param {string} saveDisplayName - Overrides `saveDisplayName` in the merged configuration.
- * @returns {{ mergeSaves: () => string, indexFileA: number, indexFileB: number }}
+ * @returns {{ mergeSaves: () => string, saveAWorldObjectIds: Set<number>, indexFileA: number, indexFileB: number }}
  */
 export function merge(saveA, saveB, saveDisplayName) {
   const parsedSaveA = parseSaveSections(saveA);
@@ -36,14 +36,19 @@ export function merge(saveA, saveB, saveDisplayName) {
   const [metadataA = [], terraformationLevelsA = [], playersA = [], worldObjectsGeneratorA = EMPTY_GENERATOR(), inventoriesA = [], statisticsA = [], mailboxA = [], storyEventsA = [], saveConfigurationsA = [], terrainLayersA = [], worldEventsA = []] = mainSave;
   const [metadataB = [], terraformationLevelsB = [], playersB = [], worldObjectsGeneratorB = EMPTY_GENERATOR(), inventoriesB = [], statisticsB = [], mailboxB = [], storyEventsB = [], saveConfigurationsB = [], terrainLayersB = [], worldEventsB = []] = secondarySave;
 
+  const saveAWorldObjectIds = new Set();
+
   function mergeSaves() {
     const ejectedPlayerIds = collectEjectedPlayerInventoryIds(playersA, playersB, inventoriesB);
+
+    const {serialized: serializedWorldObjects, saveAWorldObjectIds: collectedIds} = mergeWorldObjects(worldObjectsGeneratorA, worldObjectsGeneratorB, ejectedPlayerIds.orphanWorldObjectIds);
+    for (const id of collectedIds) saveAWorldObjectIds.add(id);
 
     const sections = [
       mergeGlobalMetadata(metadataA, metadataB),
       mergeTerraformationLevels(terraformationLevelsA, terraformationLevelsB),
       mergePlayers(playersA, playersB),
-      mergeWorldObjects(worldObjectsGeneratorA, worldObjectsGeneratorB, ejectedPlayerIds.orphanWorldObjectIds),
+      serializedWorldObjects,
       mergeInventories(inventoriesA, inventoriesB, ejectedPlayerIds.orphanInventoryIds),
       mergeStatistics(statisticsA, statisticsB),
       mergeMailboxes(mailboxA, mailboxB),
@@ -58,6 +63,7 @@ export function merge(saveA, saveB, saveDisplayName) {
 
   return {
     mergeSaves,
+    saveAWorldObjectIds,
     indexFileA: mainSave === parsedSaveA ? 0 : 1,
     indexFileB: secondarySave === parsedSaveB ? 1 : 0
   };

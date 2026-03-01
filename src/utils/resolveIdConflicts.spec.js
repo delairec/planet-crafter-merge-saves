@@ -250,7 +250,7 @@ describe('utils/resolveIdConflicts', () => {
       });
 
       // Act
-      const result = resolveIdConflicts(mergedSave);
+      const result = resolveIdConflicts(mergedSave, new Set([100]));
 
       // Assert
       const players = parseResultSection(result, PLAYERS_SECTION_INDEX);
@@ -259,6 +259,57 @@ describe('utils/resolveIdConflicts', () => {
 
       expect(worldObjects[0].liId).toBe(10);
       expect(worldObjects[1].liId).toBe(newInventoryId);
+    });
+
+    it('should point a save-B world object to its own remapped inventory when no save-A world object shares the same linked inventory id', () => {
+      // Arrange
+      const saveAUnrelatedInventory = {id: 50, woIds: '', size: 1};
+      const saveBVegetubeInventory = {id: 50, woIds: '999', size: 1};
+      const saveBVegetube = {id: 200, gId: 'VegetubeOutside1', liId: 50, pos: '5,0,5', rot: '0,0,0,1', planet: 110910047};
+      const mergedSave = createFakeSaveString({
+        players: [defaultPlayerFromA],
+        worldObjects: [saveBVegetube],
+        inventories: [inventoryOfA, equipmentOfA, saveAUnrelatedInventory, saveBVegetubeInventory]
+      });
+
+      // Act
+      const result = resolveIdConflicts(mergedSave, new Set());
+
+      // Assert
+      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
+      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
+      const remappedVegetubeInventory = inventories.find(inv => inv.woIds === '999');
+      expect(remappedVegetubeInventory).toBeDefined();
+      expect(worldObjects[0].liId).toBe(remappedVegetubeInventory.id);
+      expect(worldObjects[0].liId).not.toBe(50);
+    });
+
+    it('should keep a save-A world object pointing to its own inventory when both saves have world objects with the same linked inventory id', () => {
+      // Arrange
+      const saveAContainerInventory = {id: 50, woIds: '100', size: 35};
+      const saveBContainerInventory = {id: 50, woIds: '200', size: 12};
+      const saveAContainer = {id: 100, gId: 'Container2', liId: 50, pos: '1,0,1', rot: '0,0,0,1', planet: 110910047};
+      const saveBContainer = {id: 200, gId: 'Container2', liId: 50, pos: '2,0,2', rot: '0,0,0,1', planet: 110910047};
+      const mergedSave = createFakeSaveString({
+        players: [defaultPlayerFromA],
+        worldObjects: [saveAContainer, saveBContainer],
+        inventories: [inventoryOfA, equipmentOfA, saveAContainerInventory, saveBContainerInventory]
+      });
+
+      // Act
+      const result = resolveIdConflicts(mergedSave, new Set([100]));
+
+      // Assert
+      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
+      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
+      const saveAInventoryResult = inventories.find(inv => inv.size === 35);
+      const saveBInventoryResult = inventories.find(inv => inv.size === 12);
+      const saveAContainerResult = worldObjects.find(wo => wo.id === 100);
+      const saveBContainerResult = worldObjects.find(wo => wo.gId === 'Container2' && wo.id !== 100);
+
+      expect(saveAContainerResult.liId).toBe(50);
+      expect(saveAContainerResult.liId).toBe(saveAInventoryResult.id);
+      expect(saveBContainerResult.liId).toBe(saveBInventoryResult.id);
     });
   });
 
@@ -328,6 +379,29 @@ describe('utils/resolveIdConflicts', () => {
       const subInventoryB = inventories.find(inventory => inventory.size === 2);
       expect(siIdValues).toContain(subInventoryA.id);
       expect(siIdValues).toContain(subInventoryB.id);
+    });
+
+    it('should point a save-B world object sub-inventory slot to its own remapped inventory when no save-A world object shares the same sub-inventory id', () => {
+      // Arrange
+      const saveAUnrelatedInventory = {id: 80, woIds: '', size: 1};
+      const saveBFarmSlotInventory = {id: 80, woIds: '888', size: 1};
+      const saveBFarm = {id: 300, gId: 'Farm1', siIds: '80', pos: '3,0,3', rot: '0,0,0,1', planet: 110910047};
+      const mergedSave = createFakeSaveString({
+        players: [defaultPlayerFromA],
+        worldObjects: [saveBFarm],
+        inventories: [inventoryOfA, equipmentOfA, saveAUnrelatedInventory, saveBFarmSlotInventory]
+      });
+
+      // Act
+      const result = resolveIdConflicts(mergedSave, new Set());
+
+      // Assert
+      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
+      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
+      const remappedFarmSlotInventory = inventories.find(inv => inv.woIds === '888');
+      expect(remappedFarmSlotInventory).toBeDefined();
+      expect(worldObjects[0].siIds).toBe(String(remappedFarmSlotInventory.id));
+      expect(Number(worldObjects[0].siIds)).not.toBe(80);
     });
   });
 

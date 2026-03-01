@@ -6,13 +6,14 @@ import {serializeSave} from './serializeSave.js';
 
 /**
  * Detects duplicate ids across all merged sections and remaps later occurrences to new unique ids.
- * Updates back-references in Player (inventoryId, equipmentId) and WorldObject (liId, woIds).
+ * Updates back-references in Player (inventoryId, equipmentId) and WorldObject (liId, siIds, linkedWo, woIds).
  * Must be called on the raw serialized output of merge().
  * @param {string} mergedSave
+ * @param {Set<number>} [saveAWorldObjectIds] - Set of world object ids that originated from save A.
  * @returns {string}
  * @see GR-ID-1, GR-ID-2, GR-ID-3, GR-ID-4 in docs/game-rules.md
  */
-export function resolveIdConflicts(mergedSave) {
+export function resolveIdConflicts(mergedSave, saveAWorldObjectIds = new Set()) {
   const [
     metadata,
     terraformationLevels,
@@ -30,13 +31,13 @@ export function resolveIdConflicts(mergedSave) {
   const nextIdGenerator = createIdSequence(inventories);
 
   const resolvedPlayers = resolvePlayerIdConflicts(players, nextIdGenerator);
-  const {resolvedInventories, oldIdToNewIds, oldIdToAllResolvedIds} = resolveInventoryIdConflicts(inventories, nextIdGenerator);
-  const {updatedPlayers: playersWithUpdatedRefs, inventoryConsumedCount} = updatePlayerInventoryReferences(resolvedPlayers, oldIdToNewIds);
+  const {resolvedInventories, oldIdToNewIds, saveBInventoryOriginalIds} = resolveInventoryIdConflicts(inventories, nextIdGenerator);
+  const {updatedPlayers: playersWithUpdatedRefs, bInventorySlotsTakenByPlayers} = updatePlayerInventoryReferences(resolvedPlayers, oldIdToNewIds);
 
   const worldObjectIdRemapping = new Map();
   const saveBLinkedInventoryIds = new Set();
   const resolvedWorldObjectsGenerator = createResolveWorldObjectsGenerator(worldObjectsGenerator, nextIdGenerator, worldObjectIdRemapping, saveBLinkedInventoryIds);
-  const serializedWorldObjects = serializeWorldObjectsAndBuildRemapping(resolvedWorldObjectsGenerator, oldIdToAllResolvedIds, worldObjectIdRemapping, inventoryConsumedCount);
+  const serializedWorldObjects = serializeWorldObjectsAndBuildRemapping(resolvedWorldObjectsGenerator, oldIdToNewIds, saveBInventoryOriginalIds, saveAWorldObjectIds, worldObjectIdRemapping, bInventorySlotsTakenByPlayers);
 
   const resolvedSaveBLinkedInventoryIds = remapLinkedInventoryIds(saveBLinkedInventoryIds, oldIdToNewIds);
   const inventoriesWithUpdatedWoIds = updateInventoryWoIdsReferences(resolvedInventories, worldObjectIdRemapping, resolvedSaveBLinkedInventoryIds);
@@ -78,24 +79,23 @@ function resolvePlayerIdConflicts(players, generateNextId) {
 function resolveInventoryIdConflicts(inventories, generateNextId) {
   const seenIds = new Set();
   const oldIdToNewIds = new Map();
-  const oldIdToAllResolvedIds = new Map();
+  const saveBInventoryOriginalIds = new Set();
   const resolvedInventories = inventories.map(inventory => {
     if (seenIds.has(inventory.id)) {
       const newId = generateNextId();
       if (!oldIdToNewIds.has(inventory.id)) oldIdToNewIds.set(inventory.id, []);
       oldIdToNewIds.get(inventory.id).push(newId);
-      if (!oldIdToAllResolvedIds.has(inventory.id)) oldIdToAllResolvedIds.set(inventory.id, [inventory.id]);
-      oldIdToAllResolvedIds.get(inventory.id).push(newId);
+      saveBInventoryOriginalIds.add(inventory.id);
       return {...inventory, id: newId};
     }
     seenIds.add(inventory.id);
     return inventory;
   });
-  return {resolvedInventories, oldIdToNewIds, oldIdToAllResolvedIds};
+  return {resolvedInventories, oldIdToNewIds, saveBInventoryOriginalIds};
 }
 
 function updatePlayerInventoryReferences(players, oldIdToNewIds) {
-  if (oldIdToNewIds.size === 0) return {updatedPlayers: players, inventoryConsumedCount: new Map()};
+  if (oldIdToNewIds.size === 0) return {updatedPlayers: players, bInventorySlotsTakenByPlayers: new Map()};
   const consumedCount = new Map();
   const updatedPlayers = players.map(player => {
     return {
@@ -104,7 +104,16 @@ function updatePlayerInventoryReferences(players, oldIdToNewIds) {
       equipmentId: remapRef(player.equipmentId, oldIdToNewIds, consumedCount),
     };
   });
-  return {updatedPlayers, inventoryConsumedCount: consumedCount};
+  const bInventorySlotsTakenByPlayers = computeBSlotsTakenByPlayers(consumedCount);
+  return {updatedPlayers, bInventorySlotsTakenByPlayers};
+}
+
+function computeBSlotsTakenByPlayers(playerConsumedCount) {
+  const slotsTaken = new Map();
+  for (const [id, count] of playerConsumedCount) {
+    slotsTaken.set(id, Math.max(0, count - 1));
+  }
+  return slotsTaken;
 }
 
 function remapRef(refId, oldIdToNewIds, consumedCount) {
@@ -118,7 +127,6 @@ function remapRef(refId, oldIdToNewIds, consumedCount) {
   consumedCount.set(refId, consumed + 1);
   return newId ?? refId;
 }
-
 
 function* createResolveWorldObjectsGenerator(worldObjectsGenerator, generateNextId, worldObjectIdRemapping, saveBLinkedInventoryIds) {
   const seenIds = new Set();
@@ -165,20 +173,35 @@ function updateInventoryWoIdsReferences(inventories, worldObjectIdRemapping, sav
   });
 }
 
-function serializeWorldObjectsAndBuildRemapping(worldObjectsGenerator, oldIdToAllResolvedIds = new Map(), worldObjectIdRemapping = new Map(), inventoryConsumedCount = new Map()) {
-  const liIdConsumedCount = new Map();
-  const siIdsConsumedCount = new Map(inventoryConsumedCount);
+/**
+ * Returns the remapped inventory id for a B-origin world object reference, or the original id for A-origin.
+ * @param {boolean} isSaveAWorldObject
+ * @param {number} inventoryId
+ * @param {Map<number, number[]>} oldIdToNewIds
+ * @param {Map<number, number>} consumedCount
+ * @returns {number}
+ */
+function remapBWorldObjectInventoryRef(isSaveAWorldObject, inventoryId, oldIdToNewIds, consumedCount) {
+  if (isSaveAWorldObject) return inventoryId;
+  const newIds = oldIdToNewIds.get(inventoryId);
+  if (!newIds) return inventoryId;
+  const consumed = consumedCount.get(inventoryId) ?? 0;
+  const newId = newIds[consumed] ?? newIds[newIds.length - 1];
+  consumedCount.set(inventoryId, consumed + 1);
+  return newId;
+}
+
+function serializeWorldObjectsAndBuildRemapping(worldObjectsGenerator, oldIdToNewIds = new Map(), saveBInventoryOriginalIds = new Set(), saveAWorldObjectIds = new Set(), worldObjectIdRemapping = new Map(), bInventorySlotsTakenByPlayers = new Map()) {
+  const liIdConsumedCount = new Map(bInventorySlotsTakenByPlayers);
+  const siIdsConsumedCount = new Map(bInventorySlotsTakenByPlayers);
   const parts = [];
   for (let worldObject of worldObjectsGenerator) {
-    if (worldObject.liId !== undefined && oldIdToAllResolvedIds.has(worldObject.liId)) {
-      const resolvedIds = oldIdToAllResolvedIds.get(worldObject.liId);
-      const consumed = liIdConsumedCount.get(worldObject.liId) ?? 0;
-      const newLiId = resolvedIds[consumed] ?? resolvedIds[resolvedIds.length - 1];
-      liIdConsumedCount.set(worldObject.liId, consumed + 1);
-      worldObject = {...worldObject, liId: newLiId};
+    const isSaveAWorldObject = saveAWorldObjectIds.has(worldObject.id);
+    if (worldObject.liId !== undefined && saveBInventoryOriginalIds.has(worldObject.liId)) {
+      worldObject = {...worldObject, liId: remapBWorldObjectInventoryRef(isSaveAWorldObject, worldObject.liId, oldIdToNewIds, liIdConsumedCount)};
     }
-    if (worldObject.siIds !== undefined && oldIdToAllResolvedIds.size > 0) {
-      worldObject = remapSiIds(worldObject, oldIdToAllResolvedIds, siIdsConsumedCount);
+    if (worldObject.siIds !== undefined && saveBInventoryOriginalIds.size > 0) {
+      worldObject = remapSiIds(worldObject, isSaveAWorldObject, oldIdToNewIds, saveBInventoryOriginalIds, siIdsConsumedCount);
     }
     if (worldObject.linkedWo !== undefined && worldObjectIdRemapping.has(worldObject.linkedWo)) {
       worldObject = {...worldObject, linkedWo: worldObjectIdRemapping.get(worldObject.linkedWo)};
@@ -188,19 +211,14 @@ function serializeWorldObjectsAndBuildRemapping(worldObjectsGenerator, oldIdToAl
   return parts.join('|\n');
 }
 
-function remapSiIds(worldObject, oldIdToAllResolvedIds, consumedCount) {
+function remapSiIds(worldObject, isSaveAWorldObject, oldIdToNewIds, saveBInventoryOriginalIds, consumedCount) {
   const updatedSiIds = worldObject.siIds
     .split(',')
     .map(idString => {
       const numId = Number(idString);
-      if (!oldIdToAllResolvedIds.has(numId)) return idString;
-      const resolvedIds = oldIdToAllResolvedIds.get(numId);
-      const consumed = consumedCount.get(numId) ?? 0;
-      const newId = resolvedIds[consumed] ?? resolvedIds[resolvedIds.length - 1];
-      consumedCount.set(numId, consumed + 1);
-      return String(newId);
+      if (!saveBInventoryOriginalIds.has(numId)) return idString;
+      return String(remapBWorldObjectInventoryRef(isSaveAWorldObject, numId, oldIdToNewIds, consumedCount));
     })
     .join(',');
   return {...worldObject, siIds: updatedSiIds};
 }
-
