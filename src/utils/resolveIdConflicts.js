@@ -31,11 +31,11 @@ export function resolveIdConflicts(mergedSave) {
 
   const resolvedPlayers = resolvePlayerIdConflicts(players, nextIdGenerator);
   const {resolvedInventories, oldIdToNewIds, oldIdToAllResolvedIds} = resolveInventoryIdConflicts(inventories, nextIdGenerator);
-  const playersWithUpdatedRefs = updatePlayerInventoryReferences(resolvedPlayers, oldIdToNewIds);
+  const {updatedPlayers: playersWithUpdatedRefs, inventoryConsumedCount} = updatePlayerInventoryReferences(resolvedPlayers, oldIdToNewIds);
 
   const worldObjectIdRemapping = new Map();
   const resolvedWorldObjectsGenerator = createResolveWorldObjectsGenerator(worldObjectsGenerator, nextIdGenerator, worldObjectIdRemapping);
-  const serializedWorldObjects = serializeWorldObjectsAndBuildRemapping(resolvedWorldObjectsGenerator, oldIdToAllResolvedIds);
+  const serializedWorldObjects = serializeWorldObjectsAndBuildRemapping(resolvedWorldObjectsGenerator, oldIdToAllResolvedIds, worldObjectIdRemapping, inventoryConsumedCount);
 
   const inventoriesWithUpdatedWoIds = updateInventoryWoIdsReferences(resolvedInventories, worldObjectIdRemapping);
 
@@ -93,15 +93,16 @@ function resolveInventoryIdConflicts(inventories, generateNextId) {
 }
 
 function updatePlayerInventoryReferences(players, oldIdToNewIds) {
-  if (oldIdToNewIds.size === 0) return players;
+  if (oldIdToNewIds.size === 0) return {updatedPlayers: players, inventoryConsumedCount: new Map()};
   const consumedCount = new Map();
-  return players.map(player => {
+  const updatedPlayers = players.map(player => {
     return {
       ...player,
       inventoryId: remapRef(player.inventoryId, oldIdToNewIds, consumedCount),
       equipmentId: remapRef(player.equipmentId, oldIdToNewIds, consumedCount),
     };
   });
+  return {updatedPlayers, inventoryConsumedCount: consumedCount};
 }
 
 function remapRef(refId, oldIdToNewIds, consumedCount) {
@@ -147,19 +148,42 @@ function updateInventoryWoIdsReferences(inventories, worldObjectIdRemapping) {
   });
 }
 
-function serializeWorldObjectsAndBuildRemapping(worldObjectsGenerator, oldIdToAllResolvedIds = new Map()) {
-  const consumedCount = new Map();
+function serializeWorldObjectsAndBuildRemapping(worldObjectsGenerator, oldIdToAllResolvedIds = new Map(), worldObjectIdRemapping = new Map(), inventoryConsumedCount = new Map()) {
+  const liIdConsumedCount = new Map();
+  const siIdsConsumedCount = new Map(inventoryConsumedCount);
   const parts = [];
   for (let worldObject of worldObjectsGenerator) {
     if (worldObject.liId !== undefined && oldIdToAllResolvedIds.has(worldObject.liId)) {
       const resolvedIds = oldIdToAllResolvedIds.get(worldObject.liId);
-      const consumed = consumedCount.get(worldObject.liId) ?? 0;
+      const consumed = liIdConsumedCount.get(worldObject.liId) ?? 0;
       const newLiId = resolvedIds[consumed] ?? resolvedIds[resolvedIds.length - 1];
-      consumedCount.set(worldObject.liId, consumed + 1);
+      liIdConsumedCount.set(worldObject.liId, consumed + 1);
       worldObject = {...worldObject, liId: newLiId};
+    }
+    if (worldObject.siIds !== undefined && oldIdToAllResolvedIds.size > 0) {
+      worldObject = remapSiIds(worldObject, oldIdToAllResolvedIds, siIdsConsumedCount);
+    }
+    if (worldObject.linkedWo !== undefined && worldObjectIdRemapping.has(worldObject.linkedWo)) {
+      worldObject = {...worldObject, linkedWo: worldObjectIdRemapping.get(worldObject.linkedWo)};
     }
     parts.push(stringifyEntry(worldObject));
   }
   return parts.join('|\n');
+}
+
+function remapSiIds(worldObject, oldIdToAllResolvedIds, consumedCount) {
+  const updatedSiIds = worldObject.siIds
+    .split(',')
+    .map(idString => {
+      const numId = Number(idString);
+      if (!oldIdToAllResolvedIds.has(numId)) return idString;
+      const resolvedIds = oldIdToAllResolvedIds.get(numId);
+      const consumed = consumedCount.get(numId) ?? 0;
+      const newId = resolvedIds[consumed] ?? resolvedIds[resolvedIds.length - 1];
+      consumedCount.set(numId, consumed + 1);
+      return String(newId);
+    })
+    .join(',');
+  return {...worldObject, siIds: updatedSiIds};
 }
 

@@ -51,6 +51,8 @@
  * @property {number} [grwth]
  * @property {string} [count]
  * @property {string} [text]
+ * @property {number} [linkedWo] - → WorldObject.id. Updated by resolveIdConflicts. @see GR-ID-3
+ * @property {string} [siIds] - CSV of → Inventory.id (sub-inventories). Updated by resolveIdConflicts. @see GR-ID-3
  */
 
 /** Merge key: `id` (remapped by resolveIdConflicts when duplicated across saves).

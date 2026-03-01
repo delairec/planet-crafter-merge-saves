@@ -201,6 +201,8 @@
 **Rule GR-ID-3:** All back-references are updated to match remapped ids:
 - `Player.inventoryId` and `Player.equipmentId` → remapped inventory ids.
 - `WorldObject.liId` → remapped inventory ids.
+- `WorldObject.siIds` (CSV) → remapped inventory ids.
+- `WorldObject.linkedWo` → remapped world object ids.
 - `WorldObject.woIds` (CSV) → remapped world object ids.
 - `Inventory.woIds` (CSV) → remapped world object ids.
 
