@@ -1,9 +1,16 @@
+/** @import { ParsedSave, Player, Inventory, WorldObject } from '../types.js' */
+
 import {parseSaveSections} from './parseSaveSections.js';
 import {stringifyEntry} from './stringifyEntry.js';
+import {serializeSave} from './serializeSave.js';
 
 /**
+ * Detects duplicate ids across all merged sections and remaps later occurrences to new unique ids.
+ * Updates back-references in Player (inventoryId, equipmentId) and WorldObject (liId, woIds).
+ * Must be called on the raw serialized output of merge().
  * @param {string} mergedSave
  * @returns {string}
+ * @see GR-ID-1, GR-ID-2, GR-ID-3, GR-ID-4 in docs/game-rules.md
  */
 export function resolveIdConflicts(mergedSave) {
   const [
@@ -156,24 +163,3 @@ function serializeWorldObjectsAndBuildRemapping(worldObjectsGenerator, oldIdToAl
   return parts.join('|\n');
 }
 
-function serializeSave({metadata, terraformationLevels, players, serializedWorldObjects, inventories, statistics, mailboxes, storyEvents, saveConfigurations, terrainLayers, worldEvents}) {
-  const serialize = entries => entries.map(e => JSON.stringify(e)).join('|\n');
-  const serializeWithFloats = entries => entries.map(e => stringifyEntry(e)).join('|\n');
-  const serializeSingle = entry => entry ? JSON.stringify(entry) : '';
-
-  const sections = [
-    serialize(metadata),
-    serializeWithFloats(terraformationLevels),
-    serializeWithFloats(players),
-    serializedWorldObjects,
-    serialize(inventories),
-    serializeSingle(statistics[0]),
-    serialize(mailboxes),
-    serialize(storyEvents),
-    serializeSingle(saveConfigurations[0]),
-    serialize(terrainLayers),
-    serialize(worldEvents),
-  ];
-
-  return sections.join('\n@\n') + '\n@';
-}

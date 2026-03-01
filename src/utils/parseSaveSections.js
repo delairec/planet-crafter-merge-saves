@@ -1,24 +1,15 @@
+/** @import { ParsedSave } from '../types.js' */
+
 /**
- * Parses Planet Crafter save data into 11 structured sections.
+ * Parses a Planet Crafter save string into 11 typed sections.
+ * Section 3 (WorldObjects) is a lazy Generator; all others are arrays.
  * @param {string} save
- * @returns {Array} [
- *   GlobalMetadata[],
- *   TerraformationLevels[],
- *   Players[],
- *   WorldObjectsGenerator <Generator>,
- *   Inventories[],
- *   Statistics[],
- *   Mailbox[],
- *   StoryEvents[],
- *   SaveConfigurations[],
- *   TerrainLayers[],
- *   WorldEvents[]
- * ]
+ * @returns {ParsedSave}
  */
 export function parseSaveSections(save) {
   const sections = save.split('@');
 
-  return sections.map((section, index) => {
+  return /** @type {ParsedSave} */ (sections.map((section, index) => {
     if (isWorldObjectsSection(index)) {
       return createSectionEntriesGenerator(section);
     }
@@ -32,7 +23,7 @@ export function parseSaveSections(save) {
     } catch (error) {
       return [];
     }
-  });
+  }));
 }
 
 function isWorldObjectsSection(index) {

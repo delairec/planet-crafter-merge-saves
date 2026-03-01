@@ -1,0 +1,9 @@
+const INPUT_DIR = 'input';
+export const OUTPUT_DIR = 'output';
+export const INPUT_SUBFOLDER_ALPHA = 'Alpha';
+export const SAVE_A_FILENAME = 'Standard-1.json';
+export const SAVE_B_FILENAME = 'Standard-2.json';
+export const SAVE_A_INPUT_PATH = `${INPUT_DIR}/${INPUT_SUBFOLDER_ALPHA}/${SAVE_A_FILENAME}`;
+export const SAVE_B_INPUT_PATH = `${INPUT_DIR}/${INPUT_SUBFOLDER_ALPHA}/${SAVE_B_FILENAME}`;
+export const MERGED_SAVE_OUTPUT_PATH = `${OUTPUT_DIR}/${INPUT_SUBFOLDER_ALPHA}/Standard-1-Standard-2-merged.json`;
+export const VALIDATE_SAVE_FILE_PATH = MERGED_SAVE_OUTPUT_PATH;
