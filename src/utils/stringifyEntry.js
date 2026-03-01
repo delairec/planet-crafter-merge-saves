@@ -1,3 +1,5 @@
+/** @import { TerraformationLevel, Player, WorldObject } from '../types.js' */
+
 const FLOAT_FIELDS = new Set([
   'unitOxygenLevel', 'unitHeatLevel', 'unitPressureLevel', 'unitPlantsLevel',
   'unitInsectsLevel', 'unitAnimalsLevel', 'unitPurificationLevel',
@@ -6,8 +8,8 @@ const FLOAT_FIELDS = new Set([
 ]);
 
 /**
- * Like JSON.stringify but preserves .0 suffix for known float fields.
- * @param {object} entry
+ * Like JSON.stringify but preserves `.0` suffix for known float fields (Unity serialization).
+ * @param {TerraformationLevel | Player | WorldObject | Record<string, unknown>} entry
  * @returns {string}
  */
 export function stringifyEntry(entry) {

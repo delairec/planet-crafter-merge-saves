@@ -1,65 +1,75 @@
 # Copilot Instructions
 
 ## Project
-Merges two **Planet Crafter** save files into one. The save format is a plain-text string split into 11 sections separated by `@`. Each section contains JSON objects separated by `|\n`.
+
+Merges two **Planet Crafter** save files into one. The save format is a plain-text string split into 11 sections separated by `@`. Each
+section contains JSON objects separated by `|\n`.
 
 ## Stack
-- **Runtime**: Node.js (ESM, `"type": "module"`)
-- **Tests**: `node:test` + `node:assert/strict` — no external test framework
 
-## TDD Workflow
-Follow strict **red → green → refactor** cycles:
-- Red phase: write failing tests first
-- Green phase: implement the minimal code to pass the tests
-- Never implement logic without a corresponding test
-- Don't execute tests by yourself, ask me to do so and I'll provide feedback.
+- **Runtime**: Bun (ESM, `"type": "module"`)
+- **Tests**: `bun test` with `bun:test` (`describe`, `it`, `expect`) — no external test framework
+- **Type checking**: `tsconfig.json` with `checkJs: true` — no compilation, types only (`bun run lint:types`)
+- **Types**: all domain types are defined as `@typedef` in `src/types.js` — import with `/** @import { Foo } from '../types.js' */`
 
 ## Terminal usage
-- When you commit, avoid description bloc. A simple and short commit message is better.
-- Follow conventional commit format: `<type>(<scope>): <message>`, where:
-    - `<type>` is one of `feat`, `fix`, `refactor`, `test`, `chore`, etc.
-    - `<scope>` is the section being merged if any (e.g. `players`, `inventories`)
-    - `<message>` is a brief summary of the change
-- You don't need `cd` command unless an error occurred in the terminal.
+
+- Follow conventional commit format: `<type>(<scope>): <message>` (no description block).
+- `<scope>` is the section being merged if applicable (e.g. `players`, `inventories`).
+- No `cd` command unless an error occurred.
+- No `wsl` command at all — assume all commands are run in the correct environment.
+
+## TDD Workflow
+
+Follow strict **red → green → refactor** cycles: write failing tests first, then implement the minimal code to pass. Never implement logic
+without a corresponding test. Don't execute tests yourself — ask me to run them and provide feedback.
+
+## Testing conventions
+
+- AAA pattern (Arrange, Act, Assert); one Act per test.
+- Business-readable test names; no technical details in names.
+- Nested `describe` blocks for context grouping; test names focused on behavior.
+- Tests are living documentation — no additional comments needed.
+- Prefer hard-coded values in assertions; avoid loops unless data exceeds ~5 entries.
+- Avoid mocking modules directly. Prefer dependency injection for testability.
+- Avoid test dependencies; each test should be independent and self-contained. Use `beforeEach` for shared setup if necessary, but avoid
+  shared state between tests.
 
 ## Code Conventions
-- Use **named exports** (no default exports)
-- Each `merge*` function receives the two parsed sections as arrays and returns a serialized string
-- Follow the same pattern as `mergeTerraformationLevels` for new merge functions
-- Helper/test utilities live in `src/testing/`
-- Avoid diminutive and truncated names for variables and functions.
+
+- SOLID principles; respect abstraction levels.
+- **Named exports** only (no default exports).
+- Each `merge*` function receives two parsed section arrays and returns a serialized string. Follow the `mergeTerraformationLevels` pattern.
+- Helper/test utilities live in `src/testing/`.
+- No magic numbers or strings — use `UPPER_SNAKE_CASE` named constants.
+- No explanatory comments; write self-explanatory code.
+- Avoid diminutive or truncated variable/function names.
+- All new modules must import their types from `src/types.js` via `/** @import { ... } from '../types.js' */` and annotate every exported
+  function with `@param` / `@returns`.
+- Avoid `any` type whenever possible; prefer precise types, `unknown`, or `@ts-expect-error` for intentionally invalid test values.
 
 ## Domain guidelines
-- Players are unique by their name (primary key) and by their id.
-- The project includes an implemented id-conflict resolution step (`src/utils/resolveIdConflicts.js`) which detects duplicate ids across merged data and remaps later occurrences to new unique ids while updating references where possible.
-- If more than one player share the same name, take the player from save A.
-- When duplicate numeric gauges/levels exist for the same domain object, take `Math.max` (except where domain rules say otherwise).
-- Player gauge toxic value is merged by taking `Math.min`.
-- Player inventories: prefer the inventory object coming from save A for a given player when both saves reference the same player name.
-- Player equipment list: prefer save A's equipment list for a player when merging by name.
-- Only one player can be the host: take save A host status. All other players will have host status set to false.
-- When merging inventories and equipment, keep all inventories from both saves. Inventories are referenced by players and by world objects (buildings, machines…).
-- Inventories and equipment are considered unique by their `id`. The resolver will detect duplicate ids and generate new ids for later occurrences; mappings are recorded to update references in players and world objects where applicable.
-- Note: identical ids across saves do not necessarily mean the entries are the same logical object. The resolver treats each entry as a separate object and will remap ids to ensure uniqueness.
-- Statistics: they should be summed.
-- Messages are unique by `stringId`. Deduplicate, and prioritize `true` values (e.g. `isRead`) over `false`.
-- Terrain layers are unique by their `layerId` and `planet`. When merging, prefer the layer from save A; matching `layerId` + `planet` from save B will be discarded.
-- World events are unique by their `planet`, `seed` and `pos`. If duplicated, prioritize save A.
-- World objects are deduplicated by position (`planet:pos`) and their ids are normalized by the id-conflict resolver; orphaned references from ejected players are removed before merging world objects.
-- Issues with duplicated ids are detected and resolved during the `resolveIdConflicts` step which runs after the main merge; the resolver behavior should be consulted when implementing new merge logic.
-- Save configurations: Save display name should be a parameter of the main merge function.
-- World events are unique by their `planet`, `seed` and `pos`. If duplicated, prioritize save A.
-- Issues with duplicated ids will be handled by `resolveIdConflicts` after all data is merged.
 
-## Examples:
-- Players with inventories and equipment ids:
+The canonical merge rules are in **[`docs/game-rules.md`](../docs/game-rules.md)** — consult that file for every section strategy,
+merge key, and invariant. The summary below is for quick orientation only; the canonical document is authoritative.
 
-```json
-{"id":12345678910111213,"name":"Nikowa","inventoryId":44,"equipmentId":45,"playerPosition":"1751.865,472.58,-1106.104","playerRotation":"0,0.5740051,0,-0.8188518","playerGaugeOxygen":280.0,"playerGaugeThirst":96.3858642578125,"playerGaugeHealth":72.67363739013672,"playerGaugeToxic":0.0,"host":false,"planetId":"Toxicity"}| 
-{"id":13121110987654321,"name":"Chilney","inventoryId":3,"equipmentId":4,"playerPosition":"1397.571,465.3293,-397.9421","playerRotation":"0,0.5459602,0,0.8378111","playerGaugeOxygen":370.0,"playerGaugeThirst":99.90899658203125,"playerGaugeHealth":91.76728820800781,"playerGaugeToxic":0.0,"host":true,"planetId":"Toxicity"}
-```
-- Corresponding inventory or equipment:
+| Section                   | Merge key             | Conflict strategy                                             |
+|---------------------------|-----------------------|---------------------------------------------------------------|
+| 0 — Global metadata       | —                     | Sum tokens; union groups; save A wins instance fields         |
+| 1 — Terraformation levels | `planetId`            | `Math.max` all numeric fields; `-1` sentinel for purification |
+| 2 — Players               | `name`                | Save A wins; exactly one `host: true` (save A's host)         |
+| 3 — World objects         | `planet:pos`          | Save A wins; orphans from ejected B-players removed first     |
+| 4 — Inventories           | `id` (remapped)       | All kept except ejected-player inventories from save B        |
+| 5 — Statistics            | —                     | All fields summed                                             |
+| 6 — Messages              | `stringId`            | Union; `isRead` = boolean OR                                  |
+| 7 — Story events          | `stringId`            | Union; no field merge                                         |
+| 8 — Save configuration    | —                     | Save A wins; `saveDisplayName` overridden by `merge()` arg    |
+| 9 — Terrain layers        | `layerId`+`planet`    | Save A wins                                                   |
+| 10 — World events         | `planet`+`seed`+`pos` | Save A wins                                                   |
 
-```json
-{"id":44,"woIds":"206524427,209785873,205093544,207814413,207642135,207043789,203412908,207023582,205081482,201957366,203930732,201357259,208050298,201049268,201852847,205880748,205927490,202986832,209148190","size":20}
-```
+**Save order (GR-ORDER-1):** if one save has `planetId === 'Prime'` in its configuration and the other does not, the Prime save is promoted
+to save A before any merge function runs.
+
+**Id conflict resolution:** `src/utils/resolveIdConflicts.js` runs last — remaps duplicate ids and updates all back-references
+(`inventoryId`, `equipmentId`, `liId`, `woIds`).
+

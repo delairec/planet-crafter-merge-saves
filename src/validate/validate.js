@@ -1,45 +1,38 @@
 import Ajv from 'ajv';
-import {readFileSync} from 'node:fs';
-import {fileURLToPath} from 'node:url';
-import {join, dirname} from 'node:path';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const SCHEMAS_DIR = join(__dirname, '..', 'docs', 'schemas');
-
-const SECTION_SCHEMA_FILES = {
-  0: 'section0-player-progression.schema.json',
-  1: 'section1-terraformation-levels.schema.json',
-  2: 'section2-players.schema.json',
-  4: 'section4-inventories.schema.json',
-  5: 'section5-statistics.schema.json',
-  6: 'section6-messages.schema.json',
-  7: 'section7-story-events.schema.json',
-  8: 'section8-save-config.schema.json',
-  9: 'section9-terrain-layers.schema.json',
-  10: 'section10-world-events.schema.json',
-};
+import schema0 from '../../docs/schemas/section0-player-progression.schema.json' with {type: 'json'};
+import schema1 from '../../docs/schemas/section1-terraformation-levels.schema.json' with {type: 'json'};
+import schema2 from '../../docs/schemas/section2-players.schema.json' with {type: 'json'};
+import schema4 from '../../docs/schemas/section4-inventories.schema.json' with {type: 'json'};
+import schema5 from '../../docs/schemas/section5-statistics.schema.json' with {type: 'json'};
+import schema6 from '../../docs/schemas/section6-messages.schema.json' with {type: 'json'};
+import schema7 from '../../docs/schemas/section7-story-events.schema.json' with {type: 'json'};
+import schema8 from '../../docs/schemas/section8-save-config.schema.json' with {type: 'json'};
+import schema9 from '../../docs/schemas/section9-terrain-layers.schema.json' with {type: 'json'};
+import schema10 from '../../docs/schemas/section10-world-events.schema.json' with {type: 'json'};
 
 const FLOAT_FIELDS = new Set([
   'unitOxygenLevel', 'unitHeatLevel', 'unitPressureLevel', 'unitPlantsLevel',
   'unitInsectsLevel', 'unitAnimalsLevel', 'unitPurificationLevel',
   'playerGaugeOxygen', 'playerGaugeThirst', 'playerGaugeHealth', 'playerGaugeToxic',
-  'hunger',
+  'hunger'
 ]);
 
 const SECTION_COUNT = 11;
 const EXPECTED_SPLIT_PARTS = SECTION_COUNT + 1; // trailing @ produces one empty part
 
-function loadSchemaValidators() {
-  const ajv = new Ajv();
-  const validators = {};
-  for (const [sectionIndex, filename] of Object.entries(SECTION_SCHEMA_FILES)) {
-    const schema = JSON.parse(readFileSync(join(SCHEMAS_DIR, filename), 'utf8'));
-    validators[Number(sectionIndex)] = ajv.compile(schema);
-  }
-  return validators;
-}
-
-const schemaValidators = loadSchemaValidators();
+const ajv = new Ajv();
+const schemaValidators = {
+  0: ajv.compile(schema0),
+  1: ajv.compile(schema1),
+  2: ajv.compile(schema2),
+  4: ajv.compile(schema4),
+  5: ajv.compile(schema5),
+  6: ajv.compile(schema6),
+  7: ajv.compile(schema7),
+  8: ajv.compile(schema8),
+  9: ajv.compile(schema9),
+  10: ajv.compile(schema10)
+};
 
 /**
  * Validates a merged Planet Crafter save string.
@@ -89,11 +82,11 @@ function validateSchemas(parsedSections, errors) {
     for (let entryIndex = 0; entryIndex < entries.length; entryIndex++) {
       const valid = validate(entries[entryIndex]);
       if (!valid) {
-        for (const ajvError of validate.errors) {
+        for (const ajvError of validate.errors ?? []) {
           errors.push({
             section: index,
             entryIndex,
-            message: `${ajvError.instancePath} ${ajvError.message}`.trim(),
+            message: `${ajvError.instancePath} ${ajvError.message}`.trim()
           });
         }
       }
@@ -110,7 +103,7 @@ function validateFloatSerialization(mergedSave, errors) {
   while ((match = regex.exec(mergedSave)) !== null) {
     errors.push({
       rule: 'float-serialization',
-      message: `Field "${match[1]}" has integer value serialized without .0 suffix (got: ${match[2] ?? ''}${match[3]})`,
+      message: `Field "${match[1]}" has integer value serialized without .0 suffix (got: ${match[2] ?? ''}${match[3]})`
     });
   }
 }
@@ -121,7 +114,7 @@ function validateUniqueHost(players, errors) {
   if (hosts.length !== 1) {
     errors.push({
       rule: 'unique-host',
-      message: `Expected exactly one host player, found ${hosts.length}`,
+      message: `Expected exactly one host player, found ${hosts.length}`
     });
   }
 }

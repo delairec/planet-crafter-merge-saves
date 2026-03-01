@@ -3,14 +3,17 @@
   "version": "1.0.0",
   "description": "Merge Planet Crafter save files",
   "type": "module",
-  "main": "src/index.js",
+  "main": "src/merge-cli.js",
   "scripts": {
-    "test": "node --test src/**/*.spec.js",
-    "test:watch": "node --test --watch src/**/*.spec.js",
-    "merge": "node src/index.js",
-    "validate": "node src/validate-cli.js"
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "merge": "bun src/merge-cli.js",
+    "validate": "bun src/validate-cli.js",
+    "lint:types": "tsc --noEmit"
   },
   "devDependencies": {
-    "ajv": "^8.18.0"
+    "@types/bun": "^1.3.9",
+    "ajv": "^8.18.0",
+    "typescript": "^5.9.3"
   }
 }
