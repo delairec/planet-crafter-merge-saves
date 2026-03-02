@@ -10,6 +10,8 @@
     "test:watch": "bun test --watch",
     "merge": "bun src/merge-cli.js",
     "validate": "bun src/validate-cli.js",
+    "node:merge": "node src/merge-cli.js --platform=node",
+    "node:validate": "node src/validate-cli.js --platform=node",
     "lint:types": "tsc --noEmit"
   },
   "devDependencies": {

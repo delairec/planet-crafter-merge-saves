@@ -1,3 +1,16 @@
+/** @typedef {Object} RuntimePlatform
+ * @property {(path: string) => Promise<string>} readTextFile
+ * @property {(path: string, content: string) => Promise<void>} writeTextFile
+ * @property {(path: string) => Promise<string[]>} readDirectory
+ * @property {(...segments: string[]) => string} joinPath
+ * @property {(path: string, extension?: string) => string} getBasename
+ * @property {(code: number) => never} exitProcess
+ * @property {() => string[]} getCliArguments
+ * @property {(importMeta: { main?: boolean }) => boolean} isEntryPoint
+ */
+
+// GAME SPECIFIC TYPES -->
+
 /** @typedef {Object} GlobalMetadata
  * @property {number} terraTokens - Summed across saves. @see GR-META-1
  * @property {number} allTimeTerraTokens - Summed across saves. @see GR-META-2

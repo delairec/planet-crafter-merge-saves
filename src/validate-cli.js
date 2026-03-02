@@ -1,13 +1,20 @@
-import {readTextFile, exitProcess, isEntryPoint, getCliArguments} from './platform.js';
+import {readTextFile, exitProcess, isEntryPoint, getCliArguments} from './platforms/platform.js';
 import {validateMergedSave} from './validate/validate.js';
 
-const USAGE_MESSAGE = 'Usage: bun src/validate-cli.js <path-to-save-file>';
+const OUTPUT_DIR = 'output';
+const USAGE_MESSAGE = `Usage: bun src/validate-cli.js <path-to-save-file>`;
 
 const CLI = initValidateCli({readTextFile, exitProcess, isEntryPoint, getCliArguments});
 
 
 if (CLI.isEntryPoint(import.meta)) {
-  const [, , filePath] = CLI.getCliArguments();
+  const filePath = CLI.getCliArguments().find(arg => arg.startsWith(OUTPUT_DIR));
+
+  if(filePath === undefined) {
+    console.error(USAGE_MESSAGE);
+    CLI.exitProcess(1);
+  }
+
   CLI.main(filePath).catch(err => {
     console.error('Error:', err);
     CLI.exitProcess(1);

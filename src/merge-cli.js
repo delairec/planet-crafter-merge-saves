@@ -1,6 +1,9 @@
-import {isEntryPoint, exitProcess, readTextFile, readDirectory, getBasename, writeTextFile, joinPath} from './platform.js';
+import {exitProcess, getBasename, isEntryPoint, joinPath, readDirectory, readTextFile, writeTextFile} from './platforms/platform.js';
 import {resolveIdConflicts} from './utils/resolveIdConflicts.js';
 import {merge} from './merge/merge.js';
+
+const INPUT_DIR = 'input';
+const OUTPUT_DIR = 'output';
 
 const CLI = initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirectory, getBasename, writeTextFile, joinPath});
 if (CLI.isEntryPoint(import.meta)) {
@@ -11,9 +14,6 @@ if (CLI.isEntryPoint(import.meta)) {
 }
 
 export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirectory, getBasename, writeTextFile, joinPath}) {
-  const INPUT_DIR = 'input';
-  const OUTPUT_DIR = 'output';
-
   async function filterByValidSaveFolders(folders) {
     const results = [];
     for (const folder of folders) {
