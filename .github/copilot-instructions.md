@@ -17,6 +17,10 @@ Merges two **Planet Crafter** save files. Format: plain-text, 11 sections separa
 - `<scope>` = section name when applicable (e.g. `players`, `inventories`).
 - No `cd` unless an error occurred. No `wsl` ever.
 
+## Planning
+
+- Always start with a short written plan (1–3 bullets): goal, steps (tests → implementation → refactor), and verification criteria. Write the plan before creating tests or code; stop and share it for non-trivial changes.
+
 ## TDD — strict red → green → refactor
 
 1. Write failing tests first. Never implement logic without a test.
