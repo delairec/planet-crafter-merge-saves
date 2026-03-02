@@ -27,6 +27,8 @@ bun install
 
 ## Scripts
 
+### With Bun
+
 ```
 bun merge
 ```
@@ -54,6 +56,23 @@ bun run lint:types
 ```
 
 Checks typings in all the project files (using `tsc --noEmit` under the hood).
+
+### With Node.js
+
+If you prefer to run the scripts using Node.js instead of Bun, use the following commands:
+
+```
+npm run node:merge
+```
+
+Equivalent to `bun merge`, but uses Node.js as the runtime.
+
+```
+npm run node:validate -- <file>
+```
+
+Equivalent to `bun validate`, but uses Node.js as the runtime.
+
 
 ## Preparing data
 

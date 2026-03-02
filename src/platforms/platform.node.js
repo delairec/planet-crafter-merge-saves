@@ -1,4 +1,4 @@
-import {readdir} from 'node:fs/promises';
+import fs from 'node:fs/promises';
 import {join, basename} from 'node:path';
 import process from 'node:process';
 
@@ -7,7 +7,7 @@ import process from 'node:process';
  * @returns {Promise<string>}
  */
 export function readTextFile(path) {
-  return Bun.file(path).text();
+  return fs.readFile(path, 'utf8');
 }
 
 /**
@@ -16,7 +16,7 @@ export function readTextFile(path) {
  * @returns {Promise<void>}
  */
 export async function writeTextFile(path, content) {
-  await Bun.write(path, content);
+  await fs.writeFile(path, content, 'utf8');
 }
 
 /**
@@ -24,7 +24,7 @@ export async function writeTextFile(path, content) {
  * @returns {Promise<string[]>}
  */
 export function readDirectory(path) {
-  return readdir(path);
+  return fs.readdir(path);
 }
 
 /**
@@ -60,9 +60,13 @@ export function getCliArguments() {
 }
 
 /**
- * @param {{ main?: boolean }} importMeta
+ * @param {object} importMeta
  * @returns {boolean}
  */
 export function isEntryPoint(importMeta) {
-  return importMeta.main === true;
+  if (!importMeta || !importMeta.url) return false;
+  const scriptPath = process.argv[1];
+  const importPath = new URL(importMeta.url).pathname;
+
+  return scriptPath.endsWith(importPath);
 }
