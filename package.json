@@ -1,18 +1,21 @@
 {
-  "name": "planet-crafter-merge-saves",
+  "name": "planet-crafter-save-tools",
   "version": "1.0.0",
   "description": "Merge Planet Crafter save files",
   "type": "module",
-  "main": "src/merge-cli.js",
+  "main": "src/tools/merge/cli/merge-cli.js",
   "scripts": {
     "clean": "rm -rf output",
     "test": "bun test",
     "test:watch": "bun test --watch",
-    "merge": "bun src/merge-cli.js",
-    "validate": "bun src/validate-cli.js",
-    "node:merge": "node src/merge-cli.js --platform=node",
-    "node:validate": "node src/validate-cli.js --platform=node",
-    "lint:types": "tsc --noEmit"
+    "lint:types": "tsc --noEmit",
+    "merge": "bun src/tools/merge/cli/merge-cli.js",
+    "merge:test": "bun test src/tools/merge",
+    "validate": "bun src/tools/validate/cli/validate-cli.js",
+    "validate:test": "bun test src/tools/validate",
+    "ui:test": "bun test src/tools/ui",
+    "node:merge": "node src/tools/merge/cli/merge-cli.js --platform=node",
+    "node:validate": "node src/tools/validate/cli/validate-cli.js --platform=node"
   },
   "devDependencies": {
     "@types/bun": "^1.3.9",

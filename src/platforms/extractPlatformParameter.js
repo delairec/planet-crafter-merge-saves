@@ -1,4 +1,4 @@
-export const SUPPORTED_PLATFORMS = ['bun', 'node'];
+export const SUPPORTED_PLATFORMS = /** @type {readonly ['bun', 'node']} */ (['bun', 'node']);
 
 /**
  * @param argv

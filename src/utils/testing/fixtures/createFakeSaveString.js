@@ -1,6 +1,6 @@
-/** @import { GlobalMetadata, TerraformationLevel, Player, WorldObject, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, TerrainLayer, WorldEvent } from '../../../types.js' */
+/** @import { GlobalMetadata, TerraformationLevel, Player, WorldObject, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, TerrainLayer, WorldEvent } from '../../../types/js/types.js' */
 
-import {stringifyEntry} from '../../stringifyEntry.js';
+import {stringifyEntry} from '../../parsing/stringifyEntry.js';
 
 const DEFAULT_GLOBAL_METADATA = /** @type {GlobalMetadata} */ ({
   terraTokens: 0,

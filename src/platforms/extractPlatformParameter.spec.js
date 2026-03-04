@@ -17,7 +17,7 @@ describe('Extract platform parameter', () => {
   });
 
   describe('When --platform is present', () => {
-    it.each(SUPPORTED_PLATFORMS)('should return $platform as the platform name', (expectedPlatform) => {
+    it.each([SUPPORTED_PLATFORMS])('should return $platform as the platform name', (/** @type {'bun'|'node'} */ expectedPlatform) => {
       // Arrange
       const argv = [expectedPlatform, 'script.js', `--platform=${expectedPlatform}`];
 
