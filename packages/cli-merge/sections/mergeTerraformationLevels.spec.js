@@ -2,10 +2,10 @@ import {describe, it, expect} from 'bun:test';
 import {merge} from '../merge.js';
 import {createFakeSaveString} from '../../util-testing/fixtures/createFakeSaveString.js';
 import {terraformationLevel} from '../../util-testing/fixtures/createFakeSaveContent.js';
+import {TERRAFORMATION_LEVELS_SECTION_INDEX} from '../../util-types/js/sectionIndexes.js';
 
 describe('Merge saves — #2 Terraformation levels', () => {
   const SECTION_SEPARATOR = '@';
-  const TERRAFORMATION_LEVELS_SECTION_INDEX = 1;
   const saveDisplayName = 'SAVE_NAME';
 
   const saveA_terraformationLevels = [{
@@ -194,4 +194,3 @@ describe('Merge saves — #2 Terraformation levels', () => {
     });
   });
 });
-
