@@ -1,18 +1,13 @@
-@import "tailwindcss";
+@import "styles/colors.css";
+@import "styles/typography.css";
+@import "styles/layer.css";
+@import "styles/effects.css";
 
-:root {
-  --background-rgb: 214, 219, 220;
-  --foreground-rgb: 0, 0, 0;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background-rgb: 0, 0, 0;
-    --foreground-rgb: 255, 255, 255;
-  }
-}
-
-body {
-  background: rgb(var(--background-rgb));
-  color: rgb(var(--foreground-rgb));
+#app {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 1.25rem;
 }

@@ -1,7 +1,12 @@
 export default function Home() {
   return (
     <main>
-      <h1>Hello world!</h1>
+      <h2>File selection</h2>
+      <input type="file" />
+      <button>Submit</button>
+
+      <h2>Visualization</h2>
+      <p class="text-color-muted">Parsed data will appear here.</p>
     </main>
   );
 }

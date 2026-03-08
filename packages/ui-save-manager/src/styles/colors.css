@@ -1,0 +1,57 @@
+:root {
+    /* FOND & SURFACES */
+    --canvas: #0af;
+    --surface: #ffffff;
+    --elevated: #f1f4ff;
+
+    /* TEXTE */
+    --content: #0f1226;
+    --muted: #5c6285;
+    --subtle: #8a90b2;
+    --inverted: #ffffff;
+
+    /* ACCENTS */
+    --primary: #5b7cfa;
+    --secondary: #a855f7;
+    --accent: #06b6d4;
+
+    /* NÉON / FUTURISTE */
+    --neon-pink: #ff3cac;
+    --neon-cyan: #22d3ee;
+    --neon-purple: #8b5cf6;
+
+    /* BORDURES */
+    --border: #d9ddff;
+
+    /* ÉTATS */
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --canvas: #0a0d1a;
+        --surface: #11152b;
+        --elevated: #161b36;
+
+        --content: #f1f3ff;
+        --muted: #a4a9d4;
+        --subtle: #6c72a6;
+        --inverted: #0a0d1a;
+
+        --primary: #6d8dff;
+        --secondary: #c084fc;
+        --accent: #22d3ee;
+
+        --neon-pink: #ff4fd8;
+        --neon-cyan: #2be4ff;
+        --neon-purple: #a78bfa;
+
+        --border: #262b52;
+
+        --success: #4ade80;
+        --warning: #fbbf24;
+        --danger: #f87171;
+    }
+}
