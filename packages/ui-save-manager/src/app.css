@@ -2,6 +2,7 @@
 @import "styles/typography.css";
 @import "styles/layer.css";
 @import "styles/effects.css";
+@import "styles/tables.css";
 
 #app {
     height: 100vh;
