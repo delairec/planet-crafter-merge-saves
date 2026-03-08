@@ -1,6 +1,6 @@
 import {PlayerEntity} from "../../domain/PlayerEntity";
 
-export interface PlayerPresenterPort {
+export interface PlayersPresenterPort {
   present(players: PlayerEntity[]): void;
 }
 
