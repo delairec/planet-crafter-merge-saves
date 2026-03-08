@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, it} from 'bun:test';
-import {createFakeSaveContent} from '../../util-testing/fixtures/createFakeSaveContent';
+import {createFakeSaveContent, player} from '../../util-testing/fixtures/createFakeSaveContent';
 import {parseSaveSections} from '../../util-parsing/parseSaveSections.js';
 import {ParsedSave} from '../../util-types/gameDefinitions';
 import {PlayerEntity} from "../domain/PlayerEntity";
@@ -9,7 +9,17 @@ describe('SaveParserService', () => {
   let sections: ParsedSave;
 
   beforeEach(() => {
-    sections = parseSaveSections(createFakeSaveContent());
+    sections = parseSaveSections(createFakeSaveContent(
+      {
+        players: [{
+          ...player,
+          name: 'Nikowa',
+        }, {
+          ...player,
+          name: 'Chileny',
+        }],
+      }
+    ));
   });
 
   it('should extract players section', () => {
@@ -22,6 +32,8 @@ describe('SaveParserService', () => {
     // Assert
     expect(players).toEqual<PlayerEntity[]>([{
       name: 'Nikowa',
+    },{
+      name: 'Chileny',
     }]);
   });
 });
