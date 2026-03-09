@@ -41,14 +41,12 @@ export default function Home() {
         <table>
           <thead>
             <tr>
-              <th>Key</th>
-              <th>Value</th>
+              <th>Players</th>
             </tr>
           </thead>
           <tbody>
             <For each={viewModel().players || []}>{(player) => (
               <tr>
-                <td>Name</td>
                 <td>{player.name}</td>
               </tr>
             )}</For>
