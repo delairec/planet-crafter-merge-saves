@@ -1,9 +1,11 @@
-import {PlayerEntity} from "../../domain/PlayerEntity";
-import {GlobalProgressionEntity} from "../../domain/GlobalProgressionEntity";
-import {TerraformationLevelEntity} from "../../domain/TerraformationLevelEntity";
+import {PlayerEntity} from "../../domain/entities/PlayerEntity";
+import {GlobalProgressionValueObject} from "../../domain/valueObjects/GlobalProgressionValueObject";
+import {TerraformationLevelEntity} from "../../domain/entities/TerraformationLevelEntity";
+import {InventoryEntity} from "../../domain/entities/InventoryEntity";
 
 export interface SaveParserPort {
   getPlayers(): PlayerEntity[];
-  getGlobalMetadata(): GlobalProgressionEntity;
+  getGlobalMetadata(): GlobalProgressionValueObject;
   getTerraformationLevels(): TerraformationLevelEntity[];
+  getInventories(): InventoryEntity[];
 }

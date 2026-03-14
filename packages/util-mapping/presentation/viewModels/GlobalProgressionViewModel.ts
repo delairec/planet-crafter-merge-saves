@@ -1,4 +1,4 @@
 import {TableViewModel} from "./TableViewModel";
-import {GlobalProgressionEntity} from "../../domain/GlobalProgressionEntity";
+import {GlobalProgressionValueObject} from "../../domain/valueObjects/GlobalProgressionValueObject";
 
-export interface GlobalProgressionViewModel extends TableViewModel<GlobalProgressionEntity> {}
+export interface GlobalProgressionViewModel extends TableViewModel<GlobalProgressionValueObject> {}

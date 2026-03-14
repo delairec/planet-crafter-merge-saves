@@ -1,5 +1,5 @@
-import {GlobalProgressionEntity} from "../../domain/GlobalProgressionEntity";
+import {GlobalProgressionValueObject} from "../../domain/valueObjects/GlobalProgressionValueObject";
 
 export interface GlobalProgressionPresenterPort {
-  present(metadata: GlobalProgressionEntity): void;
+  present(metadata: GlobalProgressionValueObject): void;
 }

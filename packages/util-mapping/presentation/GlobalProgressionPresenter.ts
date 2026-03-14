@@ -1,6 +1,6 @@
 import {GlobalProgressionViewModel} from './viewModels/GlobalProgressionViewModel';
 import {GlobalProgressionPresenterPort} from '../application/ports/GlobalProgressionPresenterPort';
-import {GlobalProgressionEntity} from "../domain/GlobalProgressionEntity";
+import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
 
 export class GlobalProgressionPresenter implements GlobalProgressionPresenterPort {
   viewModel: GlobalProgressionViewModel;
@@ -12,7 +12,7 @@ export class GlobalProgressionPresenter implements GlobalProgressionPresenterPor
     }
   }
 
-  present(globalProgression: GlobalProgressionEntity): void {
+  present(globalProgression: GlobalProgressionValueObject): void {
     const allTimeTerraTokens = new Intl.NumberFormat().format(globalProgression.allTimeTerraTokens);
     this.viewModel.rows = [{
         cells: [{

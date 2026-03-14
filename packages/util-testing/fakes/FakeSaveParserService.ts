@@ -1,10 +1,10 @@
 import {SaveParserPort} from "../../util-mapping/application/ports/SaveParserPort";
-import {GlobalProgressionEntity} from "../../util-mapping/domain/GlobalProgressionEntity";
-import {PlayerEntity} from "../../util-mapping/domain/PlayerEntity";
-import {TerraformationLevelEntity} from "../../util-mapping/domain/TerraformationLevelEntity";
+import {GlobalProgressionValueObject} from "../../util-mapping/domain/valueObjects/GlobalProgressionValueObject";
+import {PlayerEntity} from "../../util-mapping/domain/entities/PlayerEntity";
+import {TerraformationLevelEntity} from "../../util-mapping/domain/entities/TerraformationLevelEntity";
 
 export class FakeSaveParserService implements SaveParserPort {
-  getGlobalMetadata(): GlobalProgressionEntity {
+  getGlobalMetadata(): GlobalProgressionValueObject {
       return {allTimeTerraTokens: 1_234_567};
   }
   getPlayers(): PlayerEntity[] {

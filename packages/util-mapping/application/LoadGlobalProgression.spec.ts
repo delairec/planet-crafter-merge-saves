@@ -2,10 +2,10 @@ import {describe, expect, it, mock} from 'bun:test';
 import {FakeSaveParserService} from "../../util-testing/fakes/FakeSaveParserService";
 import {SaveParserPort} from "./ports/SaveParserPort";
 import {LoadGlobalProgressionSection} from "./LoadGlobalProgressionSection";
-import {GlobalProgressionEntity} from "../domain/GlobalProgressionEntity";
+import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
 
 interface GlobalProgressionPresenterPort{
-  present(globalProgression:GlobalProgressionEntity): void;
+  present(globalProgression:GlobalProgressionValueObject): void;
 }
 
 describe('LoadGlobalProgressionSection', () => {
