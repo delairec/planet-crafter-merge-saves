@@ -1,7 +1,7 @@
 import { PlayersPresenterPort } from './ports/PlayersPresenterPort';
 import { SaveParserPort } from './ports/SaveParserPort';
 
-export class LoadSaveData {
+export class LoadPlayersSection {
   constructor(
     private readonly saveParser: SaveParserPort,
     private readonly presenter: PlayersPresenterPort,

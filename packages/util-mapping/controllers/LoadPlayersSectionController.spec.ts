@@ -1,15 +1,16 @@
 import {describe, expect, it} from 'bun:test';
+import {parseSaveSections} from '../../util-parsing/parseSaveSections.js';
 import {createFakeSaveContent} from '../../util-testing/fixtures/createFakeSaveContent';
-import {LoadSaveDataController} from './LoadSaveDataController';
+import {LoadPlayersSectionController} from './LoadPlayersSectionController';
 import {PlayersViewModel} from '../presentation/viewModels/PlayersViewModel';
 
-describe('LoadSaveDataController', () => {
+describe('LoadPlayersSectionController', () => {
   it('should present players from parsed save', () => {
     // Arrange
-    const saveString = createFakeSaveContent();
+    const sections = parseSaveSections(createFakeSaveContent());
 
     // Act
-    const viewModel = LoadSaveDataController.loadSaveData(saveString);
+    const viewModel = LoadPlayersSectionController.loadPlayersSection(sections);
 
     // Assert
     expect(viewModel).toEqual<PlayersViewModel>({ players: [{ name: 'Nikowa' }] });
