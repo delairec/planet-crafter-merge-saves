@@ -1,11 +1,17 @@
-import {createSignal, Show} from 'solid-js';
+import {createSignal, onMount, Show} from 'solid-js';
 import PlayersSection from '../components/PlayersSection';
+import GlobalProgressionSection from "../components/GlobalProgressionSection";
 import {parseSaveSections} from "../../../util-parsing/parseSaveSections";
 import {ParsedSave} from "../../../util-types/gameDefinitions";
 
 export default function Home() {
   const [file, setFile] = createSignal<File | null>(null);
-  const [sections, setSections] = createSignal<ParsedSave|null>(null);
+  const [sections, setSections] = createSignal<ParsedSave | null>(null);
+  const [isReady, setIsReady] = createSignal<boolean>(false);
+
+  onMount(() => {
+    setIsReady(true);
+  });
 
   const handleFileChange = (event: Event) => {
     const input = event.target as HTMLInputElement;
@@ -27,19 +33,22 @@ export default function Home() {
   };
 
   return (
-    <main>
-      <h2>File selection</h2>
-      <input type="file" onChange={handleFileChange}/>
-      <button onClick={handleSubmit} disabled={!file()}>Submit</button>
+    <Show when={isReady()} fallback={<p class="text-color-muted">Loading...</p>}>
+      <main>
+        <h2>File selection</h2>
+        <input type="file" onChange={handleFileChange}/>
+        <button onClick={handleSubmit} disabled={!file()}>Submit</button>
 
-      <h2>Visualization</h2>
-      <Show when={!sections()}>
-        <p class="text-color-muted">Parsed data will appear here.</p>
-      </Show>
+        <h2>Visualization</h2>
+        <Show when={!sections()}>
+          <p class="text-color-muted">Parsed data will appear here.</p>
+        </Show>
 
-      <Show when={sections()}>
-        <PlayersSection sections={sections()!}/>
-      </Show>
-    </main>
+        <Show when={sections()}>
+          <GlobalProgressionSection sections={() => sections()!}/>
+          <PlayersSection sections={() => sections()!}/>
+        </Show>
+      </main>
+    </Show>
   );
 }

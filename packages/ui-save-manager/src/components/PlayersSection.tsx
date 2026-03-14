@@ -1,30 +1,27 @@
-import {For, Show} from "solid-js";
+import {Accessor, createEffect, createSignal, Show} from "solid-js";
 import {LoadPlayersSectionController} from "../../../util-mapping/controllers/LoadPlayersSectionController";
 import {ParsedSave} from "../../../util-types/gameDefinitions";
+import Table from "~/components/structure/Table";
+import {PlayersViewModel} from "../../../util-mapping/presentation/viewModels/PlayersViewModel";
 
 interface PlayersProps {
-  sections: ParsedSave;
+  sections: Accessor<ParsedSave>;
 }
 
 export default function PlayersSection({sections}: PlayersProps) {
+  const [headers, setHeaders] = createSignal<PlayersViewModel['headers']>([]);
+  const [rows, setRows] = createSignal<PlayersViewModel['rows']>([]);
 
-  const vm = LoadPlayersSectionController.loadPlayersSection(sections);
+  createEffect(() => {
+    const vm = LoadPlayersSectionController.loadPlayersSection(sections());
+    setHeaders(vm.headers);
+    setRows(vm.rows);
+  });
 
-  return <Show when={sections}>
-    <table>
-      <thead>
-      <tr>
-        <th>Players</th>
-      </tr>
-      </thead>
-      <tbody>
-      <For each={vm.players || []}>
-        {(player) => (
-          <tr>
-            <td>{player.name}</td>
-          </tr>
-        )}</For>
-      </tbody>
-    </table>
-  </Show>;
+  return (<>
+    <h3>Players</h3>
+    <Show when={sections}>
+      <Table headers={headers} rows={rows}/>
+    </Show>
+  </>);
 }
