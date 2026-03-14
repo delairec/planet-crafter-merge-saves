@@ -2,8 +2,12 @@ import {SaveParserPort} from "../../util-mapping/application/ports/SaveParserPor
 import {GlobalProgressionValueObject} from "../../util-mapping/domain/valueObjects/GlobalProgressionValueObject";
 import {PlayerEntity} from "../../util-mapping/domain/entities/PlayerEntity";
 import {TerraformationLevelEntity} from "../../util-mapping/domain/entities/TerraformationLevelEntity";
+import { InventoryEntity } from "../../util-mapping/domain/entities/InventoryEntity";
 
 export class FakeSaveParserService implements SaveParserPort {
+  getInventories(): InventoryEntity[] {
+      throw new Error("Method not implemented.");
+  }
   getGlobalMetadata(): GlobalProgressionValueObject {
       return {allTimeTerraTokens: 1_234_567};
   }

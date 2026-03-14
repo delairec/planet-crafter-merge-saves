@@ -1,12 +1,15 @@
+.table-container {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 table {
-  width: 100%;
   border: 1px solid var(--border);
   border-collapse: separate;
   border-spacing: 0;
   background-color: var(--surface);
   border-radius: 0.5rem;
   box-shadow: 0 2px 8px var(--border);
-  overflow: hidden;
 }
 
 table th,
@@ -51,3 +54,45 @@ table th:first-child {
   border-left: none;
 }
 
+@media (max-width: 600px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  table th {
+    position: absolute;
+    left: -9999px;
+  }
+
+  table tr {
+    margin-bottom: 1rem;
+  }
+  table tr:hover {
+    background-color: inherit;
+    color: inherit;
+  }
+  table td {
+    border: none;
+    position: relative;
+    padding-left: 50%;
+  }
+  table td::before {
+    position: absolute;
+    left: 1rem;
+    top: 25%;
+    content: attr(data-label);
+    color: var(--primary);
+    font-weight: bold;
+    vertical-align: middle;
+  }
+  table td:nth-child(even) {
+     background-color: var(--elevated);
+   }
+  table td:hover {
+     background-color: var(--neon-pink);
+     color: var(--inverted);
+   }
+  table td:hover::before {
+    color: var(--inverted);
+  }
+}

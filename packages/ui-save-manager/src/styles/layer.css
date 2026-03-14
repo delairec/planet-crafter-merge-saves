@@ -21,9 +21,10 @@ body {
 }
 
 /* -----------------------------
-   Spacing
+   Containers
 ----------------------------- */
-.py-4 {
+.container {
+    max-width: calc(100vw - 2rem);
     padding-left: 1rem;
     padding-right: 1rem;
 }
