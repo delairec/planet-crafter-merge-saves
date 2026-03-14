@@ -1,6 +1,7 @@
 import {createSignal, onMount, Show} from 'solid-js';
 import PlayersSection from '../components/PlayersSection';
 import GlobalProgressionSection from "../components/GlobalProgressionSection";
+import TerraformationLevelsSection from '../components/TerraformationLevelsSection';
 import {parseSaveSections} from "../../../util-parsing/parseSaveSections";
 import {ParsedSave} from "../../../util-types/gameDefinitions";
 
@@ -45,6 +46,7 @@ export default function Home() {
         </Show>
 
         <Show when={sections()}>
+          <TerraformationLevelsSection sections={() => sections()!}/>
           <GlobalProgressionSection sections={() => sections()!}/>
           <PlayersSection sections={() => sections()!}/>
         </Show>
