@@ -8,7 +8,10 @@ describe('PlayersPresenter', () => {
     const presenter = new PlayersPresenter();
 
     // Assert
-    expect(presenter.viewModel).toEqual<PlayersViewModel>({players: []});
+    expect(presenter.viewModel).toEqual<PlayersViewModel>({
+      headers: ['name'],
+      rows: [],
+    });
   });
 
   it('should present all players', () => {
@@ -19,7 +22,19 @@ describe('PlayersPresenter', () => {
     presenter.present([{name: 'Nikowa'}, {name: 'Chileny'}]);
 
     // Assert
-    expect(presenter.viewModel).toEqual<PlayersViewModel>({players: [{name: 'Nikowa'}, {name: 'Chileny'}]});
+    expect(presenter.viewModel).toEqual<PlayersViewModel>({
+      headers: ['name'],
+      rows: [{
+        cells: [{
+          value: 'Nikowa'
+        }]
+      },
+        {
+          cells: [{
+            value: 'Chileny'
+          }]
+        }]
+    });
   });
 });
 

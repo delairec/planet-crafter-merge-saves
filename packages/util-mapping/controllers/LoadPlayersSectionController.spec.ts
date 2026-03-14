@@ -13,7 +13,14 @@ describe('LoadPlayersSectionController', () => {
     const viewModel = LoadPlayersSectionController.loadPlayersSection(sections);
 
     // Assert
-    expect(viewModel).toEqual<PlayersViewModel>({ players: [{ name: 'Nikowa' }] });
+    expect(viewModel).toEqual<PlayersViewModel>({
+      headers: ['name'],
+      rows: [{
+        cells: [{
+          value: 'Nikowa'
+        }]
+      }]
+    });
   });
 });
 

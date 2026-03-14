@@ -7,11 +7,16 @@ export class PlayersPresenter implements PlayersPresenterPort {
 
   constructor() {
     this.viewModel = {
-      players: [],
+      headers: ['name'],
+      rows: [],
     };
   }
 
   present(players: PlayerEntity[]): void {
-    this.viewModel.players = players.map(player => ({ name: player.name }));
+    this.viewModel.rows = players.map(player => ({
+      cells: [{
+          value: player.name,
+        }]
+    }));
   }
 }

@@ -44,7 +44,7 @@ export const saveConfiguration = {
 };
 export const metadata = {
   terraTokens: 100,
-  allTimeTerraTokens: 200,
+  allTimeTerraTokens: 200_345,
   unlockedGroups: 'BootsSpeed1',
   openedInstanceSeed: 0,
   openedInstanceTimeLeft: 0
