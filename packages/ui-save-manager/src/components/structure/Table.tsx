@@ -14,7 +14,7 @@ export default function Table<T extends Record<string, any>>({headers, rows}: Ta
       <tr>
         <For each={headers() || []}>
           {(header) => (
-            <th>{header} 1</th>
+            <th>{header}</th>
           )}
         </For>
       </tr>
