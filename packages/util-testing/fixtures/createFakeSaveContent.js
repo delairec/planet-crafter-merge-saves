@@ -16,11 +16,17 @@ export const player = {
 };
 export const inventory = {id: 44, woIds: '79111656,58524136', size: 20};
 export const equipment = {id: 45, woIds: '85274195,48456321', size: 10};
+export const inventory2 = {id: 46, woIds: '15974863,28491667', size: 20};
+export const equipment2 = {id: 47, woIds: '39187611,65514812', size: 10};
 export const worldObjects = [
   {id: 79111656, gId: 'Phytoplankton3'},
   {id: 58524136, gId: 'MagnetarQuartz'},
   {id: 85274195, gId: 'Backpack4'},
-  {id: 48456321, gId: 'OxygenTank5'}
+  {id: 48456321, gId: 'OxygenTank5'},
+  {id: 15974863, gId: 'Phytoplankton1'},
+  {id: 28491667, gId: 'PulsarQuartz'},
+  {id: 39187611, gId: 'Backpack7'},
+  {id: 65514812, gId: 'OxygenTank4'},
 ]
 export const saveConfiguration = {
   saveDisplayName: 'Merged Save',
@@ -76,6 +82,10 @@ export const worldObjectsGenerator = (function* () {
   yield {id: '58524136', gId: 'MagnetarQuartz'};
   yield {id: '85274195', gId: 'Backpack4'};
   yield {id: '48456321', gId: 'OxygenTank5'};
+  yield {id: '15974863', gId: 'Phytoplankton1'};
+  yield {id: '28491667', gId: 'PulsarQuartz'};
+  yield {id: '39187611', gId: 'Backpack7'};
+  yield {id: '65514812', gId: 'OxygenTank4'};
 })();
 
 export function createFakeSaveContent(overrides = {}) {
@@ -83,7 +93,7 @@ export function createFakeSaveContent(overrides = {}) {
     globalMetadata: metadata,
     terraformationLevels: [terraformationLevel],
     players: [player],
-    inventories: [inventory, equipment],
+    inventories: [inventory, equipment, inventory2, equipment2],
     worldObjects: worldObjects,
     statistics: statistics,
     saveConfiguration: saveConfiguration,

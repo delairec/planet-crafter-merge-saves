@@ -1,5 +1,4 @@
-/** @import { ParsedSave, Player, Inventory, WorldObject } from '../types.js' */
-
+/** @import { ParsedSave, Player, Inventory, WorldObject } from '../util-types/js/types.js' */
 import {parseSaveSections} from './parseSaveSections.js';
 import {stringifyEntry} from './stringifyEntry.js';
 import {serializeSave} from './serializeSave.js';
@@ -18,7 +17,7 @@ export function resolveIdConflicts(mergedSave, saveAWorldObjectIds = new Set()) 
     metadata,
     terraformationLevels,
     players,
-    worldObjectsGenerator,
+    worldObjectsFactory,
     inventories,
     statistics,
     mailboxes,
@@ -36,7 +35,7 @@ export function resolveIdConflicts(mergedSave, saveAWorldObjectIds = new Set()) 
 
   const worldObjectIdRemapping = new Map();
   const saveBLinkedInventoryIds = new Set();
-  const resolvedWorldObjectsGenerator = createResolveWorldObjectsGenerator(worldObjectsGenerator, nextIdGenerator, worldObjectIdRemapping, saveBLinkedInventoryIds);
+  const resolvedWorldObjectsGenerator = createResolveWorldObjectsGenerator(worldObjectsFactory(), nextIdGenerator, worldObjectIdRemapping, saveBLinkedInventoryIds);
   const serializedWorldObjects = serializeWorldObjectsAndBuildRemapping(resolvedWorldObjectsGenerator, oldIdToNewIds, saveBInventoryOriginalIds, saveAWorldObjectIds, worldObjectIdRemapping, bInventorySlotsTakenByPlayers);
 
   const resolvedSaveBLinkedInventoryIds = remapLinkedInventoryIds(saveBLinkedInventoryIds, oldIdToNewIds);

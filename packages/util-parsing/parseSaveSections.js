@@ -2,16 +2,17 @@
 
 /**
  * Parses a Planet Crafter save string into 11 typed sections.
- * Section 3 (WorldObjects) is a lazy Generator; all others are arrays.
+ * Section 3 (WorldObjects) is a Generator factory; all others are arrays.
  * @param {string} save
  * @returns {ParsedSave}
  */
 export function parseSaveSections(save) {
+
   const sections = save.split('@');
 
   return /** @type {ParsedSave} */ (sections.map((section, index) => {
     if (isWorldObjectsSection(index)) {
-      return createSectionEntriesGenerator(section);
+      return () => createSectionEntriesGenerator(section);
     }
 
     try {
