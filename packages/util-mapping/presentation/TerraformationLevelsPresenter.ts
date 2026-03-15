@@ -1,5 +1,6 @@
 import {TerraformationLevelsViewModel} from "./viewModels/TerraformationLevelsViewModel";
 import {TerraformationLevel} from "../../util-types/gameDefinitions";
+import {formatNumber} from "./formatters/formatNumber";
 
 export class TerraformationLevelsPresenter {
   viewModel: TerraformationLevelsViewModel = {
@@ -19,14 +20,14 @@ export class TerraformationLevelsPresenter {
   present(levels: TerraformationLevel[]): void {
     this.viewModel.rows = levels.map(level => ({
       cells: [
-        { value: String(level.planetId) },
-        { value: String(level.unitOxygenLevel) },
-        { value: String(level.unitHeatLevel) },
-        { value: String(level.unitPressureLevel) },
-        { value: String(level.unitPlantsLevel) },
-        { value: String(level.unitInsectsLevel) },
-        { value: String(level.unitAnimalsLevel) },
-        { value: String(level.unitPurificationLevel) }
+        { value: level.planetId },
+        { value: formatNumber(level.unitOxygenLevel) },
+        { value: formatNumber(level.unitHeatLevel) },
+        { value: formatNumber(level.unitPressureLevel) },
+        { value: formatNumber(level.unitPlantsLevel) },
+        { value: formatNumber(level.unitInsectsLevel) },
+        { value: formatNumber(level.unitAnimalsLevel) },
+        { value: formatNumber(level.unitPurificationLevel) }
       ]
     }));
   }
