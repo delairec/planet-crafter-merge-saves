@@ -7,7 +7,6 @@ import {SaveParserService} from './SaveParserService';
 import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
 import {TerraformationLevelEntity} from "../domain/entities/TerraformationLevelEntity";
 import {InventoryEntity} from "../domain/entities/InventoryEntity";
-import {WorldObject} from "../../util-types/gameDefinitions/WorldObject";
 import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 
 describe('SaveParserService', () => {
@@ -56,8 +55,8 @@ describe('SaveParserService', () => {
       equipment: ['Backpack4','OxygenTank5']
     }, {
       name: 'Chileny',
-      inventory: [],
-      equipment: []
+      inventory: ['Phytoplankton1', 'PulsarQuartz'],
+      equipment: ['Backpack7', 'OxygenTank4']
     }]);
   });
 
@@ -92,6 +91,8 @@ describe('SaveParserService', () => {
     expect(inventories).toEqual<InventoryEntity[]>([
       {id: 44, worldObjectIds: ['79111656', '58524136'], size: 20},
       {id: 45, worldObjectIds: ['85274195', '48456321'], size: 10},
+      {id: 46, worldObjectIds: ['15974863', '28491667'], size: 20},
+      {id: 47, worldObjectIds: ['39187611', '65514812'], size: 10},
     ]);
   });
 
@@ -103,19 +104,20 @@ describe('SaveParserService', () => {
     const worldObjects = service.getWorldObjects();
 
     // Assert
-    expect(worldObjects.next().value).toEqual<WorldObjectEntity>({
+    const worldObjectsGenerator = worldObjects(sections);
+    expect(worldObjectsGenerator.next().value).toEqual<WorldObjectEntity>({
       id: '79111656',
       label: 'Phytoplankton3'
     });
-    expect(worldObjects.next().value).toEqual<WorldObjectEntity>({
+    expect(worldObjectsGenerator.next().value).toEqual<WorldObjectEntity>({
       id: '58524136',
       label: 'MagnetarQuartz'
     });
-    expect(worldObjects.next().value).toEqual<WorldObjectEntity>({
+    expect(worldObjectsGenerator.next().value).toEqual<WorldObjectEntity>({
       id: '85274195',
       label: 'Backpack4'
     });
-    expect(worldObjects.next().value).toEqual<WorldObjectEntity>({
+    expect(worldObjectsGenerator.next().value).toEqual<WorldObjectEntity>({
       id: '48456321',
       label: 'OxygenTank5'
     });

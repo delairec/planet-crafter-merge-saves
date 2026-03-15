@@ -1,4 +1,4 @@
-/** @import { ParsedSave } from '../types.js' */
+/** @import { ParsedSave } from '../util-types/js/types.js' */
 
 import {parseSaveSections} from '../util-parsing/parseSaveSections.js';
 import {mergeGlobalMetadata} from './sections/mergeGlobalMetadata.js';
@@ -33,15 +33,15 @@ export function merge(saveA, saveB, saveDisplayName) {
 
   const [mainSave, secondarySave] = determineSaveOrder(parsedSaveA, parsedSaveB);
 
-  const [metadataA = [], terraformationLevelsA = [], playersA = [], worldObjectsGeneratorA = EMPTY_GENERATOR(), inventoriesA = [], statisticsA = [], mailboxA = [], storyEventsA = [], saveConfigurationsA = [], terrainLayersA = [], worldEventsA = []] = mainSave;
-  const [metadataB = [], terraformationLevelsB = [], playersB = [], worldObjectsGeneratorB = EMPTY_GENERATOR(), inventoriesB = [], statisticsB = [], mailboxB = [], storyEventsB = [], saveConfigurationsB = [], terrainLayersB = [], worldEventsB = []] = secondarySave;
+  const [metadataA = [], terraformationLevelsA = [], playersA = [], worldObjectsFactoryA = () => EMPTY_GENERATOR(), inventoriesA = [], statisticsA = [], mailboxA = [], storyEventsA = [], saveConfigurationsA = [], terrainLayersA = [], worldEventsA = []] = mainSave;
+  const [metadataB = [], terraformationLevelsB = [], playersB = [], worldObjectsFactoryB = () => EMPTY_GENERATOR(), inventoriesB = [], statisticsB = [], mailboxB = [], storyEventsB = [], saveConfigurationsB = [], terrainLayersB = [], worldEventsB = []] = secondarySave;
 
   const saveAWorldObjectIds = new Set();
 
   function mergeSaves() {
     const ejectedPlayerIds = collectEjectedPlayerInventoryIds(playersA, playersB, inventoriesB);
 
-    const {serialized: serializedWorldObjects, saveAWorldObjectIds: collectedIds} = mergeWorldObjects(worldObjectsGeneratorA, worldObjectsGeneratorB, ejectedPlayerIds.orphanWorldObjectIds);
+    const {serialized: serializedWorldObjects, saveAWorldObjectIds: collectedIds} = mergeWorldObjects(worldObjectsFactoryA(), worldObjectsFactoryB(), ejectedPlayerIds.orphanWorldObjectIds);
     for (const id of collectedIds) saveAWorldObjectIds.add(id);
 
     const sections = [

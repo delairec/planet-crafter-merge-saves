@@ -28,7 +28,6 @@ export class SaveParserService implements SaveParserPort {
   }
 
   getPlayers(): PlayerEntity[] {
-
     const inventories = this.getInventories();
 
     return this.sections[PLAYERS_SECTION_INDEX].map((player: Player): PlayerEntity => {
@@ -41,12 +40,8 @@ export class SaveParserService implements SaveParserPort {
 
       return {
         name: player.name,
-        inventory: playerInventoryIds.map((id)=>{
-          return worldObjects.find((worldObject) => worldObject.id === id)?.label ?? id;
-        }),
-        equipment: playerEquipmentIds.map((id)=> {
-          return worldObjects.find((worldObject) => worldObject.id === id)?.label ?? id;
-        })
+        inventory: playerInventoryIds.map((id) => worldObjects.find((wo) => wo.id === id)?.label ?? id),
+        equipment: playerEquipmentIds.map((id) => worldObjects.find((wo) => wo.id === id)?.label ?? id)
       };
     });
   }
@@ -65,34 +60,29 @@ export class SaveParserService implements SaveParserPort {
   }
 
   getInventories(): InventoryEntity[] {
-    return this.sections[INVENTORIES_SECTION_INDEX].map((inventory:Inventory): InventoryEntity => ({
-      id:inventory.id,
+    return this.sections[INVENTORIES_SECTION_INDEX].map((inventory: Inventory): InventoryEntity => ({
+      id: inventory.id,
       worldObjectIds: inventory.woIds.split(',').filter(Boolean),
       size: inventory.size
     }));
   }
 
-  getWorldObjects(): Generator<WorldObjectEntity> {
-    return (function* (sections:ParsedSave) {
-
-      for (const worldObject of sections[WORLD_OBJECTS_SECTION_INDEX]) {
+  getWorldObjects(): (sections: ParsedSave) => Generator<{ id: string; label: string }, void, unknown> {
+    return (function* (sections: ParsedSave) {
+      for (const worldObject of sections[WORLD_OBJECTS_SECTION_INDEX]()) {
         yield {
           id: String(worldObject.id),
           label: worldObject.gId
         };
       }
-
-    })(this.sections);
+    });
   }
 
-  private findWorldObjectByIds(ids:string[]): WorldObjectEntity[] {
-    let worldObjects: WorldObjectEntity[] = [];
-    for (const worldObject of this.getWorldObjects()) {
-      console.log('OHE', worldObject.id)
-      if (ids.includes(worldObject.id)) {
-        worldObjects.push(worldObject);
-      }
+  private findWorldObjectByIds(ids: string[]): WorldObjectEntity[] {
+    const result: WorldObjectEntity[] = [];
+    for (const wo of this.getWorldObjects()(this.sections)) {
+      if (ids.includes(wo.id)) result.push(wo);
     }
-    return worldObjects;
+    return result;
   }
 }

@@ -14,7 +14,7 @@ export type ParsedSave = [
   GlobalMetadata[],
   TerraformationLevel[],
   Player[],
-  Generator<WorldObject>,
+  () => Generator<WorldObject>,
   Inventory[],
   Statistics[],
   MailboxMessage[],

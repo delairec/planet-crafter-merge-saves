@@ -13,10 +13,10 @@ export function determineSaveOrder(parsedSaveA, parsedSaveB) {
   const configA = saveConfigurationsA?.[0];
   const configB = saveConfigurationsB?.[0];
 
-  const save2IsPrime = configB?.planetId === 'Prime';
   const save1IsPrime = configA?.planetId === 'Prime';
+  const save2IsPrime = configB?.planetId === 'Prime';
 
-  if (save2IsPrime && !save1IsPrime) {
+  if (!save1IsPrime && save2IsPrime) {
     return [parsedSaveB, parsedSaveA];
   }
 

@@ -134,12 +134,12 @@
  * @property {number} [version]
  */
 
-/** 11-tuple returned by parseSaveSections(). Section 3 (WorldObjects) is a Generator.
+/** 11-tuple returned by parseSaveSections(). Section 3 (WorldObjects) is a Generator factory.
  * @typedef {[
  *   GlobalMetadata[],
  *   TerraformationLevel[],
  *   Player[],
- *   Generator<WorldObject>,
+ *   () => Generator<WorldObject>,
  *   Inventory[],
  *   Statistics[],
  *   MailboxMessage[],

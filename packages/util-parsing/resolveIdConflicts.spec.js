@@ -640,9 +640,9 @@ describe('utils/resolveIdConflicts', () => {
       const result = resolveIdConflicts(mergedSave);
 
       // Assert
-      const [, , players, worldObjectsGenerator, inventories, statistics] = parseSaveSections(result);
+      const [, , players, worldObjectsFactory, inventories, statistics] = parseSaveSections(result);
       expect(players[0].name).toBe('Nikowa');
-      expect([...worldObjectsGenerator][0].id).toBe(100);
+      expect([...worldObjectsFactory()][0].id).toBe(100);
       expect(inventories[0].id).toBe(10);
       expect(statistics[0].craftedObjects).toBe(10);
     });
