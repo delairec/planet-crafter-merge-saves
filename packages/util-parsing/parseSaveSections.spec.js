@@ -86,10 +86,10 @@ describe('utils/parseSaveSections', () => {
     const save = createFakeSaveString({worldObjects: [expectedWorldObject]});
 
     // Act
-    const [, , , worldObjectsGenerator] = parseSaveSections(save);
+    const [, , , worldObjectsFactory] = parseSaveSections(save);
 
     // Assert
-    expect([...worldObjectsGenerator]).toEqual([expectedWorldObject]);
+    expect([...worldObjectsFactory()]).toEqual([expectedWorldObject]);
   });
 
   it('should parse inventories', () => {
@@ -119,10 +119,10 @@ describe('utils/parseSaveSections', () => {
     const save = createFakeSaveString({worldObjects: []});
 
     // Act
-    const [, , , worldObjectsGenerator] = parseSaveSections(save);
+    const [, , , worldObjectsFactory] = parseSaveSections(save);
 
     // Assert
-    expect([...worldObjectsGenerator]).toEqual([]);
+    expect([...worldObjectsFactory()]).toEqual([]);
   });
 });
 

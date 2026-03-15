@@ -1,0 +1,14 @@
+@import "styles/colors.css";
+@import "styles/typography.css";
+@import "styles/layer.css";
+@import "styles/effects.css";
+@import "styles/tables.css";
+
+#app {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 1.25rem;
+}
