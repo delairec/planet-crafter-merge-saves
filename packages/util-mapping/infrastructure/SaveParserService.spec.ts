@@ -1,7 +1,6 @@
 import {beforeEach, describe, expect, it} from 'bun:test';
 import {createFakeSaveContent, player} from '../../util-testing/fixtures/createFakeSaveContent';
 import {parseSaveSections} from '../../util-parsing/parseSaveSections.js';
-import {ParsedSave} from '../../util-types/gameDefinitions';
 import {PlayerEntity} from "../domain/entities/PlayerEntity";
 import {SaveParserService} from './SaveParserService';
 import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
@@ -10,10 +9,10 @@ import {InventoryEntity} from "../domain/entities/InventoryEntity";
 import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 
 describe('SaveParserService', () => {
-  let sections: ParsedSave;
+  let sections: ParsedSections;
 
   beforeEach(() => {
-    sections = parseSaveSections(createFakeSaveContent(
+    const fakeSaveContent = createFakeSaveContent(
       {
         players: [{
           ...player,
@@ -25,7 +24,9 @@ describe('SaveParserService', () => {
           equipmentId: 47
         }],
       }
-    ));
+    );
+
+    ({sections} = parseSaveSections(fakeSaveContent));
   });
 
   it('should extract global metadata', () => {

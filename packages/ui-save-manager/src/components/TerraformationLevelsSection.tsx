@@ -1,11 +1,11 @@
 import {Accessor, createEffect, createSignal, Show} from "solid-js";
 import {LoadTerraformationLevelsSectionController} from "../../../util-mapping/controllers/LoadTerraformationLevelsSectionController";
-import {ParsedSave} from "../../../util-types/gameDefinitions";
 import Table from "../components/structure/Table";
 import {TerraformationLevelsViewModel} from "../../../util-mapping/presentation/viewModels/TerraformationLevelsViewModel";
+import {ParsedSections} from "../../../util-types/js/types";
 
 interface TerraformationLevelsProps {
-  sections: Accessor<ParsedSave>;
+  sections: Accessor<ParsedSections>;
 }
 
 export default function TerraformationLevelsSection({sections}: TerraformationLevelsProps) {

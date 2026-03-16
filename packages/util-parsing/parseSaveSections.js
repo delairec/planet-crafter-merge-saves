@@ -10,21 +10,23 @@ export function parseSaveSections(save) {
 
   const sections = save.split('@');
 
-  return /** @type {ParsedSave} */ (sections.map((section, index) => {
-    if (isWorldObjectsSection(index)) {
-      return () => createSectionEntriesGenerator(section);
-    }
-
-    try {
-      if (section.includes('|')) {
-        return section.split('|\n').map(line => JSON.parse(line)).filter(Boolean);
+  return /** @type {ParsedSave} */ ({
+    sections: sections.map((section, index) => {
+      if (isWorldObjectsSection(index)) {
+        return () => createSectionEntriesGenerator(section);
       }
 
-      return [JSON.parse(section)];
-    } catch (error) {
-      return [];
-    }
-  }));
+      try {
+        if (section.includes('|')) {
+          return section.split('|\n').map(line => JSON.parse(line)).filter(Boolean);
+        }
+
+        return [JSON.parse(section)];
+      } catch (error) {
+        return [];
+      }
+    })
+  });
 }
 
 function isWorldObjectsSection(index) {

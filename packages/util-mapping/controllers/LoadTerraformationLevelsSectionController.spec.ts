@@ -7,7 +7,7 @@ import {TerraformationLevelsViewModel} from '../presentation/viewModels/Terrafor
 describe('LoadTerraformationLevelsSectionController', () => {
   it('should present terraformation levels from parsed save', () => {
     // Arrange
-    const sections = parseSaveSections(createFakeSaveContent());
+    const {sections} = parseSaveSections(createFakeSaveContent());
 
     // Act
     const viewModel = LoadTerraformationLevelsSectionController.loadTerraformationLevelsSection(sections);

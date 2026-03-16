@@ -3,11 +3,10 @@ import PlayersSection from '../components/PlayersSection';
 import GlobalProgressionSection from "../components/GlobalProgressionSection";
 import TerraformationLevelsSection from '../components/TerraformationLevelsSection';
 import {parseSaveSections} from "../../../util-parsing/parseSaveSections";
-import {ParsedSave} from "../../../util-types/gameDefinitions";
 
 export default function Home() {
   const [file, setFile] = createSignal<File | null>(null);
-  const [sections, setSections] = createSignal<ParsedSave | null>(null);
+  const [sections, setSections] = createSignal<ParsedSections | null>(null);
   const [isReady, setIsReady] = createSignal<boolean>(false);
 
   onMount(() => {
@@ -26,7 +25,7 @@ export default function Home() {
     if (fileInput) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        const sections = parseSaveSections(event.target?.result as string);
+        const {sections} = parseSaveSections(event.target?.result as string);
         setSections(sections);
       };
       reader.readAsText(fileInput);

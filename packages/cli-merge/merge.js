@@ -31,7 +31,7 @@ export function merge(saveA, saveB, saveDisplayName) {
   const parsedSaveA = parseSaveSections(saveA);
   const parsedSaveB = parseSaveSections(saveB);
 
-  const [mainSave, secondarySave] = determineSaveOrder(parsedSaveA, parsedSaveB);
+  const [mainSave, secondarySave] = determineSaveOrder(parsedSaveA.sections, parsedSaveB.sections);
 
   const [metadataA = [], terraformationLevelsA = [], playersA = [], worldObjectsFactoryA = () => EMPTY_GENERATOR(), inventoriesA = [], statisticsA = [], mailboxA = [], storyEventsA = [], saveConfigurationsA = [], terrainLayersA = [], worldEventsA = []] = mainSave;
   const [metadataB = [], terraformationLevelsB = [], playersB = [], worldObjectsFactoryB = () => EMPTY_GENERATOR(), inventoriesB = [], statisticsB = [], mailboxB = [], storyEventsB = [], saveConfigurationsB = [], terrainLayersB = [], worldEventsB = []] = secondarySave;
@@ -64,8 +64,8 @@ export function merge(saveA, saveB, saveDisplayName) {
   return {
     mergeSaves,
     saveAWorldObjectIds,
-    indexFileA: mainSave === parsedSaveA ? 0 : 1,
-    indexFileB: secondarySave === parsedSaveB ? 1 : 0
+    indexFileA: mainSave === parsedSaveA.sections ? 0 : 1,
+    indexFileB: secondarySave === parsedSaveB.sections ? 1 : 0
   };
 }
 

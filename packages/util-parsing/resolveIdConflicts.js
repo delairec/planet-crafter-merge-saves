@@ -13,6 +13,8 @@ import {serializeSave} from './serializeSave.js';
  * @see GR-ID-1, GR-ID-2, GR-ID-3, GR-ID-4 in docs/game-rules.md
  */
 export function resolveIdConflicts(mergedSave, saveAWorldObjectIds = new Set()) {
+  const {sections} = parseSaveSections(mergedSave);
+
   const [
     metadata,
     terraformationLevels,
@@ -25,7 +27,7 @@ export function resolveIdConflicts(mergedSave, saveAWorldObjectIds = new Set()) 
     saveConfigurations,
     terrainLayers,
     worldEvents,
-  ] = parseSaveSections(mergedSave);
+  ] = sections;
 
   const nextIdGenerator = createIdSequence(inventories);
 

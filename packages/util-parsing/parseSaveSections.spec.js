@@ -42,7 +42,7 @@ describe('utils/parseSaveSections', () => {
     const save = createFakeSaveString({});
 
     // Act
-    const sections = parseSaveSections(save);
+    const {sections} = parseSaveSections(save);
 
     // Assert
     expect(sections.length).toBe(12);
@@ -53,9 +53,10 @@ describe('utils/parseSaveSections', () => {
     const save = createFakeSaveString({globalMetadata: expectedGlobalMetadata});
 
     // Act
-    const [metadata] = parseSaveSections(save);
+    const {sections} = parseSaveSections(save);
 
     // Assert
+    const [metadata] = sections;
     expect(metadata).toEqual([expectedGlobalMetadata]);
   });
 
@@ -64,9 +65,10 @@ describe('utils/parseSaveSections', () => {
     const save = createFakeSaveString({terraformationLevels: [expectedTerraformationLevel]});
 
     // Act
-    const [, terraformationLevels] = parseSaveSections(save);
+    const {sections} = parseSaveSections(save);
 
     // Assert
+    const [, terraformationLevels] = sections;
     expect(terraformationLevels).toEqual([expectedTerraformationLevel]);
   });
 
@@ -75,9 +77,10 @@ describe('utils/parseSaveSections', () => {
     const save = createFakeSaveString({players: [expectedPlayer]});
 
     // Act
-    const [, , players] = parseSaveSections(save);
+    const {sections} = parseSaveSections(save);
 
     // Assert
+    const [, , players] = sections;
     expect(players).toEqual([expectedPlayer]);
   });
 
@@ -86,9 +89,10 @@ describe('utils/parseSaveSections', () => {
     const save = createFakeSaveString({worldObjects: [expectedWorldObject]});
 
     // Act
-    const [, , , worldObjectsFactory] = parseSaveSections(save);
+    const {sections} = parseSaveSections(save);
 
     // Assert
+    const [, , , worldObjectsFactory] = sections;
     expect([...worldObjectsFactory()]).toEqual([expectedWorldObject]);
   });
 
@@ -97,9 +101,10 @@ describe('utils/parseSaveSections', () => {
     const save = createFakeSaveString({inventories: [expectedInventory]});
 
     // Act
-    const [, , , , inventories] = parseSaveSections(save);
+    const {sections} = parseSaveSections(save);
 
     // Assert
+    const [, , , , inventories] = sections;
     expect(inventories).toEqual([expectedInventory]);
   });
 
@@ -108,9 +113,10 @@ describe('utils/parseSaveSections', () => {
     const save = createFakeSaveString({inventories: []});
 
     // Act
-    const [, , , , inventories] = parseSaveSections(save);
+    const {sections} = parseSaveSections(save);
 
     // Assert
+    const [, , , , inventories] = sections;
     expect(inventories).toEqual([]);
   });
 
@@ -119,9 +125,10 @@ describe('utils/parseSaveSections', () => {
     const save = createFakeSaveString({worldObjects: []});
 
     // Act
-    const [, , , worldObjectsFactory] = parseSaveSections(save);
+    const {sections} = parseSaveSections(save);
 
     // Assert
+    const [, , , worldObjectsFactory] = sections;
     expect([...worldObjectsFactory()]).toEqual([]);
   });
 });

@@ -1,11 +1,10 @@
 import {Accessor, createEffect, createSignal, Show} from "solid-js";
 import {LoadPlayersSectionController} from "../../../util-mapping/controllers/LoadPlayersSectionController";
-import {ParsedSave} from "../../../util-types/gameDefinitions";
 import Table from "~/components/structure/Table";
 import {PlayersViewModel} from "../../../util-mapping/presentation/viewModels/PlayersViewModel";
 
 interface PlayersProps {
-  sections: Accessor<ParsedSave>;
+  sections: Accessor<ParsedSections>;
 }
 
 export default function PlayersSection({sections}: PlayersProps) {

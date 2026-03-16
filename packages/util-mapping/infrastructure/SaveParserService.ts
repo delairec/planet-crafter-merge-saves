@@ -1,7 +1,6 @@
 import {
   GLOBAL_METADATA_SECTION_INDEX,
   INVENTORIES_SECTION_INDEX,
-  ParsedSave,
   Player,
   PLAYERS_SECTION_INDEX,
   TERRAFORMATION_LEVELS_SECTION_INDEX,
@@ -15,9 +14,10 @@ import {TerraformationLevelEntity} from '../domain/entities/TerraformationLevelE
 import {InventoryEntity} from "../domain/entities/InventoryEntity";
 import {Inventory} from "../../util-types/gameDefinitions/Inventory";
 import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
+import {ParsedSections} from "../../util-types/js/types";
 
 export class SaveParserService implements SaveParserPort {
-  constructor(private readonly sections: ParsedSave) {
+  constructor(private readonly sections: ParsedSections) {
   }
 
   getGlobalMetadata(): GlobalProgressionValueObject {
@@ -67,8 +67,8 @@ export class SaveParserService implements SaveParserPort {
     }));
   }
 
-  getWorldObjects(): (sections: ParsedSave) => Generator<{ id: string; label: string }, void, unknown> {
-    return (function* (sections: ParsedSave) {
+  getWorldObjects(): (sections: ParsedSections) => Generator<{ id: string; label: string }, void, unknown> {
+    return (function* (sections: ParsedSections) {
       for (const worldObject of sections[WORLD_OBJECTS_SECTION_INDEX]()) {
         yield {
           id: String(worldObject.id),

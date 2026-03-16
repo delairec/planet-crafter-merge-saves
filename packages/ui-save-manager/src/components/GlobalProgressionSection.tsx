@@ -1,11 +1,10 @@
 import {Accessor, createEffect, createSignal} from "solid-js";
 import {LoadGlobalProgressionSectionController} from "../../../util-mapping/controllers/LoadGlobalProgressionSectionController";
-import {ParsedSave} from "../../../util-types/gameDefinitions";
 import Table from "../components/structure/Table";
 import {GlobalProgressionViewModel} from "../../../util-mapping/presentation/viewModels/GlobalProgressionViewModel";
 
 interface GlobalProgressionProps {
-  sections: Accessor<ParsedSave>;
+  sections: Accessor<ParsedSections>;
 }
 
 export default function GlobalProgressionSection({sections}: GlobalProgressionProps) {

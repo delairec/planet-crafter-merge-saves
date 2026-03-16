@@ -7,7 +7,7 @@ import {PlayersViewModel} from '../presentation/viewModels/PlayersViewModel';
 describe('LoadPlayersSectionController', () => {
   it('should present players from parsed save', () => {
     // Arrange
-    const sections = parseSaveSections(createFakeSaveContent());
+    const {sections} = parseSaveSections(createFakeSaveContent());
 
     // Act
     const viewModel = LoadPlayersSectionController.loadPlayersSection(sections);

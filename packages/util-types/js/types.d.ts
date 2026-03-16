@@ -119,7 +119,7 @@ declare global {
     version?: number;
   }
 
-  type ParsedSave = [
+  type ParsedSections = [
     GlobalMetadata[],
     TerraformationLevel[],
     Player[],
@@ -133,6 +133,10 @@ declare global {
     WorldEvent[],
     never[]
   ];
+
+  type ParsedSave = {
+    sections: ParsedSections;
+  };
 }
 
 export interface GlobalMetadata {
@@ -240,7 +244,7 @@ export interface WorldEvent {
   version?: number;
 }
 
-export type ParsedSave = [
+export type ParsedSections = [
   GlobalMetadata[],
   TerraformationLevel[],
   Player[],
@@ -254,3 +258,7 @@ export type ParsedSave = [
   WorldEvent[],
   never[]
 ];
+
+export type ParsedSave = {
+  sections: ParsedSections;
+};

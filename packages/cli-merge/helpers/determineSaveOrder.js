@@ -1,9 +1,9 @@
 /** @import { ParsedSave } from '../../util-types/js/types.js' */
 
 /**
- * @param {ParsedSave} parsedSaveA
- * @param {ParsedSave} parsedSaveB
- * @returns {[ParsedSave, ParsedSave]}
+ * @param {ParsedSections} parsedSaveA
+ * @param {ParsedSections} parsedSaveB
+ * @returns {[ParsedSections, ParsedSections]}
  * @see GR-ORDER-1 in docs/business-rules.md
  */
 export function determineSaveOrder(parsedSaveA, parsedSaveB) {
