@@ -54,9 +54,11 @@ table th:first-child {
   border-left: none;
 }
 
-@media (max-width: 600px) {
+
+@media (max-width: 1024px) {
   table, thead, tbody, th, td, tr {
     display: block;
+    border: 0;
   }
 
   table th {
@@ -64,8 +66,10 @@ table th:first-child {
     left: -9999px;
   }
 
-  table tr {
+  table tbody tr {
     margin-bottom: 1rem;
+    border: 4px solid var(--neon-pink);
+    border-radius: 0.5rem;
   }
   table tr:hover {
     background-color: inherit;
@@ -75,11 +79,12 @@ table th:first-child {
     border: none;
     position: relative;
     padding-left: 50%;
+    min-height: 4rem;
   }
   table td::before {
     position: absolute;
     left: 1rem;
-    top: 25%;
+    top: 1rem;
     content: attr(data-label);
     color: var(--primary);
     font-weight: bold;
@@ -89,7 +94,7 @@ table th:first-child {
      background-color: var(--elevated);
    }
   table td:hover {
-     background-color: var(--neon-pink);
+     background-color: var(--neon-purple);
      color: var(--inverted);
    }
   table td:hover::before {
