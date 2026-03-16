@@ -10,7 +10,10 @@ export function parseSaveSections(save) {
 
   const sections = save.split('@');
 
+  const errors = verify(sections);
+
   return /** @type {ParsedSave} */ ({
+    errors,
     sections: sections.map((section, index) => {
       if (isWorldObjectsSection(index)) {
         return () => createSectionEntriesGenerator(section);
@@ -27,6 +30,16 @@ export function parseSaveSections(save) {
       }
     })
   });
+}
+
+function verify(sections){
+  const errors = [];
+
+  if (sections.length < 12) {
+    errors.push(`INVALID: Expected 12 sections but found ${sections.length}`);
+  }
+
+  return errors;
 }
 
 function isWorldObjectsSection(index) {
