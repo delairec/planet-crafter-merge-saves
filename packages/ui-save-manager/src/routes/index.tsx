@@ -24,6 +24,12 @@ export default function Home() {
   const handleSubmit = () => {
     const fileInput = file();
     if (fileInput) {
+
+      if (!fileInput.name.endsWith('.json')) {
+        setErrors(['INVALID: not a .json file']);
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (event) => {
         const {sections, errors} = parseSaveSections(event.target?.result as string);
@@ -38,7 +44,7 @@ export default function Home() {
     <Show when={isReady()} fallback={<p class="text-color-muted">Loading...</p>}>
       <main>
         <h2>File selection</h2>
-        <input type="file" onChange={handleFileChange}/>
+        <input type="file" accept="application/json" onChange={handleFileChange}/>
         <button onClick={handleSubmit} disabled={!file()}>Submit</button>
 
         <h2>Visualization</h2>
