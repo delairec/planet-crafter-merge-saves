@@ -9,7 +9,7 @@ const Layout: Component<RouteSectionProps> = (props) => {
       <header class="mb-4">
         <h1 class="text-center drop-shadow-engraved">Planet Crafter Save Manager</h1>
       </header>
-      <div class="container surface rounded-lg shadow-neon-cyan">
+      <div class="container surface rounded-lg">
         {props.children}
       </div>
       <footer class="text-center">

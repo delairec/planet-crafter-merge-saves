@@ -62,8 +62,8 @@ export default function Home() {
         </Show>
 
         <Show when={sections() && !errors().length}>
-          <TerraformationLevelsSection sections={() => sections()!}/>
           <GlobalProgressionSection sections={() => sections()!}/>
+          <TerraformationLevelsSection sections={() => sections()!}/>
           <PlayersSection sections={() => sections()!}/>
         </Show>
       </main>

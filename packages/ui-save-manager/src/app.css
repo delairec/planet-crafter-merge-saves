@@ -1,6 +1,7 @@
+@import "styles/breakpoints.css";
 @import "styles/colors.css";
 @import "styles/typography.css";
-@import "styles/layer.css";
+@import "styles/layout.css";
 @import "styles/effects.css";
 @import "styles/tables.css";
 
