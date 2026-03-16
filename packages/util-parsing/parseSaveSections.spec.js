@@ -131,5 +131,20 @@ describe('utils/parseSaveSections', () => {
     const [, , , worldObjectsFactory] = sections;
     expect([...worldObjectsFactory()]).toEqual([]);
   });
+
+  describe('When save file is invalid', () => {
+    it('should fill the errors list', () => {
+      // Arrange
+      const save = 'This is not @ valid save string';
+
+      // Act
+      const {errors} = parseSaveSections(save);
+
+      // Assert
+      expect(errors).toEqual([
+        'INVALID: Expected 12 sections but found 2',
+      ]);
+    });
+  });
 });
 

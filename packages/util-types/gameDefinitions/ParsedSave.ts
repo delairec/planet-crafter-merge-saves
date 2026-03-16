@@ -27,4 +27,5 @@ type ParsedSections = [
 
 export type ParsedSave = {
   sections: ParsedSections;
+  errors: string[];
 };

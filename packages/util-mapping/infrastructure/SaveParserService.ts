@@ -17,11 +17,30 @@ import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {ParsedSections} from "../../util-types/js/types";
 
 export class SaveParserService implements SaveParserPort {
+
+  private readonly globalMetadata: GlobalMetadata[];
+  private readonly terraformationLevels: TerraformationLevel[];
+  private readonly players: Player[];
+  private readonly worldObjectsFactory: () => Generator<WorldObject>;
+  private readonly inventories: Inventory[];
+
   constructor(private readonly sections: ParsedSections) {
+    this.globalMetadata = sections[GLOBAL_METADATA_SECTION_INDEX] ?? [];
+    this.terraformationLevels = sections[TERRAFORMATION_LEVELS_SECTION_INDEX] ?? [];
+    this.players = sections[PLAYERS_SECTION_INDEX] ?? [];
+    this.worldObjectsFactory = sections[WORLD_OBJECTS_SECTION_INDEX] ?? [];
+    this.inventories = sections[INVENTORIES_SECTION_INDEX] ?? [];
   }
 
   getGlobalMetadata(): GlobalProgressionValueObject {
-    const metadata = this.sections[GLOBAL_METADATA_SECTION_INDEX][0];
+    const metadata = this.globalMetadata[0];
+
+    if(!metadata){
+      return {
+        allTimeTerraTokens: 0
+      }
+    }
+
     return {
       allTimeTerraTokens: metadata.allTimeTerraTokens
     }
@@ -30,7 +49,7 @@ export class SaveParserService implements SaveParserPort {
   getPlayers(): PlayerEntity[] {
     const inventories = this.getInventories();
 
-    return this.sections[PLAYERS_SECTION_INDEX].map((player: Player): PlayerEntity => {
+    return this.players.map((player: Player): PlayerEntity => {
       const playerInventory = inventories.find(inventory => inventory.id === player.inventoryId);
       const playerEquipment = inventories.find(inventory => inventory.id === player.equipmentId);
 
@@ -47,7 +66,7 @@ export class SaveParserService implements SaveParserPort {
   }
 
   getTerraformationLevels(): TerraformationLevelEntity[] {
-    return this.sections[TERRAFORMATION_LEVELS_SECTION_INDEX].map((level: TerraformationLevel): TerraformationLevelEntity => ({
+    return this.terraformationLevels.map((level: TerraformationLevel): TerraformationLevelEntity => ({
       planetId: level.planetId,
       unitOxygenLevel: level.unitOxygenLevel,
       unitHeatLevel: level.unitHeatLevel,
@@ -60,7 +79,7 @@ export class SaveParserService implements SaveParserPort {
   }
 
   getInventories(): InventoryEntity[] {
-    return this.sections[INVENTORIES_SECTION_INDEX].map((inventory: Inventory): InventoryEntity => ({
+    return this.inventories.map((inventory: Inventory): InventoryEntity => ({
       id: inventory.id,
       worldObjectIds: inventory.woIds.split(',').filter(Boolean),
       size: inventory.size
@@ -68,8 +87,11 @@ export class SaveParserService implements SaveParserPort {
   }
 
   getWorldObjects(): (sections: ParsedSections) => Generator<{ id: string; label: string }, void, unknown> {
-    return (function* (sections: ParsedSections) {
-      for (const worldObject of sections[WORLD_OBJECTS_SECTION_INDEX]()) {
+
+    const worldObjectsFactory = this.worldObjectsFactory;
+
+    return (function* () {
+      for (const worldObject of worldObjectsFactory()) {
         yield {
           id: String(worldObject.id),
           label: worldObject.gId

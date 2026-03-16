@@ -42,6 +42,24 @@ describe('SaveParserService', () => {
     });
   });
 
+  describe('When global metadata are missing', () => {
+    it('should use fallback values', () => {
+      // Arrange
+      const sectionsWithoutGlobalMetadata = [...sections];
+      sectionsWithoutGlobalMetadata[0] = [];
+      // @ts-ignore invalid section on purpose
+      const service = new SaveParserService(sectionsWithoutGlobalMetadata);
+
+      // Act
+      const metadata = service.getGlobalMetadata();
+
+      // Assert
+      expect(metadata).toEqual<GlobalProgressionValueObject>({
+        allTimeTerraTokens: 0
+      });
+    });
+  });
+
   it('should extract players section', () => {
     // Arrange
     const service = new SaveParserService(sections);

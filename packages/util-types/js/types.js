@@ -153,7 +153,8 @@
 
 /** 11-tuple returned by parseSaveSections(). Section 3 (WorldObjects) is a Generator factory.
  * @typedef {{
- *   sections: ParsedSections
+ *   sections: ParsedSections,
+ *   errors: string[]
  * }} ParsedSave
  */
 
