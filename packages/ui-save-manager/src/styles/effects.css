@@ -4,3 +4,8 @@
 .shadow-neon-cyan {
     box-shadow: 0 0 8px var(--neon-cyan), 0 0 16px var(--neon-cyan);
 }
+
+::selection {
+    background-color: var(--primary);
+    color: var(--inverted);
+}

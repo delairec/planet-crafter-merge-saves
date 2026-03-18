@@ -1,4 +1,11 @@
 import {TableViewModel} from "./TableViewModel";
-import {TerraformationLevelEntity} from "../../domain/entities/TerraformationLevelEntity";
 
-export interface TerraformationLevelsViewModel extends TableViewModel<TerraformationLevelEntity> {}
+export interface TerraformationLevelsViewModel {
+  planets: PlanetLevelsViewModel[]
+}
+
+interface PlanetLevelsViewModel {
+  name: string,
+  environmentalLevels: TableViewModel,
+  organicLevels: TableViewModel
+}

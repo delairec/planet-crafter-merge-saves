@@ -10,39 +10,48 @@ describe('PlayersPresenter', () => {
 
     // Assert
     expect(presenter.viewModel).toEqual<PlayersViewModel>({
-      headers: ['name', 'equipment', 'inventory'],
-      rows: [],
+      players: []
     });
   });
 
   it('should present all players', () => {
     // Arrange
     const presenter = new PlayersPresenter();
-    const playerNikowa: PlayerEntity = {name: 'Nikowa', inventory: ['85274195','48456321'], equipment: ['79111656','58524136']};
+    const playerNikowa: PlayerEntity = {name: 'Nikowa', inventory: ['Phytoplankton3','MagnetarQuartz'], equipment: ['Backpack4', 'OxygenTank5']};
     const playerChileny: PlayerEntity = {name: 'Chileny', inventory: [], equipment: []};
 
     // Act
     presenter.present([playerNikowa, playerChileny]);
 
     // Assert
-    expect(presenter.viewModel.rows).toEqual<PlayersViewModel['rows']>([{
-      cells: [{
-        value: 'Nikowa'
-      }, {
-        value: '79111656, 58524136'
-      }, {
-        value: '85274195, 48456321'
-      }]
-    },
-      {
-        cells: [{
-          value: 'Chileny'
+    expect(presenter.viewModel).toEqual<PlayersViewModel>({
+      players: [
+        {
+          name: 'Nikowa',
+          columns: [
+            {
+              header: 'Equipment',
+              values: ['Backpack4', 'OxygenTank5']
+            },
+            {
+              header: 'Inventory',
+              values: ['Phytoplankton3', 'MagnetarQuartz']
+            }
+          ]
         }, {
-          value: ''
-        }, {
-          value: ''
+          name: 'Chileny',
+          columns: [
+            {
+              header: 'Equipment',
+              values: []
+            },
+            {
+              header: 'Inventory',
+              values: []
+            }
+          ]
         }]
-      }]);
+    });
   });
 });
 

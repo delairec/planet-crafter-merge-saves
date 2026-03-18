@@ -8,17 +8,17 @@ interface GlobalProgressionProps {
 }
 
 export default function GlobalProgressionSection({sections}: GlobalProgressionProps) {
-  const [headers, setHeaders] = createSignal<GlobalProgressionViewModel['headers']>([]);
-  const [rows, setRows] = createSignal<GlobalProgressionViewModel['rows']>([]);
+  const [tokenColumns, setTokenColumns] = createSignal<GlobalProgressionViewModel['tokens']['columns']>([]);
+  const [title, setTitle] = createSignal<string|null>(null);
 
   createEffect(() => {
-    const vm = LoadGlobalProgressionSectionController.loadGlobalProgressionSection(sections());
-    setHeaders(vm.headers);
-    setRows(vm.rows);
+    const {tokens} = LoadGlobalProgressionSectionController.loadGlobalProgressionSection(sections());
+    setTokenColumns(tokens.columns);
+    setTitle(title);
   });
 
   return (<>
     <h3>Global progression</h3>
-    <Table headers={headers} rows={rows} />
+    <Table columns={tokenColumns} />
   </>);
 }

@@ -8,17 +8,20 @@ export class GlobalProgressionPresenter implements GlobalProgressionPresenterPor
 
   constructor() {
     this.viewModel = {
-      headers: ['allTimeTerraTokens'],
-      rows: []
+      tokens: {
+        columns: [
+          {
+            header: 'All time Terra Tokens',
+            values: []
+          }
+        ]
+      },
     }
   }
 
   present(globalProgression: GlobalProgressionValueObject): void {
     const allTimeTerraTokens = formatNumber(globalProgression.allTimeTerraTokens);
-    this.viewModel.rows = [{
-        cells: [{
-          value: `${allTimeTerraTokens} =tt=`
-        }]
-      }];
+    const [allTimeTerraTokensColumn] = this.viewModel.tokens.columns;
+    allTimeTerraTokensColumn.values = [`${allTimeTerraTokens} =tt=`];
   }
 }

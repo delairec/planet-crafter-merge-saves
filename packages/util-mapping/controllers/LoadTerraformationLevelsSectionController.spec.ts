@@ -14,30 +14,47 @@ describe('LoadTerraformationLevelsSectionController', () => {
 
     // Assert
     expect(viewModel).toEqual<TerraformationLevelsViewModel>({
-      headers: [
-        "planetId",
-        "unitOxygenLevel",
-        "unitHeatLevel",
-        "unitPressureLevel",
-        "unitPlantsLevel",
-        "unitInsectsLevel",
-        "unitAnimalsLevel",
-        "unitPurificationLevel"
-      ],
-      rows: [
+      planets: [
         {
-          cells: [
-            { value: "Toxicity" },
-            { value: "100" },
-            { value: "200" },
-            { value: "300" },
-            { value: "400" },
-            { value: "500" },
-            { value: "600" },
-            { value: "700" }
-          ]
+          name: 'Toxicity',
+          environmentalLevels: {
+            columns: [
+              {
+                header: 'O²',
+                values: ['100']
+              },
+              {
+                header: 'Heat',
+                values: ['200']
+              },
+              {
+                header: 'Pressure',
+                values: ['300']
+              },
+              {
+                header: 'Purification',
+                values: ['700']
+              }
+            ]
+          },
+          organicLevels: {
+            columns: [
+              {
+                header: 'Plants',
+                values: ['400']
+              },
+              {
+                header: 'Insects',
+                values: ['500']
+              },
+              {
+                header: 'Animals',
+                values: ['600']
+              },
+            ]
+          }
         }
-      ]
+      ],
     });
   });
 });

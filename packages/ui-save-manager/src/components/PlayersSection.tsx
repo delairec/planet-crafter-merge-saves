@@ -1,4 +1,4 @@
-import {Accessor, createEffect, createSignal, Show} from "solid-js";
+import {Accessor, createEffect, createSignal, For, Show} from "solid-js";
 import {LoadPlayersSectionController} from "../../../util-mapping/controllers/LoadPlayersSectionController";
 import Table from "~/components/structure/Table";
 import {PlayersViewModel} from "../../../util-mapping/presentation/viewModels/PlayersViewModel";
@@ -8,19 +8,24 @@ interface PlayersProps {
 }
 
 export default function PlayersSection({sections}: PlayersProps) {
-  const [headers, setHeaders] = createSignal<PlayersViewModel['headers']>([]);
-  const [rows, setRows] = createSignal<PlayersViewModel['rows']>([]);
+  const [players, setPlayers] = createSignal<PlayersViewModel['players']>([]);
 
   createEffect(() => {
     const vm = LoadPlayersSectionController.loadPlayersSection(sections());
-    setHeaders(vm.headers);
-    setRows(vm.rows);
+    setPlayers(vm.players);
   });
 
   return (<>
     <h3>Players</h3>
     <Show when={sections}>
-      <Table headers={headers} rows={rows}/>
+      <For each={players()}>
+        {(player)=> (
+          <>
+            <h4>{player.name}</h4>
+            <Table columns={() => player.columns}/>
+          </>
+        )}
+      </For>
     </Show>
   </>);
 }

@@ -1,0 +1,31 @@
+
+
+button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 0;
+    opacity: 0.9;
+    border-radius: 0.25rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: var(--primary);
+    color: var(--inverted);
+}
+
+button:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--neon-pink), 0 0 0 4px var(--neon-pink);
+}

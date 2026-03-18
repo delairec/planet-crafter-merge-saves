@@ -7,20 +7,23 @@ export class PlayersPresenter implements PlayersPresenterPort {
 
   constructor() {
     this.viewModel = {
-      headers: ['name', 'equipment', 'inventory'],
-      rows: [],
+      players: []
     };
   }
 
   present(players: PlayerEntity[]): void {
-    this.viewModel.rows = players.map(player => ({
-      cells: [{
-        value: player.name,
-      }, {
-        value: player.equipment.join(', '),
-      }, {
-        value: player.inventory.join(', '),
-      }]
+    this.viewModel.players = players.map(player => ({
+      name: player.name,
+      columns: [
+        {
+          header: 'Equipment',
+          values: player.equipment
+        },
+        {
+          header: 'Inventory',
+          values: player.inventory
+        }
+      ]
     }));
   }
 }

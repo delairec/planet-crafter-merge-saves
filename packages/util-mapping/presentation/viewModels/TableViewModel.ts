@@ -1,13 +1,8 @@
-export interface TableViewModel<T> {
-  headers: Extract<keyof T, string>[];
-  rows: Row[]
+export interface TableViewModel {
+  columns: ColumnViewModel[];
 }
 
-interface Row {
-  cells: Cell[]
+interface ColumnViewModel {
+  header: string;
+  values: string[];
 }
-
-interface Cell {
-  value: string;
-}
-
