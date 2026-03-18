@@ -1,4 +1,4 @@
-import {Accessor, createEffect, createSignal, Show} from "solid-js";
+import {Accessor, createEffect, createSignal, For, Show} from "solid-js";
 import {LoadTerraformationLevelsSectionController} from "../../../util-mapping/controllers/LoadTerraformationLevelsSectionController";
 import Table from "../components/structure/Table";
 import {TerraformationLevelsViewModel} from "../../../util-mapping/presentation/viewModels/TerraformationLevelsViewModel";
@@ -9,19 +9,27 @@ interface TerraformationLevelsProps {
 }
 
 export default function TerraformationLevelsSection({sections}: TerraformationLevelsProps) {
-  const [headers, setHeaders] = createSignal<TerraformationLevelsViewModel['headers']>([]);
-  const [rows, setRows] = createSignal<TerraformationLevelsViewModel['rows']>([]);
+  const [planets, setPlanets] = createSignal<TerraformationLevelsViewModel['planets']>([]);
 
   createEffect(() => {
-    const vm = LoadTerraformationLevelsSectionController.loadTerraformationLevelsSection(sections());
-    setHeaders(vm.headers);
-    setRows(vm.rows);
+    const {planets} = LoadTerraformationLevelsSectionController.loadTerraformationLevelsSection(sections());
+    setPlanets(planets);
   });
 
   return (<>
     <h3>Terraformation Levels</h3>
     <Show when={sections}>
-      <Table headers={headers} rows={rows}/>
+      <For each={planets()}>
+        {(planet) => (
+          <>
+            <h4>{planet.name}</h4>
+            <div class="flex">
+              <Table columns={() => planet.environmentalLevels.columns}/>
+              <Table columns={() => planet.organicLevels.columns}/>
+            </div>
+          </>
+        )}
+      </For>
     </Show>
   </>);
 }

@@ -13,15 +13,23 @@ describe('LoadPlayersSectionController', () => {
     const viewModel = LoadPlayersSectionController.loadPlayersSection(sections);
 
     // Assert
-    expect(viewModel.rows).toEqual<PlayersViewModel['rows']>([{
-      cells: [{
-        value: 'Nikowa'
-      },{
-        value: 'Backpack4, OxygenTank5'
-      },{
-        value: 'Phytoplankton3, MagnetarQuartz'
-      }]
-    }]);
+    expect(viewModel).toEqual<PlayersViewModel>({
+      players: [
+        {
+          name: 'Nikowa',
+          columns: [
+            {
+              header: 'Equipment',
+              values: ['Backpack4', 'OxygenTank5']
+            },
+            {
+              header: 'Inventory',
+              values: ['Phytoplankton3', 'MagnetarQuartz']
+            }
+          ]
+        }
+      ]
+    });
   });
 });
 

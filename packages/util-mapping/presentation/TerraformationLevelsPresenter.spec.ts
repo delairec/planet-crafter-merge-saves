@@ -9,17 +9,47 @@ describe('TerraformationLevelsPresenter', () => {
 
     // Assert
     expect(presenter.viewModel).toEqual<TerraformationLevelsViewModel>({
-      headers: [
-        "planetId",
-        "unitOxygenLevel",
-        "unitHeatLevel",
-        "unitPressureLevel",
-        "unitPlantsLevel",
-        "unitInsectsLevel",
-        "unitAnimalsLevel",
-        "unitPurificationLevel"
+      planets: [
+        {
+          name: 'Planet',
+          environmentalLevels: {
+            columns: [
+              {
+                header: 'O²',
+                values: []
+              },
+              {
+                header: 'Heat',
+                values: []
+              },
+              {
+                header: 'Pressure',
+                values: []
+              },
+              {
+                header: 'Purification',
+                values: []
+              }
+            ]
+          },
+          organicLevels: {
+            columns: [
+              {
+                header: 'Plants',
+                values: []
+              },
+              {
+                header: 'Insects',
+                values: []
+              },
+              {
+                header: 'Animals',
+                values: []
+              },
+            ]
+          }
+        }
       ],
-      rows: []
     });
   });
 
@@ -31,42 +61,59 @@ describe('TerraformationLevelsPresenter', () => {
     presenter.present([
       {
         planetId: "Earth",
-        unitOxygenLevel: 123,
-        unitHeatLevel: 456,
-        unitPressureLevel: 789,
-        unitPlantsLevel: 101,
-        unitInsectsLevel: 112,
-        unitAnimalsLevel: 131,
-        unitPurificationLevel: 415
+        unitOxygenLevel: 123123,
+        unitHeatLevel: 456456,
+        unitPressureLevel: 789789,
+        unitPlantsLevel: 101101,
+        unitInsectsLevel: 112112,
+        unitAnimalsLevel: 131131,
+        unitPurificationLevel: 415415,
       }
     ]);
 
     // Assert
     expect(presenter.viewModel).toEqual<TerraformationLevelsViewModel>({
-      headers: [
-        "planetId",
-        "unitOxygenLevel",
-        "unitHeatLevel",
-        "unitPressureLevel",
-        "unitPlantsLevel",
-        "unitInsectsLevel",
-        "unitAnimalsLevel",
-        "unitPurificationLevel"
-      ],
-      rows: [
+      planets: [
         {
-          cells: [
-            { value: "Earth" },
-            { value: "123" },
-            { value: "456" },
-            { value: "789" },
-            { value: "101" },
-            { value: "112" },
-            { value: "131" },
-            { value: "415" }
-          ]
+          name: 'Earth',
+          environmentalLevels: {
+            columns: [
+              {
+                header: 'O²',
+                values: ['123,123']
+              },
+              {
+                header: 'Heat',
+                values: ['456,456']
+              },
+              {
+                header: 'Pressure',
+                values: ['789,789']
+              },
+              {
+                header: 'Purification',
+                values: ['415,415']
+              }
+            ]
+          },
+          organicLevels: {
+            columns: [
+              {
+                header: 'Plants',
+                values: ['101,101']
+              },
+              {
+                header: 'Insects',
+                values: ['112,112']
+              },
+              {
+                header: 'Animals',
+                values: ['131,131']
+              },
+            ]
+          }
         }
-      ]
+      ],
     });
   });
 });

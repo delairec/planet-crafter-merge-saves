@@ -14,10 +14,14 @@ describe('LoadGlobalProgressionSectionController', () => {
 
     // Assert
     expect(viewModel).toEqual<GlobalProgressionViewModel>({
-      headers: ['allTimeTerraTokens'],
-      rows: [{
-        cells: [{value: '200,345 =tt='}]
-      }]
+      tokens: {
+        columns: [
+          {
+            header: 'All time Terra Tokens',
+            values: ['200,345 =tt=']
+          }
+        ]
+      },
     });
   });
 });

@@ -3,7 +3,8 @@
 @import "styles/typography.css";
 @import "styles/layout.css";
 @import "styles/effects.css";
-@import "styles/tables.css";
+@import "styles/forms.css";
+@import "styles/buttons.css";
 
 #app {
     height: 100vh;

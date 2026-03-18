@@ -1,38 +1,28 @@
 import {Accessor, For} from "solid-js";
-import {TableViewModel} from "../../../../util-mapping/presentation/viewModels/TableViewModel";
 
-interface TableProps<T> {
-  headers: Accessor<TableViewModel<T>['headers']>;
-  rows: Accessor<TableViewModel<T>['rows']>;
+interface Column {
+  header: string,
+  values: string[]
 }
 
-export default function Table<T extends Record<string, any>>({headers, rows}: TableProps<T>) {
+interface TableProps {
+  columns: Accessor<Column[]>,
+}
+
+export default function Table({columns}: TableProps) {
 
   return (
-    <div class="table-container">
-      <table>
-        <thead>
-        <tr>
-          <For each={headers()}>
-            {(header) => (
-              <th>{header}</th>
+    <For each={columns()}>
+      {(column) => (
+        <div class="field readonly">
+          <div class="label">{column.header}</div>
+          <For each={column.values}>
+            {(value) => (
+              <div class="value">{value}</div>
             )}
           </For>
-        </tr>
-        </thead>
-        <tbody>
-        <For each={rows()}>
-          {(row) => (
-            <tr>
-              <For each={row.cells}>
-                {(cell, index) => (
-                  <td data-label={headers()[index()]}>{cell.value}</td>
-                )}
-              </For>
-            </tr>
-          )}</For>
-        </tbody>
-      </table>
-    </div>
+        </div>
+      )}
+    </For>
   );
 }

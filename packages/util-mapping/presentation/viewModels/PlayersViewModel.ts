@@ -1,5 +1,9 @@
 import {TableViewModel} from "./TableViewModel";
-import {PlayerEntity} from "../../domain/entities/PlayerEntity";
 
-export interface PlayersViewModel extends TableViewModel<PlayerEntity>{
+export interface PlayersViewModel {
+  players: PlayerViewModel[];
+}
+
+interface PlayerViewModel extends TableViewModel{
+  name: string;
 }

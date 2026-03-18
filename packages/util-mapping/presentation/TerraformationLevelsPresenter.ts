@@ -3,32 +3,93 @@ import {TerraformationLevel} from "../../util-types/gameDefinitions";
 import {formatNumber} from "./formatters/formatNumber";
 
 export class TerraformationLevelsPresenter {
-  viewModel: TerraformationLevelsViewModel = {
-    headers: [
-      "planetId",
-      "unitOxygenLevel",
-      "unitHeatLevel",
-      "unitPressureLevel",
-      "unitPlantsLevel",
-      "unitInsectsLevel",
-      "unitAnimalsLevel",
-      "unitPurificationLevel"
-    ],
-    rows: []
-  };
+  viewModel: TerraformationLevelsViewModel;
+
+  constructor() {
+    this.viewModel = {
+      planets: [
+        {
+          name: 'Planet',
+          environmentalLevels: {
+            columns: [
+              {
+                header: 'O²',
+                values: []
+              },
+              {
+                header: 'Heat',
+                values: []
+              },
+              {
+                header: 'Pressure',
+                values: []
+              },
+              {
+                header: 'Purification',
+                values: []
+              }
+            ]
+          },
+          organicLevels: {
+            columns: [
+              {
+                header: 'Plants',
+                values: []
+              },
+              {
+                header: 'Insects',
+                values: []
+              },
+              {
+                header: 'Animals',
+                values: []
+              },
+            ]
+          }
+        }
+      ]
+    };
+  }
 
   present(levels: TerraformationLevel[]): void {
-    this.viewModel.rows = levels.map(level => ({
-      cells: [
-        { value: level.planetId },
-        { value: formatNumber(level.unitOxygenLevel) },
-        { value: formatNumber(level.unitHeatLevel) },
-        { value: formatNumber(level.unitPressureLevel) },
-        { value: formatNumber(level.unitPlantsLevel) },
-        { value: formatNumber(level.unitInsectsLevel) },
-        { value: formatNumber(level.unitAnimalsLevel) },
-        { value: formatNumber(level.unitPurificationLevel) }
-      ]
+    this.viewModel.planets = levels.map(level => ({
+      name: level.planetId,
+      environmentalLevels: {
+        columns: [
+          {
+            header: 'O²',
+            values: [formatNumber(level.unitOxygenLevel)]
+          },
+          {
+            header: 'Heat',
+            values: [formatNumber(level.unitHeatLevel)]
+          },
+          {
+            header: 'Pressure',
+            values: [formatNumber(level.unitPressureLevel)]
+          },
+          {
+            header: 'Purification',
+            values: [formatNumber(level.unitPurificationLevel)]
+          }
+        ]
+      },
+      organicLevels: {
+        columns: [
+          {
+            header: 'Plants',
+            values: [formatNumber(level.unitPlantsLevel)]
+          },
+          {
+            header: 'Insects',
+            values: [formatNumber(level.unitInsectsLevel)]
+          },
+          {
+            header: 'Animals',
+            values: [formatNumber(level.unitAnimalsLevel)]
+          },
+        ]
+      }
     }));
   }
 }
