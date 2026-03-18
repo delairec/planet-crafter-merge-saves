@@ -18,7 +18,7 @@ export default function GlobalProgressionSection({sections}: GlobalProgressionPr
   });
 
   return (<>
-    <h3>Global progression</h3>
+    <h3 class="field-group-title">Global progression</h3>
     <FieldsGroup columns={tokenColumns} />
   </>);
 }

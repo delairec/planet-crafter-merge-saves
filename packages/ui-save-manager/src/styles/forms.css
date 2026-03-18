@@ -26,6 +26,24 @@ select:focus {
     box-shadow: 0 0 0 2px var(--neon-pink);
 }
 
-.field .label {
+.fields-group.readonly {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 200px);
+    gap: 2rem;
+
+    border: 1px solid var(--border);
+    background-color: var(--surface);
+    padding: 1rem;
+    border-radius: 0.375rem;
+}
+
+.fields-group.readonly .field .label {
     color: var(--primary);
+}
+
+.field-group-title {
+    border: 1px solid var(--neon-cyan);
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+    text-align: center;
 }

@@ -21,7 +21,7 @@ export default function PlayersSection({sections}: PlayersProps) {
       <For each={players()}>
         {(player)=> (
           <>
-            <h4>{player.name}</h4>
+            <h4 class="field-group-title">{player.name}</h4>
             <FieldsGroup columns={() => player.columns}/>
           </>
         )}
