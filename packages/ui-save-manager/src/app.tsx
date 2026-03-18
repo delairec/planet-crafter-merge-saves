@@ -6,10 +6,10 @@ import {Component} from "solid-js";
 const Layout: Component<RouteSectionProps> = (props) => {
   return (
     <>
-      <header class="mb-4">
+      <header>
         <h1 class="text-center drop-shadow-engraved">Planet Crafter Save Manager</h1>
       </header>
-      <div class="container surface rounded-lg">
+      <div class="container rounded-lg">
         {props.children}
       </div>
       <footer class="text-center">
