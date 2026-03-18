@@ -22,8 +22,8 @@ export default function TerraformationLevelsSection({sections}: TerraformationLe
       <For each={planets()}>
         {(planet) => (
           <>
-            <h4>{planet.name}</h4>
-            <div class="flex">
+            <h4 class="field-group-title">{planet.name}</h4>
+            <div>
               <FieldsGroup columns={() => planet.environmentalLevels.columns}/>
               <FieldsGroup columns={() => planet.organicLevels.columns}/>
             </div>
