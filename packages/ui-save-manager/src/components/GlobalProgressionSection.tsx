@@ -1,6 +1,6 @@
 import {Accessor, createEffect, createSignal} from "solid-js";
 import {LoadGlobalProgressionSectionController} from "../../../util-mapping/controllers/LoadGlobalProgressionSectionController";
-import Table from "../components/structure/Table";
+import FieldsGroup from "./structure/FieldsGroup";
 import {GlobalProgressionViewModel} from "../../../util-mapping/presentation/viewModels/GlobalProgressionViewModel";
 
 interface GlobalProgressionProps {
@@ -19,6 +19,6 @@ export default function GlobalProgressionSection({sections}: GlobalProgressionPr
 
   return (<>
     <h3>Global progression</h3>
-    <Table columns={tokenColumns} />
+    <FieldsGroup columns={tokenColumns} />
   </>);
 }

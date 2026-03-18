@@ -1,6 +1,6 @@
 import {Accessor, createEffect, createSignal, For, Show} from "solid-js";
 import {LoadPlayersSectionController} from "../../../util-mapping/controllers/LoadPlayersSectionController";
-import Table from "~/components/structure/Table";
+import FieldsGroup from "~/components/structure/FieldsGroup";
 import {PlayersViewModel} from "../../../util-mapping/presentation/viewModels/PlayersViewModel";
 
 interface PlayersProps {
@@ -22,7 +22,7 @@ export default function PlayersSection({sections}: PlayersProps) {
         {(player)=> (
           <>
             <h4>{player.name}</h4>
-            <Table columns={() => player.columns}/>
+            <FieldsGroup columns={() => player.columns}/>
           </>
         )}
       </For>

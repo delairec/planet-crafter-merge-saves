@@ -9,7 +9,7 @@ interface TableProps {
   columns: Accessor<Column[]>,
 }
 
-export default function Table({columns}: TableProps) {
+export default function FieldsGroup({columns}: TableProps) {
 
   return (
     <For each={columns()}>

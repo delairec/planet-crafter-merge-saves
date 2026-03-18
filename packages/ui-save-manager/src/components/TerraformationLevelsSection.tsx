@@ -1,6 +1,6 @@
 import {Accessor, createEffect, createSignal, For, Show} from "solid-js";
 import {LoadTerraformationLevelsSectionController} from "../../../util-mapping/controllers/LoadTerraformationLevelsSectionController";
-import Table from "../components/structure/Table";
+import FieldsGroup from "./structure/FieldsGroup";
 import {TerraformationLevelsViewModel} from "../../../util-mapping/presentation/viewModels/TerraformationLevelsViewModel";
 import {ParsedSections} from "../../../util-types/js/types";
 
@@ -24,8 +24,8 @@ export default function TerraformationLevelsSection({sections}: TerraformationLe
           <>
             <h4>{planet.name}</h4>
             <div class="flex">
-              <Table columns={() => planet.environmentalLevels.columns}/>
-              <Table columns={() => planet.organicLevels.columns}/>
+              <FieldsGroup columns={() => planet.environmentalLevels.columns}/>
+              <FieldsGroup columns={() => planet.organicLevels.columns}/>
             </div>
           </>
         )}
