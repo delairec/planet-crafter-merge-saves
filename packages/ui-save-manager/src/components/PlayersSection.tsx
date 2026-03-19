@@ -18,14 +18,18 @@ export default function PlayersSection({sections}: PlayersProps) {
   return (<>
     <h3>Players</h3>
     <Show when={sections}>
-      <For each={players()}>
-        {(player)=> (
-          <>
-            <h4 class="field-group-title">{player.name}</h4>
-            <FieldsGroup columns={() => player.columns}/>
-          </>
-        )}
-      </For>
+      <div class="grid-container">
+        <For each={players()}>
+          {(player) => (
+            <div class="grid-item">
+              <h4>{player.name}</h4>
+              <div class="fields-group-container">
+                <FieldsGroup columns={() => player.columns}/>
+              </div>
+            </div>
+          )}
+        </For>
+      </div>
     </Show>
   </>);
 }
