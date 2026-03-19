@@ -88,11 +88,22 @@ h2 {
 h3 {
     font-size: var(--text-xl);
     font-weight: var(--semibold);
+
+    color: var(--neon-pink);
+    text-align: center;
+    border-bottom: 3px solid var(--neon-pink);
 }
 
 h4 {
-    font-size: var(--text-lg);
+    font-size: var(--text-xl);
     font-weight: var(--semibold);
+
+    padding: 0.5rem;
+    background: var(--neon-cyan);
+    color: var(--inverted);
+    border-radius: 0.375rem;
+    box-shadow: 0 0 1rem 0 var(--neon-cyan);
+    text-align: center;
 }
 
 p {

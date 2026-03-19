@@ -5,11 +5,11 @@ interface Column {
   values: string[]
 }
 
-interface TableProps {
+interface FieldsGroupProps {
   columns: Accessor<Column[]>,
 }
 
-export default function FieldsGroup({columns}: TableProps) {
+export default function FieldsGroup({columns}: FieldsGroupProps) {
 
   return (
     <div class="fields-group readonly mb-2">

@@ -9,7 +9,7 @@ interface GlobalProgressionProps {
 
 export default function GlobalProgressionSection({sections}: GlobalProgressionProps) {
   const [tokenColumns, setTokenColumns] = createSignal<GlobalProgressionViewModel['tokens']['columns']>([]);
-  const [title, setTitle] = createSignal<string|null>(null);
+  const [title, setTitle] = createSignal<string | null>(null);
 
   createEffect(() => {
     const {tokens} = LoadGlobalProgressionSectionController.loadGlobalProgressionSection(sections());
@@ -17,8 +17,13 @@ export default function GlobalProgressionSection({sections}: GlobalProgressionPr
     setTitle(title);
   });
 
-  return (<>
-    <h3 class="field-group-title">Global progression</h3>
-    <FieldsGroup columns={tokenColumns} />
-  </>);
+  return (
+    <>
+      <h3>Global progression</h3>
+      <div class="fields-group-container fields-group-single">
+        <FieldsGroup columns={tokenColumns}/>
+      </div>
+    </>
+  )
+    ;
 }
