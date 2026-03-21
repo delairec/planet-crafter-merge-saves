@@ -17,7 +17,11 @@ describe('PlayersPresenter', () => {
   it('should present all players', () => {
     // Arrange
     const presenter = new PlayersPresenter();
-    const playerNikowa: PlayerEntity = {name: 'Nikowa', inventory: ['Phytoplankton3','MagnetarQuartz'], equipment: ['Backpack4', 'OxygenTank5']};
+    const playerNikowa: PlayerEntity = {
+      name: 'Nikowa',
+      inventory: ['Phytoplankton3', 'MagnetarQuartz'],
+      equipment: ['Backpack4', 'OxygenTank5']
+    };
     const playerChileny: PlayerEntity = {name: 'Chileny', inventory: [], equipment: []};
 
     // Act
@@ -31,11 +35,11 @@ describe('PlayersPresenter', () => {
           columns: [
             {
               header: 'Equipment',
-              values: ['Backpack4', 'OxygenTank5']
+              values: ['Backpack T4', 'Oxygen tank T5']
             },
             {
               header: 'Inventory',
-              values: ['Phytoplankton3', 'MagnetarQuartz']
+              values: ['Phytoplankton C', 'Magnetar Quartz']
             }
           ]
         }, {
@@ -43,14 +47,43 @@ describe('PlayersPresenter', () => {
           columns: [
             {
               header: 'Equipment',
-              values: []
+              values: ['(/) No equipment']
             },
             {
               header: 'Inventory',
-              values: []
+              values: ['(/) No items']
             }
           ]
         }]
+    });
+  });
+
+  describe('When an item id is not found', () => {
+    it('should use a placeholder value', () => {
+      // Arrange
+      const presenter = new PlayersPresenter();
+      const playerNikowa: PlayerEntity = {name: 'Nikowa', inventory: ['Phytoplankton99'], equipment: ['Backpack99']};
+
+      // Act
+      presenter.present([playerNikowa]);
+
+      // Assert
+      expect(presenter.viewModel).toEqual<PlayersViewModel>({
+        players: [
+          {
+            name: 'Nikowa',
+            columns: [
+              {
+                header: 'Equipment',
+                values: ['Unknown Item (Backpack99)']
+              },
+              {
+                header: 'Inventory',
+                values: ['Unknown Item (Phytoplankton99)']
+              }
+            ]
+          }]
+      });
     });
   });
 });
