@@ -80,19 +80,19 @@ describe('TerraformationLevelsPresenter', () => {
             columns: [
               {
                 header: 'O²',
-                values: ['123,123']
+                values: ['123.123k']
               },
               {
                 header: 'Heat',
-                values: ['456,456']
+                values: ['456.456k']
               },
               {
                 header: 'Pressure',
-                values: ['789,789']
+                values: ['789.789k']
               },
               {
                 header: 'Purification',
-                values: ['415,415']
+                values: ['415.415k']
               }
             ]
           },
@@ -100,15 +100,15 @@ describe('TerraformationLevelsPresenter', () => {
             columns: [
               {
                 header: 'Plants',
-                values: ['101,101']
+                values: ['101.101k']
               },
               {
                 header: 'Insects',
-                values: ['112,112']
+                values: ['112.112k']
               },
               {
                 header: 'Animals',
-                values: ['131,131']
+                values: ['131.131k']
               },
             ]
           }

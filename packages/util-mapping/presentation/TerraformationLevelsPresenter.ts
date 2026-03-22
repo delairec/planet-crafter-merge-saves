@@ -1,6 +1,6 @@
 import {TerraformationLevelsViewModel} from "./viewModels/TerraformationLevelsViewModel";
 import {TerraformationLevel} from "../../util-types/gameDefinitions";
-import {formatNumber} from "./formatters/formatNumber";
+import {formatNumber, FormatNumberStrategies} from "./formatters/formatNumber";
 
 export class TerraformationLevelsPresenter {
   viewModel: TerraformationLevelsViewModel;
@@ -58,19 +58,19 @@ export class TerraformationLevelsPresenter {
         columns: [
           {
             header: 'O²',
-            values: [formatNumber(level.unitOxygenLevel)]
+            values: [formatNumber(level.unitOxygenLevel, FormatNumberStrategies.SYMBOL)]
           },
           {
             header: 'Heat',
-            values: [formatNumber(level.unitHeatLevel)]
+            values: [formatNumber(level.unitHeatLevel, FormatNumberStrategies.SYMBOL)]
           },
           {
             header: 'Pressure',
-            values: [formatNumber(level.unitPressureLevel)]
+            values: [formatNumber(level.unitPressureLevel, FormatNumberStrategies.SYMBOL)]
           },
           {
             header: 'Purification',
-            values: [formatNumber(level.unitPurificationLevel)]
+            values: [formatNumber(level.unitPurificationLevel, FormatNumberStrategies.SYMBOL)]
           }
         ]
       },
@@ -78,15 +78,15 @@ export class TerraformationLevelsPresenter {
         columns: [
           {
             header: 'Plants',
-            values: [formatNumber(level.unitPlantsLevel)]
+            values: [formatNumber(level.unitPlantsLevel, FormatNumberStrategies.SYMBOL)]
           },
           {
             header: 'Insects',
-            values: [formatNumber(level.unitInsectsLevel)]
+            values: [formatNumber(level.unitInsectsLevel, FormatNumberStrategies.SYMBOL)]
           },
           {
             header: 'Animals',
-            values: [formatNumber(level.unitAnimalsLevel)]
+            values: [formatNumber(level.unitAnimalsLevel, FormatNumberStrategies.SYMBOL)]
           },
         ]
       }
