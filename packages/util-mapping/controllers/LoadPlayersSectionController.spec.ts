@@ -20,11 +20,11 @@ describe('LoadPlayersSectionController', () => {
           columns: [
             {
               header: 'Equipment',
-              values: ['Backpack4', 'OxygenTank5']
+              values: ['Backpack T4', 'Oxygen tank T5']
             },
             {
               header: 'Inventory',
-              values: ['Phytoplankton3', 'MagnetarQuartz']
+              values: ['Phytoplankton C', 'Magnetar Quartz']
             }
           ]
         }
