@@ -63,10 +63,17 @@ function formatNumberByThresholds(numberOrBigint: number|bigint) {
       return formatNumberWithSymbol(result, threshold);
     }
   }
+
+  return formatNumberWithoutSymbol(num);
 }
 
 function formatNumberWithoutSymbol(value: number) {
-  return new Intl.NumberFormat().format(value);
+  const locales = undefined;
+  return new Intl.NumberFormat(locales, {
+    style: 'decimal',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 3
+  }).format(value);
 }
 
 function formatNumberWithSymbol(value: number, t:Threshold) {

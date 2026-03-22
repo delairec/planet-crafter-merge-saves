@@ -68,4 +68,16 @@ describe('formatNumber', () => {
       expect(result).toBe('1,234,567');
     });
   });
+
+  describe('When using SYMBOL strategy', () => {
+    describe('When the number to format is not handled', () => {
+      it('should fallback to default strategy', () => {
+        // Act
+        const result = formatNumber(0.000_000_000_1, FormatNumberStrategies.SYMBOL);
+
+        // Assert
+        expect(result).toBe('0');
+      });
+    });
+  });
 });
