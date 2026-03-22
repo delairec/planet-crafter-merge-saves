@@ -20,10 +20,32 @@ const thresholds: Threshold[] = [
   { value: 0.000_000_001, suffix: "n", multiply: 1_000_000_000 },
 ];
 
-export function formatNumber(num: number) {
+export const FormatNumberStrategies = {
+  SYMBOL: 1,
+  THOUSANDS_SEPARATOR: 2
+};
+
+type FormatNumberStrategy = typeof FormatNumberStrategies[keyof typeof FormatNumberStrategies];
+
+export function formatNumber(numberOrBigint: number|bigint, strategy?:FormatNumberStrategy) {
+  if(strategy === FormatNumberStrategies.THOUSANDS_SEPARATOR){
+    return formatNumberWithoutSymbol(Number(numberOrBigint));
+  }
+
+  if(strategy === FormatNumberStrategies.SYMBOL){
+    return formatNumberByThresholds(numberOrBigint);
+  }
+
+  return formatNumberWithoutSymbol(Number(numberOrBigint));
+}
+
+function formatNumberByThresholds(numberOrBigint: number|bigint) {
+  const num = isBigIntType(numberOrBigint) ? Number(numberOrBigint) : numberOrBigint;
+  const bigNum = isBigIntType(numberOrBigint) ? numberOrBigint : null;
+
   for (const threshold of thresholds) {
-    if(isBigInteger(num, threshold)){
-      const quotient = BigInt(num) / BigInt(threshold.value);
+    if(bigNum && isBiggerThanThreshold(bigNum, threshold)){
+      const quotient = bigNum / BigInt(threshold.value);
       const result = Number(quotient);
       return formatNumberWithSymbol(result, threshold);
     }
@@ -41,8 +63,6 @@ export function formatNumber(num: number) {
       return formatNumberWithSymbol(result, threshold);
     }
   }
-
-  return formatNumberWithoutSymbol(num);
 }
 
 function formatNumberWithoutSymbol(value: number) {
@@ -57,9 +77,8 @@ function isBigIntType(num: number | bigint): num is bigint {
   return typeof num === 'bigint';
 }
 
-function isBigInteger(num: number, threshold: Threshold) {
-  const isBig = isBigIntType(num) || Number(num) > 999_999_999_999_999;
-  return isBig && BigInt(num) >= threshold.value;
+function isBiggerThanThreshold(num: bigint, threshold: Threshold) {
+  return num >= threshold.value;
 }
 
 function isNumber(num: number, threshold: Threshold) {
