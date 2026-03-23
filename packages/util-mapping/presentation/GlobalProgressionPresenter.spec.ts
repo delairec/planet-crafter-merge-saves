@@ -9,12 +9,16 @@ describe('GlobalProgressionPresenter', () => {
 
     // Assert
     expect(presenter.viewModel).toEqual<GlobalProgressionViewModel>({
-      tokens: {
+      statistics: {
         columns: [
           {
             header: 'All time Terra Tokens',
             values: []
-          }
+          },
+          {
+            header: 'Total crafted objects',
+            values: []
+          },
         ]
       },
     });
@@ -23,19 +27,25 @@ describe('GlobalProgressionPresenter', () => {
   it('should present all GlobalProgression', () => {
     // Arrange
     const presenter = new GlobalProgressionPresenter();
+    const globalProgression = {
+      allTimeTerraTokens: 200_345
+    };
+    const statistics = {totalCraftedObjects:10};
 
     // Act
-    presenter.present({
-      allTimeTerraTokens: 200_345
-    });
+    presenter.present(globalProgression, statistics);
 
     // Assert
     expect(presenter.viewModel).toEqual<GlobalProgressionViewModel>({
-      tokens: {
+      statistics: {
         columns: [
           {
             header: 'All time Terra Tokens',
             values: ['200,345 =tt=']
+          },
+          {
+            header: 'Total crafted objects',
+            values: ['10']
           }
         ]
       },

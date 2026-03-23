@@ -9,6 +9,7 @@ export class LoadGlobalProgressionSection {
 
   execute(): void {
     const globalProgression = this.saveParser.getGlobalMetadata();
-    this.presenter.present(globalProgression);
+    const statistics = this.saveParser.getStatistics();
+    this.presenter.present(globalProgression, statistics);
   }
 }

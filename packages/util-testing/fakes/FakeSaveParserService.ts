@@ -3,8 +3,14 @@ import {GlobalProgressionValueObject} from "../../util-mapping/domain/valueObjec
 import {PlayerEntity} from "../../util-mapping/domain/entities/PlayerEntity";
 import {TerraformationLevelEntity} from "../../util-mapping/domain/entities/TerraformationLevelEntity";
 import { InventoryEntity } from "../../util-mapping/domain/entities/InventoryEntity";
+import { StatisticsValueObject } from "../../util-mapping/domain/valueObjects/StatisticsValueObject";
 
 export class FakeSaveParserService implements SaveParserPort {
+  getStatistics(): StatisticsValueObject {
+      return {
+        totalCraftedObjects: 10
+      }
+  }
   getInventories(): InventoryEntity[] {
       throw new Error("Method not implemented.");
   }
@@ -12,7 +18,15 @@ export class FakeSaveParserService implements SaveParserPort {
       return {allTimeTerraTokens: 1_234_567};
   }
   getPlayers(): PlayerEntity[] {
-    return [{name: 'Nikowa'}, {name: 'Chileny'}];
+    return [{
+      name: 'Nikowa',
+      inventory: [],
+      equipment: []
+    }, {
+      name: 'Chileny',
+      inventory: [],
+      equipment: []
+    }];
   }
   getTerraformationLevels(): TerraformationLevelEntity[] {
     return [{

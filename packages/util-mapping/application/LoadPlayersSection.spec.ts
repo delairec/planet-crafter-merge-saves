@@ -16,6 +16,14 @@ describe('LoadPlayersSection', () => {
 
     // Assert
     expect(presenter.present).toHaveBeenCalledTimes(1);
-    expect(presenter.present).toHaveBeenCalledWith([{name:'Nikowa'}, {name:'Chileny'}]);
+    expect(presenter.present).toHaveBeenCalledWith([{
+      name: 'Nikowa',
+      equipment: [],
+      inventory: []
+    }, {
+      name: 'Chileny',
+      equipment: [],
+      inventory: []
+    }]);
   });
 });

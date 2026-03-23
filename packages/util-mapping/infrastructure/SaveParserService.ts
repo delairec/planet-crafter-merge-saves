@@ -1,8 +1,10 @@
 import {
   GLOBAL_METADATA_SECTION_INDEX,
   INVENTORIES_SECTION_INDEX,
+  ParsedSections,
   Player,
   PLAYERS_SECTION_INDEX,
+  STATISTICS_SECTION_INDEX,
   TERRAFORMATION_LEVELS_SECTION_INDEX,
   TerraformationLevel,
   WORLD_OBJECTS_SECTION_INDEX
@@ -14,7 +16,7 @@ import {TerraformationLevelEntity} from '../domain/entities/TerraformationLevelE
 import {InventoryEntity} from "../domain/entities/InventoryEntity";
 import {Inventory} from "../../util-types/gameDefinitions/Inventory";
 import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
-import {ParsedSections} from "../../util-types/js/types";
+import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 
 export class SaveParserService implements SaveParserPort {
 
@@ -23,6 +25,7 @@ export class SaveParserService implements SaveParserPort {
   private readonly players: Player[];
   private readonly worldObjectsFactory: () => Generator<WorldObject>;
   private readonly inventories: Inventory[];
+  private readonly statistics: Statistics[];
 
   constructor(private readonly sections: ParsedSections) {
     this.globalMetadata = sections[GLOBAL_METADATA_SECTION_INDEX] ?? [];
@@ -30,6 +33,7 @@ export class SaveParserService implements SaveParserPort {
     this.players = sections[PLAYERS_SECTION_INDEX] ?? [];
     this.worldObjectsFactory = sections[WORLD_OBJECTS_SECTION_INDEX] ?? [];
     this.inventories = sections[INVENTORIES_SECTION_INDEX] ?? [];
+    this.statistics = sections[STATISTICS_SECTION_INDEX] ?? [];
   }
 
   getGlobalMetadata(): GlobalProgressionValueObject {
@@ -106,5 +110,11 @@ export class SaveParserService implements SaveParserPort {
       if (ids.includes(wo.id)) result.push(wo);
     }
     return result;
+  }
+
+  getStatistics(): StatisticsValueObject {
+    return this.statistics.map((stat) => ({
+      totalCraftedObjects: stat.craftedObjects
+    }))[0];
   }
 }

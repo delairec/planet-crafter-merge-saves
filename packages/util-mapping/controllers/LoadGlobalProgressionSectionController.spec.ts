@@ -14,11 +14,15 @@ describe('LoadGlobalProgressionSectionController', () => {
 
     // Assert
     expect(viewModel).toEqual<GlobalProgressionViewModel>({
-      tokens: {
+      statistics: {
         columns: [
           {
             header: 'All time Terra Tokens',
             values: ['200,345 =tt=']
+          },
+          {
+            header: 'Total crafted objects',
+            values: ['10']
           }
         ]
       },
