@@ -7,6 +7,7 @@ import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgres
 import {TerraformationLevelEntity} from "../domain/entities/TerraformationLevelEntity";
 import {InventoryEntity} from "../domain/entities/InventoryEntity";
 import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
+import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 
 describe('SaveParserService', () => {
   let sections: ParsedSections;
@@ -139,6 +140,19 @@ describe('SaveParserService', () => {
     expect(worldObjectsGenerator.next().value).toEqual<WorldObjectEntity>({
       id: '48456321',
       label: 'OxygenTank5'
+    });
+  });
+
+  it('should extract statistics', () => {
+    // Arrange
+    const service = new SaveParserService(sections);
+
+    // Act
+    const statistics = service.getStatistics();
+
+    // Assert
+    expect(statistics).toEqual<StatisticsValueObject>({
+      totalCraftedObjects: 10
     });
   });
 });

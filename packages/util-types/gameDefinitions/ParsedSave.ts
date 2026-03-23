@@ -10,7 +10,7 @@ import {SaveConfiguration} from "./SaveConfiguration";
 import {TerrainLayer} from "./TerrainLayer";
 import {WorldEvent} from "./WorldEvent";
 
-type ParsedSections = [
+export type ParsedSections = [
   GlobalMetadata[],
   TerraformationLevel[],
   Player[],
