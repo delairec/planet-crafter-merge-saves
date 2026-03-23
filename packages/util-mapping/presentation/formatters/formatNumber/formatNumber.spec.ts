@@ -1,5 +1,6 @@
 import { describe, it, expect} from 'bun:test';
-import {formatNumber, FormatNumberStrategies} from "./formatNumber";
+import {formatNumber} from "./formatNumber";
+import {FormatNumberStrategies} from "./FormatNumberStrategies";
 
 describe('formatNumber', () => {
 

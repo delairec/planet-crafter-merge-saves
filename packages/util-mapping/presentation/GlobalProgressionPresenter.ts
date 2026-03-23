@@ -1,7 +1,7 @@
 import {GlobalProgressionViewModel} from './viewModels/GlobalProgressionViewModel';
 import {GlobalProgressionPresenterPort} from '../application/ports/GlobalProgressionPresenterPort';
 import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
-import {formatNumber} from "./formatters/formatNumber";
+import {formatNumber} from "./formatters/formatNumber/formatNumber";
 
 export class GlobalProgressionPresenter implements GlobalProgressionPresenterPort {
   viewModel: GlobalProgressionViewModel;
