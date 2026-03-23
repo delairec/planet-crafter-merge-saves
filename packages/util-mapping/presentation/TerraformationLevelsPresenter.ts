@@ -1,6 +1,7 @@
 import {TerraformationLevelsViewModel} from "./viewModels/TerraformationLevelsViewModel";
 import {TerraformationLevel} from "../../util-types/gameDefinitions";
-import {formatNumber, FormatNumberStrategies} from "./formatters/formatNumber";
+import {formatNumber} from "./formatters/formatNumber/formatNumber";
+import {FormatNumberStrategies} from "./formatters/formatNumber/FormatNumberStrategies";
 
 export class TerraformationLevelsPresenter {
   viewModel: TerraformationLevelsViewModel;
