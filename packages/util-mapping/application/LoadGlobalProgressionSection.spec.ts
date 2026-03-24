@@ -2,11 +2,7 @@ import {describe, expect, it, mock} from 'bun:test';
 import {FakeSaveParserService} from "../../util-testing/fakes/FakeSaveParserService";
 import {SaveParserPort} from "./ports/SaveParserPort";
 import {LoadGlobalProgressionSection} from "./LoadGlobalProgressionSection";
-import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
-
-interface GlobalProgressionPresenterPort{
-  present(globalProgression:GlobalProgressionValueObject): void;
-}
+import {GlobalProgressionPresenterPort} from "./ports/GlobalProgressionPresenterPort";
 
 describe('LoadGlobalProgressionSection', () => {
   it('should present global progression and statistics from the parsed save', () => {

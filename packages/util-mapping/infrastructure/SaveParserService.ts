@@ -4,6 +4,7 @@ import {
   ParsedSections,
   Player,
   PLAYERS_SECTION_INDEX,
+  SAVE_CONFIGURATION_SECTION_INDEX,
   STATISTICS_SECTION_INDEX,
   TERRAFORMATION_LEVELS_SECTION_INDEX,
   TerraformationLevel,
@@ -17,6 +18,7 @@ import {InventoryEntity} from "../domain/entities/InventoryEntity";
 import {Inventory} from "../../util-types/gameDefinitions/Inventory";
 import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
+import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
 
 export class SaveParserService implements SaveParserPort {
 
@@ -26,6 +28,7 @@ export class SaveParserService implements SaveParserPort {
   private readonly worldObjectsFactory: () => Generator<WorldObject>;
   private readonly inventories: Inventory[];
   private readonly statistics: Statistics[];
+  private readonly saveConfiguration: SaveConfiguration[];
 
   constructor(private readonly sections: ParsedSections) {
     this.globalMetadata = sections[GLOBAL_METADATA_SECTION_INDEX] ?? [];
@@ -34,6 +37,7 @@ export class SaveParserService implements SaveParserPort {
     this.worldObjectsFactory = sections[WORLD_OBJECTS_SECTION_INDEX] ?? [];
     this.inventories = sections[INVENTORIES_SECTION_INDEX] ?? [];
     this.statistics = sections[STATISTICS_SECTION_INDEX] ?? [];
+    this.saveConfiguration = sections[SAVE_CONFIGURATION_SECTION_INDEX] ?? [];
   }
 
   getGlobalMetadata(): GlobalProgressionValueObject {
@@ -115,6 +119,20 @@ export class SaveParserService implements SaveParserPort {
   getStatistics(): StatisticsValueObject {
     return this.statistics.map((stat) => ({
       totalCraftedObjects: stat.craftedObjects
+    }))[0];
+  }
+
+  getSaveConfiguration(): SaveConfigurationValueObject {
+    return this.saveConfiguration.map((config) => ({
+      title: config.saveDisplayName,
+      mode: config.mode,
+      modifiers: {
+        terraformationPace: config.modifierTerraformationPace,
+        powerConsumption: config.modifierPowerConsumption,
+        gaugeDrain: config.modifierGaugeDrain,
+        meteoOccurrence: config.modifierMeteoOccurence,
+        multiplayerFactor: config.modifierMultiplayerTerraformationFactor
+      }
     }))[0];
   }
 }

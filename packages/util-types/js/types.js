@@ -111,6 +111,20 @@
  * @property {number} modifierGaugeDrain
  * @property {number} modifierMeteoOccurence
  * @property {number} modifierMultiplayerTerraformationFactor
+ *   // Extra
+ *   @property {boolean} unlockedSpaceTrading
+ *   @property {boolean} unlockedOreExtrators
+ *   @property {boolean} unlockedTeleporters
+ *   @property {boolean} unlockedDrones
+ *   @property {boolean} unlockedAutocrafter
+ *   @property {boolean} unlockedEverything
+ *   @property {boolean} freeCraft
+ *   @property {boolean} preInterplanetarySave
+ *   @property {boolean} randomizeMineables
+ *   @property {string} dyingConsequencesLabel
+ *   @property {string} startLocationLabel
+ *   @property {boolean} hasPlayedIntro
+ *   @property {string} gameStartLocation
  */
 
 /** Merge key: `layerId` + `planet`. Save A wins on conflict. @see GR-TERRAIN-1, GR-TERRAIN-2
