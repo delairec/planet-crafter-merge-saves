@@ -60,6 +60,16 @@ describe('formatNumber', () => {
     });
   });
 
+  describe('When formatting strategy is PERCENTAGE', () => {
+    it('should format the number as percentage', () => {
+      // Act
+        const result = formatNumber(0.1234, FormatNumberStrategies.PERCENTAGE);
+
+      // Assert
+      expect(result).toBe('12%');
+    });
+  });
+
   describe('When formatting strategy is not provided', () => {
     it('should default to thousands separator', () => {
       // Act

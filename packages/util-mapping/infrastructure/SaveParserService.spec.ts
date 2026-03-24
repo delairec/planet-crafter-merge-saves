@@ -8,6 +8,7 @@ import {TerraformationLevelEntity} from "../domain/entities/TerraformationLevelE
 import {InventoryEntity} from "../domain/entities/InventoryEntity";
 import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
+import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
 
 describe('SaveParserService', () => {
   let sections: ParsedSections;
@@ -153,6 +154,27 @@ describe('SaveParserService', () => {
     // Assert
     expect(statistics).toEqual<StatisticsValueObject>({
       totalCraftedObjects: 10
+    });
+  });
+
+  it('should extract save configuration', () => {
+    // Arrange
+    const service = new SaveParserService(sections);
+
+    // Act
+    const saveConfiguration = service.getSaveConfiguration();
+
+    // Assert
+    expect(saveConfiguration).toEqual<SaveConfigurationValueObject>({
+      title: 'Merged Save',
+      mode: 'Standard',
+      modifiers: {
+        terraformationPace: 0.1,
+        powerConsumption: 0.2,
+        gaugeDrain: 0.3,
+        meteoOccurrence: 0.4,
+        multiplayerFactor: 0.5
+      }
     });
   });
 });
