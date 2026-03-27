@@ -55,3 +55,13 @@ select:focus {
 .fields-group.readonly .field .label {
     color: var(--primary);
 }
+
+.fields-group-main-value {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.fields-group-main-value span {
+    color: var(--neon-purple);
+    font-weight: var(--bold);
+}

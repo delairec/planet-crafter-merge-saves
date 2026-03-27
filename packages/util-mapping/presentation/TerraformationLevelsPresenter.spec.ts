@@ -49,6 +49,7 @@ describe('TerraformationLevelsPresenter', () => {
             ]
           },
           terraformationIndex: '',
+          biomass: ''
         }
       ],
     });
@@ -113,7 +114,8 @@ describe('TerraformationLevelsPresenter', () => {
               },
             ]
           },
-          terraformationIndex: '2.129MTi'
+          terraformationIndex: '2.129MTi',
+          biomass: '344.344kg'
         }
       ],
     });

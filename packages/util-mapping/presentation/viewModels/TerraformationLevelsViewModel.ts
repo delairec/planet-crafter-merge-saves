@@ -5,8 +5,9 @@ export interface TerraformationLevelsViewModel {
 }
 
 interface PlanetLevelsViewModel {
-  name: string,
-  environmentalLevels: TableViewModel,
-  organicLevels: TableViewModel,
+  name: string;
+  environmentalLevels: TableViewModel;
+  organicLevels: TableViewModel;
   terraformationIndex: string;
+  biomass: string;
 }

@@ -53,7 +53,8 @@ describe('LoadTerraformationLevelsSectionController', () => {
               },
             ]
           },
-          terraformationIndex: '2.8kTi'
+          terraformationIndex: '2.8kTi',
+          biomass: '1.5kg'
         }
       ],
     });

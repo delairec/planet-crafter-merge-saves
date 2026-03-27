@@ -47,7 +47,8 @@ export class TerraformationLevelsPresenter {
               },
             ]
           },
-          terraformationIndex: ''
+          terraformationIndex: '',
+          biomass: ''
         }
       ]
     };
@@ -92,15 +93,18 @@ export class TerraformationLevelsPresenter {
           },
         ]
       },
-      terraformationIndex: this.computeTerraformationIndex(level),
+      terraformationIndex: formatNumber(this.computeTerraformationIndex(level), FormatNumberStrategies.SYMBOL) + 'Ti',
+      biomass: formatNumber(this.computeBiomass(level), FormatNumberStrategies.WEIGHT)
     }));
   }
 
   private computeTerraformationIndex(level: TerraformationLevel) {
     const totalEnvironmental = level.unitOxygenLevel + level.unitHeatLevel + level.unitPressureLevel + level.unitPurificationLevel;
-    const totalOrganic = level.unitPlantsLevel + level.unitInsectsLevel + level.unitAnimalsLevel;
-    const total = totalEnvironmental + totalOrganic;
+    const totalOrganic = this.computeBiomass(level);
+    return totalEnvironmental + totalOrganic;
+  }
 
-    return formatNumber(total, FormatNumberStrategies.SYMBOL) + 'Ti';
+  private computeBiomass(level: TerraformationLevel) {
+    return level.unitPlantsLevel + level.unitInsectsLevel + level.unitAnimalsLevel;
   }
 }
