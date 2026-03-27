@@ -20,6 +20,7 @@ const thresholds: Threshold[] = [
   {value: 0.001, suffix: ""},
   {value: 0.000_001, suffix: "µ", multiply: 1_000_000},
   {value: 0.000_000_001, suffix: "n", multiply: 1_000_000_000},
+  {value: 0.000_000_000_001, suffix: "p", multiply: 1_000_000_000_000},
 ];
 
 export function formatNumberByUnitThresholds(numberOrBigint: number | bigint) {
