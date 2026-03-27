@@ -14,7 +14,9 @@ const thresholds: Threshold[] = [
   {value: 1, suffix: "g"},
 ];
 
-export function formatNumberByWeightThresholds(num: number) {
+export function formatNumberByWeightThresholds(value: number|bigint) {
+  const num = Number(value);
+
   for (const threshold of thresholds) {
     if (isNumberBiggerThanThreshold(num, threshold)) {
       const result = num / threshold.value;

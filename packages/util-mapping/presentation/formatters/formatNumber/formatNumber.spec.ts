@@ -103,16 +103,17 @@ describe('formatNumber', () => {
     });
 
     it.each([
-      {symbol:'ppt', value: 1_000},
-      {symbol:'ppb', value: 1_000_000},
-      {symbol:'ppm', value: 1_000_000_000},
-      {symbol:'ppk', value: 1_000_000_000_000},
+      {symbol:'ppq', value: 1_000},
+      {symbol:'ppt', value: 1_000_000},
+      {symbol:'ppb', value: 1_000_000_000},
+      {symbol:'ppm', value: 1_000_000_000_000},
+      {symbol:'ppk', value: 1_000_000_000_000_000},
     ])('should format number with $symbol unit symbol', ({symbol, value}) => {
       // Act
       const result = formatNumber(value, FormatNumberStrategies.PARTS_PER);
 
       // Assert
-      expect(result).toBe(`1${symbol}`);
+      expect(result).toBe(`1,000${symbol}`);
     });
   });
 
@@ -126,16 +127,17 @@ describe('formatNumber', () => {
     });
 
     it.each([
-      {symbol:'nK', value: 1_000},
-      {symbol:'µK', value: 1_000_000},
-      {symbol:'mK', value: 1_000_000_000},
-      {symbol:'K', value: 1_000_000_000_000},
+      {symbol:'pK', value: 1_000},
+      {symbol:'nK', value: 1_000_000},
+      {symbol:'µK', value: 1_000_000_000},
+      {symbol:'mK', value: 1_000_000_000_000},
+      {symbol:'K', value: 1_000_000_000_000_000},
     ])('should format number with $symbol unit symbol', ({symbol, value}) => {
       // Act
       const result = formatNumber(value, FormatNumberStrategies.KELVIN);
 
       // Assert
-      expect(result).toBe(`1${symbol}`);
+      expect(result).toBe(`1,000${symbol}`);
     });
   });
 
@@ -149,15 +151,16 @@ describe('formatNumber', () => {
     });
 
     it.each([
-      {symbol:'µPa', value: 1_000},
-      {symbol:'mPa', value: 1_000_000},
-      {symbol:'Pa', value: 1_000_000_000},
+      {symbol:'nPa', value: 1_000},
+      {symbol:'µPa', value: 1_000_000},
+      {symbol:'mPa', value: 1_000_000_000},
+      {symbol:'Pa', value: 1_000_000_000_000},
     ])('should format number with $symbol unit symbol', ({symbol, value}) => {
       // Act
       const result = formatNumber(value, FormatNumberStrategies.PASCAL);
 
       // Assert
-      expect(result).toBe(`1${symbol}`);
+      expect(result).toBe(`1,000${symbol}`);
     });
   });
 

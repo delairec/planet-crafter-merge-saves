@@ -81,15 +81,15 @@ describe('TerraformationLevelsPresenter', () => {
             columns: [
               {
                 header: 'O²',
-                values: ['123.123ppt']
+                values: ['123,123ppq']
               },
               {
                 header: 'Heat',
-                values: ['456.456nK']
+                values: ['456,456pK']
               },
               {
                 header: 'Pressure',
-                values: ['789.789µPa']
+                values: ['789,789nPa']
               },
               {
                 header: 'Purification',

@@ -6,7 +6,7 @@ import {formatNumberByKelvinThresholds} from "./kelvin.strategy";
 import {formatNumberByPascalThresholds} from "./pascal.strategy";
 import {formatNumberByWeightThresholds} from "./weight.strategy";
 
-export const FormatNumberStrategies = {
+export const FormatNumberStrategies: Record<string, (value:number|bigint) => string> = {
   SYMBOL: formatNumberByUnitThresholds,
   THOUSANDS_SEPARATOR: formatDecimalNumber,
   PERCENTAGE: formatPercentageNumber,

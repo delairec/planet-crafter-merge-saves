@@ -13,9 +13,11 @@ const thresholds: Threshold[] = [
   {value: 1, suffix: "pK"},
 ];
 
-export function formatNumberByKelvinThresholds(num: number) {
+export function formatNumberByKelvinThresholds(value: number|bigint) {
+  const num = Number(value);
+
   for (const threshold of thresholds) {
-    if (isNumberBiggerThanThreshold(num, threshold)) {
+    if (isNumberBiggerThanThreshold(num * 0.001, threshold)) {
       const result = num / threshold.value;
       return formatDecimalNumberWithSymbol(result, threshold);
     }
