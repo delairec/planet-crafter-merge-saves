@@ -33,7 +33,7 @@ describe('LoadTerraformationLevelsSectionController', () => {
               },
               {
                 header: 'Purification',
-                values: ['700']
+                values: ['700Pu']
               }
             ]
           },
