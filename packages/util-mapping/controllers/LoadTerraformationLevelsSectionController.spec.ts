@@ -52,7 +52,8 @@ describe('LoadTerraformationLevelsSectionController', () => {
                 values: ['600g']
               },
             ]
-          }
+          },
+          terraformationIndex: '2.8kTi'
         }
       ],
     });
