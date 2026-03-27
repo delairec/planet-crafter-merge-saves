@@ -114,4 +114,27 @@ describe('formatNumber', () => {
       expect(result).toBe(`1${symbol}`);
     });
   });
+
+  describe('When using KELVIN strategy', () => {
+    it('should format the number with parts per symbol', () => {
+      // Act
+      const result = formatNumber(1, FormatNumberStrategies.KELVIN);
+
+      // Assert
+      expect(result).toBe('1pK');
+    });
+
+    it.each([
+      {symbol:'nK', value: 1_000},
+      {symbol:'µK', value: 1_000_000},
+      {symbol:'mK', value: 1_000_000_000},
+      {symbol:'K', value: 1_000_000_000_000},
+    ])('should format number with $symbol unit symbol', ({symbol, value}) => {
+      // Act
+      const result = formatNumber(value, FormatNumberStrategies.KELVIN);
+
+      // Assert
+      expect(result).toBe(`1${symbol}`);
+    });
+  });
 });

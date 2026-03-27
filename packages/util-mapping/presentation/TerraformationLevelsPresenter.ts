@@ -63,7 +63,7 @@ export class TerraformationLevelsPresenter {
           },
           {
             header: 'Heat',
-            values: [formatNumber(level.unitHeatLevel, FormatNumberStrategies.SYMBOL)]
+            values: [formatNumber(level.unitHeatLevel, FormatNumberStrategies.KELVIN)]
           },
           {
             header: 'Pressure',
