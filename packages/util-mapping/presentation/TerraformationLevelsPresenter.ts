@@ -59,7 +59,7 @@ export class TerraformationLevelsPresenter {
         columns: [
           {
             header: 'O²',
-            values: [formatNumber(level.unitOxygenLevel, FormatNumberStrategies.SYMBOL)]
+            values: [formatNumber(level.unitOxygenLevel, FormatNumberStrategies.PARTS_PER)]
           },
           {
             header: 'Heat',

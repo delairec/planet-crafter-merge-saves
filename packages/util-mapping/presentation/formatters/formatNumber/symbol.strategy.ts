@@ -22,7 +22,7 @@ const thresholds: Threshold[] = [
   {value: 0.000_000_001, suffix: "n", multiply: 1_000_000_000},
 ];
 
-export function formatNumberByThresholds(numberOrBigint: number | bigint) {
+export function formatNumberByUnitThresholds(numberOrBigint: number | bigint) {
   const num = isBigIntType(numberOrBigint) ? Number(numberOrBigint) : numberOrBigint;
   const bigNum = isBigIntType(numberOrBigint) ? numberOrBigint : null;
 

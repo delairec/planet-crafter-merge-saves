@@ -80,7 +80,7 @@ describe('TerraformationLevelsPresenter', () => {
             columns: [
               {
                 header: 'O²',
-                values: ['123.123k']
+                values: ['123.123ppt']
               },
               {
                 header: 'Heat',

@@ -91,4 +91,27 @@ describe('formatNumber', () => {
       });
     });
   });
+
+  describe('When using PARTS_PER strategy', () => {
+    it('should format the number with parts per symbol', () => {
+      // Act
+      const result = formatNumber(1, FormatNumberStrategies.PARTS_PER);
+
+      // Assert
+      expect(result).toBe('1ppq');
+    });
+
+    it.each([
+      {symbol:'ppt', value: 1_000},
+      {symbol:'ppb', value: 1_000_000},
+      {symbol:'ppm', value: 1_000_000_000},
+      {symbol:'ppk', value: 1_000_000_000_000},
+    ])('should format number with $symbol unit symbol', ({symbol, value}) => {
+      // Act
+      const result = formatNumber(value, FormatNumberStrategies.PARTS_PER);
+
+      // Assert
+      expect(result).toBe(`1${symbol}`);
+    });
+  });
 });

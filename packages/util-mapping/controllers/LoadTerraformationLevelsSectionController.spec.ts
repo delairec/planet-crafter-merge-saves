@@ -21,7 +21,7 @@ describe('LoadTerraformationLevelsSectionController', () => {
             columns: [
               {
                 header: 'O²',
-                values: ['100']
+                values: ['100ppq']
               },
               {
                 header: 'Heat',
