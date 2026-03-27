@@ -12,15 +12,17 @@ const thresholds: Threshold[] = [
   {value: 1, suffix: "nPa"},
 ];
 
-export function formatNumberByPascalThresholds(num: number) {
+export function formatNumberByPascalThresholds(value: number|bigint) {
+  const num = Number(value);
+
   for (const threshold of thresholds) {
-    if (isNumberBiggerThanThreshold(num, threshold)) {
+    if (isNumberBiggerThanThreshold(num * 0.001, threshold)) {
       const result = num / threshold.value;
       return formatDecimalNumberWithSymbol(result, threshold);
     }
   }
 
-  return formatDecimalNumberWithSymbol(num, thresholds[4]);
+  return formatDecimalNumberWithSymbol(num, thresholds[3]);
 }
 
 function formatDecimalNumberWithSymbol(value: number, t: Threshold) {
