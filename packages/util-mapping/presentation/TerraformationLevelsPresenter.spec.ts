@@ -92,7 +92,7 @@ describe('TerraformationLevelsPresenter', () => {
               },
               {
                 header: 'Purification',
-                values: ['415.415k']
+                values: ['415.415kPu']
               }
             ]
           },

@@ -71,7 +71,7 @@ export class TerraformationLevelsPresenter {
           },
           {
             header: 'Purification',
-            values: [formatNumber(level.unitPurificationLevel, FormatNumberStrategies.SYMBOL)]
+            values: [formatNumber(level.unitPurificationLevel, FormatNumberStrategies.SYMBOL) + 'Pu']
           }
         ]
       },
