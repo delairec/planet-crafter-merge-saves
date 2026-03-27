@@ -137,4 +137,26 @@ describe('formatNumber', () => {
       expect(result).toBe(`1${symbol}`);
     });
   });
+
+  describe('When using PASCAL strategy', () => {
+    it('should format the number with parts per symbol', () => {
+      // Act
+      const result = formatNumber(1, FormatNumberStrategies.PASCAL);
+
+      // Assert
+      expect(result).toBe('1nPa');
+    });
+
+    it.each([
+      {symbol:'µPa', value: 1_000},
+      {symbol:'mPa', value: 1_000_000},
+      {symbol:'Pa', value: 1_000_000_000},
+    ])('should format number with $symbol unit symbol', ({symbol, value}) => {
+      // Act
+      const result = formatNumber(value, FormatNumberStrategies.PASCAL);
+
+      // Assert
+      expect(result).toBe(`1${symbol}`);
+    });
+  });
 });

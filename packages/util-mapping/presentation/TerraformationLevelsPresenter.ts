@@ -67,7 +67,7 @@ export class TerraformationLevelsPresenter {
           },
           {
             header: 'Pressure',
-            values: [formatNumber(level.unitPressureLevel, FormatNumberStrategies.SYMBOL)]
+            values: [formatNumber(level.unitPressureLevel, FormatNumberStrategies.PASCAL)]
           },
           {
             header: 'Purification',
