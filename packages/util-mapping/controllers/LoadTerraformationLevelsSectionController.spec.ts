@@ -41,15 +41,15 @@ describe('LoadTerraformationLevelsSectionController', () => {
             columns: [
               {
                 header: 'Plants',
-                values: ['400']
+                values: ['400g']
               },
               {
                 header: 'Insects',
-                values: ['500']
+                values: ['500g']
               },
               {
                 header: 'Animals',
-                values: ['600']
+                values: ['600g']
               },
             ]
           }

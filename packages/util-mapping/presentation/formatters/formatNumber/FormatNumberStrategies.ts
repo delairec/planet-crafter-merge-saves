@@ -4,6 +4,7 @@ import {formatPercentageNumber} from "./percentage.strategy";
 import {formatNumberByPartsPerThresholds} from "./partsPer.strategy";
 import {formatNumberByKelvinThresholds} from "./kelvin.strategy";
 import {formatNumberByPascalThresholds} from "./pascal.strategy";
+import {formatNumberByWeightThresholds} from "./weight.strategy";
 
 export const FormatNumberStrategies = {
   SYMBOL: formatNumberByUnitThresholds,
@@ -12,5 +13,6 @@ export const FormatNumberStrategies = {
   PARTS_PER: formatNumberByPartsPerThresholds,
   KELVIN: formatNumberByKelvinThresholds,
   PASCAL: formatNumberByPascalThresholds,
+  WEIGHT: formatNumberByWeightThresholds,
 };
 export type FormatNumberStrategy = typeof FormatNumberStrategies[keyof typeof FormatNumberStrategies];

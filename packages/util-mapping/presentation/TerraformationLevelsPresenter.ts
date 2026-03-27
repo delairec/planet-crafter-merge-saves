@@ -79,15 +79,15 @@ export class TerraformationLevelsPresenter {
         columns: [
           {
             header: 'Plants',
-            values: [formatNumber(level.unitPlantsLevel, FormatNumberStrategies.SYMBOL)]
+            values: [formatNumber(level.unitPlantsLevel, FormatNumberStrategies.WEIGHT)]
           },
           {
             header: 'Insects',
-            values: [formatNumber(level.unitInsectsLevel, FormatNumberStrategies.SYMBOL)]
+            values: [formatNumber(level.unitInsectsLevel, FormatNumberStrategies.WEIGHT)]
           },
           {
             header: 'Animals',
-            values: [formatNumber(level.unitAnimalsLevel, FormatNumberStrategies.SYMBOL)]
+            values: [formatNumber(level.unitAnimalsLevel, FormatNumberStrategies.WEIGHT)]
           },
         ]
       }

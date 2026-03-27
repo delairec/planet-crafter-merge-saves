@@ -159,4 +159,28 @@ describe('formatNumber', () => {
       expect(result).toBe(`1${symbol}`);
     });
   });
+
+  describe('When using WEIGHT strategy', () => {
+    it('should format the number with parts per symbol', () => {
+      // Act
+      const result = formatNumber(1, FormatNumberStrategies.WEIGHT);
+
+      // Assert
+      expect(result).toBe('1g');
+    });
+
+    it.each([
+      {symbol:'kg', value: 1_000},
+      {symbol:'t', value: 1_000_000},
+      {symbol:'kt', value: 1_000_000_000},
+      {symbol:'Mt', value: 1_000_000_000_000},
+      {symbol:'Gt', value: 1_000_000_000_000_000},
+    ])('should format number with $symbol unit symbol', ({symbol, value}) => {
+      // Act
+      const result = formatNumber(value, FormatNumberStrategies.WEIGHT);
+
+      // Assert
+      expect(result).toBe(`1${symbol}`);
+    });
+  });
 });

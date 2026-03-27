@@ -100,15 +100,15 @@ describe('TerraformationLevelsPresenter', () => {
             columns: [
               {
                 header: 'Plants',
-                values: ['101.101k']
+                values: ['101.101kg']
               },
               {
                 header: 'Insects',
-                values: ['112.112k']
+                values: ['112.112kg']
               },
               {
                 header: 'Animals',
-                values: ['131.131k']
+                values: ['131.131kg']
               },
             ]
           }
