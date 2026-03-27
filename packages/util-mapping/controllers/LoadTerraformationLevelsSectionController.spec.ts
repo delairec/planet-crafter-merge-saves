@@ -29,7 +29,7 @@ describe('LoadTerraformationLevelsSectionController', () => {
               },
               {
                 header: 'Pressure',
-                values: ['300']
+                values: ['300nPa']
               },
               {
                 header: 'Purification',

@@ -88,7 +88,7 @@ describe('TerraformationLevelsPresenter', () => {
               },
               {
                 header: 'Pressure',
-                values: ['789.789k']
+                values: ['789.789µPa']
               },
               {
                 header: 'Purification',
