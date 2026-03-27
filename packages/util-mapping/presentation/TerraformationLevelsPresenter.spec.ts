@@ -47,7 +47,8 @@ describe('TerraformationLevelsPresenter', () => {
                 values: []
               },
             ]
-          }
+          },
+          terraformationIndex: '',
         }
       ],
     });
@@ -111,7 +112,8 @@ describe('TerraformationLevelsPresenter', () => {
                 values: ['131.131kg']
               },
             ]
-          }
+          },
+          terraformationIndex: '2.129MTi'
         }
       ],
     });

@@ -23,7 +23,7 @@ export default function TerraformationLevelsSection({sections}: TerraformationLe
         <For each={planets()}>
           {(planet) => (
             <div class="grid-item">
-              <h4>{planet.name}</h4>
+              <h4>{planet.name} ({planet.terraformationIndex})</h4>
               <div class="fields-group-container">
                 <FieldsGroup columns={() => planet.environmentalLevels.columns}/>
                 <FieldsGroup columns={() => planet.organicLevels.columns}/>
