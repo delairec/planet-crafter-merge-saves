@@ -19,6 +19,8 @@ import {Inventory} from "../../util-types/gameDefinitions/Inventory";
 import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
+import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
+import {WorldObjectName} from "../domain/worldObjectLabels";
 
 export class SaveSectionsReaderService implements SaveParserPort {
 
@@ -43,7 +45,7 @@ export class SaveSectionsReaderService implements SaveParserPort {
   getGlobalMetadata(): GlobalProgressionValueObject {
     const metadata = this.globalMetadata[0];
 
-    if(!metadata){
+    if (!metadata) {
       return {
         allTimeTerraTokens: 0
       }
@@ -67,8 +69,8 @@ export class SaveSectionsReaderService implements SaveParserPort {
 
       return {
         name: player.name,
-        inventory: playerInventoryIds.map((id) => worldObjects.find((wo) => wo.id === id)?.label ?? id),
-        equipment: playerEquipmentIds.map((id) => worldObjects.find((wo) => wo.id === id)?.label ?? id)
+        inventory: playerInventoryIds.map((id) => worldObjects.find((wo) => wo.id === id)?.name ?? id),
+        equipment: playerEquipmentIds.map((id) => worldObjects.find((wo) => wo.id === id)?.name ?? id)
       };
     });
   }
@@ -94,7 +96,7 @@ export class SaveSectionsReaderService implements SaveParserPort {
     }));
   }
 
-  getWorldObjects(): (sections: ParsedSections) => Generator<{ id: string; label: string }, void, unknown> {
+  getWorldObjects(): (sections: ParsedSections) => Generator<WorldObjectEntity> {
 
     const worldObjectsFactory = this.worldObjectsFactory;
 
@@ -102,18 +104,10 @@ export class SaveSectionsReaderService implements SaveParserPort {
       for (const worldObject of worldObjectsFactory()) {
         yield {
           id: String(worldObject.id),
-          label: worldObject.gId
+          name: worldObject.gId as WorldObjectName
         };
       }
     });
-  }
-
-  private findWorldObjectByIds(ids: string[]): WorldObjectEntity[] {
-    const result: WorldObjectEntity[] = [];
-    for (const wo of this.getWorldObjects()(this.sections)) {
-      if (ids.includes(wo.id)) result.push(wo);
-    }
-    return result;
   }
 
   getStatistics(): StatisticsValueObject {
@@ -134,5 +128,59 @@ export class SaveSectionsReaderService implements SaveParserPort {
         multiplayerFactor: config.modifierMultiplayerTerraformationFactor
       }
     }))[0];
+  }
+
+  getEnergyLevels(): EnergyLevelsValueObject {
+    const production = this.computeEnergyProductionLevel();
+    const consumption = this.computeEnergyConsumptionLevel();
+    const available = production - consumption;
+
+    return {
+      production,
+      consumption,
+      available,
+    };
+  }
+
+  private findWorldObjectByIds(ids: string[]): WorldObjectEntity[] {
+    const result: WorldObjectEntity[] = [];
+    for (const worldObject of this.getWorldObjects()(this.sections)) {
+      if (ids.includes(worldObject.id)) {
+        result.push(worldObject);
+      }
+    }
+    return result;
+  }
+
+  private findWorldObjectsByNames(names: WorldObjectName[]): WorldObjectEntity[] {
+    const result: WorldObjectEntity[] = [];
+    for (const worldObject of this.getWorldObjects()(this.sections)) {
+      if (names.includes(worldObject.name)) {
+        result.push(worldObject);
+      }
+    }
+    return result;
+  }
+
+  private computeEnergyProductionLevel(): number {
+    const windTurbines: WorldObjectEntity[] = this.findWorldObjectsByNames(['EnergyGenerator1']);
+    const t2WindTurbines: WorldObjectEntity[] = this.findWorldObjectsByNames(['WindTurbine1']);
+    const t1SolarPanels: WorldObjectEntity[] = this.findWorldObjectsByNames(['EnergyGenerator2']);
+    const t2SolarPanels: WorldObjectEntity[] = this.findWorldObjectsByNames(['EnergyGenerator3']);
+    const t1NuclearReactors: WorldObjectEntity[] = this.findWorldObjectsByNames(['EnergyGenerator4']);
+    const t2NuclearReactors: WorldObjectEntity[] = this.findWorldObjectsByNames(['EnergyGenerator5']);
+    const nuclearFusionGenerators: WorldObjectEntity[] = this.findWorldObjectsByNames(['EnergyGenerator6']);
+
+    return windTurbines.length * 1.2 +
+      t2WindTurbines.length * 290 +
+      t1SolarPanels.length * 6.5 +
+      t2SolarPanels.length * 19.5 +
+      t1NuclearReactors.length * 86.5 +
+      t2NuclearReactors.length * 331.5 +
+      nuclearFusionGenerators.length * 1485.5;
+  }
+
+  private computeEnergyConsumptionLevel():number {
+    return 0;
   }
 }

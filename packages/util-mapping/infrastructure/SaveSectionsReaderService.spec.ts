@@ -10,6 +10,7 @@ import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
 import {ParsedSections} from "../../util-types/gameDefinitions";
+import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
 
 describe('SaveSectionsReaderService', () => {
   let sections: ParsedSections;
@@ -129,19 +130,19 @@ describe('SaveSectionsReaderService', () => {
     const worldObjectsGenerator = worldObjects(sections);
     expect(worldObjectsGenerator.next().value).toEqual<WorldObjectEntity>({
       id: '79111656',
-      label: 'Phytoplankton3'
+      name: 'Phytoplankton3'
     });
     expect(worldObjectsGenerator.next().value).toEqual<WorldObjectEntity>({
       id: '58524136',
-      label: 'MagnetarQuartz'
+      name: 'MagnetarQuartz'
     });
     expect(worldObjectsGenerator.next().value).toEqual<WorldObjectEntity>({
       id: '85274195',
-      label: 'Backpack4'
+      name: 'Backpack4'
     });
     expect(worldObjectsGenerator.next().value).toEqual<WorldObjectEntity>({
       id: '48456321',
-      label: 'OxygenTank5'
+      name: 'OxygenTank5'
     });
   });
 
@@ -176,6 +177,21 @@ describe('SaveSectionsReaderService', () => {
         meteoOccurrence: 0.4,
         multiplayerFactor: 0.5
       }
+    });
+  });
+
+  it('should extract energy levels of production and consumption', () => {
+    // Arrange
+    const service = new SaveSectionsReaderService(sections);
+
+    // Act
+    const energyLevels = service.getEnergyLevels();
+
+    // Assert
+    expect(energyLevels).toEqual<EnergyLevelsValueObject>({
+      production: 2220.7,
+      consumption: 0,
+      available: 2220.7
     });
   });
 });

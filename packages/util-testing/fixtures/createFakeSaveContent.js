@@ -27,7 +27,14 @@ export const worldObjects = [
   {id: 28491667, gId: 'PulsarQuartz'},
   {id: 39187611, gId: 'Backpack7'},
   {id: 65514812, gId: 'OxygenTank4'},
-]
+  {id: 95585241, gId: 'EnergyGenerator1'},
+  {id: 95585242, gId: 'EnergyGenerator2'},
+  {id: 95585243, gId: 'EnergyGenerator3'},
+  {id: 95585244, gId: 'EnergyGenerator4'},
+  {id: 95585245, gId: 'EnergyGenerator5'},
+  {id: 95585246, gId: 'EnergyGenerator6'},
+  {id: 95585246, gId: 'WindTurbine1'},
+];
 export const saveConfiguration = {
   saveDisplayName: 'Merged Save',
   planetId: 'Toxicity',
@@ -76,17 +83,6 @@ export const statistics = {
   totalSaveFileLoad: 5,
   totalSaveFileTime: 3600
 };
-
-export const worldObjectsGenerator = (function* () {
-  yield {id: '79111656', gId: 'Phytoplankton3'};
-  yield {id: '58524136', gId: 'MagnetarQuartz'};
-  yield {id: '85274195', gId: 'Backpack4'};
-  yield {id: '48456321', gId: 'OxygenTank5'};
-  yield {id: '15974863', gId: 'Phytoplankton1'};
-  yield {id: '28491667', gId: 'PulsarQuartz'};
-  yield {id: '39187611', gId: 'Backpack7'};
-  yield {id: '65514812', gId: 'OxygenTank4'};
-})();
 
 export function createFakeSaveContent(overrides = {}) {
   return createFakeSaveString({
