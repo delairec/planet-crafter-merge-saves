@@ -131,6 +131,10 @@ export class SaveSectionsReaderService implements SaveParserPort {
   }
 
   getEnergyLevels(): EnergyLevelsValueObject {
+
+    // FIXME: il doit manquer des unités car le compte n'y est pas (inférieur au cas réel)
+    //  + voir si c'est une production par planète ou globale ?
+
     const production = this.computeEnergyProductionLevel();
     const consumption = this.computeEnergyConsumptionLevel();
     const available = production - consumption;
