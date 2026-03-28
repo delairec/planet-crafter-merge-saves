@@ -53,7 +53,7 @@ describe('formatNumber', () => {
       const result = formatNumber(value, FormatNumberStrategies.SYMBOL);
 
       // Assert
-      expect(result).toBe(`1${symbol}`);
+      expect(result).toBe(`1 ${symbol}`);
     });
 
     it('should handle big values that are not bigint type', () => {
@@ -61,7 +61,7 @@ describe('formatNumber', () => {
       const result = formatNumber(1_987_487_654_321_885, FormatNumberStrategies.SYMBOL);
 
       // Assert
-      expect(result).toBe('1.987P');
+      expect(result).toBe('1.987 P');
     });
 
     it('should handle non integer numbers', () => {
@@ -69,7 +69,7 @@ describe('formatNumber', () => {
       const result = formatNumber(3210.52039, FormatNumberStrategies.SYMBOL);
 
       // Assert
-      expect(result).toBe('3.211k');
+      expect(result).toBe('3.211 k');
     });
 
     describe('When number is between 0.001 and 999', () => {
@@ -78,7 +78,7 @@ describe('formatNumber', () => {
         const result = formatNumber(number, FormatNumberStrategies.SYMBOL);
 
         // Assert
-        expect(result).toBe(`${number}`);
+        expect(result).toBe(`${number} `);
       });
     });
 
@@ -88,7 +88,7 @@ describe('formatNumber', () => {
         const result = formatNumber(0.000_000_000_000_000_1, FormatNumberStrategies.SYMBOL);
 
         // Assert
-        expect(result).toBe('0');
+        expect(result).toBe('0 ');
       });
     });
   });
@@ -99,7 +99,7 @@ describe('formatNumber', () => {
       const result = formatNumber(1, FormatNumberStrategies.PARTS_PER);
 
       // Assert
-      expect(result).toBe('1ppq');
+      expect(result).toBe('1 ppq');
     });
 
     it.each([
@@ -113,7 +113,7 @@ describe('formatNumber', () => {
       const result = formatNumber(value, FormatNumberStrategies.PARTS_PER);
 
       // Assert
-      expect(result).toBe(`1,000${symbol}`);
+      expect(result).toBe(`1,000 ${symbol}`);
     });
   });
 
@@ -123,7 +123,7 @@ describe('formatNumber', () => {
       const result = formatNumber(1, FormatNumberStrategies.KELVIN);
 
       // Assert
-      expect(result).toBe('1pK');
+      expect(result).toBe('1 pK');
     });
 
     it.each([
@@ -137,7 +137,7 @@ describe('formatNumber', () => {
       const result = formatNumber(value, FormatNumberStrategies.KELVIN);
 
       // Assert
-      expect(result).toBe(`1,000${symbol}`);
+      expect(result).toBe(`1,000 ${symbol}`);
     });
   });
 
@@ -147,7 +147,7 @@ describe('formatNumber', () => {
       const result = formatNumber(1, FormatNumberStrategies.PASCAL);
 
       // Assert
-      expect(result).toBe('1nPa');
+      expect(result).toBe('1 nPa');
     });
 
     it.each([
@@ -160,7 +160,7 @@ describe('formatNumber', () => {
       const result = formatNumber(value, FormatNumberStrategies.PASCAL);
 
       // Assert
-      expect(result).toBe(`1,000${symbol}`);
+      expect(result).toBe(`1,000 ${symbol}`);
     });
   });
 
@@ -170,7 +170,7 @@ describe('formatNumber', () => {
       const result = formatNumber(1, FormatNumberStrategies.WEIGHT);
 
       // Assert
-      expect(result).toBe('1g');
+      expect(result).toBe('1 g');
     });
 
     it.each([
@@ -184,7 +184,7 @@ describe('formatNumber', () => {
       const result = formatNumber(value, FormatNumberStrategies.WEIGHT);
 
       // Assert
-      expect(result).toBe(`1${symbol}`);
+      expect(result).toBe(`1 ${symbol}`);
     });
   });
 });

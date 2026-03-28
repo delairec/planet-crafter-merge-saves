@@ -82,19 +82,19 @@ describe('TerraformationLevelsPresenter', () => {
             columns: [
               {
                 header: 'O²',
-                values: ['123,123ppq']
+                values: ['123,123 ppq']
               },
               {
                 header: 'Heat',
-                values: ['456,456pK']
+                values: ['456,456 pK']
               },
               {
                 header: 'Pressure',
-                values: ['789,789nPa']
+                values: ['789,789 nPa']
               },
               {
                 header: 'Purification',
-                values: ['415.415kPu']
+                values: ['415.415 kPu']
               }
             ]
           },
@@ -102,20 +102,20 @@ describe('TerraformationLevelsPresenter', () => {
             columns: [
               {
                 header: 'Plants',
-                values: ['101.101kg']
+                values: ['101.101 kg']
               },
               {
                 header: 'Insects',
-                values: ['112.112kg']
+                values: ['112.112 kg']
               },
               {
                 header: 'Animals',
-                values: ['131.131kg']
+                values: ['131.131 kg']
               },
             ]
           },
-          terraformationIndex: '2.129MTi',
-          biomass: '344.344kg'
+          terraformationIndex: '2.129 MTi',
+          biomass: '344.344 kg'
         }
       ],
     });

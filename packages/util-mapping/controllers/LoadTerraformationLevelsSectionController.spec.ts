@@ -21,19 +21,19 @@ describe('LoadTerraformationLevelsSectionController', () => {
             columns: [
               {
                 header: 'O²',
-                values: ['100ppq']
+                values: ['100 ppq']
               },
               {
                 header: 'Heat',
-                values: ['200pK']
+                values: ['200 pK']
               },
               {
                 header: 'Pressure',
-                values: ['300nPa']
+                values: ['300 nPa']
               },
               {
                 header: 'Purification',
-                values: ['700Pu']
+                values: ['700 Pu']
               }
             ]
           },
@@ -41,20 +41,20 @@ describe('LoadTerraformationLevelsSectionController', () => {
             columns: [
               {
                 header: 'Plants',
-                values: ['400g']
+                values: ['400 g']
               },
               {
                 header: 'Insects',
-                values: ['500g']
+                values: ['500 g']
               },
               {
                 header: 'Animals',
-                values: ['600g']
+                values: ['600 g']
               },
             ]
           },
-          terraformationIndex: '2.8kTi',
-          biomass: '1.5kg'
+          terraformationIndex: '2.8 kTi',
+          biomass: '1.5 kg'
         }
       ],
     });
