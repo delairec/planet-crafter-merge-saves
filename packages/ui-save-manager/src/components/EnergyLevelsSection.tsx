@@ -20,7 +20,7 @@ export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
 
   return (
     <div>
-      <h3>Power</h3>
+      <h3>Power (WORK IN PROGRESS)</h3>
       <div class="fields-group-container">
         <FieldsGroup columns={energyLevelsColumns}/>
       </div>
