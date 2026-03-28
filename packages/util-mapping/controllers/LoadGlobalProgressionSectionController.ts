@@ -2,6 +2,7 @@ import {GlobalProgressionViewModel} from '../presentation/viewModels/GlobalProgr
 import {GlobalProgressionPresenter} from '../presentation/GlobalProgressionPresenter';
 import {LoadGlobalProgressionSection} from '../application/LoadGlobalProgressionSection';
 import {SaveParserService} from '../infrastructure/SaveParserService';
+import { ParsedSections } from "../../util-types/gameDefinitions";
 
 export class LoadGlobalProgressionSectionController {
 

@@ -9,6 +9,7 @@ import {InventoryEntity} from "../domain/entities/InventoryEntity";
 import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
+import {ParsedSections} from "../../util-types/gameDefinitions";
 
 describe('SaveParserService', () => {
   let sections: ParsedSections;

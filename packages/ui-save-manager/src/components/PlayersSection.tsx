@@ -2,6 +2,7 @@ import {Accessor, createEffect, createSignal, For, Show} from "solid-js";
 import {LoadPlayersSectionController} from "../../../util-mapping/controllers/LoadPlayersSectionController";
 import FieldsGroup from "~/components/structure/FieldsGroup";
 import {PlayersViewModel} from "../../../util-mapping/presentation/viewModels/PlayersViewModel";
+import {ParsedSections} from "../../../util-types/gameDefinitions";
 
 interface PlayersProps {
   sections: Accessor<ParsedSections>;

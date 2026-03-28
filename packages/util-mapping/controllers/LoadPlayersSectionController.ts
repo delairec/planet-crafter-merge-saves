@@ -2,6 +2,7 @@ import {PlayersViewModel} from '../presentation/viewModels/PlayersViewModel';
 import {PlayersPresenter} from '../presentation/PlayersPresenter';
 import {LoadPlayersSection} from '../application/LoadPlayersSection';
 import {SaveParserService} from '../infrastructure/SaveParserService';
+import { ParsedSections } from "../../util-types/gameDefinitions";
 
 export class LoadPlayersSectionController {
 

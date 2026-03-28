@@ -4,6 +4,7 @@ import GlobalProgressionSection from "../components/GlobalProgressionSection";
 import TerraformationLevelsSection from '../components/TerraformationLevelsSection';
 import {parseSaveSections} from "../../../util-parsing/parseSaveSections";
 import SaveConfigurationSection from "../components/SaveConfigurationSection";
+import {ParsedSections} from "../../../util-types/gameDefinitions";
 
 export default function Home() {
   const [file, setFile] = createSignal<File | null>(null);

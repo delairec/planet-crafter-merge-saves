@@ -2,6 +2,7 @@ import {Accessor, createEffect, createSignal} from "solid-js";
 import {LoadSaveConfigurationSectionController} from "../../../util-mapping/controllers/LoadSaveConfigurationSectionController";
 import FieldsGroup from "./structure/FieldsGroup";
 import {SaveConfigurationViewModel} from "../../../util-mapping/presentation/viewModels/SaveConfigurationViewModel";
+import {ParsedSections} from "../../../util-types/gameDefinitions";
 
 interface SaveConfigurationProps {
   sections: Accessor<ParsedSections>;
