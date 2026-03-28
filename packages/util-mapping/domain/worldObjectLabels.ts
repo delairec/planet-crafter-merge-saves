@@ -1,4 +1,4 @@
-export const worldObjectIds = {
+export const worldObjectLabels = {
   // Equipment
   BootsSpeed1: 'Agility Boots T1',
   BootsSpeed2: 'Agility Boots T2',
@@ -717,4 +717,8 @@ export const worldObjectIds = {
   WreckSafe: 'Big safe',
   WreckServer: 'Technical debris',
   WreckWardrobe: 'Spacesuits locker',
-};
+} as const;
+
+export type WorldObjectName = keyof typeof worldObjectLabels;
+
+export type WorldObjectLabel = typeof worldObjectLabels[WorldObjectName];

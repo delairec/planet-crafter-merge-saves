@@ -1,7 +1,7 @@
 import {PlayersViewModel} from './viewModels/PlayersViewModel';
 import {PlayersPresenterPort} from '../application/ports/PlayersPresenterPort';
 import {PlayerEntity} from "../domain/entities/PlayerEntity";
-import {worldObjectIds} from "./idMapping/worldObjectIds";
+import {WorldObjectLabel, worldObjectLabels} from "../domain/worldObjectLabels";
 
 export class PlayersPresenter implements PlayersPresenterPort {
   viewModel: PlayersViewModel;
@@ -28,12 +28,12 @@ export class PlayersPresenter implements PlayersPresenterPort {
     }));
   }
 
-  private mapItemIdToItemName(itemId: string) {
-    const worldObjectName: string = worldObjectIds[itemId];
-    return worldObjectName ?? `Unknown Item (${itemId})`;
+  private mapItemNameToItemLabel(itemName: string) {
+    const worldObjectLabel: WorldObjectLabel = worldObjectLabels[itemName];
+    return worldObjectLabel ?? `Unknown Item (${itemName})`;
   }
 
   private mapListWithEmptyMessage(list: string[], message: string) {
-    return list.length === 0 ? [message] : list.map(this.mapItemIdToItemName);
+    return list.length === 0 ? [message] : list.map(this.mapItemNameToItemLabel);
   }
 }
