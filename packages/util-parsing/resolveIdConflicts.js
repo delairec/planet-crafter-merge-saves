@@ -1,5 +1,4 @@
-/** @import { ParsedSave, Player, Inventory, WorldObject } from '../types.js' */
-
+/** @import { ParsedSave, Player, Inventory, WorldObject } from '../util-types/js/types.js' */
 import {parseSaveSections} from './parseSaveSections.js';
 import {stringifyEntry} from './stringifyEntry.js';
 import {serializeSave} from './serializeSave.js';
@@ -14,11 +13,13 @@ import {serializeSave} from './serializeSave.js';
  * @see GR-ID-1, GR-ID-2, GR-ID-3, GR-ID-4 in docs/game-rules.md
  */
 export function resolveIdConflicts(mergedSave, saveAWorldObjectIds = new Set()) {
+  const {sections} = parseSaveSections(mergedSave);
+
   const [
     metadata,
     terraformationLevels,
     players,
-    worldObjectsGenerator,
+    worldObjectsFactory,
     inventories,
     statistics,
     mailboxes,
@@ -26,7 +27,7 @@ export function resolveIdConflicts(mergedSave, saveAWorldObjectIds = new Set()) 
     saveConfigurations,
     terrainLayers,
     worldEvents,
-  ] = parseSaveSections(mergedSave);
+  ] = sections;
 
   const nextIdGenerator = createIdSequence(inventories);
 
@@ -36,7 +37,7 @@ export function resolveIdConflicts(mergedSave, saveAWorldObjectIds = new Set()) 
 
   const worldObjectIdRemapping = new Map();
   const saveBLinkedInventoryIds = new Set();
-  const resolvedWorldObjectsGenerator = createResolveWorldObjectsGenerator(worldObjectsGenerator, nextIdGenerator, worldObjectIdRemapping, saveBLinkedInventoryIds);
+  const resolvedWorldObjectsGenerator = createResolveWorldObjectsGenerator(worldObjectsFactory(), nextIdGenerator, worldObjectIdRemapping, saveBLinkedInventoryIds);
   const serializedWorldObjects = serializeWorldObjectsAndBuildRemapping(resolvedWorldObjectsGenerator, oldIdToNewIds, saveBInventoryOriginalIds, saveAWorldObjectIds, worldObjectIdRemapping, bInventorySlotsTakenByPlayers);
 
   const resolvedSaveBLinkedInventoryIds = remapLinkedInventoryIds(saveBLinkedInventoryIds, oldIdToNewIds);

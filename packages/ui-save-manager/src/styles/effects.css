@@ -1,0 +1,11 @@
+.drop-shadow-engraved {
+    text-shadow: var(--neon-cyan) -1px 1px;
+}
+.shadow-neon-cyan {
+    box-shadow: 0 0 8px var(--neon-cyan), 0 0 16px var(--neon-cyan);
+}
+
+::selection {
+    background-color: var(--primary);
+    color: var(--inverted);
+}

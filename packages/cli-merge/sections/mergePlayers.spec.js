@@ -2,10 +2,10 @@ import {describe, it, expect} from 'bun:test';
 import {merge} from '../merge.js';
 import {createFakeSaveString} from '../../util-testing/fixtures/createFakeSaveString.js';
 import {player} from '../../util-testing/fixtures/createFakeSaveContent.js';
+import { PLAYERS_SECTION_INDEX } from '../../util-types/js/sectionIndexes.js';
 
 describe('Merge saves — #3 Players', () => {
   const SECTION_SEPARATOR = '@';
-  const PLAYERS_SECTION_INDEX = 2;
   const saveDisplayName = 'SAVE_NAME';
 
   const saveA_players = [{
@@ -133,4 +133,3 @@ describe('Merge saves — #3 Players', () => {
     });
   });
 });
-

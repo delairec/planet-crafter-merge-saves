@@ -2,13 +2,10 @@ import {describe, it, expect} from 'bun:test';
 import {resolveIdConflicts} from './resolveIdConflicts.js';
 import {parseSaveSections} from './parseSaveSections.js';
 import {createFakeSaveString} from '../util-testing/fixtures/createFakeSaveString.js';
+import { TERRAFORMATION_LEVELS_SECTION_INDEX, PLAYERS_SECTION_INDEX, WORLD_OBJECTS_SECTION_INDEX, INVENTORIES_SECTION_INDEX } from '../util-types/js/sectionIndexes.js';
 
 describe('utils/resolveIdConflicts', () => {
   const SECTION_SEPARATOR = '@';
-  const TERRAFORMATION_LEVELS_SECTION_INDEX = 1;
-  const PLAYERS_SECTION_INDEX = 2;
-  const WORLD_OBJECTS_SECTION_INDEX = 3;
-  const INVENTORIES_SECTION_INDEX = 4;
 
   const defaultPlayerConfiguration = {
     playerPosition: '0,0,0',
@@ -624,7 +621,7 @@ describe('utils/resolveIdConflicts', () => {
       const result = resolveIdConflicts(mergedSave);
 
       // Assert
-      const sections = parseSaveSections(result);
+      const {sections} = parseSaveSections(result);
       expect(sections.length).toBe(12);
     });
 
@@ -643,9 +640,10 @@ describe('utils/resolveIdConflicts', () => {
       const result = resolveIdConflicts(mergedSave);
 
       // Assert
-      const [, , players, worldObjectsGenerator, inventories, statistics] = parseSaveSections(result);
+      const {sections} = parseSaveSections(result);
+      const [, , players, worldObjectsFactory, inventories, statistics] = sections;
       expect(players[0].name).toBe('Nikowa');
-      expect([...worldObjectsGenerator][0].id).toBe(100);
+      expect([...worldObjectsFactory()][0].id).toBe(100);
       expect(inventories[0].id).toBe(10);
       expect(statistics[0].craftedObjects).toBe(10);
     });

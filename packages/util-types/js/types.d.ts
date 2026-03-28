@@ -98,6 +98,20 @@ declare global {
     modifierGaugeDrain: number;
     modifierMeteoOccurence: number;
     modifierMultiplayerTerraformationFactor: number;
+    // Extra
+    unlockedSpaceTrading: boolean;
+    unlockedOreExtrators: boolean;
+    unlockedTeleporters: boolean;
+    unlockedDrones: boolean;
+    unlockedAutocrafter: boolean;
+    unlockedEverything: boolean;
+    freeCraft: boolean;
+    preInterplanetarySave: boolean;
+    randomizeMineables: boolean;
+    dyingConsequencesLabel: string;
+    startLocationLabel: string;
+    hasPlayedIntro: boolean;
+    gameStartLocation: string;
   }
 
   interface TerrainLayer {
@@ -119,11 +133,11 @@ declare global {
     version?: number;
   }
 
-  type ParsedSave = [
+  type ParsedSections = [
     GlobalMetadata[],
     TerraformationLevel[],
     Player[],
-    Generator<WorldObject>,
+    () => Generator<WorldObject>,
     Inventory[],
     Statistics[],
     MailboxMessage[],
@@ -133,6 +147,11 @@ declare global {
     WorldEvent[],
     never[]
   ];
+
+  type ParsedSave = {
+    sections: ParsedSections;
+    errors: string[];
+  };
 }
 
 export interface GlobalMetadata {
@@ -219,6 +238,20 @@ export interface SaveConfiguration {
   modifierGaugeDrain: number;
   modifierMeteoOccurence: number;
   modifierMultiplayerTerraformationFactor: number;
+  // Extra
+  unlockedSpaceTrading: boolean;
+  unlockedOreExtrators: boolean;
+  unlockedTeleporters: boolean;
+  unlockedDrones: boolean;
+  unlockedAutocrafter: boolean;
+  unlockedEverything: boolean;
+  freeCraft: boolean;
+  preInterplanetarySave: boolean;
+  randomizeMineables: boolean;
+  dyingConsequencesLabel: string;
+  startLocationLabel: string;
+  hasPlayedIntro: boolean;
+  gameStartLocation: string;
 }
 
 export interface TerrainLayer {
@@ -240,11 +273,11 @@ export interface WorldEvent {
   version?: number;
 }
 
-export type ParsedSave = [
+export type ParsedSections = [
   GlobalMetadata[],
   TerraformationLevel[],
   Player[],
-  Generator<WorldObject>,
+  () => Generator<WorldObject>,
   Inventory[],
   Statistics[],
   MailboxMessage[],
@@ -254,3 +287,8 @@ export type ParsedSave = [
   WorldEvent[],
   never[]
 ];
+
+export type ParsedSave = {
+  sections: ParsedSections;
+  errors: string[];
+};

@@ -14,8 +14,27 @@ export const player = {
   host: true,
   planetId: 'Toxicity'
 };
-export const inventory = {id: 44, woIds: '', size: 20};
-export const equipment = {id: 45, woIds: '', size: 10};
+export const inventory = {id: 44, woIds: '79111656,58524136', size: 20};
+export const equipment = {id: 45, woIds: '85274195,48456321', size: 10};
+export const inventory2 = {id: 46, woIds: '15974863,28491667', size: 20};
+export const equipment2 = {id: 47, woIds: '39187611,65514812', size: 10};
+export const worldObjects = [
+  {id: 79111656, gId: 'Phytoplankton3'},
+  {id: 58524136, gId: 'MagnetarQuartz'},
+  {id: 85274195, gId: 'Backpack4'},
+  {id: 48456321, gId: 'OxygenTank5'},
+  {id: 15974863, gId: 'Phytoplankton1'},
+  {id: 28491667, gId: 'PulsarQuartz'},
+  {id: 39187611, gId: 'Backpack7'},
+  {id: 65514812, gId: 'OxygenTank4'},
+  {id: 95585241, gId: 'EnergyGenerator1'},
+  {id: 95585242, gId: 'EnergyGenerator2'},
+  {id: 95585243, gId: 'EnergyGenerator3'},
+  {id: 95585244, gId: 'EnergyGenerator4'},
+  {id: 95585245, gId: 'EnergyGenerator5'},
+  {id: 95585246, gId: 'EnergyGenerator6'},
+  {id: 95585246, gId: 'WindTurbine1'},
+];
 export const saveConfiguration = {
   saveDisplayName: 'Merged Save',
   planetId: 'Toxicity',
@@ -28,11 +47,11 @@ export const saveConfiguration = {
   freeCraft: false,
   preInterplanetarySave: false,
   randomizeMineables: false,
-  modifierTerraformationPace: 1.0,
-  modifierPowerConsumption: 1.0,
-  modifierGaugeDrain: 1.0,
-  modifierMeteoOccurence: 1.0,
-  modifierMultiplayerTerraformationFactor: 1.0,
+  modifierTerraformationPace: 0.1,
+  modifierPowerConsumption: 0.2,
+  modifierGaugeDrain: 0.3,
+  modifierMeteoOccurence: 0.4,
+  modifierMultiplayerTerraformationFactor: 0.5,
   modded: false,
   version: '1.0',
   mode: 'Standard',
@@ -44,7 +63,7 @@ export const saveConfiguration = {
 };
 export const metadata = {
   terraTokens: 100,
-  allTimeTerraTokens: 200,
+  allTimeTerraTokens: 200_345,
   unlockedGroups: 'BootsSpeed1',
   openedInstanceSeed: 0,
   openedInstanceTimeLeft: 0
@@ -70,7 +89,8 @@ export function createFakeSaveContent(overrides = {}) {
     globalMetadata: metadata,
     terraformationLevels: [terraformationLevel],
     players: [player],
-    inventories: [inventory, equipment],
+    inventories: [inventory, equipment, inventory2, equipment2],
+    worldObjects: worldObjects,
     statistics: statistics,
     saveConfiguration: saveConfiguration,
     ...overrides

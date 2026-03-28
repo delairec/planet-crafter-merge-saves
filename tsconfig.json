@@ -4,6 +4,7 @@
     "allowJs": true,
     "noEmit": true,
     "strict": true,
+    "skipLibCheck": true,
     "noImplicitAny": false,
     "moduleResolution": "bundler",
     "module": "esnext",
@@ -12,7 +13,7 @@
     "types": ["@types/bun"],
     "maxNodeModuleJsDepth": 1
   },
-  "include": ["packages/**/*.js"],
-  "exclude": ["node_modules"]
+  "include": ["packages/**/*.js", "packages/**/*.ts"],
+  "exclude": ["node_modules", ".output"]
 }
 
