@@ -5,6 +5,7 @@ import TerraformationLevelsSection from '../components/TerraformationLevelsSecti
 import {parseSaveSections} from "../../../util-parsing/parseSaveSections";
 import SaveConfigurationSection from "../components/SaveConfigurationSection";
 import {ParsedSections} from "../../../util-types/gameDefinitions";
+import EnergyLevelsSection from "~/components/EnergyLevelsSection";
 
 export default function Home() {
   const [file, setFile] = createSignal<File | null>(null);
@@ -65,7 +66,10 @@ export default function Home() {
 
         <Show when={sections() && !errors().length}>
           <SaveConfigurationSection sections={() => sections()!}/>
-          <GlobalProgressionSection sections={() => sections()!}/>
+          <div class="grid-container">
+            <GlobalProgressionSection sections={() => sections()!}/>
+            <EnergyLevelsSection sections={() => sections()!}/>
+          </div>
           <TerraformationLevelsSection sections={() => sections()!}/>
           <PlayersSection sections={() => sections()!}/>
         </Show>
