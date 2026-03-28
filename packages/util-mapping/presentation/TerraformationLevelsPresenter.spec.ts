@@ -2,6 +2,8 @@ import {describe, expect, it} from 'bun:test';
 import {TerraformationLevelsPresenter} from './TerraformationLevelsPresenter';
 import {TerraformationLevelsViewModel} from './viewModels/TerraformationLevelsViewModel';
 
+const nbsp = '\u00A0';
+
 describe('TerraformationLevelsPresenter', () => {
   it('should initialize with default view model', () => {
     // Act
@@ -82,19 +84,19 @@ describe('TerraformationLevelsPresenter', () => {
             columns: [
               {
                 header: 'O²',
-                values: ['123,123 ppq']
+                values: [`123,123${nbsp}ppq`]
               },
               {
                 header: 'Heat',
-                values: ['456,456 pK']
+                values: [`456,456${nbsp}pK`]
               },
               {
                 header: 'Pressure',
-                values: ['789,789 nPa']
+                values: [`789,789${nbsp}nPa`]
               },
               {
                 header: 'Purification',
-                values: ['415.415 kPu']
+                values: [`415.415${nbsp}kPu`]
               }
             ]
           },
@@ -102,20 +104,20 @@ describe('TerraformationLevelsPresenter', () => {
             columns: [
               {
                 header: 'Plants',
-                values: ['101.101 kg']
+                values: [`101.101${nbsp}kg`]
               },
               {
                 header: 'Insects',
-                values: ['112.112 kg']
+                values: [`112.112${nbsp}kg`]
               },
               {
                 header: 'Animals',
-                values: ['131.131 kg']
+                values: [`131.131${nbsp}kg`]
               },
             ]
           },
-          terraformationIndex: '2.129 MTi',
-          biomass: '344.344 kg'
+          terraformationIndex: `2.129${nbsp}MTi`,
+          biomass: `344.344${nbsp}kg`
         }
       ],
     });
