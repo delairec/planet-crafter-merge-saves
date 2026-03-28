@@ -20,7 +20,7 @@ import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
 
-export class SaveParserService implements SaveParserPort {
+export class SaveSectionsReaderService implements SaveParserPort {
 
   private readonly globalMetadata: GlobalMetadata[];
   private readonly terraformationLevels: TerraformationLevel[];

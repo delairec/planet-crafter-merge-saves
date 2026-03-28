@@ -2,7 +2,7 @@ import {beforeEach, describe, expect, it} from 'bun:test';
 import {createFakeSaveContent, player} from '../../util-testing/fixtures/createFakeSaveContent';
 import {parseSaveSections} from '../../util-parsing/parseSaveSections.js';
 import {PlayerEntity} from "../domain/entities/PlayerEntity";
-import {SaveParserService} from './SaveParserService';
+import {SaveSectionsReaderService} from './SaveSectionsReaderService';
 import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
 import {TerraformationLevelEntity} from "../domain/entities/TerraformationLevelEntity";
 import {InventoryEntity} from "../domain/entities/InventoryEntity";
@@ -11,7 +11,7 @@ import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObjec
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
 import {ParsedSections} from "../../util-types/gameDefinitions";
 
-describe('SaveParserService', () => {
+describe('SaveSectionsReaderService', () => {
   let sections: ParsedSections;
 
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe('SaveParserService', () => {
 
   it('should extract global metadata', () => {
     // Arrange
-    const service = new SaveParserService(sections);
+    const service = new SaveSectionsReaderService(sections);
 
     // Act
     const metadata = service.getGlobalMetadata();
@@ -51,7 +51,7 @@ describe('SaveParserService', () => {
       const sectionsWithoutGlobalMetadata = [...sections];
       sectionsWithoutGlobalMetadata[0] = [];
       // @ts-ignore invalid section on purpose
-      const service = new SaveParserService(sectionsWithoutGlobalMetadata);
+      const service = new SaveSectionsReaderService(sectionsWithoutGlobalMetadata);
 
       // Act
       const metadata = service.getGlobalMetadata();
@@ -65,7 +65,7 @@ describe('SaveParserService', () => {
 
   it('should extract players section', () => {
     // Arrange
-    const service = new SaveParserService(sections);
+    const service = new SaveSectionsReaderService(sections);
 
     // Act
     const players = service.getPlayers();
@@ -84,7 +84,7 @@ describe('SaveParserService', () => {
 
   it('should extract terraformation levels', () => {
     // Arrange
-    const service = new SaveParserService(sections);
+    const service = new SaveSectionsReaderService(sections);
 
     // Act
     const levels = service.getTerraformationLevels();
@@ -104,7 +104,7 @@ describe('SaveParserService', () => {
 
   it('should extract inventories', () => {
     // Arrange
-    const service = new SaveParserService(sections);
+    const service = new SaveSectionsReaderService(sections);
 
     // Act
     const inventories = service.getInventories();
@@ -120,7 +120,7 @@ describe('SaveParserService', () => {
 
   it('should extract world objects', () => {
     // Arrange
-    const service = new SaveParserService(sections);
+    const service = new SaveSectionsReaderService(sections);
 
     // Act
     const worldObjects = service.getWorldObjects();
@@ -147,7 +147,7 @@ describe('SaveParserService', () => {
 
   it('should extract statistics', () => {
     // Arrange
-    const service = new SaveParserService(sections);
+    const service = new SaveSectionsReaderService(sections);
 
     // Act
     const statistics = service.getStatistics();
@@ -160,7 +160,7 @@ describe('SaveParserService', () => {
 
   it('should extract save configuration', () => {
     // Arrange
-    const service = new SaveParserService(sections);
+    const service = new SaveSectionsReaderService(sections);
 
     // Act
     const saveConfiguration = service.getSaveConfiguration();

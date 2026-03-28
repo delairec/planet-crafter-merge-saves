@@ -1,12 +1,12 @@
 import {TerraformationLevelsViewModel} from '../presentation/viewModels/TerraformationLevelsViewModel';
 import {TerraformationLevelsPresenter} from '../presentation/TerraformationLevelsPresenter';
 import {LoadTerraformationLevelsSection} from '../application/LoadTerraformationLevelsSection';
-import {SaveParserService} from '../infrastructure/SaveParserService';
+import {SaveSectionsReaderService} from '../infrastructure/SaveSectionsReaderService';
 import { ParsedSections } from "../../util-types/gameDefinitions";
 
 export class LoadTerraformationLevelsSectionController {
   static loadTerraformationLevelsSection(sections: ParsedSections): TerraformationLevelsViewModel {
-    const saveParser = new SaveParserService(sections);
+    const saveParser = new SaveSectionsReaderService(sections);
     const presenter = new TerraformationLevelsPresenter();
     const useCase = new LoadTerraformationLevelsSection(saveParser, presenter);
 
