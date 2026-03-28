@@ -36,5 +36,6 @@ function isNumberBiggerThanThreshold(num: number, threshold: Threshold) {
 
 function formatDecimalNumber(value: number) {
   const locales = undefined;
-  return new Intl.NumberFormat(locales, formatDecimalNumberOptions).format(value) + ' ';
+  const nbsp = '\u00A0';
+  return new Intl.NumberFormat(locales, formatDecimalNumberOptions).format(value) + nbsp;
 }
