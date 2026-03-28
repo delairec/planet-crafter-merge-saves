@@ -19,12 +19,12 @@ export default function GlobalProgressionSection({sections}: GlobalProgressionPr
   });
 
   return (
-    <>
+    <div>
       <h3>Global progression</h3>
-      <div class="fields-group-container fields-group-single">
+      <div class="fields-group-container">
         <FieldsGroup columns={statisticsColumns}/>
       </div>
-    </>
+    </div>
   )
     ;
 }
