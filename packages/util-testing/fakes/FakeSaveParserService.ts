@@ -5,8 +5,17 @@ import {TerraformationLevelEntity} from "../../util-mapping/domain/entities/Terr
 import {InventoryEntity} from "../../util-mapping/domain/entities/InventoryEntity";
 import {StatisticsValueObject} from "../../util-mapping/domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../../util-mapping/domain/valueObjects/SaveConfigurationValueObject";
+import { EnergyLevelsValueObject } from "../../util-mapping/domain/valueObjects/EnergyLevelsValueObject";
 
 export class FakeSaveParserService implements SaveParserPort {
+  getEnergyLevels(): EnergyLevelsValueObject {
+    return {
+      production: 22_220.5,
+      consumption: 11_110.5,
+      available: 11_110
+    }
+  }
+
   getSaveConfiguration(): SaveConfigurationValueObject {
     return {
       mode: 'Standard',
