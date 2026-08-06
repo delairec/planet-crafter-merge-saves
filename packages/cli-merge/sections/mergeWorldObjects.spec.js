@@ -47,30 +47,19 @@ describe('Merge world objects', () => {
   describe('When save B contains world objects from an ejected player inventory', () => {
     it('should drop the world objects that were in the orphan inventories', () => {
       // Arrange
-      const playerA = {...player, id: 1, name: 'Nikowa', inventoryId: 44, equipmentId: 45};
-      const playerB = {...player, id: 2, name: 'Chileny', host: false, inventoryId: 77, equipmentId: 4};
-      const ejectedPlayerB = {...playerB, name: playerA.name, equipmentId: 78};
-      const fakeSaveA = createFakeSaveString({players: [playerA], inventories: [inventory]});
-      const fakeSaveB = createFakeSaveString({
-        players: [ejectedPlayerB, playerB],
-        inventories: [
-          {id: 77, woIds: '901,902', size: 10},
-          {id: 78, woIds: '903', size: 5},
-          inventory
-        ],
-        worldObjects: [
-          {id: 901, gId: 'Iron'},
-          {id: 902, gId: 'Cobalt'},
-          {id: 903, gId: 'AirFilter1'}
-        ]
-      });
-      const {mergeSaves} = merge(fakeSaveA, fakeSaveB, saveDisplayName);
+      const worldObjectsFromSaveA = createWorldObjectsGenerator([]);
+      const worldObjectsFromSaveB = createWorldObjectsGenerator([
+        {id: 901, gId: 'Iron'},
+        {id: 902, gId: 'Cobalt'},
+        {id: 903, gId: 'AirFilter1'}
+      ]);
+      const orphanWorldObjectIds = new Set([901, 902, 903]);
 
       // Act
-      const result = mergeSaves();
+      const result = mergeWorldObjects(worldObjectsFromSaveA, worldObjectsFromSaveB, orphanWorldObjectIds);
 
       // Assert
-      expect(result).toBe(createFakeSaveString({players: [playerA, playerB], inventories: [inventory, inventory], worldObjects: []}));
+      expect(result.serialized).toBe('');
     });
   });
 
