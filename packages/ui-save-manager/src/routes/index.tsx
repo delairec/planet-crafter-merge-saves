@@ -11,6 +11,7 @@ export default function Home() {
   const [file, setFile] = createSignal<File | null>(null);
   const [sections, setSections] = createSignal<ParsedSections | null>(null);
   const [errors, setErrors] = createSignal<string[]>([]);
+  const [warnings, setWarnings] = createSignal<string[]>([]);
   const [isReady, setIsReady] = createSignal<boolean>(false);
 
   onMount(() => {
@@ -30,14 +31,16 @@ export default function Home() {
 
       if (!fileInput.name.endsWith('.json')) {
         setErrors(['INVALID: not a .json file']);
+        setWarnings([]);
         return;
       }
 
       const reader = new FileReader();
       reader.onload = (event) => {
-        const {sections, errors} = parseSaveSections(event.target?.result as string);
+        const {sections, errors, warnings} = parseSaveSections(event.target?.result as string);
         setSections(sections);
         setErrors(errors);
+        setWarnings(warnings);
       };
       reader.readAsText(fileInput);
     }
@@ -60,6 +63,15 @@ export default function Home() {
           <ul>
             {errors().map((error) => (
               <li>{error}</li>
+            ))}
+          </ul>
+        </Show>
+
+        <Show when={warnings().length}>
+          <h3>Warnings</h3>
+          <ul>
+            {warnings().map((warning) => (
+              <li>{warning}</li>
             ))}
           </ul>
         </Show>

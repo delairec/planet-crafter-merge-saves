@@ -1,20 +1,27 @@
 /** @import { ParsedSave } from '../util-types/js/types.js' */
 
+import {normalizeRawSections, verifySectionCount} from './normalizeSaveSections.js';
+
 /**
- * Parses a Planet Crafter save string into 11 typed sections.
+ * Parses a Planet Crafter save string into 10 typed sections (current format; the Terrain Layers
+ * section was removed from the save format by a game update).
  * Section 3 (WorldObjects) is a Generator factory; all others are arrays.
+ * Legacy saves (still containing Terrain Layers) are transparently adapted to the current format —
+ * see `normalizeSaveSections.js` — and produce a warning instead of an error.
  * @param {string} save
  * @returns {ParsedSave}
  */
 export function parseSaveSections(save) {
 
-  const sections = save.split('@');
+  const rawSections = save.split('@');
 
-  const errors = verify(sections);
+  const errors = verifySectionCount(rawSections);
+  const {sections: normalizedSections, warnings} = normalizeRawSections(rawSections);
 
   return /** @type {ParsedSave} */ ({
     errors,
-    sections: sections.map((section, index) => {
+    warnings,
+    sections: normalizedSections.map((section, index) => {
       if (isWorldObjectsSection(index)) {
         return () => createSectionEntriesGenerator(section);
       }
@@ -30,16 +37,6 @@ export function parseSaveSections(save) {
       }
     })
   });
-}
-
-function verify(sections){
-  const errors = [];
-
-  if (sections.length < 12) {
-    errors.push(`INVALID: Expected 12 sections but found ${sections.length}`);
-  }
-
-  return errors;
 }
 
 function isWorldObjectsSection(index) {

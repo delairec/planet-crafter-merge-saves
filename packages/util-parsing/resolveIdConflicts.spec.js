@@ -625,7 +625,7 @@ describe('utils/resolveIdConflicts', () => {
 
       // Assert
       const {sections} = parseSaveSections(result);
-      expect(sections.length).toBe(12);
+      expect(sections.length).toBe(11);
     });
 
     it('should preserve all sections in the correct order', () => {
@@ -635,8 +635,7 @@ describe('utils/resolveIdConflicts', () => {
         players: [defaultPlayerFromA],
         worldObjects: [worldObject],
         inventories: [inventoryOfA, equipmentOfA],
-        statistics: {craftedObjects: 10, totalSaveFileLoad: 1, totalSaveFileTime: 100},
-        terrainLayers: [{layerId: 'PC-Toxicity-Layer1', planet: 110910047, colorBase: '1-1-1-1'}]
+        statistics: {craftedObjects: 10, totalSaveFileLoad: 1, totalSaveFileTime: 100}
       });
 
       // Act

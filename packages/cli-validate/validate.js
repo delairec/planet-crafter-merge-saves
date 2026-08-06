@@ -1,4 +1,5 @@
 import Ajv from 'ajv';
+import {normalizeRawSections, verifySectionCount} from '../util-parsing/normalizeSaveSections.js';
 import schema0 from '../../docs/schemas/section0-player-progression.schema.json' with {type: 'json'};
 import schema1 from '../../docs/schemas/section1-terraformation-levels.schema.json' with {type: 'json'};
 import schema2 from '../../docs/schemas/section2-players.schema.json' with {type: 'json'};
@@ -7,8 +8,7 @@ import schema5 from '../../docs/schemas/section5-statistics.schema.json' with {t
 import schema6 from '../../docs/schemas/section6-messages.schema.json' with {type: 'json'};
 import schema7 from '../../docs/schemas/section7-story-events.schema.json' with {type: 'json'};
 import schema8 from '../../docs/schemas/section8-save-config.schema.json' with {type: 'json'};
-import schema9 from '../../docs/schemas/section9-terrain-layers.schema.json' with {type: 'json'};
-import schema10 from '../../docs/schemas/section10-world-events.schema.json' with {type: 'json'};
+import schema9 from '../../docs/schemas/section9-world-events.schema.json' with {type: 'json'};
 
 const FLOAT_FIELDS = new Set([
   'unitOxygenLevel', 'unitHeatLevel', 'unitPressureLevel', 'unitPlantsLevel',
@@ -17,8 +17,8 @@ const FLOAT_FIELDS = new Set([
   'hunger'
 ]);
 
-const SECTION_COUNT = 11;
-const EXPECTED_SPLIT_PARTS = SECTION_COUNT + 1; // trailing @ produces one empty part
+// Real sections in the current save format (Terrain Layers was removed from the save format by a game update).
+const SECTION_COUNT = 10;
 
 const ajv = new Ajv();
 const schemaValidators = {
@@ -30,33 +30,36 @@ const schemaValidators = {
   6: ajv.compile(schema6),
   7: ajv.compile(schema7),
   8: ajv.compile(schema8),
-  9: ajv.compile(schema9),
-  10: ajv.compile(schema10)
+  9: ajv.compile(schema9)
 };
 
 /**
  * Validates a merged Planet Crafter save string.
  * Checks JSON schema compliance for each section and domain-specific rules.
+ * Legacy saves (still containing the Terrain Layers section, removed by a later game update) are
+ * transparently adapted to the current format and reported through `warnings` instead of an error.
  *
  * @param {string} mergedSave
- * @returns {{ isValid: boolean, errors: Array<{section?: number, entryIndex?: number, rule?: string, message: string}> }}
+ * @returns {{ isValid: boolean, errors: Array<{section?: number, entryIndex?: number, rule?: string, message: string}>, warnings: string[] }}
  */
 export function validateMergedSave(mergedSave) {
   const errors = [];
 
-  const sections = mergedSave.split('@');
-  if (sections.length !== EXPECTED_SPLIT_PARTS) {
-    errors.push({message: `Expected ${SECTION_COUNT} sections separated by '@', got ${sections.length - 1}`});
-    return {isValid: errors.length === 0, errors};
+  const rawSections = mergedSave.split('@');
+  const sectionCountErrors = verifySectionCount(rawSections);
+  if (sectionCountErrors.length > 0) {
+    errors.push({message: sectionCountErrors[0].replace(/^INVALID: /, '')});
+    return {isValid: errors.length === 0, errors, warnings: []};
   }
 
-  const parsedSections = parseSections(sections.slice(0, SECTION_COUNT), errors);
+  const {sections: normalizedRawSections, warnings} = normalizeRawSections(rawSections);
+  const parsedSections = parseSections(normalizedRawSections.slice(0, SECTION_COUNT), errors);
 
   validateSchemas(parsedSections, errors);
   validateFloatSerialization(mergedSave, errors);
   validateUniqueHost(parsedSections[2], errors);
 
-  return {isValid: errors.length === 0, errors};
+  return {isValid: errors.length === 0, errors, warnings};
 }
 
 function parseSections(sections, errors) {

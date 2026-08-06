@@ -145,13 +145,12 @@ Note: the file is ending by `@`.
 | 6  | Mailbox (messages)                                    | `\|`-separated records |
 | 7  | Triggered story events                                | `\|`-separated records |
 | 8  | Save configuration (`saveDisplayName`, `worldSeed`…)  | `\|`-separated records |
-| 9  | Terrain colour layers                                 | `\|`-separated records |
-| 10 | World events (asteroid / instance spawns)             | `\|`-separated records |
+| 9  | World events (asteroid / instance spawns)             | `\|`-separated records |
 
 #### Planet Identification
 
-Each **world object** contains a `planet` field (numeric integer). The mapping from number to planet name uses the terrain layer `layerId`
-values (format `PC-{PlanetId}-{LayerName}`).
+Each **world object** contains a `planet` field (numeric integer). The mapping from number to planet name uses the
+numeric planet id (e.g. `110910045` for Toxicity).
 
 ### Merge Logic
 

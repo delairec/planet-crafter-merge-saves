@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "section10-world-events.schema.json",
-  "title": "Section 10 — World Events",
+  "$id": "section9-world-events.schema.json",
+  "title": "Section 9 — World Events",
   "description": "Événement mondial déclenché sur la planète. Clé de domaine : planet + seed + pos. Peut être vide. Lors du merge, save A est prioritaire.",
   "type": "object",
   "required": ["planet", "seed", "pos"],

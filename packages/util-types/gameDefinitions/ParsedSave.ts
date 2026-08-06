@@ -7,7 +7,6 @@ import {Statistics} from "./Statistics";
 import {MailboxMessage} from "./MailboxMessage";
 import {StoryEvent} from "./StoryEvent";
 import {SaveConfiguration} from "./SaveConfiguration";
-import {TerrainLayer} from "./TerrainLayer";
 import {WorldEvent} from "./WorldEvent";
 
 export type ParsedSections = [
@@ -20,7 +19,6 @@ export type ParsedSections = [
   MailboxMessage[],
   StoryEvent[],
   SaveConfiguration[],
-  TerrainLayer[],
   WorldEvent[],
   never[]
 ];
@@ -28,4 +26,5 @@ export type ParsedSections = [
 export type ParsedSave = {
   sections: ParsedSections;
   errors: string[];
+  warnings: string[];
 };

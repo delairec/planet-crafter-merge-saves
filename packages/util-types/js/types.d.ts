@@ -130,12 +130,6 @@ declare global {
     gameStartLocation: string;
   }
 
-  interface TerrainLayer {
-    layerId: string;
-    planet: number;
-    colorBase: string;
-  }
-
   interface WorldEvent {
     planet: number;
     seed: number;
@@ -159,7 +153,6 @@ declare global {
     MailboxMessage[],
     StoryEvent[],
     SaveConfiguration[],
-    TerrainLayer[],
     WorldEvent[],
     never[]
   ];
@@ -167,6 +160,7 @@ declare global {
   type ParsedSave = {
     sections: ParsedSections;
     errors: string[];
+    warnings: string[];
   };
 }
 
@@ -286,12 +280,6 @@ export interface SaveConfiguration {
   gameStartLocation: string;
 }
 
-export interface TerrainLayer {
-  layerId: string;
-  planet: number;
-  colorBase: string;
-}
-
 export interface WorldEvent {
   planet: number;
   seed: number;
@@ -315,7 +303,6 @@ export type ParsedSections = [
   MailboxMessage[],
   StoryEvent[],
   SaveConfiguration[],
-  TerrainLayer[],
   WorldEvent[],
   never[]
 ];
@@ -323,4 +310,5 @@ export type ParsedSections = [
 export type ParsedSave = {
   sections: ParsedSections;
   errors: string[];
+  warnings: string[];
 };

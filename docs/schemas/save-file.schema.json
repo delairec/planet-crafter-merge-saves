@@ -2,10 +2,10 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "save-file.schema.json",
   "title": "Planet Crafter — Save File (parsée)",
-  "description": "Représentation d'une sauvegarde Planet Crafter après parsing. Tableau de 12 sections (indices 0 à 11), chaque section étant un tableau d'entrées JSON.",
+  "description": "Représentation d'une sauvegarde Planet Crafter après parsing. Tableau de 11 sections (indices 0 à 10), chaque section étant un tableau d'entrées JSON.",
   "type": "array",
-  "minItems": 12,
-  "maxItems": 12,
+  "minItems": 11,
+  "maxItems": 11,
   "items": [
     {
       "title": "Section 0 — Progression du joueur",
@@ -62,17 +62,12 @@
       "items": { "$ref": "section8-save-config.schema.json" }
     },
     {
-      "title": "Section 9 — Terrain Layers",
+      "title": "Section 9 — World Events",
       "type": "array",
-      "items": { "$ref": "section9-terrain-layers.schema.json" }
+      "items": { "$ref": "section9-world-events.schema.json" }
     },
     {
-      "title": "Section 10 — World Events",
-      "type": "array",
-      "items": { "$ref": "section10-world-events.schema.json" }
-    },
-    {
-      "title": "Section 11 — Réservée",
+      "title": "Section 10 — Réservée",
       "type": "array",
       "maxItems": 0
     }

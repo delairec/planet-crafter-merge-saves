@@ -4,17 +4,23 @@
 
 ---
 **JSON Schemas** : each section has a validation schema in [`docs/schemas/`](./schemas/).
-The root schema [`save-file.schema.json`](./schemas/save-file.schema.json) validates a fully parsed save (array of 12 sections).
+The root schema [`save-file.schema.json`](./schemas/save-file.schema.json) validates a fully parsed save (array of 11 sections).
 
 ## General structure
 
-A save file is a raw text string split into **12 sections** (indexes 0 to 11) separated by `@`. Each section is a list of JSON objects
+A save file is a raw text string split into **11 sections** (indexes 0 to 10) separated by `@`. Each section is a list of JSON objects
 separated by `|\n`.
 The file ends with `@`.
 
 ```
-<section 0>@<section 1>@...@<section 11>@
+<section 0>@<section 1>@...@<section 10>@
 ```
+
+> ⚠️ **Backward compatibility:** an earlier version of the save format also had a Terrain Layers section (index 9,
+> shifting World Events to index 10), which a game update removed. Legacy saves in that older format are only
+> supported at the user-input boundary (loading a save file): they are automatically adapted to the current
+> 11-section format described below, discarding the Terrain Layers data, and a warning is reported to the user.
+> See `packages/util-parsing/normalizeSaveSections.js`.
 
 ```
 entry1|
@@ -73,15 +79,6 @@ erDiagram
         float   trtVal         "optional — terraformation value"
         float   hunger         "optional — hunger (animals)"
         string  set            "optional — configuration set"
-    }
-
-    TERRAIN_LAYER {
-        string  layerId        PK "e.g. PC-Toxicity-Layer2"
-        int     planet         FK "numeric planet id"
-        string  colorBase      "R-G-B-A"
-        string  colorCustom    "R-G-B-A"
-        int     colorBaseLerp  "0-255"
-        int     colorCustomLerp "0-255"
     }
 
     PLAYER ||--o{ INVENTORY : "inventoryId → id"
@@ -261,24 +258,7 @@ Inventory may be referenced by `Player.inventoryId`, by `Player.equipmentId`, or
 
 ---
 
-### #9 — Terrain Layers
-
-**Cardinality:** N entries. Domain key: `layerId` + `planet`.
-
-Visual appearance of terrain layers (colors, biomes).
-
-| Property          | Type     | Description                                   |
-|-------------------|----------|-----------------------------------------------|
-| `layerId`         | `string` | Id of the layer (e.g. `"PC-Toxicity-Layer2"`) |
-| `planet`          | `int`    | Planet numeric ID                             |
-| `colorBase`       | `string` | Base color as `"R-G-B-A"`                     |
-| `colorCustom`     | `string` | Custom color as `"R-G-B-A"`                   |
-| `colorBaseLerp`   | `int`    | Base color intensity (≥ 0)                    |
-| `colorCustomLerp` | `int`    | Custom color intensity (≥ 0)                  |
-
----
-
-### #10 — World Events
+### #9 — World Events
 
 **Cardinality:** N entries (can be empty). Domain key: `planet` + `seed` + `pos`.
 
@@ -297,11 +277,11 @@ Visual appearance of terrain layers (colors, biomes).
 
 ---
 
-### #11 — (Unknown)
+### #10 — (Unknown)
 
 **Cardinality:** 0 entries in analyzed save files.
 
-Section 11 is the last section (index 11 of 12). It is always empty in analyzed save files.
+Section 10 is the last section (index 10 of 11). It is always empty in analyzed save files.
 
 ---
 
@@ -318,4 +298,24 @@ Section 2 (Player)
                                            Section 3 (WorldObject)
                                               └─ linkedWo ──► Section 3 (WorldObject)
 ```
+
+---
+
+## Appendix — Legacy format (before the Terrain Layers section was removed)
+
+Saves created before a game update had **12 sections** (indexes 0 to 11): sections 0 to 8 were identical to the
+current format, but section 9 was **Terrain Layers**, World Events was at index 10, and the reserved empty section
+was at index 11.
+
+| Property          | Type     | Description                                   |
+|-------------------|----------|-----------------------------------------------|
+| `layerId`         | `string` | Id of the layer (e.g. `"PC-Toxicity-Layer2"`) |
+| `planet`          | `int`    | Planet numeric ID                             |
+| `colorBase`       | `string` | Base color as `"R-G-B-A"`                     |
+| `colorCustom`     | `string` | Custom color as `"R-G-B-A"`                   |
+| `colorBaseLerp`   | `int`    | Base color intensity (≥ 0)                    |
+| `colorCustomLerp` | `int`    | Custom color intensity (≥ 0)                  |
+
+This section no longer exists in the current save format. When a legacy save is loaded, its Terrain Layers data is
+discarded and the user is warned that their save was adapted from an old format.
 
