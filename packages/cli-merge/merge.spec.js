@@ -14,7 +14,7 @@ describe('Merge saves', () => {
     const result = mergeSaves();
 
     // Assert
-    const emptySections = Array(10).fill('@\n\n').join('');
+    const emptySections = Array(9).fill('@\n\n').join('');
     expect(result).toBe(`ERROR_INVALID_INPUT_FORMAT\n${emptySections}@`);
   });
 

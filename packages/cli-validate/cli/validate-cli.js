@@ -30,7 +30,11 @@ export function initValidateCli({readTextFile, exitProcess, isEntryPoint, getCli
     }
 
     const save = await readTextFile(filePath);
-    const {isValid, errors} = validateMergedSave(save);
+    const {isValid, errors, warnings} = validateMergedSave(save);
+
+    for (const warning of warnings ?? []) {
+      console.warn(`⚠ ${warning}`);
+    }
 
     if (isValid) {
       console.log(`✓ ${filePath} is valid`);

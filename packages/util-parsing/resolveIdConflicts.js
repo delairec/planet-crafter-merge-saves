@@ -25,7 +25,6 @@ export function resolveIdConflicts(mergedSave, saveAWorldObjectIds = new Set()) 
     mailboxes,
     storyEvents,
     saveConfigurations,
-    terrainLayers,
     worldEvents,
   ] = sections;
 
@@ -53,7 +52,6 @@ export function resolveIdConflicts(mergedSave, saveAWorldObjectIds = new Set()) 
     mailboxes,
     storyEvents,
     saveConfigurations,
-    terrainLayers,
     worldEvents,
   });
 }

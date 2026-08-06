@@ -10,7 +10,6 @@ import {mergeStatistics} from './sections/mergeStatistics.js';
 import {mergeMailboxes} from './sections/mergeMailboxes.js';
 import {mergeStoryEvents} from './sections/mergeStoryEvents.js';
 import {mergeSaveConfigurations} from './sections/mergeSaveConfigurations.js';
-import {mergeTerrainLayers} from './sections/mergeTerrainLayers.js';
 import {mergeWorldEvents} from './sections/mergeWorldEvents.js';
 import {determineSaveOrder} from './helpers/determineSaveOrder.js';
 import {collectEjectedPlayerInventoryIds} from './helpers/collectEjectedPlayerInventoryIds.js';
@@ -33,8 +32,8 @@ export function merge(saveA, saveB, saveDisplayName) {
 
   const [mainSave, secondarySave] = determineSaveOrder(parsedSaveA.sections, parsedSaveB.sections);
 
-  const [metadataA = [], terraformationLevelsA = [], playersA = [], worldObjectsFactoryA = () => EMPTY_GENERATOR(), inventoriesA = [], statisticsA = [], mailboxA = [], storyEventsA = [], saveConfigurationsA = [], terrainLayersA = [], worldEventsA = []] = mainSave;
-  const [metadataB = [], terraformationLevelsB = [], playersB = [], worldObjectsFactoryB = () => EMPTY_GENERATOR(), inventoriesB = [], statisticsB = [], mailboxB = [], storyEventsB = [], saveConfigurationsB = [], terrainLayersB = [], worldEventsB = []] = secondarySave;
+  const [metadataA = [], terraformationLevelsA = [], playersA = [], worldObjectsFactoryA = () => EMPTY_GENERATOR(), inventoriesA = [], statisticsA = [], mailboxA = [], storyEventsA = [], saveConfigurationsA = [], worldEventsA = []] = mainSave;
+  const [metadataB = [], terraformationLevelsB = [], playersB = [], worldObjectsFactoryB = () => EMPTY_GENERATOR(), inventoriesB = [], statisticsB = [], mailboxB = [], storyEventsB = [], saveConfigurationsB = [], worldEventsB = []] = secondarySave;
 
   const saveAWorldObjectIds = new Set();
 
@@ -54,7 +53,6 @@ export function merge(saveA, saveB, saveDisplayName) {
       mergeMailboxes(mailboxA, mailboxB),
       mergeStoryEvents(storyEventsA, storyEventsB),
       mergeSaveConfigurations(saveConfigurationsA, saveConfigurationsB, saveDisplayName),
-      mergeTerrainLayers(terrainLayersA, terrainLayersB),
       mergeWorldEvents(worldEventsA, worldEventsB)
     ];
 

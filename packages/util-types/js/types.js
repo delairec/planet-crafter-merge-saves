@@ -140,13 +140,6 @@
  *   @property {string} gameStartLocation
  */
 
-/** Merge key: `layerId` + `planet`. Save A wins on conflict. @see GR-TERRAIN-1, GR-TERRAIN-2
- * @typedef {Object} TerrainLayer
- * @property {string} layerId - Part of composite deduplication key. @see GR-TERRAIN-1
- * @property {number} planet - Part of composite deduplication key. @see GR-TERRAIN-1
- * @property {string} colorBase
- */
-
 /** Merge key: `planet` + `seed` + `pos`. Save A wins on conflict. @see GR-EVT-1, GR-EVT-2
  * @typedef {Object} WorldEvent
  * @property {number} planet - Part of composite deduplication key. @see GR-EVT-1
@@ -172,16 +165,18 @@
  *   MailboxMessage[],
  *   StoryEvent[],
  *   SaveConfiguration[],
- *   TerrainLayer[],
  *   WorldEvent[],
  *   never[]
  * ]} ParsedSections
  * */
 
-/** 11-tuple returned by parseSaveSections(). Section 3 (WorldObjects) is a Generator factory.
+/** 10-tuple returned by parseSaveSections(). Section 3 (WorldObjects) is a Generator factory.
+ * The Terrain Layers section was removed from the save format by a game update; legacy saves that
+ * still contain it are adapted at parse time and reported through `warnings`.
  * @typedef {{
  *   sections: ParsedSections,
- *   errors: string[]
+ *   errors: string[],
+ *   warnings: string[]
  * }} ParsedSave
  */
 

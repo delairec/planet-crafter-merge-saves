@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'bun:test';
 import {parseSaveSections} from './parseSaveSections.js';
-import {createFakeSaveString} from '../util-testing/fixtures/createFakeSaveString.js';
+import {createFakeSaveString, createLegacyFakeSaveString} from '../util-testing/fixtures/createFakeSaveString.js';
 
 describe('utils/parseSaveSections', () => {
   const expectedGlobalMetadata = {
@@ -40,7 +40,7 @@ describe('utils/parseSaveSections', () => {
     unitPurificationLevel: 700.0
   };
 
-  it('should parse a valid save into 12 sections', () => {
+  it('should parse a valid save into 11 sections', () => {
     // Arrange
     const save = createFakeSaveString({});
 
@@ -48,7 +48,18 @@ describe('utils/parseSaveSections', () => {
     const {sections} = parseSaveSections(save);
 
     // Assert
-    expect(sections.length).toBe(12);
+    expect(sections.length).toBe(11);
+  });
+
+  it('should parse a valid save with no warnings', () => {
+    // Arrange
+    const save = createFakeSaveString({});
+
+    // Act
+    const {warnings} = parseSaveSections(save);
+
+    // Assert
+    expect(warnings).toEqual([]);
   });
 
   it('should parse global metadata', () => {
@@ -135,6 +146,19 @@ describe('utils/parseSaveSections', () => {
     expect([...worldObjectsFactory()]).toEqual([]);
   });
 
+  it('should parse world events at their current index', () => {
+    // Arrange
+    const expectedWorldEvent = {planet: 110910045, seed: 1, pos: '0,0,0', owner: 0, index: 0};
+    const save = createFakeSaveString({worldEvents: [expectedWorldEvent]});
+
+    // Act
+    const {sections} = parseSaveSections(save);
+
+    // Assert
+    const [, , , , , , , , , worldEvents] = sections;
+    expect(worldEvents).toEqual([expectedWorldEvent]);
+  });
+
   describe('When save file is invalid', () => {
     it('should fill the errors list', () => {
       // Arrange
@@ -145,8 +169,53 @@ describe('utils/parseSaveSections', () => {
 
       // Assert
       expect(errors).toEqual([
-        'INVALID: Expected 12 sections but found 2',
+        'INVALID: Expected 11 sections but found 2',
       ]);
+    });
+  });
+
+  describe('When the save uses the legacy format (still contains a Terrain Layers section removed by a game update)', () => {
+    it('should adapt it to the current 11-section format', () => {
+      // Arrange
+      const save = createLegacyFakeSaveString({
+        terrainLayers: [{layerId: 'PC-Toxicity-Layer1', planet: 110910047, colorBase: '1-1-1-1'}]
+      });
+
+      // Act
+      const {errors, sections} = parseSaveSections(save);
+
+      // Assert
+      expect(errors).toEqual([]);
+      expect(sections.length).toBe(11);
+    });
+
+    it('should report a warning explaining the save was adapted', () => {
+      // Arrange
+      const save = createLegacyFakeSaveString({
+        terrainLayers: [{layerId: 'PC-Toxicity-Layer1', planet: 110910047, colorBase: '1-1-1-1'}]
+      });
+
+      // Act
+      const {warnings} = parseSaveSections(save);
+
+      // Assert
+      expect(warnings).toEqual([
+        'This save uses an outdated format (from an ancient version of the game). ' +
+        'It has been automatically adapted to the current format; some data may have been discarded in the process.'
+      ]);
+    });
+
+    it('should still parse world events at the current index (shifted from the legacy index)', () => {
+      // Arrange
+      const expectedWorldEvent = {planet: 110910045, seed: 1, pos: '0,0,0', owner: 0, index: 0};
+      const save = createLegacyFakeSaveString({worldEvents: [expectedWorldEvent]});
+
+      // Act
+      const {sections} = parseSaveSections(save);
+
+      // Assert
+      const [, , , , , , , , , worldEvents] = sections;
+      expect(worldEvents).toEqual([expectedWorldEvent]);
     });
   });
 });

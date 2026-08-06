@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 import {validateMergedSave} from './validate.js';
-import {createFakeSaveString} from '../util-testing/fixtures/createFakeSaveString.js';
+import {createFakeSaveString, createLegacyFakeSaveString} from '../util-testing/fixtures/createFakeSaveString.js';
 import {
   createFakeSaveContent,
   equipment,
@@ -254,50 +254,7 @@ describe('validateMergedSave', () => {
     });
   });
 
-  describe('Section 9 — Terrain layers schema', () => {
-    it('should reject when colorBase has an invalid format', () => {
-      // Arrange
-      const save = createFakeSaveContent({
-        terrainLayers: [{
-          layerId: 'PC-Toxicity-Layer2',
-          planet: 110910045,
-          colorBase: 'bad',
-          colorCustom: '0.5-0.5-0.5-1',
-          colorBaseLerp: 50,
-          colorCustomLerp: 50
-        }]
-      });
-
-      // Act
-      const result = validateMergedSave(save);
-
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 9)).toBeTruthy();
-    });
-
-    it('should accept when colorBaseLerp exceeds 100 (valid game value)', () => {
-      // Arrange
-      const save = createFakeSaveContent({
-        terrainLayers: [{
-          layerId: 'PC-Toxicity-Layer2',
-          planet: 110910045,
-          colorBase: '0.5-0.5-0.5-1',
-          colorCustom: '0.5-0.5-0.5-1',
-          colorBaseLerp: 150,
-          colorCustomLerp: 50
-        }]
-      });
-
-      // Act
-      const result = validateMergedSave(save);
-
-      // Assert
-      expect(result.isValid).toBe(true);
-    });
-  });
-
-  describe('Section 10 — World events schema', () => {
+  describe('Section 9 — World events schema', () => {
     it('should reject when pos has an invalid format', () => {
       // Arrange
       const save = createFakeSaveContent({worldEvents: [{planet: 110910045, seed: 42, pos: 'bad-pos'}]});
@@ -307,7 +264,7 @@ describe('validateMergedSave', () => {
 
       // Assert
       expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 10)).toBeTruthy();
+      expect(result.errors.some(e => e.section === 9)).toBeTruthy();
     });
   });
 
@@ -439,6 +396,62 @@ describe('validateMergedSave', () => {
         // Assert
         expect(result.isValid).toBe(true);
       });
+    });
+  });
+
+  describe('When the save uses the legacy format (still contains a Terrain Layers section removed by a game update)', () => {
+    it('should accept the save as valid (backward compatibility)', () => {
+      // Arrange
+      const save = createLegacyFakeSaveString({
+        globalMetadata: metadata,
+        terraformationLevels: [terraformationLevel],
+        players: [player],
+        inventories: [inventory, equipment],
+        statistics,
+        saveConfiguration,
+        terrainLayers: [{layerId: 'PC-Toxicity-Layer2', planet: 110910045, colorBase: '0.5-0.5-0.5-1'}]
+      });
+
+      // Act
+      const result = validateMergedSave(save);
+
+      // Assert
+      expect(result.isValid).toBe(true);
+    });
+
+    it('should report a warning explaining the save was adapted', () => {
+      // Arrange
+      const save = createLegacyFakeSaveString({
+        globalMetadata: metadata,
+        terraformationLevels: [terraformationLevel],
+        players: [player],
+        inventories: [inventory, equipment],
+        statistics,
+        saveConfiguration,
+        terrainLayers: [{layerId: 'PC-Toxicity-Layer2', planet: 110910045, colorBase: '0.5-0.5-0.5-1'}]
+      });
+
+      // Act
+      const result = validateMergedSave(save);
+
+      // Assert
+      expect(result.warnings.length).toBe(1);
+    });
+  });
+
+  describe('When the section count does not match any supported format', () => {
+    it('should report an error', () => {
+      // Arrange
+      const save = 'This is not @ a valid save string';
+
+      // Act
+      const result = validateMergedSave(save);
+
+      // Assert
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toEqual([
+        {message: `Expected 11 sections but found 2`}
+      ]);
     });
   });
 });

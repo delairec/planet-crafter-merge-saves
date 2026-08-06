@@ -1,4 +1,4 @@
-/** @import { GlobalMetadata, TerraformationLevel, Player, WorldObject, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, TerrainLayer, WorldEvent } from '../../util-types/js/types.js' */
+/** @import { GlobalMetadata, TerraformationLevel, Player, WorldObject, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, WorldEvent } from '../../util-types/js/types.js' */
 
 import {stringifyEntry} from '../../util-parsing/stringifyEntry.js';
 
@@ -41,6 +41,8 @@ function serializeSectionWithStringifyEntry(entries) {
 }
 
 /**
+ * Builds a save string in the current format (10 real sections; the Terrain Layers section was
+ * removed from the save format by a game update).
  * @param {{
  *   globalMetadata?: GlobalMetadata,
  *   terraformationLevels?: TerraformationLevel[],
@@ -51,7 +53,6 @@ function serializeSectionWithStringifyEntry(entries) {
  *   mailboxes?: MailboxMessage[],
  *   storyEvents?: StoryEvent[],
  *   saveConfiguration?: SaveConfiguration,
- *   terrainLayers?: TerrainLayer[],
  *   worldEvents?: WorldEvent[]
  * }} options
  * @returns {string}
@@ -66,7 +67,6 @@ export function createFakeSaveString({
   mailboxes = [],
   storyEvents = [],
   saveConfiguration,
-  terrainLayers = [],
   worldEvents = []
 }) {
   const sections = [
@@ -79,10 +79,26 @@ export function createFakeSaveString({
     serializeSection(mailboxes),
     serializeSection(storyEvents),
     saveConfiguration ? JSON.stringify(saveConfiguration) : '',
-    serializeSection(terrainLayers),
     serializeSection(worldEvents),
   ];
 
   return sections.join('\n@\n') + '\n@';
+}
+
+/**
+ * Builds a save string in the legacy format (11 real sections, still containing the Terrain
+ * Layers section removed by a later game update). Used to test backward compatibility only.
+ * @param {Parameters<typeof createFakeSaveString>[0] & {terrainLayers?: Array<{layerId: string, planet: number, colorBase: string}>}} options
+ * @returns {string}
+ */
+export function createLegacyFakeSaveString({terrainLayers = [], ...options}) {
+  const currentFormatSave = createFakeSaveString(options);
+  // The separator right before World Events (the last real section) is where Terrain Layers used to be.
+  const separator = '\n@\n';
+  const worldEventsSeparatorIndex = currentFormatSave.lastIndexOf(separator);
+  const beforeWorldEvents = currentFormatSave.slice(0, worldEventsSeparatorIndex + separator.length);
+  const worldEventsAndTerminator = currentFormatSave.slice(worldEventsSeparatorIndex + separator.length);
+
+  return beforeWorldEvents + serializeSection(terrainLayers) + separator + worldEventsAndTerminator;
 }
 

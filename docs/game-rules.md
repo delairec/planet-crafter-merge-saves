@@ -19,9 +19,8 @@
 9. [Section 6 — Messages / mailbox](#9-section-6--messages--mailbox)
 10. [Section 7 — Story events](#10-section-7--story-events)
 11. [Section 8 — Save configuration](#11-section-8--save-configuration)
-12. [Section 9 — Terrain layers](#12-section-9--terrain-layers)
-13. [Section 10 — World events](#13-section-10--world-events)
-14. [Id conflict resolution](#14-id-conflict-resolution)
+12. [Section 9 — World events](#12-section-9--world-events)
+13. [Id conflict resolution](#13-id-conflict-resolution)
 
 ---
 
@@ -31,6 +30,10 @@
 - When two entries conflict, **save A always wins** unless a section rule says otherwise.
 - All merge decisions are deterministic and stateless — the same two inputs always produce the same output.
 - Section rules are applied independently; one section's strategy does not affect another's.
+- The current save format (11 sections) is the only format used internally. Legacy saves (12 sections, still
+  containing the Terrain Layers section removed by a game update) are only supported at the user-input boundary
+  (loading a save file): they are automatically adapted to the current format, and a warning is reported to the
+  user — see [`docs/save-format.md`](./save-format.md#appendix--legacy-format-before-the-terrain-layers-section-was-removed).
 
 ---
 
@@ -170,19 +173,7 @@
 
 ---
 
-## 12. Section 9 — Terrain layers
-
-**Merge key:** `layerId` + `planet`
-
-**Rule GR-TERRAIN-1:** When the same `layerId` + `planet` pair exists in both saves, save A's entry is kept and save B's is discarded.
-
-**Rule GR-TERRAIN-2:** Terrain layers from save B whose composite key is not present in save A are appended.
-
-**Implementation:** `src/merge/mergeTerrainLayers.js`
-
----
-
-## 13. Section 10 — World events
+## 12. Section 9 — World events
 
 **Merge key:** `planet` + `seed` + `pos`
 
@@ -194,7 +185,7 @@
 
 ---
 
-## 14. Id conflict resolution
+## 13. Id conflict resolution
 
 **Rule GR-ID-1:** After all sections are merged, every `id` in the combined inventory + world object list must be unique.
 
