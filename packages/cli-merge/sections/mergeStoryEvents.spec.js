@@ -1,10 +1,7 @@
 import {describe, it, expect} from 'bun:test';
-import {merge} from '../merge.js';
-import {createFakeSaveString} from '../../util-testing/fixtures/createFakeSaveString.js';
+import {mergeStoryEvents} from './mergeStoryEvents.js';
 
-describe('Merge saves — #7 Story events', () => {
-  const saveDisplayName = 'SAVE_NAME';
-
+describe('Merge story events', () => {
   const storyEventA = {stringId: 'StoryEvent-FirstMessageClick'};
   const storyEventB = {stringId: 'StoryEvent-Toxicity-InfosGoo'};
   const storyEventShared = {stringId: 'StoryEvent-Shared'};
@@ -12,30 +9,28 @@ describe('Merge saves — #7 Story events', () => {
   describe('When story events are unique', () => {
     it('should concat story events from both saves', () => {
       // Arrange
-      const fakeSaveA = createFakeSaveString({storyEvents: [storyEventA]});
-      const fakeSaveB = createFakeSaveString({storyEvents: [storyEventB]});
-      const {mergeSaves} = merge(fakeSaveA, fakeSaveB, saveDisplayName);
+      const storyEventsFromSaveA = [storyEventA];
+      const storyEventsFromSaveB = [storyEventB];
 
       // Act
-      const result = mergeSaves();
+      const result = mergeStoryEvents(storyEventsFromSaveA, storyEventsFromSaveB);
 
       // Assert
-      expect(result).toBe(createFakeSaveString({storyEvents: [storyEventA, storyEventB]}));
+      expect(result).toBe(`${JSON.stringify(storyEventA)}|\n${JSON.stringify(storyEventB)}`);
     });
   });
 
   describe('When a story event appears in both saves', () => {
     it('should deduplicate story events', () => {
       // Arrange
-      const fakeSaveA = createFakeSaveString({storyEvents: [storyEventShared]});
-      const fakeSaveB = createFakeSaveString({storyEvents: [storyEventShared]});
-      const {mergeSaves} = merge(fakeSaveA, fakeSaveB, saveDisplayName);
+      const storyEventsFromSaveA = [storyEventShared];
+      const storyEventsFromSaveB = [storyEventShared];
 
       // Act
-      const result = mergeSaves();
+      const result = mergeStoryEvents(storyEventsFromSaveA, storyEventsFromSaveB);
 
       // Assert
-      expect(result).toBe(createFakeSaveString({storyEvents: [storyEventShared]}));
+      expect(result).toBe(JSON.stringify(storyEventShared));
     });
   });
 });
