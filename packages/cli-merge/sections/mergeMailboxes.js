@@ -4,7 +4,7 @@
  * @param {MailboxMessage[]} mailboxA
  * @param {MailboxMessage[]} mailboxB
  * @returns {string}
- * @see GR-MSG-1, GR-MSG-2, GR-MSG-3 in docs/business-rules.md
+ * @see GR-MSG-1, GR-MSG-2, GR-MSG-3 in docs/game-rules.md
  */
 export function mergeMailboxes(mailboxA, mailboxB) {
   const validatedMailboxA = mailboxA ?? [];
