@@ -88,7 +88,8 @@ export function createFakeSaveString({
 /**
  * Builds a save string in the legacy format (11 real sections, still containing the Terrain
  * Layers section removed by a later game update). Used to test backward compatibility only.
- * @param {Parameters<typeof createFakeSaveString>[0] & {terrainLayers?: Array<{layerId: string, planet: number, colorBase: string}>}} options
+ * @param terrainLayers
+ * @param options
  * @returns {string}
  */
 export function createLegacyFakeSaveString({terrainLayers = [], ...options}) {
