@@ -102,9 +102,22 @@
  * @typedef {Object} SaveConfiguration
  * @property {string} saveDisplayName - Always overridden by the `saveDisplayName` argument to `merge()`. @see GR-CFG-2
  * @property {string} planetId - 'Prime' triggers save-order reordering. @see GR-ORDER-1
+ * @property {boolean} unlockedSpaceTrading
+ * @property {boolean} unlockedOreExtrators - Typo preserved from the game save format.
+ * @property {boolean} unlockedTeleporters
+ * @property {boolean} unlockedDrones
+ * @property {boolean} unlockedAutocrafter
+ * @property {boolean} unlockedEverything
+ * @property {boolean} freeCraft
+ * @property {boolean} preInterplanetarySave
+ * @property {boolean} randomizeMineables
  * @property {string} version
  * @property {string} mode
+ * @property {string} dyingConsequencesLabel
+ * @property {string} startLocationLabel
  * @property {number} worldSeed
+ * @property {boolean} hasPlayedIntro
+ * @property {string} gameStartLocation
  * @property {boolean} modded
  * @property {number} modifierTerraformationPace
  * @property {number} modifierPowerConsumption

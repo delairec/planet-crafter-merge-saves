@@ -89,9 +89,22 @@ declare global {
   interface SaveConfiguration {
     saveDisplayName: string;
     planetId: string;
+    unlockedSpaceTrading: boolean;
+    unlockedOreExtrators: boolean;
+    unlockedTeleporters: boolean;
+    unlockedDrones: boolean;
+    unlockedAutocrafter: boolean;
+    unlockedEverything: boolean;
+    freeCraft: boolean;
+    preInterplanetarySave: boolean;
+    randomizeMineables: boolean;
     version: string;
     mode: string;
+    dyingConsequencesLabel: string;
+    startLocationLabel: string;
     worldSeed: number;
+    hasPlayedIntro: boolean;
+    gameStartLocation: string;
     modded: boolean;
     modifierTerraformationPace: number;
     modifierPowerConsumption: number;
@@ -229,9 +242,22 @@ export interface StoryEvent {
 export interface SaveConfiguration {
   saveDisplayName: string;
   planetId: string;
+  unlockedSpaceTrading: boolean;
+  unlockedOreExtrators: boolean;
+  unlockedTeleporters: boolean;
+  unlockedDrones: boolean;
+  unlockedAutocrafter: boolean;
+  unlockedEverything: boolean;
+  freeCraft: boolean;
+  preInterplanetarySave: boolean;
+  randomizeMineables: boolean;
   version: string;
   mode: string;
+  dyingConsequencesLabel: string;
+  startLocationLabel: string;
   worldSeed: number;
+  hasPlayedIntro: boolean;
+  gameStartLocation: string;
   modded: boolean;
   modifierTerraformationPace: number;
   modifierPowerConsumption: number;
