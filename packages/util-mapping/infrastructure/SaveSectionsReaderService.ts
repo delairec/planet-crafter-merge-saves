@@ -25,6 +25,10 @@ import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObjec
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
 import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
 import {WorldObjectName} from "../domain/worldObjectLabels";
+import {
+  energyConsumptionLevelsByWorldObjectName,
+  energyProductionLevelsByWorldObjectName
+} from "../domain/energyLevelsByWorldObjectName";
 
 export class SaveSectionsReaderService implements SaveParserPort {
 
@@ -171,49 +175,16 @@ export class SaveSectionsReaderService implements SaveParserPort {
   }
 
   private computeEnergyProductionLevel(): number {
-    return this.sumEnergyLevelByNames([
-      ['EnergyGenerator1', 1.2],
-      ['WindTurbine1', 290],
-      ['EnergyGenerator2', 6.5],
-      ['EnergyGenerator3', 19.5],
-      ['EnergyGenerator4', 86.5],
-      ['EnergyGenerator5', 331.5],
-      ['EnergyGenerator6', 1485.5]
-    ]);
+    return this.sumEnergyLevelByNames(energyProductionLevelsByWorldObjectName);
   }
 
   private computeEnergyConsumptionLevel(): number {
-    return this.sumEnergyLevelByNames([
-      ['Drill0', 0.5],
-      ['Drill1', 5],
-      ['Drill2', 8.5],
-      ['Drill3', 45.5],
-      ['Heater1', 1],
-      ['Heater2', 3.5],
-      ['Heater3', 17.5],
-      ['Heater4', 51.5],
-      ['Heater5', 360.5],
-      ['OreExtractor1', 34],
-      ['OreExtractor2', 164],
-      ['GasExtractor1', 58],
-      ['GasExtractor2', 218],
-      ['GrassSpreader1', 13.8],
-      ['SeedSpreader1', 28.8],
-      ['SeedSpreader2', 38.8],
-      ['TreeSpreader0', 31],
-      ['TreeSpreader1', 71],
-      ['TreeSpreader2', 153],
-      ['ComAntenna', 15],
-      ['Teleporter1', 276],
-      ['RecyclingMachine', 12.5],
-      ['RecyclingMachine2', 283],
-      ['Destructor1', 18]
-    ]);
+    return this.sumEnergyLevelByNames(energyConsumptionLevelsByWorldObjectName);
   }
 
-  private sumEnergyLevelByNames(kilowattsByName: [WorldObjectName, number][]): number {
-    return kilowattsByName.reduce(
-      (total, [name, kilowatts]) => total + this.findWorldObjectsByNames([name]).length * kilowatts,
+  private sumEnergyLevelByNames(kilowattsByName: Partial<Record<WorldObjectName, number>>): number {
+    return Object.entries(kilowattsByName).reduce(
+      (total, [name, kilowatts]) => total + this.findWorldObjectsByNames([name as WorldObjectName]).length * kilowatts,
       0
     );
   }

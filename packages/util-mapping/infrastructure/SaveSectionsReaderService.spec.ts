@@ -11,6 +11,10 @@ import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObjec
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
 import {ParsedSections} from "../../util-types/gameDefinitions";
 import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
+import {
+  energyConsumptionLevelsByWorldObjectName,
+  energyProductionLevelsByWorldObjectName
+} from "../domain/energyLevelsByWorldObjectName";
 
 describe('SaveSectionsReaderService', () => {
   let sections: ParsedSections;
@@ -180,21 +184,103 @@ describe('SaveSectionsReaderService', () => {
     });
   });
 
-  it('should extract energy levels of production and consumption', () => {
-    // Arrange
-    const service = new SaveSectionsReaderService(sections);
+  describe('When computing energy levels', () => {
+    it.each(Object.entries(energyProductionLevelsByWorldObjectName).map(([worldObjectName, kilowatts]) => ({
+      worldObjectName,
+      kilowatts
+    })))(
+      'should count $worldObjectName as producing $kilowatts kW',
+      ({worldObjectName, kilowatts}) => {
+        // Arrange
+        const fakeSaveContent = createFakeSaveContent({
+          worldObjects: [{id: 1, gId: worldObjectName}],
+        });
+        const {sections: sectionsWithProducer} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sectionsWithProducer);
 
-    // Act
-    const energyLevels = service.getEnergyLevels();
+        // Act
+        const energyLevels = service.getEnergyLevels();
 
-    // Assert
-    expect(energyLevels).toEqual<EnergyLevelsValueObject>({
-      production: 2220.7,
-      consumption: 1.5,
-      available: 2219.2
+        // Assert
+        expect(energyLevels).toEqual<EnergyLevelsValueObject>({
+          production: kilowatts,
+          consumption: 0,
+          available: kilowatts,
+        });
+      }
+    );
+
+    it.each(Object.entries(energyConsumptionLevelsByWorldObjectName).map(([worldObjectName, kilowatts]) => ({
+      worldObjectName,
+      kilowatts
+    })))(
+      'should count $worldObjectName as consuming $kilowatts kW',
+      ({worldObjectName, kilowatts}) => {
+        // Arrange
+        const fakeSaveContent = createFakeSaveContent({
+          worldObjects: [{id: 1, gId: worldObjectName}],
+        });
+        const {sections: sectionsWithConsumer} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sectionsWithConsumer);
+
+        // Act
+        const energyLevels = service.getEnergyLevels();
+
+        // Assert
+        expect(energyLevels).toEqual<EnergyLevelsValueObject>({
+          production: 0,
+          consumption: kilowatts,
+          available: -kilowatts,
+        });
+      }
+    );
+
+    it('should sum multiple world objects of the same kind', () => {
+      // Arrange
+      const fakeSaveContent = createFakeSaveContent({
+        worldObjects: [
+          {id: 1, gId: 'EnergyGenerator1'},
+          {id: 2, gId: 'EnergyGenerator1'},
+          {id: 3, gId: 'Drill0'},
+          {id: 4, gId: 'Drill0'},
+        ],
+      });
+      const {sections: sectionsWithTwoProducersAndTwoConsumers} = parseSaveSections(fakeSaveContent);
+      const service = new SaveSectionsReaderService(sectionsWithTwoProducersAndTwoConsumers);
+
+      // Act
+      const energyLevels = service.getEnergyLevels();
+
+      // Assert
+      expect(energyLevels).toEqual<EnergyLevelsValueObject>({
+        production: 2.4,
+        consumption: 1,
+        available: 1.4,
+      });
+    });
+
+    it('should compute available energy as production minus consumption', () => {
+      // Arrange
+      const fakeSaveContent = createFakeSaveContent({
+        worldObjects: [
+          {id: 1, gId: 'EnergyGenerator6'},
+          {id: 2, gId: 'Drill4'},
+        ],
+      });
+      const {sections: sectionsWithProducerAndConsumer} = parseSaveSections(fakeSaveContent);
+      const service = new SaveSectionsReaderService(sectionsWithProducerAndConsumer);
+
+      // Act
+      const energyLevels = service.getEnergyLevels();
+
+      // Assert
+      expect(energyLevels).toEqual<EnergyLevelsValueObject>({
+        production: 1485.5,
+        consumption: 375.5,
+        available: 1110,
+      });
     });
   });
 });
-
 
 
