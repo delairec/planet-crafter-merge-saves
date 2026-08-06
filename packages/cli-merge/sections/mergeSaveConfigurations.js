@@ -1,4 +1,4 @@
-/** @import { SaveConfiguration } from '../../util-types/js/types.js' */
+/** @import { SaveConfiguration } from '../../util-types/gameDefinitions' */
 
 /**
  * @param {SaveConfiguration[]} saveConfigurationsA

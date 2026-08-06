@@ -1,21 +1,25 @@
 import {
   GLOBAL_METADATA_SECTION_INDEX,
+  GlobalMetadata,
+  Inventory,
   INVENTORIES_SECTION_INDEX,
   ParsedSections,
   Player,
   PLAYERS_SECTION_INDEX,
   SAVE_CONFIGURATION_SECTION_INDEX,
+  SaveConfiguration,
   STATISTICS_SECTION_INDEX,
+  Statistics,
   TERRAFORMATION_LEVELS_SECTION_INDEX,
   TerraformationLevel,
-  WORLD_OBJECTS_SECTION_INDEX
+  WORLD_OBJECTS_SECTION_INDEX,
+  WorldObject
 } from '../../util-types/gameDefinitions';
 import {SaveParserPort} from '../application/ports/SaveParserPort';
 import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
 import {PlayerEntity} from "../domain/entities/PlayerEntity";
 import {TerraformationLevelEntity} from '../domain/entities/TerraformationLevelEntity';
 import {InventoryEntity} from "../domain/entities/InventoryEntity";
-import {Inventory} from "../../util-types/gameDefinitions/Inventory";
 import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";

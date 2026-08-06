@@ -1,4 +1,4 @@
-/** @import { ParsedSave } from '../../util-types/js/types.js' */
+/** @import { ParsedSections } from '../../util-types/gameDefinitions' */
 
 /**
  * @param {ParsedSections} parsedSaveA

@@ -1,4 +1,4 @@
-/** @import { ParsedSave } from '../util-types/js/types.js' */
+/** @import { ParsedSave } from '../util-types/gameDefinitions' */
 
 import {normalizeRawSections, verifySectionCount} from './normalizeSaveSections.js';
 

@@ -2,7 +2,7 @@ import {describe, it, expect} from 'bun:test';
 import {resolveIdConflicts} from './resolveIdConflicts.js';
 import {parseSaveSections} from './parseSaveSections.js';
 import {createFakeSaveString} from '../util-testing/fixtures/createFakeSaveString.js';
-import { TERRAFORMATION_LEVELS_SECTION_INDEX, PLAYERS_SECTION_INDEX, WORLD_OBJECTS_SECTION_INDEX, INVENTORIES_SECTION_INDEX } from '../util-types/js/sectionIndexes.js';
+import { TERRAFORMATION_LEVELS_SECTION_INDEX, PLAYERS_SECTION_INDEX, WORLD_OBJECTS_SECTION_INDEX, INVENTORIES_SECTION_INDEX } from '../util-types/sectionIndexes.js';
 
 describe('utils/resolveIdConflicts', () => {
   const SECTION_SEPARATOR = '@';

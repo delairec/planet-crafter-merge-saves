@@ -1,3 +1,4 @@
+/** @import { RuntimePlatform } from '../util-types/gameDefinitions' */
 import {extractPlatformParameter} from './extractPlatformParameter.js';
 
 import * as nodePlatform from './platform.node.js';
