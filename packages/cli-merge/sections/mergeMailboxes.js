@@ -1,4 +1,4 @@
-/** @import { MailboxMessage } from '../../util-types/js/types.js' */
+/** @import { MailboxMessage } from '../../util-types/gameDefinitions' */
 
 /**
  * @param {MailboxMessage[]} mailboxA

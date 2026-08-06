@@ -1,4 +1,4 @@
-/** @import { Inventory } from '../../util-types/js/types.js' */
+/** @import { Inventory } from '../../util-types/gameDefinitions' */
 
 /**
  * @param {Inventory[]} inventoriesA

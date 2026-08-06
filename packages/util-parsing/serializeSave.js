@@ -1,4 +1,4 @@
-/** @import { GlobalMetadata, TerraformationLevel, Player, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, WorldEvent } from '../util-types/js/types.js' */
+/** @import { GlobalMetadata, TerraformationLevel, Player, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, WorldEvent } from '../util-types/gameDefinitions' */
 
 import {stringifyEntry} from './stringifyEntry.js';
 

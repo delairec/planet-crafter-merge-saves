@@ -1,6 +1,5 @@
-import {describe, it, expect} from 'bun:test';
+import {describe, expect, it} from 'bun:test';
 import {mergePlayers} from './mergePlayers.js';
-import { PLAYERS_SECTION_INDEX } from '../../util-types/js/sectionIndexes.js';
 
 describe('Merge players', () => {
   const basePlayer = {

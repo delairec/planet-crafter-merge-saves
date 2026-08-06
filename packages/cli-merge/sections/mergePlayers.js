@@ -1,4 +1,4 @@
-/** @import { Player } from '../../util-types/js/types.js' */
+/** @import { Player } from '../../util-types/gameDefinitions' */
 /** @typedef {Omit<Player, 'cameraView'|'totalCraftedObjects'|'totalTerraTokenEarned'> & Partial<Pick<Player, 'cameraView'|'totalCraftedObjects'|'totalTerraTokenEarned'>>} LegacyCompatiblePlayer */
 
 import {stringifyEntry} from '../../util-parsing/stringifyEntry.js';

@@ -1,4 +1,4 @@
-/** @import { TerraformationLevel } from '../../util-types/js/types.js' */
+/** @import { TerraformationLevel } from '../../util-types/gameDefinitions' */
 
 import {stringifyEntry} from '../../util-parsing/stringifyEntry.js';
 

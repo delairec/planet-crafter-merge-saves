@@ -1,4 +1,4 @@
-/** @import { ParsedSave } from '../util-types/js/types.js' */
+/** @import { ParsedSave } from '../util-types/gameDefinitions' */
 
 import {parseSaveSections} from '../util-parsing/parseSaveSections.js';
 import {mergeGlobalMetadata} from './sections/mergeGlobalMetadata.js';

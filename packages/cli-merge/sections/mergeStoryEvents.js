@@ -1,4 +1,4 @@
-/** @import { StoryEvent } from '../../util-types/js/types.js' */
+/** @import { StoryEvent } from '../../util-types/gameDefinitions' */
 
 /**
  * @param {StoryEvent[]} storyEventsA

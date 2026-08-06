@@ -1,4 +1,4 @@
-/** @import { Player, Inventory } from '../../util-types/js/types.js' */
+/** @import { Player, Inventory } from '../../util-types/gameDefinitions' */
 
 /**
  * @param {Player[]} playersA

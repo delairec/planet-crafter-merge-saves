@@ -1,4 +1,4 @@
-/** @import { WorldObject } from '../../util-types/js/types.js' */
+/** @import { WorldObject } from '../../util-types/gameDefinitions' */
 
 import {stringifyEntry} from '../../util-parsing/stringifyEntry.js';
 

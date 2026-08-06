@@ -1,4 +1,4 @@
-/** @import { Statistics } from '../../util-types/js/types.js' */
+/** @import { Statistics } from '../../util-types/gameDefinitions' */
 
 const DEFAULT_STATISTICS = {craftedObjects: 0, totalSaveFileLoad: 0, totalSaveFileTime: 0};
 
