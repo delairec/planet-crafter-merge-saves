@@ -21,7 +21,7 @@ describe('Merge saves', () => {
   describe('Id conflict resolution — save-B world object linked inventory', () => {
     it('should point a save-B world object to its own inventory after merge and id conflict resolution', () => {
       // Arrange
-      const playerA = {id: 1, name: 'PlayerA', inventoryId: 10, equipmentId: 11, host: true, playerPosition: '0,0,0', playerRotation: '0,0,0,0', playerGaugeOxygen: 280.0, playerGaugeThirst: 96.0, playerGaugeHealth: 72.0, playerGaugeToxic: 0.0, planetId: 'Toxicity'};
+      const playerA = {id: 1, name: 'PlayerA', inventoryId: 10, equipmentId: 11, host: true, playerPosition: '0,0,0', playerRotation: '0,0,0,0', playerGaugeOxygen: 280.0, playerGaugeThirst: 96.0, playerGaugeHealth: 72.0, playerGaugeToxic: 0.0, planetId: 'Toxicity', cameraView: 0, totalCraftedObjects: 0, totalTerraTokenEarned: 0};
       const inventoryA = {id: 10, woIds: '', size: 20};
       const equipmentA = {id: 11, woIds: '', size: 10};
       const saveAContainerInventory = {id: 50, woIds: '100', size: 35};

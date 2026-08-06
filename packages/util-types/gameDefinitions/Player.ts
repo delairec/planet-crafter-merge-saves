@@ -11,4 +11,7 @@ export interface Player {
   playerGaugeToxic: number;
   host: boolean;
   planetId: string;
+  cameraView: number;
+  totalCraftedObjects: number;
+  totalTerraTokenEarned: number;
 }

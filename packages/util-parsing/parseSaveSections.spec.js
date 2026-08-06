@@ -22,7 +22,10 @@ describe('utils/parseSaveSections', () => {
     playerGaugeHealth: 72.0,
     playerGaugeToxic: 0.0,
     host: true,
-    planetId: 'Toxicity'
+    planetId: 'Toxicity',
+    cameraView: 0,
+    totalCraftedObjects: 0,
+    totalTerraTokenEarned: 0
   };
   const expectedWorldObject = {id: 101, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 110910047};
   const expectedInventory = {id: 44, woIds: '101,102', size: 10};

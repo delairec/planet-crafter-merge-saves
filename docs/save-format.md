@@ -143,6 +143,9 @@ erDiagram
 | `playerGaugeToxic`  | `float`  | Toximeter (lower = better)                             |
 | `host`              | `bool`   | `true` if the player is the host                       |
 | `planetId`          | `string` | Player's current planet                                |
+| `cameraView`        | `int`    | Camera view mode                                       |
+| `totalCraftedObjects` | `int`  | Total objects crafted by the player                    |
+| `totalTerraTokenEarned` | `int` | Total terra tokens earned by the player                |
 
 ---
 

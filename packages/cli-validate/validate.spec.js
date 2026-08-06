@@ -170,6 +170,18 @@ describe('validateMergedSave', () => {
       expect(result.isValid).toBe(false);
       expect(result.errors.some(e => e.section === 2)).toBeTruthy();
     });
+
+    it('should accept players without cameraView, totalCraftedObjects and totalTerraTokenEarned (backward compatibility)', () => {
+      // Arrange
+      const {cameraView: _cameraView, totalCraftedObjects: _totalCraftedObjects, totalTerraTokenEarned: _totalTerraTokenEarned, ...legacyPlayer} = player;
+      const save = createFakeSaveContent({players: [legacyPlayer]});
+
+      // Act
+      const result = validateMergedSave(save);
+
+      // Assert
+      expect(result.isValid).toBe(true);
+    });
   });
 
   describe('Section 4 — Inventories schema', () => {
