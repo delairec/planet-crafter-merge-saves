@@ -24,14 +24,15 @@ describe('LoadEnergyLevelsSectionController', () => {
           },
           {
             header: 'Consumption',
-            values: ['Not yet implemented']
+            values: [`1.5${nbsp}kW`]
           },
           {
             header: 'Available',
-            values: ['Not yet implemented']
+            values: [`2,219.2${nbsp}kW`]
           }
         ]
       },
+      balanceInsight: `Surplus of 2,219.2${nbsp}kW`
     });
   });
 });

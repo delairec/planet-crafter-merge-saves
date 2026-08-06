@@ -190,8 +190,8 @@ describe('SaveSectionsReaderService', () => {
     // Assert
     expect(energyLevels).toEqual<EnergyLevelsValueObject>({
       production: 2220.7,
-      consumption: 0,
-      available: 2220.7
+      consumption: 1.5,
+      available: 2219.2
     });
   });
 });
