@@ -60,6 +60,20 @@
     "planetId": {
       "type": "string",
       "description": "Planète actuelle du joueur (doit correspondre à la planète de l'hôte)"
+    },
+    "cameraView": {
+      "type": "integer",
+      "description": "Vue caméra du joueur (ajouté par une mise à jour du jeu)"
+    },
+    "totalCraftedObjects": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Nombre total d'objets fabriqués par le joueur (ajouté par une mise à jour du jeu)"
+    },
+    "totalTerraTokenEarned": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Nombre total de terra tokens gagnés par le joueur (ajouté par une mise à jour du jeu)"
     }
   }
 }
