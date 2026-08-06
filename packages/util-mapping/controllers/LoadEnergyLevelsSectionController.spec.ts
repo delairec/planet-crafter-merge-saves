@@ -20,7 +20,7 @@ describe('LoadEnergyLevelsSectionController', () => {
         columns: [
           {
             header: 'Production',
-            values: [`2,220.7${nbsp}kW`]
+            values: [`2,220.2${nbsp}kW`]
           },
           {
             header: 'Consumption',
@@ -28,11 +28,11 @@ describe('LoadEnergyLevelsSectionController', () => {
           },
           {
             header: 'Available',
-            values: [`2,219.2${nbsp}kW`]
+            values: [`2,218.7${nbsp}kW`]
           }
         ]
       },
-      balanceInsight: `Surplus of 2,219.2${nbsp}kW`
+      balanceInsight: `Surplus of 2,218.7${nbsp}kW`
     });
   });
 });

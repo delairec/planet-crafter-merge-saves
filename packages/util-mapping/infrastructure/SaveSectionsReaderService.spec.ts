@@ -193,7 +193,7 @@ describe('SaveSectionsReaderService', () => {
       ({worldObjectName, kilowatts}) => {
         // Arrange
         const fakeSaveContent = createFakeSaveContent({
-          worldObjects: [{id: 1, gId: worldObjectName}],
+          worldObjects: [{id: 1, gId: worldObjectName, pos: '0,0,0', planet: 1}],
         });
         const {sections: sectionsWithProducer} = parseSaveSections(fakeSaveContent);
         const service = new SaveSectionsReaderService(sectionsWithProducer);
@@ -218,7 +218,7 @@ describe('SaveSectionsReaderService', () => {
       ({worldObjectName, kilowatts}) => {
         // Arrange
         const fakeSaveContent = createFakeSaveContent({
-          worldObjects: [{id: 1, gId: worldObjectName}],
+          worldObjects: [{id: 1, gId: worldObjectName, pos: '0,0,0', planet: 1}],
         });
         const {sections: sectionsWithConsumer} = parseSaveSections(fakeSaveContent);
         const service = new SaveSectionsReaderService(sectionsWithConsumer);
@@ -239,10 +239,10 @@ describe('SaveSectionsReaderService', () => {
       // Arrange
       const fakeSaveContent = createFakeSaveContent({
         worldObjects: [
-          {id: 1, gId: 'EnergyGenerator1'},
-          {id: 2, gId: 'EnergyGenerator1'},
-          {id: 3, gId: 'Drill0'},
-          {id: 4, gId: 'Drill0'},
+          {id: 1, gId: 'EnergyGenerator1', pos: '0,0,0', planet: 1},
+          {id: 2, gId: 'EnergyGenerator1', pos: '10,0,0', planet: 1},
+          {id: 3, gId: 'Drill0', pos: '0,10,0', planet: 1},
+          {id: 4, gId: 'Drill0', pos: '10,10,0', planet: 1},
         ],
       });
       const {sections: sectionsWithTwoProducersAndTwoConsumers} = parseSaveSections(fakeSaveContent);
@@ -263,8 +263,8 @@ describe('SaveSectionsReaderService', () => {
       // Arrange
       const fakeSaveContent = createFakeSaveContent({
         worldObjects: [
-          {id: 1, gId: 'EnergyGenerator6'},
-          {id: 2, gId: 'Drill4'},
+          {id: 1, gId: 'EnergyGenerator6', pos: '0,0,0', planet: 1},
+          {id: 2, gId: 'Drill4', pos: '10,0,0', planet: 1},
         ],
       });
       const {sections: sectionsWithProducerAndConsumer} = parseSaveSections(fakeSaveContent);
@@ -275,12 +275,188 @@ describe('SaveSectionsReaderService', () => {
 
       // Assert
       expect(energyLevels).toEqual<EnergyLevelsValueObject>({
-        production: 1485.5,
+        production: 1485,
         consumption: 375.5,
-        available: 1110,
+        available: 1109.5,
+      });
+    });
+
+    it('should ignore world objects without a position (not placed) when computing energy levels', () => {
+      // Arrange
+      const fakeSaveContent = createFakeSaveContent({
+        worldObjects: [
+          {id: 1, gId: 'EnergyGenerator1', pos: '0,0,0', planet: 1},
+          {id: 2, gId: 'EnergyGenerator1'},
+          {id: 3, gId: 'Drill0', pos: '10,0,0', planet: 1},
+          {id: 4, gId: 'Drill0'},
+        ],
+      });
+      const {sections} = parseSaveSections(fakeSaveContent);
+      const service = new SaveSectionsReaderService(sections);
+
+      // Act
+      const energyLevels = service.getEnergyLevels();
+
+      // Assert
+      expect(energyLevels).toEqual<EnergyLevelsValueObject>({
+        production: 1.2,
+        consumption: 0.5,
+        available: 0.7,
+      });
+    });
+
+    describe('When an Optimizer holds an Energy Fuse', () => {
+      it('should boost a producer within radius to 150% for a single fuse', () => {
+        // Arrange
+        const fakeSaveContent = createFakeSaveContent({
+          worldObjects: [
+            {id: 10, gId: 'Optimizer1', pos: '0,0,0', planet: 1, liId: 100},
+            {id: 20, gId: 'FuseEnergy1'},
+            {id: 30, gId: 'EnergyGenerator1', pos: '10,0,0', planet: 1},
+          ],
+          inventories: [{id: 100, woIds: '20', size: 1}],
+        });
+        const {sections} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sections);
+
+        // Act
+        const energyLevels = service.getEnergyLevels();
+
+        // Assert
+        expect(energyLevels.production).toBeCloseTo(1.2 * 1.5);
+      });
+
+      it('should not boost a producer beyond the optimizer radius', () => {
+        // Arrange
+        const fakeSaveContent = createFakeSaveContent({
+          worldObjects: [
+            {id: 10, gId: 'Optimizer1', pos: '0,0,0', planet: 1, liId: 100},
+            {id: 20, gId: 'FuseEnergy1'},
+            {id: 30, gId: 'EnergyGenerator1', pos: '200,0,0', planet: 1},
+          ],
+          inventories: [{id: 100, woIds: '20', size: 1}],
+        });
+        const {sections} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sections);
+
+        // Act
+        const energyLevels = service.getEnergyLevels();
+
+        // Assert
+        expect(energyLevels.production).toBeCloseTo(1.2);
+      });
+
+      it('should not boost a producer on a different planet', () => {
+        // Arrange
+        const fakeSaveContent = createFakeSaveContent({
+          worldObjects: [
+            {id: 10, gId: 'Optimizer1', pos: '0,0,0', planet: 1, liId: 100},
+            {id: 20, gId: 'FuseEnergy1'},
+            {id: 30, gId: 'EnergyGenerator1', pos: '10,0,0', planet: 2},
+          ],
+          inventories: [{id: 100, woIds: '20', size: 1}],
+        });
+        const {sections} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sections);
+
+        // Act
+        const energyLevels = service.getEnergyLevels();
+
+        // Assert
+        expect(energyLevels.production).toBeCloseTo(1.2);
+      });
+
+      it('should ignore an Optimizer without any Energy Fuse in its inventory', () => {
+        // Arrange
+        const fakeSaveContent = createFakeSaveContent({
+          worldObjects: [
+            {id: 10, gId: 'Optimizer1', pos: '0,0,0', planet: 1, liId: 100},
+            {id: 30, gId: 'EnergyGenerator1', pos: '10,0,0', planet: 1},
+          ],
+          inventories: [{id: 100, woIds: '', size: 1}],
+        });
+        const {sections} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sections);
+
+        // Act
+        const energyLevels = service.getEnergyLevels();
+
+        // Assert
+        expect(energyLevels.production).toBeCloseTo(1.2);
+      });
+
+      it('should stack multiple fuses in a T2 Optimizer additively by raw percentage (EN-FUSE-3)', () => {
+        // Arrange
+        const fakeSaveContent = createFakeSaveContent({
+          worldObjects: [
+            {id: 10, gId: 'Optimizer2', pos: '0,0,0', planet: 1, liId: 100},
+            {id: 20, gId: 'FuseEnergy1'},
+            {id: 21, gId: 'FuseEnergy1'},
+            {id: 30, gId: 'EnergyGenerator1', pos: '10,0,0', planet: 1},
+          ],
+          inventories: [{id: 100, woIds: '20,21', size: 3}],
+        });
+        const {sections} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sections);
+
+        // Act
+        const energyLevels = service.getEnergyLevels();
+
+        // Assert: 2 fuses => 2 × 150% = 300%
+        expect(energyLevels.production).toBeCloseTo(1.2 * 3);
+      });
+
+      it('should stack fuses from two different Optimizers reaching the same producer (EN-OPT-3)', () => {
+        // Arrange
+        const fakeSaveContent = createFakeSaveContent({
+          worldObjects: [
+            {id: 10, gId: 'Optimizer1', pos: '0,0,0', planet: 1, liId: 100},
+            {id: 11, gId: 'Optimizer1', pos: '20,0,0', planet: 1, liId: 101},
+            {id: 20, gId: 'FuseEnergy1'},
+            {id: 21, gId: 'FuseEnergy1'},
+            {id: 30, gId: 'EnergyGenerator1', pos: '10,0,0', planet: 1},
+          ],
+          inventories: [
+            {id: 100, woIds: '20', size: 1},
+            {id: 101, woIds: '21', size: 1},
+          ],
+        });
+        const {sections} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sections);
+
+        // Act
+        const energyLevels = service.getEnergyLevels();
+
+        // Assert: 2 fuses total (1 from each optimizer) => 2 × 150% = 300%
+        expect(energyLevels.production).toBeCloseTo(1.2 * 3);
+      });
+
+      it('should only boost the closest machines up to the optimizer capacity (EN-OPT-2)', () => {
+        // Arrange: T1 Optimizer boosts at most 5 machines; add 6 eligible producers in range.
+        const producers = Array.from({length: 6}, (_, index) => ({
+          id: 30 + index,
+          gId: 'EnergyGenerator1',
+          pos: `${10 + index},0,0`,
+          planet: 1,
+        }));
+        const fakeSaveContent = createFakeSaveContent({
+          worldObjects: [
+            {id: 10, gId: 'Optimizer1', pos: '0,0,0', planet: 1, liId: 100},
+            {id: 20, gId: 'FuseEnergy1'},
+            ...producers,
+          ],
+          inventories: [{id: 100, woIds: '20', size: 1}],
+        });
+        const {sections} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sections);
+
+        // Act
+        const energyLevels = service.getEnergyLevels();
+
+        // Assert: 5 boosted producers at 150% + 1 unboosted at 100%
+        expect(energyLevels.production).toBeCloseTo(1.2 * 1.5 * 5 + 1.2);
       });
     });
   });
 });
-
 

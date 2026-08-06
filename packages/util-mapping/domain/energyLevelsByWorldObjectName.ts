@@ -7,7 +7,7 @@ export const energyProductionLevelsByWorldObjectName: Partial<Record<WorldObject
   EnergyGenerator3: 19.5,
   EnergyGenerator4: 86.5,
   EnergyGenerator5: 331.5,
-  EnergyGenerator6: 1485.5
+  EnergyGenerator6: 1485
 };
 
 export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjectName, number>> = {

@@ -30,6 +30,27 @@ import {
   energyProductionLevelsByWorldObjectName
 } from "../domain/energyLevelsByWorldObjectName";
 
+// Rule EN-OPT-1: Optimizer capacity (max boosted machines) and radius (in meters).
+const OPTIMIZER_CONFIG_BY_NAME: Partial<Record<WorldObjectName, {radius: number; maxMachines: number}>> = {
+  Optimizer1: {radius: 120, maxMachines: 5},
+  Optimizer2: {radius: 250, maxMachines: 8}
+};
+
+const ENERGY_FUSE_NAME: WorldObjectName = 'FuseEnergy1' as WorldObjectName;
+// Rule EN-FUSE-2/3 (per Fuse wiki page): each Energy Fuse replaces the producer's 100% base value
+// with a 150% multiplier; multiple fuses (from one or more Optimizers) stack additively by raw
+// percentage — e.g. 2 fuses => 300%, not 200%. A producer reached by zero fuses stays at 100%.
+const ENERGY_FUSE_MULTIPLIER_PER_FUSE = 1.5;
+
+function parsePosition(pos: string): [number, number, number] {
+  const [x, y, z] = pos.split(',').map(Number);
+  return [x, y, z];
+}
+
+function distanceBetween(a: [number, number, number], b: [number, number, number]): number {
+  return Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2);
+}
+
 export class SaveSectionsReaderService implements SaveParserPort {
 
   private readonly globalMetadata: GlobalMetadata[];
@@ -164,28 +185,87 @@ export class SaveSectionsReaderService implements SaveParserPort {
     return result;
   }
 
-  private findWorldObjectsByNames(names: WorldObjectName[]): WorldObjectEntity[] {
-    const result: WorldObjectEntity[] = [];
-    for (const worldObject of this.getWorldObjects()(this.sections)) {
-      if (names.includes(worldObject.name)) {
-        result.push(worldObject);
-      }
-    }
-    return result;
-  }
-
   private computeEnergyProductionLevel(): number {
-    return this.sumEnergyLevelByNames(energyProductionLevelsByWorldObjectName);
+    const allWorldObjects = [...this.worldObjectsFactory()];
+    // Rule GR-WO-1 / EN-BASE-1: only positioned (placed) world objects actually produce energy.
+    const positionedWorldObjects = allWorldObjects.filter(
+      (worldObject) => worldObject.pos !== undefined && worldObject.planet !== undefined
+    );
+    const fuseCountByProducerId = this.computeEnergyFuseCountsByProducerId(allWorldObjects, positionedWorldObjects);
+
+    return positionedWorldObjects.reduce((total, worldObject) => {
+      const baseLevel = energyProductionLevelsByWorldObjectName[worldObject.gId as WorldObjectName];
+      if (baseLevel === undefined) {
+        return total;
+      }
+      const fuseCount = fuseCountByProducerId.get(String(worldObject.id)) ?? 0;
+      const multiplier = fuseCount === 0 ? 1 : fuseCount * ENERGY_FUSE_MULTIPLIER_PER_FUSE;
+      return total + baseLevel * multiplier;
+    }, 0);
   }
 
   private computeEnergyConsumptionLevel(): number {
-    return this.sumEnergyLevelByNames(energyConsumptionLevelsByWorldObjectName);
+    return [...this.worldObjectsFactory()].reduce((total, worldObject) => {
+      if (worldObject.pos === undefined || worldObject.planet === undefined) {
+        return total;
+      }
+      const kilowatts = energyConsumptionLevelsByWorldObjectName[worldObject.gId as WorldObjectName];
+      return kilowatts === undefined ? total : total + kilowatts;
+    }, 0);
   }
 
-  private sumEnergyLevelByNames(kilowattsByName: Partial<Record<WorldObjectName, number>>): number {
-    return Object.entries(kilowattsByName).reduce(
-      (total, [name, kilowatts]) => total + this.findWorldObjectsByNames([name as WorldObjectName]).length * kilowatts,
-      0
+  /**
+   * Implements rules EN-OPT-1..3 and EN-FUSE-1..4: for each Optimizer holding at least one Energy
+   * Fuse, finds the closest eligible energy producers (same planet, within radius, up to the
+   * optimizer's machine capacity) and accumulates the total number of Energy Fuses reaching each
+   * producer (summed across every optimizer that reaches it, per Rule EN-OPT-3).
+   */
+  private computeEnergyFuseCountsByProducerId(
+    allWorldObjects: WorldObject[],
+    positionedWorldObjects: WorldObject[]
+  ): Map<string, number> {
+    const fuseCountByProducerId = new Map<string, number>();
+
+    const worldObjectById = new Map(allWorldObjects.map((worldObject) => [String(worldObject.id), worldObject]));
+    const producers = positionedWorldObjects.filter(
+      (worldObject) => energyProductionLevelsByWorldObjectName[worldObject.gId as WorldObjectName] !== undefined
     );
+    const optimizers = positionedWorldObjects.filter(
+      (worldObject) => OPTIMIZER_CONFIG_BY_NAME[worldObject.gId as WorldObjectName] !== undefined
+    );
+
+    for (const optimizer of optimizers) {
+      const inventory = this.inventories.find((candidate) => candidate.id === optimizer.liId);
+      if (!inventory) {
+        continue;
+      }
+
+      const fuseCount = inventory.woIds
+        .split(',')
+        .filter(Boolean)
+        .filter((id) => worldObjectById.get(id)?.gId === ENERGY_FUSE_NAME)
+        .length;
+      if (fuseCount === 0) {
+        continue;
+      }
+
+      const {radius, maxMachines} = OPTIMIZER_CONFIG_BY_NAME[optimizer.gId as WorldObjectName]!;
+      const optimizerPosition = parsePosition(optimizer.pos!);
+
+      const closestEligibleProducers = producers
+        .filter((producer) => producer.planet === optimizer.planet)
+        .map((producer) => ({producer, distance: distanceBetween(optimizerPosition, parsePosition(producer.pos!))}))
+        .filter(({distance}) => distance <= radius)
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, maxMachines);
+
+      for (const {producer} of closestEligibleProducers) {
+        const producerId = String(producer.id);
+        const previousCount = fuseCountByProducerId.get(producerId) ?? 0;
+        fuseCountByProducerId.set(producerId, previousCount + fuseCount);
+      }
+    }
+
+    return fuseCountByProducerId;
   }
 }
