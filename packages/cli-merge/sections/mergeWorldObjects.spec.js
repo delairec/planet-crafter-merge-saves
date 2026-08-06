@@ -1,5 +1,6 @@
 import {describe, it, expect} from 'bun:test';
 import {mergeWorldObjects} from './mergeWorldObjects.js';
+import {inventory, player} from '../../util-testing/fixtures/createFakeSaveContent.js';
 
 describe('Merge world objects', () => {
   function* createWorldObjectsGenerator(worldObjects) {
@@ -40,6 +41,36 @@ describe('Merge world objects', () => {
 
       // Assert
       expect(result.serialized).toBe('');
+    });
+  });
+
+  describe('When save B contains world objects from an ejected player inventory', () => {
+    it('should drop the world objects that were in the orphan inventories', () => {
+      // Arrange
+      const playerA = {...player, id: 1, name: 'Nikowa', inventoryId: 44, equipmentId: 45};
+      const playerB = {...player, id: 2, name: 'Chileny', host: false, inventoryId: 77, equipmentId: 4};
+      const ejectedPlayerB = {...playerB, name: playerA.name, equipmentId: 78};
+      const fakeSaveA = createFakeSaveString({players: [playerA], inventories: [inventory]});
+      const fakeSaveB = createFakeSaveString({
+        players: [ejectedPlayerB, playerB],
+        inventories: [
+          {id: 77, woIds: '901,902', size: 10},
+          {id: 78, woIds: '903', size: 5},
+          inventory
+        ],
+        worldObjects: [
+          {id: 901, gId: 'Iron'},
+          {id: 902, gId: 'Cobalt'},
+          {id: 903, gId: 'AirFilter1'}
+        ]
+      });
+      const {mergeSaves} = merge(fakeSaveA, fakeSaveB, saveDisplayName);
+
+      // Act
+      const result = mergeSaves();
+
+      // Assert
+      expect(result).toBe(createFakeSaveString({players: [playerA, playerB], inventories: [inventory, inventory], worldObjects: []}));
     });
   });
 
