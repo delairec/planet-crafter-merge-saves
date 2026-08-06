@@ -10,17 +10,18 @@ interface EnergyLevelsProps {
 
 export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
   const [energyLevelsColumns, setEnergyLevelsColumns] = createSignal<EnergyLevelsViewModel['energyLevels']['columns']>([]);
-  const [title, setTitle] = createSignal<string | null>(null);
+  const [balanceInsight, setBalanceInsight] = createSignal<string>('');
 
   createEffect(() => {
-    const {energyLevels} = LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections());
+    const {energyLevels, balanceInsight} = LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections());
     setEnergyLevelsColumns(energyLevels.columns);
-    setTitle(title);
+    setBalanceInsight(balanceInsight);
   });
 
   return (
     <div>
-      <h3>Power (WORK IN PROGRESS)</h3>
+      <h3>Power</h3>
+      <p class="fields-group-main-value">{balanceInsight()}</p>
       <div class="fields-group-container">
         <FieldsGroup columns={energyLevelsColumns}/>
       </div>

@@ -37,6 +37,8 @@ export const worldObjects = [
   {id: 95585245, gId: 'EnergyGenerator5'},
   {id: 95585246, gId: 'EnergyGenerator6'},
   {id: 95585246, gId: 'WindTurbine1'},
+  {id: 95585247, gId: 'Drill0'},
+  {id: 95585248, gId: 'Heater1'},
 ];
 export const saveConfiguration = {
   saveDisplayName: 'Merged Save',

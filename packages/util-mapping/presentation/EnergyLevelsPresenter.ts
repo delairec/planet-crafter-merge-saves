@@ -25,7 +25,8 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
             values: ['Not yet implemented']
           }
         ]
-      }
+      },
+      balanceInsight: ''
     };
   }
 
@@ -39,14 +40,23 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
               },
               {
                 header: 'Consumption',
-                values: ['Not yet implemented']
+                values: [formatNumber(energyLevels.consumption) + `${nbsp}kW`]
               },
               {
                 header: 'Available',
-                values: ['Not yet implemented']
+                values: [formatNumber(energyLevels.available) + `${nbsp}kW`]
               }
             ]
-          }
+          },
+          balanceInsight: this.buildBalanceInsight(energyLevels.available)
         };
     }
+
+  private buildBalanceInsight(available: number): string {
+    if (available >= 0) {
+      return `Surplus of ${formatNumber(available)}${nbsp}kW`;
+    }
+
+    return `⚠️ Power deficit of ${formatNumber(Math.abs(available))}${nbsp}kW — your base is at risk`;
+  }
 }

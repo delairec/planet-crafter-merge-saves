@@ -171,24 +171,50 @@ export class SaveSectionsReaderService implements SaveParserPort {
   }
 
   private computeEnergyProductionLevel(): number {
-    const windTurbines: WorldObjectEntity[] = this.findWorldObjectsByNames(['EnergyGenerator1']);
-    const t2WindTurbines: WorldObjectEntity[] = this.findWorldObjectsByNames(['WindTurbine1']);
-    const t1SolarPanels: WorldObjectEntity[] = this.findWorldObjectsByNames(['EnergyGenerator2']);
-    const t2SolarPanels: WorldObjectEntity[] = this.findWorldObjectsByNames(['EnergyGenerator3']);
-    const t1NuclearReactors: WorldObjectEntity[] = this.findWorldObjectsByNames(['EnergyGenerator4']);
-    const t2NuclearReactors: WorldObjectEntity[] = this.findWorldObjectsByNames(['EnergyGenerator5']);
-    const nuclearFusionGenerators: WorldObjectEntity[] = this.findWorldObjectsByNames(['EnergyGenerator6']);
-
-    return windTurbines.length * 1.2 +
-      t2WindTurbines.length * 290 +
-      t1SolarPanels.length * 6.5 +
-      t2SolarPanels.length * 19.5 +
-      t1NuclearReactors.length * 86.5 +
-      t2NuclearReactors.length * 331.5 +
-      nuclearFusionGenerators.length * 1485.5;
+    return this.sumEnergyLevelByNames([
+      ['EnergyGenerator1', 1.2],
+      ['WindTurbine1', 290],
+      ['EnergyGenerator2', 6.5],
+      ['EnergyGenerator3', 19.5],
+      ['EnergyGenerator4', 86.5],
+      ['EnergyGenerator5', 331.5],
+      ['EnergyGenerator6', 1485.5]
+    ]);
   }
 
-  private computeEnergyConsumptionLevel():number {
-    return 0;
+  private computeEnergyConsumptionLevel(): number {
+    return this.sumEnergyLevelByNames([
+      ['Drill0', 0.5],
+      ['Drill1', 5],
+      ['Drill2', 8.5],
+      ['Drill3', 45.5],
+      ['Heater1', 1],
+      ['Heater2', 3.5],
+      ['Heater3', 17.5],
+      ['Heater4', 51.5],
+      ['Heater5', 360.5],
+      ['OreExtractor1', 34],
+      ['OreExtractor2', 164],
+      ['GasExtractor1', 58],
+      ['GasExtractor2', 218],
+      ['GrassSpreader1', 13.8],
+      ['SeedSpreader1', 28.8],
+      ['SeedSpreader2', 38.8],
+      ['TreeSpreader0', 31],
+      ['TreeSpreader1', 71],
+      ['TreeSpreader2', 153],
+      ['ComAntenna', 15],
+      ['Teleporter1', 276],
+      ['RecyclingMachine', 12.5],
+      ['RecyclingMachine2', 283],
+      ['Destructor1', 18]
+    ]);
+  }
+
+  private sumEnergyLevelByNames(kilowattsByName: [WorldObjectName, number][]): number {
+    return kilowattsByName.reduce(
+      (total, [name, kilowatts]) => total + this.findWorldObjectsByNames([name]).length * kilowatts,
+      0
+    );
   }
 }

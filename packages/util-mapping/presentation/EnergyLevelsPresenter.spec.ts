@@ -26,7 +26,42 @@ describe('EnergyLevelsPresenter', () => {
             values: ['Not yet implemented']
           }
         ]
-      }
+      },
+      balanceInsight: ''
+    });
+  });
+
+  describe('When production covers consumption', () => {
+    it('should present a surplus insight', () => {
+      // Arrange
+      const presenter = new EnergyLevelsPresenter();
+
+      // Act
+      presenter.present({
+        production: 80_000,
+        consumption: 0,
+        available: 80_000,
+      });
+
+      // Assert
+      expect(presenter.viewModel.balanceInsight).toBe(`Surplus of 80,000${nbsp}kW`);
+    });
+  });
+
+  describe('When consumption exceeds production', () => {
+    it('should present a deficit warning insight', () => {
+      // Arrange
+      const presenter = new EnergyLevelsPresenter();
+
+      // Act
+      presenter.present({
+        production: 5_000,
+        consumption: 8_000,
+        available: -3_000,
+      });
+
+      // Assert
+      expect(presenter.viewModel.balanceInsight).toBe(`⚠️ Power deficit of 3,000${nbsp}kW — your base is at risk`);
     });
   });
 
@@ -52,14 +87,15 @@ describe('EnergyLevelsPresenter', () => {
             },
             {
               header: 'Consumption',
-              values: ['Not yet implemented']
+              values: ['0' + `${nbsp}kW`]
             },
             {
               header: 'Available',
-              values: ['Not yet implemented']
+              values: ['80,000' + `${nbsp}kW`]
             }
           ]
-        }
+        },
+        balanceInsight: `Surplus of 80,000${nbsp}kW`
       }
     );
   });
