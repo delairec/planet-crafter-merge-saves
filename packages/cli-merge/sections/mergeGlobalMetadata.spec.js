@@ -1,11 +1,8 @@
-import {describe, it, expect} from 'bun:test';
-import {merge} from '../merge.js';
-import {createFakeSaveString} from '../../util-testing/fixtures/createFakeSaveString.js';
+import {describe, expect, it} from 'bun:test';
+import {mergeGlobalMetadata} from './mergeGlobalMetadata.js';
 
-describe('Merge saves — #1 Global metadata', () => {
-  const saveDisplayName = 'SAVE_NAME';
-
-  const saveA_metadata = {
+describe('Merge global metadata', () => {
+  const metadataFromSaveA = {
     terraTokens: 122279,
     allTimeTerraTokens: 222154,
     unlockedGroups: 'MultiToolMineSpeed1,BootsSpeed1,BootsSpeed2,SofaColored',
@@ -13,33 +10,152 @@ describe('Merge saves — #1 Global metadata', () => {
     openedInstanceTimeLeft: 2
   };
 
-  const saveB_metadata = {
+  const metadataFromSaveB = {
     terraTokens: 10928,
     allTimeTerraTokens: 11456,
     unlockedGroups: 'MultiToolMineSpeed1,BootsSpeed1,BedDoubleColored',
     openedInstanceSeed: 1,
-    openedInstanceTimeLeft: 0
+    openedInstanceTimeLeft: 5
   };
 
-  const mergedSave_metadata = {
-    terraTokens: 133207,
-    allTimeTerraTokens: 233610,
-    unlockedGroups: 'MultiToolMineSpeed1,BootsSpeed1,BootsSpeed2,SofaColored,BedDoubleColored',
-    openedInstanceSeed: 1,
-    openedInstanceTimeLeft: 2
-  };
+  describe('When both saves contain full global metadata', () => {
+    it('should sum terra tokens', () => {
+      // Act
+      const mergeResult = mergeGlobalMetadata([metadataFromSaveA], [metadataFromSaveB]);
 
-  it('should merge metadata', () => {
-    // Arrange
-    const fakeSaveA = createFakeSaveString({globalMetadata: saveA_metadata});
-    const fakeSaveB = createFakeSaveString({globalMetadata: saveB_metadata});
-    const {mergeSaves} = merge(fakeSaveA, fakeSaveB, saveDisplayName);
+      // Assert
+      expect(JSON.parse(mergeResult).terraTokens).toBe(133207);
+    });
 
-    // Act
-    const result = mergeSaves();
+    it('should sum all-time terra tokens', () => {
+      // Act
+      const mergeResult = mergeGlobalMetadata([metadataFromSaveA], [metadataFromSaveB]);
 
-    // Assert
-    expect(result).toBe(createFakeSaveString({globalMetadata: mergedSave_metadata}));
+      // Assert
+      expect(JSON.parse(mergeResult).allTimeTerraTokens).toBe(233610);
+    });
+
+    it('should merge unlocked groups without duplicates', () => {
+      // Act
+      const mergeResult = mergeGlobalMetadata([metadataFromSaveA], [metadataFromSaveB]);
+
+      // Assert
+      expect(JSON.parse(mergeResult).unlockedGroups.split(',').sort()).toEqual([
+        'BedDoubleColored',
+        'BootsSpeed1',
+        'BootsSpeed2',
+        'MultiToolMineSpeed1',
+        'SofaColored'
+      ].sort());
+    });
+
+    it('should keep the instance seed from save A', () => {
+      // Act
+      const mergeResult = mergeGlobalMetadata([metadataFromSaveA], [metadataFromSaveB]);
+
+      // Assert
+      expect(JSON.parse(mergeResult).openedInstanceSeed).toBe(0);
+    });
+
+    it('should keep the remaining instance time from save A', () => {
+      // Act
+      const mergeResult = mergeGlobalMetadata([metadataFromSaveA], [metadataFromSaveB]);
+
+      // Assert
+      expect(JSON.parse(mergeResult).openedInstanceTimeLeft).toBe(2);
+    });
+  });
+
+  describe('When save A has no global metadata', () => {
+    it('should fall back to save B global metadata', () => {
+      // Arrange
+      const noMetadataFromSaveA = [];
+
+      // Act
+      const mergeResult = mergeGlobalMetadata(noMetadataFromSaveA, [metadataFromSaveB]);
+
+      // Assert
+      expect(JSON.parse(mergeResult)).toEqual(metadataFromSaveB);
+    });
+  });
+
+  describe('When save B has no global metadata', () => {
+    it('should fall back to save A global metadata', () => {
+      // Arrange
+      const noMetadataFromSaveB = [];
+
+      // Act
+      const mergeResult = mergeGlobalMetadata([metadataFromSaveA], noMetadataFromSaveB);
+
+      // Assert
+      expect(JSON.parse(mergeResult)).toEqual(metadataFromSaveA);
+    });
+  });
+
+  describe('When unlocked groups contain JSON special characters', () => {
+    it('should produce parseable JSON', () => {
+      // Arrange
+      const escapedGroup = 'Group"With\\Slash';
+      const metadataWithEscapedGroup = {...metadataFromSaveA, unlockedGroups: escapedGroup};
+
+      // Act
+      const mergeResult = mergeGlobalMetadata([metadataWithEscapedGroup], []);
+
+      // Assert
+      expect(JSON.parse(mergeResult).unlockedGroups).toBe(escapedGroup);
+    });
+  });
+
+  describe('When unlocked groups lists are empty', () => {
+    it('should return an empty list', () => {
+      // Arrange
+      const metadataFromSaveAWithoutGroups = {...metadataFromSaveA, unlockedGroups: ''};
+      const metadataFromSaveBWithoutGroups = {...metadataFromSaveB, unlockedGroups: ''};
+
+      // Act
+      const mergeResult = mergeGlobalMetadata([metadataFromSaveAWithoutGroups], [metadataFromSaveBWithoutGroups]);
+
+      // Assert
+      expect(JSON.parse(mergeResult).unlockedGroups).toBe('');
+    });
+
+    it('should ignore an empty unlocked groups list from save A', () => {
+      // Arrange
+      const metadataFromSaveAWithoutGroups = {...metadataFromSaveA, unlockedGroups: ''};
+      const metadataFromSaveBWithGroups = {...metadataFromSaveB, unlockedGroups: 'GroupB'};
+
+      // Act
+      const mergeResult = mergeGlobalMetadata([metadataFromSaveAWithoutGroups], [metadataFromSaveBWithGroups]);
+
+      // Assert
+      expect(JSON.parse(mergeResult).unlockedGroups).toBe('GroupB');
+    });
+
+    it('should ignore an empty unlocked groups list from save B', () => {
+      // Arrange
+      const metadataFromSaveAWithGroups = {...metadataFromSaveA, unlockedGroups: 'GroupA'};
+      const metadataFromSaveBWithoutGroups = {...metadataFromSaveB, unlockedGroups: ''};
+
+      // Act
+      const mergeResult = mergeGlobalMetadata([metadataFromSaveAWithGroups], [metadataFromSaveBWithoutGroups]);
+
+      // Assert
+      expect(JSON.parse(mergeResult).unlockedGroups).toBe('GroupA');
+    });
+  });
+
+  describe('When both saves have no global metadata', () => {
+    it('should return an invalid input format error', () => {
+      // Arrange
+      const noMetadataFromSaveA = [];
+      const noMetadataFromSaveB = [];
+
+      // Act
+      const mergeResult = mergeGlobalMetadata(noMetadataFromSaveA, noMetadataFromSaveB);
+
+      // Assert
+      expect(mergeResult).toBe('ERROR_INVALID_INPUT_FORMAT');
+    });
   });
 });
 

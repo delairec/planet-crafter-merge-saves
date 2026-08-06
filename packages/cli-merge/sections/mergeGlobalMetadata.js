@@ -31,9 +31,9 @@ export function mergeGlobalMetadata([metadataA], [metadataB]) {
   ]);
   const unlockedGroups = Array.from(deduplicatedUnlockedGroups).filter(Boolean).join(',');
 
-  const openedInstanceSeed = Math.max(validatedMetadataA.openedInstanceSeed, validatedMetadataB.openedInstanceSeed);
-  const openedInstanceTimeLeft = Math.max(validatedMetadataA.openedInstanceTimeLeft, validatedMetadataB.openedInstanceTimeLeft);
+  const openedInstanceSeed = (metadataA ?? metadataB).openedInstanceSeed;
+  const openedInstanceTimeLeft = (metadataA ?? metadataB).openedInstanceTimeLeft;
 
-  return `{"terraTokens":${terraTokens},"allTimeTerraTokens":${allTimeTerraTokens},"unlockedGroups":"${unlockedGroups}","openedInstanceSeed":${openedInstanceSeed},"openedInstanceTimeLeft":${openedInstanceTimeLeft}}`;
+  return `{"terraTokens":${terraTokens},"allTimeTerraTokens":${allTimeTerraTokens},"unlockedGroups":${JSON.stringify(unlockedGroups)},"openedInstanceSeed":${openedInstanceSeed},"openedInstanceTimeLeft":${openedInstanceTimeLeft}}`;
 }
 
