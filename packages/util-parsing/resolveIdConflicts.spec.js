@@ -15,7 +15,10 @@ describe('utils/resolveIdConflicts', () => {
     playerGaugeHealth: 72.0,
     playerGaugeToxic: 0.0,
     host: true,
-    planetId: 'Toxicity'
+    planetId: 'Toxicity',
+    cameraView: 0,
+    totalCraftedObjects: 0,
+    totalTerraTokenEarned: 0
   };
 
   const defaultPlayerFromA = {...defaultPlayerConfiguration, id: 1, name: 'Nikowa', inventoryId: 10, equipmentId: 11, host: true};

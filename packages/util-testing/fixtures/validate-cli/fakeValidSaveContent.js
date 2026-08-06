@@ -38,7 +38,10 @@ const validPlayer = {
   playerGaugeHealth: 72.67363739013672,
   playerGaugeToxic: 0.0,
   host: true,
-  planetId: 'Toxicity'
+  planetId: 'Toxicity',
+  cameraView: 0,
+  totalCraftedObjects: 1820,
+  totalTerraTokenEarned: 9000
 };
 export const VALID_SAVE_CONTENT = createFakeSaveString({
   globalMetadata: {

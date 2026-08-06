@@ -88,6 +88,8 @@
 
 **Rule GR-PLAYER-3:** Players from save B whose `name` does not exist in save A are appended to the merged list.
 
+**Rule GR-PLAYER-4:** Players from older saves may be missing `cameraView`, `totalCraftedObjects` or `totalTerraTokenEarned` (fields added by a later game update). Any missing field defaults to `0` in the merged output.
+
 **Implementation:** `src/merge/mergePlayers.js`
 
 ---

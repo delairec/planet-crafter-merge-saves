@@ -12,7 +12,10 @@ export const player = {
   playerGaugeHealth: 72.67363739013672,
   playerGaugeToxic: 0.0,
   host: true,
-  planetId: 'Toxicity'
+  planetId: 'Toxicity',
+  cameraView: 0,
+  totalCraftedObjects: 1820,
+  totalTerraTokenEarned: 9000
 };
 export const inventory = {id: 44, woIds: '79111656,58524136', size: 20};
 export const equipment = {id: 45, woIds: '85274195,48456321', size: 10};

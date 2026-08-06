@@ -15,7 +15,10 @@ describe('Merge players', () => {
     playerGaugeHealth: 72.67363739013672,
     playerGaugeToxic: 0.0,
     host: true,
-    planetId: 'Toxicity'
+    planetId: 'Toxicity',
+    cameraView: 0,
+    totalCraftedObjects: 0,
+    totalTerraTokenEarned: 0
   };
 
   const playersFromSaveA = [{
@@ -119,6 +122,19 @@ describe('Merge players', () => {
       // Assert
       expect(result).toInclude('"playerGaugeOxygen":280.0');
       expect(result).toInclude('"playerGaugeToxic":0.0');
+    });
+  });
+
+  describe('When a player is missing cameraView, totalCraftedObjects or totalTerraTokenEarned', () => {
+    it('should default the missing fields to 0', () => {
+      // Arrange
+      const {cameraView: _cameraView, totalCraftedObjects: _totalCraftedObjects, totalTerraTokenEarned: _totalTerraTokenEarned, ...legacyPlayer} = playersFromSaveA[0];
+
+      // Act
+      const result = mergePlayers([legacyPlayer], []);
+
+      // Assert
+      expect(parsePlayers(result)).toEqual([{...legacyPlayer, cameraView: 0, totalCraftedObjects: 0, totalTerraTokenEarned: 0, host: true}]);
     });
   });
 });
