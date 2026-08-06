@@ -2,8 +2,6 @@
 
 import {normalizeRawSections, verifySectionCount} from './normalizeSaveSections.js';
 
-import {normalizeRawSections, verifySectionCount} from './normalizeSaveSections.js';
-
 /**
  * Parses a Planet Crafter save string into 10 typed sections (current format; the Terrain Layers
  * section was removed from the save format by a game update).
