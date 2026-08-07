@@ -3,6 +3,7 @@ import {LoadPlayersSectionController} from "../../../util-mapping/controllers/Lo
 import FieldsGroup from "~/components/structure/FieldsGroup";
 import {PlayersViewModel} from "../../../util-mapping/presentation/viewModels/PlayersViewModel";
 import {ParsedSections} from "../../../util-types/gameDefinitions";
+import {playersSectionTitle} from "../../../util-messages/playersSectionMessages";
 
 interface PlayersProps {
   sections: Accessor<ParsedSections>;
@@ -17,7 +18,7 @@ export default function PlayersSection({sections}: PlayersProps) {
   });
 
   return (<>
-    <h3>Players</h3>
+    <h3>{playersSectionTitle}</h3>
     <Show when={sections}>
       <div class="grid-container">
         <For each={players()}>

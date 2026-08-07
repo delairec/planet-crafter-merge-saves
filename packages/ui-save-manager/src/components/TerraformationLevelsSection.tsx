@@ -3,6 +3,10 @@ import {LoadTerraformationLevelsSectionController} from "../../../util-mapping/c
 import FieldsGroup from "./structure/FieldsGroup";
 import {TerraformationLevelsViewModel} from "../../../util-mapping/presentation/viewModels/TerraformationLevelsViewModel";
 import {ParsedSections} from "../../../util-types/gameDefinitions";
+import {
+  terraformationLevelsSectionTitle,
+  terraformationLevelsSectionBiomassLabel
+} from "../../../util-messages/terraformationLevelsSectionMessages";
 
 interface TerraformationLevelsProps {
   sections: Accessor<ParsedSections>;
@@ -17,7 +21,7 @@ export default function TerraformationLevelsSection({sections}: TerraformationLe
   });
 
   return (<>
-    <h3>Terraformation Levels</h3>
+    <h3>{terraformationLevelsSectionTitle}</h3>
     <Show when={sections}>
       <div class="grid-container">
         <For each={planets()}>
@@ -33,7 +37,7 @@ export default function TerraformationLevelsSection({sections}: TerraformationLe
                 </div>
                <div>
                  <div class="fields-group-main-value">
-                   <span>Biomass: </span>{planet.biomass}
+                    <span>{terraformationLevelsSectionBiomassLabel}</span>{planet.biomass}
                  </div>
                  <FieldsGroup columns={() => planet.organicLevels.columns}/>
                </div>

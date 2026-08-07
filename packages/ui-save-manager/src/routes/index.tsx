@@ -10,6 +10,16 @@ import MergeSection from "~/components/MergeSection";
 import MergeResultSection from "~/components/MergeResultSection";
 import {MergeResultViewModel} from "../../../util-mapping/presentation/viewModels/MergeResultViewModel";
 import {hasJsonExtension} from "../../../util-parsing/hasJsonExtension";
+import {
+  displayRouteLoadingLabel,
+  displayRouteDisplayTitle,
+  displayRouteSubmitButtonLabel,
+  displayRouteVisualizationTitle,
+  displayRouteParsedDataPlaceholder,
+  displayRouteErrorsTitle,
+  displayRouteWarningsTitle
+} from "../../../util-messages/displayRouteMessages";
+import {invalidExtensionErrorMessage} from "../../../util-messages/validationMessages";
 
 export default function Home() {
   const [file, setFile] = createSignal<File | null>(null);
@@ -35,7 +45,7 @@ export default function Home() {
     if (fileInput) {
 
       if (!hasJsonExtension(fileInput.name)) {
-        setErrors(['Invalid file extension: expected a .json file.']);
+        setErrors([invalidExtensionErrorMessage]);
         setWarnings([]);
         return;
       }
@@ -52,23 +62,23 @@ export default function Home() {
   };
 
   return (
-    <Show when={isReady()} fallback={<p class="text-color-muted">Loading...</p>}>
+    <Show when={isReady()} fallback={<p class="text-color-muted">{displayRouteLoadingLabel}</p>}>
       <main>
-        <h2>Display</h2>
+        <h2>{displayRouteDisplayTitle}</h2>
         <input type="file" accept="application/json" onChange={handleFileChange}/>
-        <button onClick={handleSubmit} disabled={!file()}>Submit</button>
+        <button onClick={handleSubmit} disabled={!file()}>{displayRouteSubmitButtonLabel}</button>
 
         <MergeSection onMergeResult={setMergeResult}/>
 
-        <h2>Visualization</h2>
+        <h2>{displayRouteVisualizationTitle}</h2>
         <MergeResultSection result={mergeResult}/>
 
         <Show when={!errors().length && !sections() && !mergeResult()}>
-          <p class="text-color-muted">Parsed data will appear here.</p>
+          <p class="text-color-muted">{displayRouteParsedDataPlaceholder}</p>
         </Show>
 
         <Show when={errors().length}>
-          <h3>Errors</h3>
+          <h3>{displayRouteErrorsTitle}</h3>
           <ul>
             {errors().map((error) => (
               <li>{error}</li>
@@ -77,7 +87,7 @@ export default function Home() {
         </Show>
 
         <Show when={warnings().length}>
-          <h3>Warnings</h3>
+          <h3>{displayRouteWarningsTitle}</h3>
           <ul>
             {warnings().map((warning) => (
               <li>{warning}</li>
