@@ -61,7 +61,7 @@ export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
         </For>
       </div>
 
-      <h4>Consumption</h4>
+      <h4>Consumption 🚧 Work In Progress</h4>
       <div class="grid-container">
         <For each={consumptionBreakdown()}>
           {(row) => (

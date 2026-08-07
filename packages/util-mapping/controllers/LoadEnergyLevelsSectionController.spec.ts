@@ -24,11 +24,11 @@ describe('LoadEnergyLevelsSectionController', () => {
           },
           {
             header: 'Consumption',
-            values: [`1.5${nbsp}kW`]
+            values: [`1.5${nbsp}kW 🚧 Work In Progress`]
           },
           {
             header: 'Available',
-            values: [`2,218.7${nbsp}kW`]
+            values: [`2,218.7${nbsp}kW 🚧 Work In Progress`]
           }
         ]
       },
