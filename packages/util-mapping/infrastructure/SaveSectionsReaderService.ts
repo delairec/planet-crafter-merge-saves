@@ -335,13 +335,20 @@ export class SaveSectionsReaderService implements SaveParserPort {
 
   /**
    * Builds one entry per Optimizer holding at least one Energy Fuse, describing which machines it
-   * boosts and its own contribution to production (this Optimizer's fuses applied in isolation —
-   * see docs/energy-levels.md).
+   * boosts and its own contribution to production. Contribution is the extra production gained
+   * from the boost only (boosted level minus base level), since the base level is already counted
+   * in the production breakdown — avoids double-counting when computing each entry's share of
+   * total production. When several Optimizers reach the same producer (Rule EN-OPT-3), the
+   * producer's total boost is split between them in proportion to each Optimizer's fuse count, so
+   * that contributions sum up to the producer's actual combined boost instead of each Optimizer's
+   * fuse applied in isolation.
    */
   private computeOptimizers(
     allWorldObjects: WorldObject[],
     positionedWorldObjects: WorldObject[]
   ): OptimizerValueObject[] {
+    const fuseCountByProducerId = this.computeEnergyFuseCountsByProducerId(allWorldObjects, positionedWorldObjects);
+
     return this.computeOptimizerBoosts(allWorldObjects, positionedWorldObjects)
       .map(({optimizer, fuseCount, boostedProducers}): OptimizerValueObject => {
         const quantityByName = new Map<WorldObjectName, number>();
@@ -351,7 +358,9 @@ export class SaveSectionsReaderService implements SaveParserPort {
           const name = producer.gId as WorldObjectName;
           quantityByName.set(name, (quantityByName.get(name) ?? 0) + 1);
           const baseLevel = energyProductionLevelsByWorldObjectName[name]!;
-          contribution += baseLevel * fuseCount * ENERGY_FUSE_MULTIPLIER_PER_FUSE;
+          const totalFuseCount = fuseCountByProducerId.get(String(producer.id)) ?? fuseCount;
+          const totalBoost = baseLevel * (totalFuseCount * ENERGY_FUSE_MULTIPLIER_PER_FUSE - 1);
+          contribution += totalBoost * (fuseCount / totalFuseCount);
         }
 
         return {

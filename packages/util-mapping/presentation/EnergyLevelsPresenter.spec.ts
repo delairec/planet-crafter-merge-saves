@@ -144,7 +144,7 @@ describe('EnergyLevelsPresenter', () => {
       label: 'Wind turbine T2',
       quantity: '2',
       unitLevel: `290${nbsp}kW`,
-      totalLevel: `580${nbsp}kW`
+      totalLevel: `580${nbsp}kW (98%)`
     }]);
     expect(presenter.viewModel.consumptionBreakdown).toEqual([{
       label: 'Drill T3',
@@ -181,7 +181,7 @@ describe('EnergyLevelsPresenter', () => {
       label: 'Machine Optimizer T2',
       fuseCount: '2',
       boostedMachines: '3 Nuclear Reactor T2, 2 Solar panel T2',
-      contribution: `994.5${nbsp}kW`
+      contribution: `994.5${nbsp}kW (169%)`
     }]);
   });
 });

@@ -531,12 +531,12 @@ describe('SaveSectionsReaderService', () => {
         // Act
         const energyLevels = service.getEnergyLevels();
 
-        // Assert: 1 fuse boosting 1 Wind turbine => contribution = 1.2 × 1 × 1.5
+        // Assert: 1 fuse boosting 1 Wind turbine => contribution = 1.2 × (1 × 1.5 − 1) (base already counted in production breakdown)
         expect(energyLevels.optimizers).toEqual([{
           label: 'Machine optimizer T1',
           fuseCount: 1,
           boostedMachines: [{label: 'Wind turbine', quantity: 1}],
-          contribution: 1.2 * 1.5
+          contribution: 1.2 * (1 * 1.5 - 1)
         }]);
       });
 
@@ -559,7 +559,7 @@ describe('SaveSectionsReaderService', () => {
         expect(energyLevels.optimizers).toEqual([]);
       });
 
-      it('should report each optimizer\'s own contribution in isolation when several optimizers reach the same producer', () => {
+      it('should split a shared producer\'s boost between optimizers proportionally to their fuse count', () => {
         // Arrange
         const fakeSaveContent = createFakeSaveContent({
           worldObjects: [
@@ -580,19 +580,20 @@ describe('SaveSectionsReaderService', () => {
         // Act
         const energyLevels = service.getEnergyLevels();
 
-        // Assert: each Optimizer holds 1 fuse and reaches the same Wind turbine independently
+        // Assert: each Optimizer holds 1 fuse; the producer's real combined boost (2 fuses × 1.5 −
+        // base) is split evenly between the two Optimizers since they each hold 1 fuse.
         expect(energyLevels.optimizers).toEqual([
           {
             label: 'Machine optimizer T1',
             fuseCount: 1,
             boostedMachines: [{label: 'Wind turbine', quantity: 1}],
-            contribution: 1.2 * 1.5
+            contribution: 1.2 * (2 * 1.5 - 1) / 2
           },
           {
             label: 'Machine optimizer T1',
             fuseCount: 1,
             boostedMachines: [{label: 'Wind turbine', quantity: 1}],
-            contribution: 1.2 * 1.5
+            contribution: 1.2 * (2 * 1.5 - 1) / 2
           }
         ]);
       });

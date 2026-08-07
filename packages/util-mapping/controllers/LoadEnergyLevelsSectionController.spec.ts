@@ -34,13 +34,13 @@ describe('LoadEnergyLevelsSectionController', () => {
       },
       balanceInsight: `Surplus of 2,218.7${nbsp}kW`,
       productionBreakdown: [
-        {label: 'Nuclear Fusion generator', quantity: '1', unitLevel: `1,485${nbsp}kW`, totalLevel: `1,485${nbsp}kW`},
-        {label: 'Nuclear Reactor T2', quantity: '1', unitLevel: `331.5${nbsp}kW`, totalLevel: `331.5${nbsp}kW`},
-        {label: 'Wind turbine T2', quantity: '1', unitLevel: `290${nbsp}kW`, totalLevel: `290${nbsp}kW`},
-        {label: 'Nuclear Reactor T1', quantity: '1', unitLevel: `86.5${nbsp}kW`, totalLevel: `86.5${nbsp}kW`},
-        {label: 'Solar panel T2', quantity: '1', unitLevel: `19.5${nbsp}kW`, totalLevel: `19.5${nbsp}kW`},
-        {label: 'Solar panel T1', quantity: '1', unitLevel: `6.5${nbsp}kW`, totalLevel: `6.5${nbsp}kW`},
-        {label: 'Wind turbine', quantity: '1', unitLevel: `1.2${nbsp}kW`, totalLevel: `1.2${nbsp}kW`}
+        {label: 'Nuclear Fusion generator', quantity: '1', unitLevel: `1,485${nbsp}kW`, totalLevel: `1,485${nbsp}kW (67%)`},
+        {label: 'Nuclear Reactor T2', quantity: '1', unitLevel: `331.5${nbsp}kW`, totalLevel: `331.5${nbsp}kW (15%)`},
+        {label: 'Wind turbine T2', quantity: '1', unitLevel: `290${nbsp}kW`, totalLevel: `290${nbsp}kW (13%)`},
+        {label: 'Nuclear Reactor T1', quantity: '1', unitLevel: `86.5${nbsp}kW`, totalLevel: `86.5${nbsp}kW (4%)`},
+        {label: 'Solar panel T2', quantity: '1', unitLevel: `19.5${nbsp}kW`, totalLevel: `19.5${nbsp}kW (1%)`},
+        {label: 'Solar panel T1', quantity: '1', unitLevel: `6.5${nbsp}kW`, totalLevel: `6.5${nbsp}kW (0%)`},
+        {label: 'Wind turbine', quantity: '1', unitLevel: `1.2${nbsp}kW`, totalLevel: `1.2${nbsp}kW (0%)`}
       ],
       consumptionBreakdown: [
         {label: 'Heater T1', quantity: '1', unitLevel: `1${nbsp}kW`, totalLevel: `1${nbsp}kW`},
