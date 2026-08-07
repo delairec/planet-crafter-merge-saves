@@ -17,7 +17,25 @@ defined in
 [`packages/util-mapping/domain/energyLevelsByWorldObjectName.ts`](../packages/util-mapping/domain/energyLevelsByWorldObjectName.ts):
 
 - `energyProductionLevelsByWorldObjectName` — energy producers (`EnergyGenerator1..6`, `WindTurbine1`).
-- `energyConsumptionLevelsByWorldObjectName` — energy consumers (drills, heaters, extractors, spreaders, etc.).
+- `energyConsumptionLevelsByWorldObjectName` — energy consumers: drills, heaters, extractors, spreaders,
+  atmosphere purifiers, detoxification machines, toxic/atmospheric/lake water collectors, vegetubes, algae
+  generators, food growers, the DNA manipulator, the biolab, the incubator, the auto-crafter, craft stations
+  (T2, Advanced, Quartz, Refinement), the vehicle station, beehives, the butterfly dome, biodomes, the launch
+  platform, display screens, lamps and the beacon.
+
+**Rule EN-BASE-2 (exhaustiveness):** every positioned `WorldObject` whose `gId` corresponds to a machine that
+has a power cost in-game must have an entry in `energyConsumptionLevelsByWorldObjectName`, otherwise the
+computed total consumption falls short of the in-game HUD value. A prior version of this table only covered a
+subset of consumers (drills, heaters, extractors, spreaders, recycling machines, the communication antenna and
+the teleporter), which under-reported total consumption by several thousand kW on real saves containing water
+collectors, atmosphere purifiers, detoxification machines, craft stations, biodomes, etc. All added values were
+cross-checked against the wiki (see the [Craft Stations](https://planet-crafter.fandom.com/wiki/Craft_Stations),
+[Atmosphere Purifiers](https://planet-crafter.fandom.com/wiki/Atmosphere_Purifiers),
+[Detoxification Machines](https://planet-crafter.fandom.com/wiki/Detoxification_Machines),
+[Toxic Water Collectors](https://planet-crafter.fandom.com/wiki/Toxic_Water_Collectors),
+[Biodomes](https://planet-crafter.fandom.com/wiki/Biodomes),
+[Base Building](https://planet-crafter.fandom.com/wiki/Base_Building) and
+[Display Screens](https://planet-crafter.fandom.com/wiki/Display_Screens) wiki pages).
 
 **Rule EN-BASE-1:** The base energy balance of a save is
 `sum(production of every positioned world object) - sum(consumption of every positioned world object)`,
@@ -40,12 +58,16 @@ matched only after excluding un-positioned generators.
 | `EnergyGenerator5`  | Nuclear Reactor T2       | Energy producer          |
 | `EnergyGenerator6`  | Nuclear Fusion generator | Energy producer          |
 | `WindTurbine1`      | Wind turbine T2          | Energy producer          |
-| `Optimizer1`        | Machine optimizer T1     | Fuse holder / booster    |
-| `Optimizer2`        | Machine Optimizer T2     | Fuse holder / booster    |
+| `Optimizer1`        | Machine optimizer T1     | Fuse holder / booster **and** energy consumer (50 kW) |
+| `Optimizer2`        | Machine Optimizer T2     | Fuse holder / booster **and** energy consumer (150 kW) |
 | `FuseEnergy1`       | Energy Fuse              | Bonus item (goes inside an Optimizer) |
 
 All values in `energyProductionLevelsByWorldObjectName` are, per the wiki, boostable by the Energy Fuse
 (wind turbines, solar panels, nuclear reactors, nuclear fusion generator).
+
+**Note:** Optimizers themselves draw power (50 kW for T1, 150 kW for T2, per the
+[Machine Optimizers wiki page](https://planet-crafter.fandom.com/wiki/Machine_Optimizers)) — they are listed
+in `energyConsumptionLevelsByWorldObjectName` in addition to their role as fuse holders/boosters.
 
 ---
 

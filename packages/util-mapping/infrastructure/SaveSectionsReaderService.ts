@@ -161,8 +161,11 @@ export class SaveSectionsReaderService implements SaveParserPort {
 
   getEnergyLevels(): EnergyLevelsValueObject {
 
-    // FIXME: il doit manquer des unités car le compte n'y est pas (inférieur au cas réel)
-    //  + voir si c'est une production par planète ou globale ?
+    // NOTE: consumption previously under-reported the in-game HUD value because many consumer
+    // world objects (water collectors, atmosphere purifiers, detox machines, craft stations,
+    // biodomes, etc.) were missing from `energyConsumptionLevelsByWorldObjectName` — see Rule
+    // EN-BASE-2 in docs/energy-levels.md. Still open: whether production/consumption should be
+    // scoped per-planet rather than global across the whole save.
 
     const production = this.computeEnergyProductionLevel();
     const consumption = this.computeEnergyConsumptionLevel();
