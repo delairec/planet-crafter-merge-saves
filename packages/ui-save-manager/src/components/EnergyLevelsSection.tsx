@@ -9,73 +9,74 @@ interface EnergyLevelsProps {
 }
 
 export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
-  const [energyLevelsColumns, setEnergyLevelsColumns] = createSignal<EnergyLevelsViewModel['energyLevels']['columns']>([]);
-  const [productionBreakdown, setProductionBreakdown] = createSignal<EnergyLevelsViewModel['productionBreakdown']>([]);
-  const [consumptionBreakdown, setConsumptionBreakdown] = createSignal<EnergyLevelsViewModel['consumptionBreakdown']>([]);
-  const [optimizers, setOptimizers] = createSignal<EnergyLevelsViewModel['optimizers']>([]);
+  const [planets, setPlanets] = createSignal<EnergyLevelsViewModel['planets']>([]);
 
   createEffect(() => {
-    const {energyLevels, productionBreakdown, consumptionBreakdown, optimizers} = LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections());
-    setEnergyLevelsColumns(energyLevels.columns);
-    setProductionBreakdown(productionBreakdown);
-    setConsumptionBreakdown(consumptionBreakdown);
-    setOptimizers(optimizers);
+    const {planets} = LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections());
+    setPlanets(planets);
   });
 
   return (
     <div>
       <h3>Power</h3>
-      <div class="fields-group-container">
-        <FieldsGroup columns={energyLevelsColumns}/>
-      </div>
+      <For each={planets()}>
+        {(planet) => (
+          <div>
+            <h4>{planet.planetId}</h4>
+            <div class="fields-group-container">
+              <FieldsGroup columns={() => planet.energyLevels.columns}/>
+            </div>
 
-        <h4>Optimizers</h4>
-        <div class="grid-container">
-            <For each={optimizers()}>
+            <h5>Optimizers</h5>
+            <div class="grid-container">
+              <For each={planet.optimizers}>
                 {(optimizer) => (
-                    <div class="grid-item">
-                        <h4>{optimizer.label}</h4>
-                        <FieldsGroup columns={() => [
-                            {header: 'Energy Fuses', values: [optimizer.fuseCount]},
-                            {header: 'Boosted machines', values: [optimizer.boostedMachines]},
-                            {header: 'Contribution', values: [optimizer.contribution]}
-                        ]}/>
-                    </div>
+                  <div class="grid-item">
+                    <h5>{optimizer.label}</h5>
+                    <FieldsGroup columns={() => [
+                      {header: 'Energy Fuses', values: [optimizer.fuseCount]},
+                      {header: 'Boosted machines', values: [optimizer.boostedMachines]},
+                      {header: 'Contribution', values: [optimizer.contribution]}
+                    ]}/>
+                  </div>
                 )}
-            </For>
-        </div>
-
-      <h4>Production</h4>
-      <div class="grid-container">
-        <For each={productionBreakdown()}>
-          {(row) => (
-            <div class="grid-item">
-              <h4>{row.label}</h4>
-              <FieldsGroup columns={() => [
-                {header: 'Quantity', values: [row.quantity]},
-                {header: 'Unit', values: [row.unitLevel]},
-                {header: 'Total', values: [row.totalLevel]}
-              ]}/>
+              </For>
             </div>
-          )}
-        </For>
-      </div>
 
-      <h4>Consumption 🚧 Work In Progress</h4>
-      <div class="grid-container">
-        <For each={consumptionBreakdown()}>
-          {(row) => (
-            <div class="grid-item">
-              <h4>{row.label}</h4>
-              <FieldsGroup columns={() => [
-                {header: 'Quantity', values: [row.quantity]},
-                {header: 'Unit', values: [row.unitLevel]},
-                {header: 'Total', values: [row.totalLevel]}
-              ]}/>
+            <h5>Production</h5>
+            <div class="grid-container">
+              <For each={planet.productionBreakdown}>
+                {(row) => (
+                  <div class="grid-item">
+                    <h5>{row.label}</h5>
+                    <FieldsGroup columns={() => [
+                      {header: 'Quantity', values: [row.quantity]},
+                      {header: 'Unit', values: [row.unitLevel]},
+                      {header: 'Total', values: [row.totalLevel]}
+                    ]}/>
+                  </div>
+                )}
+              </For>
             </div>
-          )}
-        </For>
-      </div>
+
+            <h5>Consumption 🚧 Work In Progress</h5>
+            <div class="grid-container">
+              <For each={planet.consumptionBreakdown}>
+                {(row) => (
+                  <div class="grid-item">
+                    <h5>{row.label}</h5>
+                    <FieldsGroup columns={() => [
+                      {header: 'Quantity', values: [row.quantity]},
+                      {header: 'Unit', values: [row.unitLevel]},
+                      {header: 'Total', values: [row.totalLevel]}
+                    ]}/>
+                  </div>
+                )}
+              </For>
+            </div>
+          </div>
+        )}
+      </For>
     </div>
   );
 }

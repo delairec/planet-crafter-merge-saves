@@ -10,22 +10,25 @@ import { EnergyLevelsValueObject } from "../../util-mapping/domain/valueObjects/
 export class FakeSaveParserService implements SaveParserPort {
   getEnergyLevels(): EnergyLevelsValueObject {
     return {
-      production: 22_220.5,
-      consumption: 11_110.5,
-      available: 11_110,
-      productionBreakdown: [{
-        label: 'Nuclear Fusion generator',
-        quantity: 1,
-        unitLevel: 22_220.5,
-        totalLevel: 22_220.5
-      }],
-      consumptionBreakdown: [{
-        label: 'Nuclear Reactor T1',
-        quantity: 1,
-        unitLevel: 11_110.5,
-        totalLevel: 11_110.5
-      }],
-      optimizers: []
+      planets: [{
+        planetId: 'Planet 1',
+        production: 22_220.5,
+        consumption: 11_110.5,
+        available: 11_110,
+        productionBreakdown: [{
+          label: 'Nuclear Fusion generator',
+          quantity: 1,
+          unitLevel: 22_220.5,
+          totalLevel: 22_220.5
+        }],
+        consumptionBreakdown: [{
+          label: 'Nuclear Reactor T1',
+          quantity: 1,
+          unitLevel: 11_110.5,
+          totalLevel: 11_110.5
+        }],
+        optimizers: []
+      }]
     }
   }
 

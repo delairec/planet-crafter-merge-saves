@@ -24,6 +24,7 @@ import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
 import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
+import {PlanetEnergyLevelsValueObject} from "../domain/valueObjects/PlanetEnergyLevelsValueObject";
 import {worldObjectLabels, WorldObjectName} from "../domain/worldObjectLabels";
 import {
   energyConsumptionLevelsByWorldObjectName,
@@ -31,6 +32,7 @@ import {
 } from "../domain/energyLevelsByWorldObjectName";
 import {EnergyBreakdownEntryValueObject} from "../domain/valueObjects/EnergyBreakdownEntryValueObject";
 import {OptimizerValueObject} from "../domain/valueObjects/OptimizerValueObject";
+import {planetNamesByNumericId} from "../domain/planetNamesByNumericId";
 
 // Rule EN-OPT-1: Optimizer capacity (max boosted machines) and radius (in meters).
 const OPTIMIZER_CONFIG_BY_NAME: Partial<Record<WorldObjectName, {radius: number; maxMachines: number}>> = {
@@ -163,31 +165,70 @@ export class SaveSectionsReaderService implements SaveParserPort {
 
   getEnergyLevels(): EnergyLevelsValueObject {
 
-    // NOTE: consumption previously under-reported the in-game HUD value because many consumer
-    // world objects (water collectors, atmosphere purifiers, detox machines, craft stations,
-    // biodomes, etc.) were missing from `energyConsumptionLevelsByWorldObjectName` — see Rule
-    // EN-BASE-2 in docs/energy-levels.md. Still open: whether production/consumption should be
-    // scoped per-planet rather than global across the whole save.
+    // NOTE: production/consumption are scoped per-planet — each planet has its own independent
+    // power grid in-game (see docs/energy-levels.md, section 4). Consumption previously
+    // under-reported the in-game HUD value because many consumer world objects (water collectors,
+    // atmosphere purifiers, detox machines, craft stations, biodomes, etc.) were missing from
+    // `energyConsumptionLevelsByWorldObjectName` — see Rule EN-BASE-2.
 
-    const production = this.computeEnergyProductionLevel();
-    const consumption = this.computeEnergyConsumptionLevel();
-    const available = production - consumption;
     const allWorldObjects = [...this.worldObjectsFactory()];
     const positionedWorldObjects = allWorldObjects.filter(
       (worldObject) => worldObject.pos !== undefined && worldObject.planet !== undefined
     );
 
-    return {
-      production,
-      consumption,
-      available,
-      // NOTE: breakdowns use base levels only (no Optimizer/Fuse boost) — see Rule EN-FUSE section
-      // in docs/energy-levels.md. Reflecting Optimizer effects in the per-machine breakdown is a
-      // follow-up improvement.
-      productionBreakdown: this.computeEnergyBreakdown(positionedWorldObjects, energyProductionLevelsByWorldObjectName),
-      consumptionBreakdown: this.computeEnergyBreakdown(positionedWorldObjects, energyConsumptionLevelsByWorldObjectName),
-      optimizers: this.computeOptimizers(allWorldObjects, positionedWorldObjects),
-    };
+    const positionedWorldObjectsByPlanet = new Map<number, WorldObject[]>();
+    for (const worldObject of positionedWorldObjects) {
+      const planetId = worldObject.planet!;
+      const worldObjectsOnPlanet = positionedWorldObjectsByPlanet.get(planetId) ?? [];
+      worldObjectsOnPlanet.push(worldObject);
+      positionedWorldObjectsByPlanet.set(planetId, worldObjectsOnPlanet);
+    }
+
+    const planets: PlanetEnergyLevelsValueObject[] = [...positionedWorldObjectsByPlanet.entries()]
+      .map(([planetId, positionedWorldObjectsOnPlanet]) => {
+        const production = this.computeEnergyProductionLevel(allWorldObjects, positionedWorldObjectsOnPlanet);
+        const consumption = this.computeEnergyConsumptionLevel(positionedWorldObjectsOnPlanet);
+
+        return {
+          planetId: this.resolvePlanetLabel(planetId, positionedWorldObjectsOnPlanet),
+          production,
+          consumption,
+          available: production - consumption,
+          // NOTE: breakdowns use base levels only (no Optimizer/Fuse boost) — see Rule EN-FUSE
+          // section in docs/energy-levels.md. Reflecting Optimizer effects in the per-machine
+          // breakdown is a follow-up improvement.
+          productionBreakdown: this.computeEnergyBreakdown(positionedWorldObjectsOnPlanet, energyProductionLevelsByWorldObjectName),
+          consumptionBreakdown: this.computeEnergyBreakdown(positionedWorldObjectsOnPlanet, energyConsumptionLevelsByWorldObjectName),
+          optimizers: this.computeOptimizers(allWorldObjects, positionedWorldObjectsOnPlanet),
+        };
+      });
+
+    return {planets};
+  }
+
+  /**
+   * Resolves a human-readable label for a numeric `WorldObject.planet` id. The primary source is
+   * the fixed lookup table `planetNamesByNumericId` (see docs/save-format.md, "Planet numeric
+   * IDs"). For planet ids not in that table (e.g. future planets, modded content), falls back to
+   * a heuristic: some world object `gId`s embed the planet name in plain text (e.g. `Seed7Humble`
+   * on planet `Humble`) — if exactly one known planet name (from this save's TerraformationLevels)
+   * is found as a substring of a `gId` on this planet, use it; otherwise fall back to
+   * `Planet ${planetId}`.
+   */
+  private resolvePlanetLabel(planetId: number, positionedWorldObjectsOnPlanet: WorldObject[]): string {
+    const knownPlanetName = planetNamesByNumericId[planetId];
+    if (knownPlanetName !== undefined) {
+      return knownPlanetName;
+    }
+
+    const knownPlanetNames = [...new Set(this.terraformationLevels.map((level) => level.planetId))];
+
+    const matchingPlanetNames = new Set(
+      positionedWorldObjectsOnPlanet
+        .flatMap((worldObject) => knownPlanetNames.filter((planetName) => worldObject.gId.includes(planetName)))
+    );
+
+    return matchingPlanetNames.size === 1 ? [...matchingPlanetNames][0] : `Planet ${planetId}`;
   }
 
   private findWorldObjectByIds(ids: string[]): WorldObjectEntity[] {
@@ -200,15 +241,15 @@ export class SaveSectionsReaderService implements SaveParserPort {
     return result;
   }
 
-  private computeEnergyProductionLevel(): number {
-    const allWorldObjects = [...this.worldObjectsFactory()];
-    // Rule GR-WO-1 / EN-BASE-1: only positioned (placed) world objects actually produce energy.
-    const positionedWorldObjects = allWorldObjects.filter(
-      (worldObject) => worldObject.pos !== undefined && worldObject.planet !== undefined
-    );
-    const fuseCountByProducerId = this.computeEnergyFuseCountsByProducerId(allWorldObjects, positionedWorldObjects);
+  /**
+   * Computes total production for a single planet's positioned world objects (Rule GR-WO-1 /
+   * EN-BASE-1: only positioned, i.e. placed, world objects actually produce energy). Each planet
+   * has its own independent power grid in-game, so this is always scoped to one planet's objects.
+   */
+  private computeEnergyProductionLevel(allWorldObjects: WorldObject[], positionedWorldObjectsOnPlanet: WorldObject[]): number {
+    const fuseCountByProducerId = this.computeEnergyFuseCountsByProducerId(allWorldObjects, positionedWorldObjectsOnPlanet);
 
-    return positionedWorldObjects.reduce((total, worldObject) => {
+    return positionedWorldObjectsOnPlanet.reduce((total, worldObject) => {
       const baseLevel = energyProductionLevelsByWorldObjectName[worldObject.gId as WorldObjectName];
       if (baseLevel === undefined) {
         return total;
@@ -219,11 +260,9 @@ export class SaveSectionsReaderService implements SaveParserPort {
     }, 0);
   }
 
-  private computeEnergyConsumptionLevel(): number {
-    return [...this.worldObjectsFactory()].reduce((total, worldObject) => {
-      if (worldObject.pos === undefined || worldObject.planet === undefined) {
-        return total;
-      }
+  /** Computes total consumption for a single planet's positioned world objects. */
+  private computeEnergyConsumptionLevel(positionedWorldObjectsOnPlanet: WorldObject[]): number {
+    return positionedWorldObjectsOnPlanet.reduce((total, worldObject) => {
       const kilowatts = energyConsumptionLevelsByWorldObjectName[worldObject.gId as WorldObjectName];
       return kilowatts === undefined ? total : total + kilowatts;
     }, 0);

@@ -1,7 +1,9 @@
 import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
+import {PlanetEnergyLevelsValueObject} from "../domain/valueObjects/PlanetEnergyLevelsValueObject";
 import {EnergyBreakdownEntryValueObject} from "../domain/valueObjects/EnergyBreakdownEntryValueObject";
 import {OptimizerValueObject} from "../domain/valueObjects/OptimizerValueObject";
 import {EnergyLevelsViewModel} from "./viewModels/EnergyLevelsViewModel";
+import {PlanetEnergyLevelsViewModel} from "./viewModels/PlanetEnergyLevelsViewModel";
 import {EnergyBreakdownRowViewModel} from "./viewModels/EnergyBreakdownRowViewModel";
 import {OptimizerViewModel} from "./viewModels/OptimizerViewModel";
 import {formatNumber} from "./formatters/formatNumber/formatNumber";
@@ -15,50 +17,39 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
 
   constructor() {
     this.viewModel = {
-      energyLevels: {
-        columns: [
-          {
-            header: 'Production',
-            values: ['']
-          },
-          {
-            header: 'Consumption',
-            values: ['']
-          },
-          {
-            header: 'Available',
-            values: ['']
-          }
-        ]
-      },
-      productionBreakdown: [],
-      consumptionBreakdown: [],
-      optimizers: []
+      planets: []
     };
   }
 
   present(energyLevels: EnergyLevelsValueObject): void {
-      this.viewModel = {
-        energyLevels: {
-          columns: [
-            {
-              header: 'Production',
-              values: [formatNumber(energyLevels.production) + `${nbsp}kW`]
-            },
-            {
-              header: 'Consumption',
-              values: [formatNumber(energyLevels.consumption) + `${nbsp}kW 🚧 Work In Progress`]
-            },
-            {
-              header: 'Available',
-              values: [formatNumber(energyLevels.available) + `${nbsp}kW 🚧 Work In Progress`]
-            }
-          ]
-        },
-        productionBreakdown: this.buildBreakdownRows(energyLevels.productionBreakdown, energyLevels.production),
-        consumptionBreakdown: this.buildBreakdownRows(energyLevels.consumptionBreakdown),
-        optimizers: this.buildOptimizers(energyLevels.optimizers, energyLevels.production)
-      };
+    this.viewModel = {
+      planets: energyLevels.planets.map((planet): PlanetEnergyLevelsViewModel => this.buildPlanet(planet))
+    };
+  }
+
+  private buildPlanet(planet: PlanetEnergyLevelsValueObject): PlanetEnergyLevelsViewModel {
+    return {
+      planetId: planet.planetId,
+      energyLevels: {
+        columns: [
+          {
+            header: 'Production',
+            values: [formatNumber(planet.production) + `${nbsp}kW`]
+          },
+          {
+            header: 'Consumption',
+            values: [formatNumber(planet.consumption) + `${nbsp}kW 🚧 Work In Progress`]
+          },
+          {
+            header: 'Available',
+            values: [formatNumber(planet.available) + `${nbsp}kW 🚧 Work In Progress`]
+          }
+        ]
+      },
+      productionBreakdown: this.buildBreakdownRows(planet.productionBreakdown, planet.production),
+      consumptionBreakdown: this.buildBreakdownRows(planet.consumptionBreakdown),
+      optimizers: this.buildOptimizers(planet.optimizers, planet.production)
+    };
   }
 
   private buildBreakdownRows(breakdown: EnergyBreakdownEntryValueObject[], totalProduction?: number): EnergyBreakdownRowViewModel[] {
