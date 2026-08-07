@@ -10,6 +10,7 @@ import MergeSection from "~/components/MergeSection";
 import MergeResultSection from "~/components/MergeResultSection";
 import {MergeResultViewModel} from "../../../util-mapping/presentation/viewModels/MergeResultViewModel";
 import {hasJsonExtension} from "../../../util-parsing/hasJsonExtension";
+import {SaveValidatorService} from "../../../util-mapping/infrastructure/SaveValidatorService";
 import {
   displayRouteLoadingLabel,
   displayRouteDisplayTitle,
@@ -52,7 +53,16 @@ export default function Home() {
 
       const reader = new FileReader();
       reader.onload = (event) => {
-        const {sections, errors, warnings} = parseSaveSections(event.target?.result as string);
+        const content = event.target?.result as string;
+        const validation = new SaveValidatorService().validate(content);
+        if (!validation.isValid) {
+          setSections(null);
+          setErrors(validation.errorMessages);
+          setWarnings([]);
+          return;
+        }
+
+        const {sections, errors, warnings} = parseSaveSections(content);
         setSections(sections);
         setErrors(errors);
         setWarnings(warnings);
