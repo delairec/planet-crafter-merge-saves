@@ -29,7 +29,8 @@ describe('EnergyLevelsPresenter', () => {
       },
       balanceInsight: '',
       productionBreakdown: [],
-      consumptionBreakdown: []
+      consumptionBreakdown: [],
+      optimizers: []
     });
   });
 
@@ -44,7 +45,8 @@ describe('EnergyLevelsPresenter', () => {
         consumption: 0,
         available: 80_000,
         productionBreakdown: [],
-        consumptionBreakdown: []
+        consumptionBreakdown: [],
+        optimizers: []
       });
 
       // Assert
@@ -63,7 +65,8 @@ describe('EnergyLevelsPresenter', () => {
         consumption: 8_000,
         available: -3_000,
         productionBreakdown: [],
-        consumptionBreakdown: []
+        consumptionBreakdown: [],
+        optimizers: []
       });
 
       // Assert
@@ -81,7 +84,8 @@ describe('EnergyLevelsPresenter', () => {
       consumption: 0,
       available: 80_000,
       productionBreakdown: [],
-      consumptionBreakdown: []
+      consumptionBreakdown: [],
+      optimizers: []
     });
 
     // Assert
@@ -105,7 +109,8 @@ describe('EnergyLevelsPresenter', () => {
         },
         balanceInsight: `Surplus of 80,000${nbsp}kW`,
         productionBreakdown: [],
-        consumptionBreakdown: []
+        consumptionBreakdown: [],
+        optimizers: []
       }
     );
   });
@@ -130,7 +135,8 @@ describe('EnergyLevelsPresenter', () => {
         quantity: 4,
         unitLevel: 45.5,
         totalLevel: 182
-      }]
+      }],
+      optimizers: []
     });
 
     // Assert
@@ -145,6 +151,37 @@ describe('EnergyLevelsPresenter', () => {
       quantity: '4',
       unitLevel: `45.5${nbsp}kW`,
       totalLevel: `182${nbsp}kW`
+    }]);
+  });
+
+  it('should present optimizers with the machines they boost and their contribution', () => {
+    // Arrange
+    const presenter = new EnergyLevelsPresenter();
+
+    // Act
+    presenter.present({
+      production: 590,
+      consumption: 0,
+      available: 590,
+      productionBreakdown: [],
+      consumptionBreakdown: [],
+      optimizers: [{
+        label: 'Machine Optimizer T2',
+        fuseCount: 2,
+        boostedMachines: [
+          {label: 'Nuclear Reactor T2', quantity: 3},
+          {label: 'Solar panel T2', quantity: 2}
+        ],
+        contribution: 994.5
+      }]
+    });
+
+    // Assert
+    expect(presenter.viewModel.optimizers).toEqual([{
+      label: 'Machine Optimizer T2',
+      fuseCount: '2',
+      boostedMachines: '3 Nuclear Reactor T2, 2 Solar panel T2',
+      contribution: `994.5${nbsp}kW`
     }]);
   });
 });

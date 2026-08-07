@@ -1,7 +1,9 @@
 import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
 import {EnergyBreakdownEntryValueObject} from "../domain/valueObjects/EnergyBreakdownEntryValueObject";
+import {OptimizerValueObject} from "../domain/valueObjects/OptimizerValueObject";
 import {EnergyLevelsViewModel} from "./viewModels/EnergyLevelsViewModel";
 import {EnergyBreakdownRowViewModel} from "./viewModels/EnergyBreakdownRowViewModel";
+import {OptimizerViewModel} from "./viewModels/OptimizerViewModel";
 import {formatNumber} from "./formatters/formatNumber/formatNumber";
 import {EnergyLevelsPresenterPort} from "../application/ports/EnergyLevelsPresenterPort";
 
@@ -30,7 +32,8 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
       },
       balanceInsight: '',
       productionBreakdown: [],
-      consumptionBreakdown: []
+      consumptionBreakdown: [],
+      optimizers: []
     };
   }
 
@@ -54,7 +57,8 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
         },
         balanceInsight: this.buildBalanceInsight(energyLevels.available),
         productionBreakdown: this.buildBreakdownRows(energyLevels.productionBreakdown),
-        consumptionBreakdown: this.buildBreakdownRows(energyLevels.consumptionBreakdown)
+        consumptionBreakdown: this.buildBreakdownRows(energyLevels.consumptionBreakdown),
+        optimizers: this.buildOptimizers(energyLevels.optimizers)
       };
   }
 
@@ -72,6 +76,17 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
       quantity: formatNumber(entry.quantity),
       unitLevel: formatNumber(entry.unitLevel) + `${nbsp}kW`,
       totalLevel: formatNumber(entry.totalLevel) + `${nbsp}kW`
+    }));
+  }
+
+  private buildOptimizers(optimizers: OptimizerValueObject[]): OptimizerViewModel[] {
+    return optimizers.map((optimizer): OptimizerViewModel => ({
+      label: optimizer.label,
+      fuseCount: formatNumber(optimizer.fuseCount),
+      boostedMachines: optimizer.boostedMachines
+        .map((machine) => `${formatNumber(machine.quantity)} ${machine.label}`)
+        .join(', '),
+      contribution: formatNumber(optimizer.contribution) + `${nbsp}kW`
     }));
   }
 }

@@ -214,6 +214,7 @@ describe('SaveSectionsReaderService', () => {
             totalLevel: kilowatts
           }],
           consumptionBreakdown: [],
+          optimizers: [],
         });
       }
     );
@@ -246,6 +247,7 @@ describe('SaveSectionsReaderService', () => {
             unitLevel: kilowatts,
             totalLevel: kilowatts
           }],
+          optimizers: [],
         });
       }
     );
@@ -283,6 +285,7 @@ describe('SaveSectionsReaderService', () => {
           unitLevel: 0.5,
           totalLevel: 1
         }],
+        optimizers: [],
       });
     });
 
@@ -317,6 +320,7 @@ describe('SaveSectionsReaderService', () => {
           unitLevel: 375.5,
           totalLevel: 375.5
         }],
+        optimizers: [],
       });
     });
 
@@ -353,6 +357,7 @@ describe('SaveSectionsReaderService', () => {
           unitLevel: 0.5,
           totalLevel: 0.5
         }],
+        optimizers: [],
       });
     });
 
@@ -506,6 +511,90 @@ describe('SaveSectionsReaderService', () => {
 
         // Assert: 5 boosted producers at 150% + 1 unboosted at 100%
         expect(energyLevels.production).toBeCloseTo(1.2 * 1.5 * 5 + 1.2);
+      });
+    });
+
+    describe('When building the optimizers breakdown', () => {
+      it('should describe the boosted machines and fuse count for each qualifying Optimizer', () => {
+        // Arrange
+        const fakeSaveContent = createFakeSaveContent({
+          worldObjects: [
+            {id: 10, gId: 'Optimizer1', pos: '0,0,0', planet: 1, liId: 100},
+            {id: 20, gId: 'FuseEnergy1'},
+            {id: 30, gId: 'EnergyGenerator1', pos: '10,0,0', planet: 1},
+          ],
+          inventories: [{id: 100, woIds: '20', size: 1}],
+        });
+        const {sections} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sections);
+
+        // Act
+        const energyLevels = service.getEnergyLevels();
+
+        // Assert: 1 fuse boosting 1 Wind turbine => contribution = 1.2 × 1 × 1.5
+        expect(energyLevels.optimizers).toEqual([{
+          label: 'Machine optimizer T1',
+          fuseCount: 1,
+          boostedMachines: [{label: 'Wind turbine', quantity: 1}],
+          contribution: 1.2 * 1.5
+        }]);
+      });
+
+      it('should not include an Optimizer without any Energy Fuse in its inventory', () => {
+        // Arrange
+        const fakeSaveContent = createFakeSaveContent({
+          worldObjects: [
+            {id: 10, gId: 'Optimizer1', pos: '0,0,0', planet: 1, liId: 100},
+            {id: 30, gId: 'EnergyGenerator1', pos: '10,0,0', planet: 1},
+          ],
+          inventories: [{id: 100, woIds: '', size: 1}],
+        });
+        const {sections} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sections);
+
+        // Act
+        const energyLevels = service.getEnergyLevels();
+
+        // Assert
+        expect(energyLevels.optimizers).toEqual([]);
+      });
+
+      it('should report each optimizer\'s own contribution in isolation when several optimizers reach the same producer', () => {
+        // Arrange
+        const fakeSaveContent = createFakeSaveContent({
+          worldObjects: [
+            {id: 10, gId: 'Optimizer1', pos: '0,0,0', planet: 1, liId: 100},
+            {id: 11, gId: 'Optimizer1', pos: '20,0,0', planet: 1, liId: 101},
+            {id: 20, gId: 'FuseEnergy1'},
+            {id: 21, gId: 'FuseEnergy1'},
+            {id: 30, gId: 'EnergyGenerator1', pos: '10,0,0', planet: 1},
+          ],
+          inventories: [
+            {id: 100, woIds: '20', size: 1},
+            {id: 101, woIds: '21', size: 1},
+          ],
+        });
+        const {sections} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sections);
+
+        // Act
+        const energyLevels = service.getEnergyLevels();
+
+        // Assert: each Optimizer holds 1 fuse and reaches the same Wind turbine independently
+        expect(energyLevels.optimizers).toEqual([
+          {
+            label: 'Machine optimizer T1',
+            fuseCount: 1,
+            boostedMachines: [{label: 'Wind turbine', quantity: 1}],
+            contribution: 1.2 * 1.5
+          },
+          {
+            label: 'Machine optimizer T1',
+            fuseCount: 1,
+            boostedMachines: [{label: 'Wind turbine', quantity: 1}],
+            contribution: 1.2 * 1.5
+          }
+        ]);
       });
     });
   });

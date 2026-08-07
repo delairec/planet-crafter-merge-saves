@@ -24,7 +24,8 @@ export class FakeSaveParserService implements SaveParserPort {
         quantity: 1,
         unitLevel: 11_110.5,
         totalLevel: 11_110.5
-      }]
+      }],
+      optimizers: []
     }
   }
 
