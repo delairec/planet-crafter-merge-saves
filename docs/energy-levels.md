@@ -163,3 +163,19 @@ HUD production value (24075.45 kW) for a real save containing 2 active Optimizer
   horizontal-only (`x,z`) distance would have, so it hasn't been possible to distinguish the two — both gave
   the same targeting result in the validated save.
 - A `FuseEnergy1` with `liId` unset / not inside an Optimizer inventory has no effect (ignored), as implemented.
+
+---
+
+## 5. Optimizers section (UI)
+
+The UI's Power section displays one card per qualifying Optimizer (`EnergyLevelsValueObject.optimizers`, built
+by `SaveSectionsReaderService.computeOptimizers`), showing:
+
+- the label (`Machine optimizer T1` / `Machine Optimizer T2`);
+- its Energy Fuse count (`fuseCount`);
+- which machines it boosts and how many of each (`boostedMachines`, grouped by `gId` among the producers it
+  reaches — same selection as `computeEnergyFuseCountsByProducerId`, see section 4);
+- its **own contribution to production, computed in isolation** (`contribution`): for each producer it
+  boosts, `baseLevel × fuseCount × 1.5`, summed across all boosted producers. When a producer is reached by
+  several Optimizers (Rule EN-OPT-3), each Optimizer's card reports its own share rather than the producer's
+  final combined output, so contributions across cards do not necessarily sum to `production - baseProduction`.

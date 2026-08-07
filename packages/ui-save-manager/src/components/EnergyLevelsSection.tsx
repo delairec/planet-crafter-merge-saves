@@ -13,13 +13,15 @@ export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
   const [balanceInsight, setBalanceInsight] = createSignal<string>('');
   const [productionBreakdown, setProductionBreakdown] = createSignal<EnergyLevelsViewModel['productionBreakdown']>([]);
   const [consumptionBreakdown, setConsumptionBreakdown] = createSignal<EnergyLevelsViewModel['consumptionBreakdown']>([]);
+  const [optimizers, setOptimizers] = createSignal<EnergyLevelsViewModel['optimizers']>([]);
 
   createEffect(() => {
-    const {energyLevels, balanceInsight, productionBreakdown, consumptionBreakdown} = LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections());
+    const {energyLevels, balanceInsight, productionBreakdown, consumptionBreakdown, optimizers} = LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections());
     setEnergyLevelsColumns(energyLevels.columns);
     setBalanceInsight(balanceInsight);
     setProductionBreakdown(productionBreakdown);
     setConsumptionBreakdown(consumptionBreakdown);
+    setOptimizers(optimizers);
   });
 
   return (
@@ -29,6 +31,22 @@ export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
       <div class="fields-group-container">
         <FieldsGroup columns={energyLevelsColumns}/>
       </div>
+
+        <h4>Optimizers</h4>
+        <div class="grid-container">
+            <For each={optimizers()}>
+                {(optimizer) => (
+                    <div class="grid-item">
+                        <h4>{optimizer.label}</h4>
+                        <FieldsGroup columns={() => [
+                            {header: 'Energy Fuses', values: [optimizer.fuseCount]},
+                            {header: 'Boosted machines', values: [optimizer.boostedMachines]},
+                            {header: 'Contribution', values: [optimizer.contribution]}
+                        ]}/>
+                    </div>
+                )}
+            </For>
+        </div>
 
       <h4>Production</h4>
       <div class="grid-container">

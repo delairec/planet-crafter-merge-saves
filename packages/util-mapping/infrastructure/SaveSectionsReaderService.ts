@@ -30,6 +30,7 @@ import {
   energyProductionLevelsByWorldObjectName
 } from "../domain/energyLevelsByWorldObjectName";
 import {EnergyBreakdownEntryValueObject} from "../domain/valueObjects/EnergyBreakdownEntryValueObject";
+import {OptimizerValueObject} from "../domain/valueObjects/OptimizerValueObject";
 
 // Rule EN-OPT-1: Optimizer capacity (max boosted machines) and radius (in meters).
 const OPTIMIZER_CONFIG_BY_NAME: Partial<Record<WorldObjectName, {radius: number; maxMachines: number}>> = {
@@ -171,7 +172,8 @@ export class SaveSectionsReaderService implements SaveParserPort {
     const production = this.computeEnergyProductionLevel();
     const consumption = this.computeEnergyConsumptionLevel();
     const available = production - consumption;
-    const positionedWorldObjects = [...this.worldObjectsFactory()].filter(
+    const allWorldObjects = [...this.worldObjectsFactory()];
+    const positionedWorldObjects = allWorldObjects.filter(
       (worldObject) => worldObject.pos !== undefined && worldObject.planet !== undefined
     );
 
@@ -184,6 +186,7 @@ export class SaveSectionsReaderService implements SaveParserPort {
       // follow-up improvement.
       productionBreakdown: this.computeEnergyBreakdown(positionedWorldObjects, energyProductionLevelsByWorldObjectName),
       consumptionBreakdown: this.computeEnergyBreakdown(positionedWorldObjects, energyConsumptionLevelsByWorldObjectName),
+      optimizers: this.computeOptimizers(allWorldObjects, positionedWorldObjects),
     };
   }
 
@@ -261,15 +264,12 @@ export class SaveSectionsReaderService implements SaveParserPort {
   /**
    * Implements rules EN-OPT-1..3 and EN-FUSE-1..4: for each Optimizer holding at least one Energy
    * Fuse, finds the closest eligible energy producers (same planet, within radius, up to the
-   * optimizer's machine capacity) and accumulates the total number of Energy Fuses reaching each
-   * producer (summed across every optimizer that reaches it, per Rule EN-OPT-3).
+   * optimizer's machine capacity) reached by that Optimizer.
    */
-  private computeEnergyFuseCountsByProducerId(
+  private computeOptimizerBoosts(
     allWorldObjects: WorldObject[],
     positionedWorldObjects: WorldObject[]
-  ): Map<string, number> {
-    const fuseCountByProducerId = new Map<string, number>();
-
+  ): {optimizer: WorldObject; fuseCount: number; boostedProducers: WorldObject[]}[] {
     const worldObjectById = new Map(allWorldObjects.map((worldObject) => [String(worldObject.id), worldObject]));
     const producers = positionedWorldObjects.filter(
       (worldObject) => energyProductionLevelsByWorldObjectName[worldObject.gId as WorldObjectName] !== undefined
@@ -277,6 +277,8 @@ export class SaveSectionsReaderService implements SaveParserPort {
     const optimizers = positionedWorldObjects.filter(
       (worldObject) => OPTIMIZER_CONFIG_BY_NAME[worldObject.gId as WorldObjectName] !== undefined
     );
+
+    const result: {optimizer: WorldObject; fuseCount: number; boostedProducers: WorldObject[]}[] = [];
 
     for (const optimizer of optimizers) {
       const inventory = this.inventories.find((candidate) => candidate.id === optimizer.liId);
@@ -296,14 +298,32 @@ export class SaveSectionsReaderService implements SaveParserPort {
       const {radius, maxMachines} = OPTIMIZER_CONFIG_BY_NAME[optimizer.gId as WorldObjectName]!;
       const optimizerPosition = parsePosition(optimizer.pos!);
 
-      const closestEligibleProducers = producers
+      const boostedProducers = producers
         .filter((producer) => producer.planet === optimizer.planet)
         .map((producer) => ({producer, distance: distanceBetween(optimizerPosition, parsePosition(producer.pos!))}))
         .filter(({distance}) => distance <= radius)
         .sort((a, b) => a.distance - b.distance)
-        .slice(0, maxMachines);
+        .slice(0, maxMachines)
+        .map(({producer}) => producer);
 
-      for (const {producer} of closestEligibleProducers) {
+      result.push({optimizer, fuseCount, boostedProducers});
+    }
+
+    return result;
+  }
+
+  /**
+   * Implements Rule EN-OPT-3: accumulates the total number of Energy Fuses reaching each producer
+   * (summed across every Optimizer that reaches it).
+   */
+  private computeEnergyFuseCountsByProducerId(
+    allWorldObjects: WorldObject[],
+    positionedWorldObjects: WorldObject[]
+  ): Map<string, number> {
+    const fuseCountByProducerId = new Map<string, number>();
+
+    for (const {fuseCount, boostedProducers} of this.computeOptimizerBoosts(allWorldObjects, positionedWorldObjects)) {
+      for (const producer of boostedProducers) {
         const producerId = String(producer.id);
         const previousCount = fuseCountByProducerId.get(producerId) ?? 0;
         fuseCountByProducerId.set(producerId, previousCount + fuseCount);
@@ -311,5 +331,38 @@ export class SaveSectionsReaderService implements SaveParserPort {
     }
 
     return fuseCountByProducerId;
+  }
+
+  /**
+   * Builds one entry per Optimizer holding at least one Energy Fuse, describing which machines it
+   * boosts and its own contribution to production (this Optimizer's fuses applied in isolation —
+   * see docs/energy-levels.md).
+   */
+  private computeOptimizers(
+    allWorldObjects: WorldObject[],
+    positionedWorldObjects: WorldObject[]
+  ): OptimizerValueObject[] {
+    return this.computeOptimizerBoosts(allWorldObjects, positionedWorldObjects)
+      .map(({optimizer, fuseCount, boostedProducers}): OptimizerValueObject => {
+        const quantityByName = new Map<WorldObjectName, number>();
+        let contribution = 0;
+
+        for (const producer of boostedProducers) {
+          const name = producer.gId as WorldObjectName;
+          quantityByName.set(name, (quantityByName.get(name) ?? 0) + 1);
+          const baseLevel = energyProductionLevelsByWorldObjectName[name]!;
+          contribution += baseLevel * fuseCount * ENERGY_FUSE_MULTIPLIER_PER_FUSE;
+        }
+
+        return {
+          label: worldObjectLabels[optimizer.gId as WorldObjectName],
+          fuseCount,
+          boostedMachines: [...quantityByName.entries()].map(([name, quantity]) => ({
+            label: worldObjectLabels[name],
+            quantity
+          })),
+          contribution
+        };
+      });
   }
 }

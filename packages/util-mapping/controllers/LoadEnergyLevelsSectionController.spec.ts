@@ -45,7 +45,8 @@ describe('LoadEnergyLevelsSectionController', () => {
       consumptionBreakdown: [
         {label: 'Heater T1', quantity: '1', unitLevel: `1${nbsp}kW`, totalLevel: `1${nbsp}kW`},
         {label: 'Drill T1', quantity: '1', unitLevel: `0.5${nbsp}kW`, totalLevel: `0.5${nbsp}kW`}
-      ]
+      ],
+      optimizers: []
     });
   });
 });

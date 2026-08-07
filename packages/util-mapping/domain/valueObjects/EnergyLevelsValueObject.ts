@@ -1,4 +1,5 @@
 import {EnergyBreakdownEntryValueObject} from "./EnergyBreakdownEntryValueObject";
+import {OptimizerValueObject} from "./OptimizerValueObject";
 
 export interface EnergyLevelsValueObject {
   production: number;
@@ -6,4 +7,5 @@ export interface EnergyLevelsValueObject {
   available: number;
   productionBreakdown: EnergyBreakdownEntryValueObject[];
   consumptionBreakdown: EnergyBreakdownEntryValueObject[];
+  optimizers: OptimizerValueObject[];
 }
