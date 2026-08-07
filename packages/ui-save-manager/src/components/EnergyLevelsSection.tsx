@@ -1,4 +1,4 @@
-import {Accessor, createEffect, createSignal} from "solid-js";
+import {Accessor, createEffect, createSignal, For} from "solid-js";
 import FieldsGroup from "./structure/FieldsGroup";
 import {EnergyLevelsViewModel} from "../../../util-mapping/presentation/viewModels/EnergyLevelsViewModel";
 import {ParsedSections} from "../../../util-types/gameDefinitions";
@@ -11,11 +11,15 @@ interface EnergyLevelsProps {
 export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
   const [energyLevelsColumns, setEnergyLevelsColumns] = createSignal<EnergyLevelsViewModel['energyLevels']['columns']>([]);
   const [balanceInsight, setBalanceInsight] = createSignal<string>('');
+  const [productionBreakdown, setProductionBreakdown] = createSignal<EnergyLevelsViewModel['productionBreakdown']>([]);
+  const [consumptionBreakdown, setConsumptionBreakdown] = createSignal<EnergyLevelsViewModel['consumptionBreakdown']>([]);
 
   createEffect(() => {
-    const {energyLevels, balanceInsight} = LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections());
+    const {energyLevels, balanceInsight, productionBreakdown, consumptionBreakdown} = LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections());
     setEnergyLevelsColumns(energyLevels.columns);
     setBalanceInsight(balanceInsight);
+    setProductionBreakdown(productionBreakdown);
+    setConsumptionBreakdown(consumptionBreakdown);
   });
 
   return (
@@ -25,7 +29,38 @@ export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
       <div class="fields-group-container">
         <FieldsGroup columns={energyLevelsColumns}/>
       </div>
+
+      <h4>Production</h4>
+      <div class="grid-container">
+        <For each={productionBreakdown()}>
+          {(row) => (
+            <div class="grid-item">
+              <h4>{row.label}</h4>
+              <FieldsGroup columns={() => [
+                {header: 'Quantity', values: [row.quantity]},
+                {header: 'Unit', values: [row.unitLevel]},
+                {header: 'Total', values: [row.totalLevel]}
+              ]}/>
+            </div>
+          )}
+        </For>
+      </div>
+
+      <h4>Consumption</h4>
+      <div class="grid-container">
+        <For each={consumptionBreakdown()}>
+          {(row) => (
+            <div class="grid-item">
+              <h4>{row.label}</h4>
+              <FieldsGroup columns={() => [
+                {header: 'Quantity', values: [row.quantity]},
+                {header: 'Unit', values: [row.unitLevel]},
+                {header: 'Total', values: [row.totalLevel]}
+              ]}/>
+            </div>
+          )}
+        </For>
+      </div>
     </div>
-  )
-    ;
+  );
 }

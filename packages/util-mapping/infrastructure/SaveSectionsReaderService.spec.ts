@@ -15,6 +15,7 @@ import {
   energyConsumptionLevelsByWorldObjectName,
   energyProductionLevelsByWorldObjectName
 } from "../domain/energyLevelsByWorldObjectName";
+import {worldObjectLabels, WorldObjectName} from "../domain/worldObjectLabels";
 
 describe('SaveSectionsReaderService', () => {
   let sections: ParsedSections;
@@ -206,6 +207,13 @@ describe('SaveSectionsReaderService', () => {
           production: kilowatts,
           consumption: 0,
           available: kilowatts,
+          productionBreakdown: [{
+            label: worldObjectLabels[worldObjectName as WorldObjectName],
+            quantity: 1,
+            unitLevel: kilowatts,
+            totalLevel: kilowatts
+          }],
+          consumptionBreakdown: [],
         });
       }
     );
@@ -231,6 +239,13 @@ describe('SaveSectionsReaderService', () => {
           production: 0,
           consumption: kilowatts,
           available: -kilowatts,
+          productionBreakdown: [],
+          consumptionBreakdown: [{
+            label: worldObjectLabels[worldObjectName as WorldObjectName],
+            quantity: 1,
+            unitLevel: kilowatts,
+            totalLevel: kilowatts
+          }],
         });
       }
     );
@@ -256,6 +271,18 @@ describe('SaveSectionsReaderService', () => {
         production: 2.4,
         consumption: 1,
         available: 1.4,
+        productionBreakdown: [{
+          label: 'Wind turbine',
+          quantity: 2,
+          unitLevel: 1.2,
+          totalLevel: 2.4
+        }],
+        consumptionBreakdown: [{
+          label: 'Drill T1',
+          quantity: 2,
+          unitLevel: 0.5,
+          totalLevel: 1
+        }],
       });
     });
 
@@ -278,6 +305,18 @@ describe('SaveSectionsReaderService', () => {
         production: 1485,
         consumption: 375.5,
         available: 1109.5,
+        productionBreakdown: [{
+          label: 'Nuclear Fusion generator',
+          quantity: 1,
+          unitLevel: 1485,
+          totalLevel: 1485
+        }],
+        consumptionBreakdown: [{
+          label: 'Drill T5',
+          quantity: 1,
+          unitLevel: 375.5,
+          totalLevel: 375.5
+        }],
       });
     });
 
@@ -302,6 +341,18 @@ describe('SaveSectionsReaderService', () => {
         production: 1.2,
         consumption: 0.5,
         available: 0.7,
+        productionBreakdown: [{
+          label: 'Wind turbine',
+          quantity: 1,
+          unitLevel: 1.2,
+          totalLevel: 1.2
+        }],
+        consumptionBreakdown: [{
+          label: 'Drill T1',
+          quantity: 1,
+          unitLevel: 0.5,
+          totalLevel: 0.5
+        }],
       });
     });
 

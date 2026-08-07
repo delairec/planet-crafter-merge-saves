@@ -24,11 +24,12 @@ import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
 import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
-import {WorldObjectName} from "../domain/worldObjectLabels";
+import {worldObjectLabels, WorldObjectName} from "../domain/worldObjectLabels";
 import {
   energyConsumptionLevelsByWorldObjectName,
   energyProductionLevelsByWorldObjectName
 } from "../domain/energyLevelsByWorldObjectName";
+import {EnergyBreakdownEntryValueObject} from "../domain/valueObjects/EnergyBreakdownEntryValueObject";
 
 // Rule EN-OPT-1: Optimizer capacity (max boosted machines) and radius (in meters).
 const OPTIMIZER_CONFIG_BY_NAME: Partial<Record<WorldObjectName, {radius: number; maxMachines: number}>> = {
@@ -170,11 +171,19 @@ export class SaveSectionsReaderService implements SaveParserPort {
     const production = this.computeEnergyProductionLevel();
     const consumption = this.computeEnergyConsumptionLevel();
     const available = production - consumption;
+    const positionedWorldObjects = [...this.worldObjectsFactory()].filter(
+      (worldObject) => worldObject.pos !== undefined && worldObject.planet !== undefined
+    );
 
     return {
       production,
       consumption,
       available,
+      // NOTE: breakdowns use base levels only (no Optimizer/Fuse boost) — see Rule EN-FUSE section
+      // in docs/energy-levels.md. Reflecting Optimizer effects in the per-machine breakdown is a
+      // follow-up improvement.
+      productionBreakdown: this.computeEnergyBreakdown(positionedWorldObjects, energyProductionLevelsByWorldObjectName),
+      consumptionBreakdown: this.computeEnergyBreakdown(positionedWorldObjects, energyConsumptionLevelsByWorldObjectName),
     };
   }
 
@@ -215,6 +224,38 @@ export class SaveSectionsReaderService implements SaveParserPort {
       const kilowatts = energyConsumptionLevelsByWorldObjectName[worldObject.gId as WorldObjectName];
       return kilowatts === undefined ? total : total + kilowatts;
     }, 0);
+  }
+
+  /**
+   * Groups positioned world objects matching the given base energy levels table by `gId`, so the
+   * UI can display, for each machine type, how many are placed and how much it contributes to the
+   * total (see the Power section's Production/Consumption breakdowns).
+   */
+  private computeEnergyBreakdown(
+    positionedWorldObjects: WorldObject[],
+    levelsByWorldObjectName: Partial<Record<WorldObjectName, number>>
+  ): EnergyBreakdownEntryValueObject[] {
+    const quantityByName = new Map<WorldObjectName, number>();
+
+    for (const worldObject of positionedWorldObjects) {
+      const name = worldObject.gId as WorldObjectName;
+      if (levelsByWorldObjectName[name] === undefined) {
+        continue;
+      }
+      quantityByName.set(name, (quantityByName.get(name) ?? 0) + 1);
+    }
+
+    return [...quantityByName.entries()]
+      .map(([name, quantity]): EnergyBreakdownEntryValueObject => {
+        const unitLevel = levelsByWorldObjectName[name]!;
+        return {
+          label: worldObjectLabels[name],
+          quantity,
+          unitLevel,
+          totalLevel: unitLevel * quantity
+        };
+      })
+      .sort((a, b) => b.totalLevel - a.totalLevel);
   }
 
   /**

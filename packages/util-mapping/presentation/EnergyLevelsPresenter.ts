@@ -1,5 +1,7 @@
 import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
+import {EnergyBreakdownEntryValueObject} from "../domain/valueObjects/EnergyBreakdownEntryValueObject";
 import {EnergyLevelsViewModel} from "./viewModels/EnergyLevelsViewModel";
+import {EnergyBreakdownRowViewModel} from "./viewModels/EnergyBreakdownRowViewModel";
 import {formatNumber} from "./formatters/formatNumber/formatNumber";
 import {EnergyLevelsPresenterPort} from "../application/ports/EnergyLevelsPresenterPort";
 
@@ -26,37 +28,50 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
           }
         ]
       },
-      balanceInsight: ''
+      balanceInsight: '',
+      productionBreakdown: [],
+      consumptionBreakdown: []
     };
   }
 
   present(energyLevels: EnergyLevelsValueObject): void {
-        this.viewModel = {
-          energyLevels: {
-            columns: [
-              {
-                header: 'Production',
-                values: [formatNumber(energyLevels.production) + `${nbsp}kW`]
-              },
-              {
-                header: 'Consumption',
-                values: [formatNumber(energyLevels.consumption) + `${nbsp}kW`]
-              },
-              {
-                header: 'Available',
-                values: [formatNumber(energyLevels.available) + `${nbsp}kW`]
-              }
-            ]
-          },
-          balanceInsight: this.buildBalanceInsight(energyLevels.available)
-        };
-    }
+      this.viewModel = {
+        energyLevels: {
+          columns: [
+            {
+              header: 'Production',
+              values: [formatNumber(energyLevels.production) + `${nbsp}kW`]
+            },
+            {
+              header: 'Consumption',
+              values: [formatNumber(energyLevels.consumption) + `${nbsp}kW`]
+            },
+            {
+              header: 'Available',
+              values: [formatNumber(energyLevels.available) + `${nbsp}kW`]
+            }
+          ]
+        },
+        balanceInsight: this.buildBalanceInsight(energyLevels.available),
+        productionBreakdown: this.buildBreakdownRows(energyLevels.productionBreakdown),
+        consumptionBreakdown: this.buildBreakdownRows(energyLevels.consumptionBreakdown)
+      };
+  }
 
   private buildBalanceInsight(available: number): string {
-    if (available >= 0) {
-      return `Surplus of ${formatNumber(available)}${nbsp}kW`;
-    }
+  if (available >= 0) {
+    return `Surplus of ${formatNumber(available)}${nbsp}kW`;
+  }
 
-    return `⚠️ Power deficit of ${formatNumber(Math.abs(available))}${nbsp}kW — your base is at risk`;
+  return `⚠️ Power deficit of ${formatNumber(Math.abs(available))}${nbsp}kW — your base is at risk`;
+  }
+
+  private buildBreakdownRows(breakdown: EnergyBreakdownEntryValueObject[]): EnergyBreakdownRowViewModel[] {
+    return breakdown.map((entry): EnergyBreakdownRowViewModel => ({
+      label: entry.label,
+      quantity: formatNumber(entry.quantity),
+      unitLevel: formatNumber(entry.unitLevel) + `${nbsp}kW`,
+      totalLevel: formatNumber(entry.totalLevel) + `${nbsp}kW`
+    }));
   }
 }

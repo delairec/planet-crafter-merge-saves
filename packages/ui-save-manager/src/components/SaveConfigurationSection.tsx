@@ -21,12 +21,12 @@ export default function SaveConfigurationSection({sections}: SaveConfigurationPr
   });
 
   return (
-    <>
+    <div>
       <h3>Save Configuration: {title()} ({mode()})</h3>
       <div class="fields-group-container">
         <FieldsGroup columns={modifiersColumns}/>
       </div>
-    </>
+    </div>
   )
     ;
 }
