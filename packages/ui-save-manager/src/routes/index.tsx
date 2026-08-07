@@ -6,6 +6,9 @@ import {parseSaveSections} from "../../../util-parsing/parseSaveSections";
 import SaveConfigurationSection from "../components/SaveConfigurationSection";
 import {ParsedSections} from "../../../util-types/gameDefinitions";
 import EnergyLevelsSection from "~/components/EnergyLevelsSection";
+import MergeSection from "~/components/MergeSection";
+import MergeResultSection from "~/components/MergeResultSection";
+import {MergeResultViewModel} from "../../../util-mapping/presentation/viewModels/MergeResultViewModel";
 
 export default function Home() {
   const [file, setFile] = createSignal<File | null>(null);
@@ -13,6 +16,7 @@ export default function Home() {
   const [errors, setErrors] = createSignal<string[]>([]);
   const [warnings, setWarnings] = createSignal<string[]>([]);
   const [isReady, setIsReady] = createSignal<boolean>(false);
+  const [mergeResult, setMergeResult] = createSignal<MergeResultViewModel | null>(null);
 
   onMount(() => {
     setIsReady(true);
@@ -49,12 +53,16 @@ export default function Home() {
   return (
     <Show when={isReady()} fallback={<p class="text-color-muted">Loading...</p>}>
       <main>
-        <h2>File selection</h2>
+        <h2>Display</h2>
         <input type="file" accept="application/json" onChange={handleFileChange}/>
         <button onClick={handleSubmit} disabled={!file()}>Submit</button>
 
+        <MergeSection onMergeResult={setMergeResult}/>
+
         <h2>Visualization</h2>
-        <Show when={!errors().length && !sections()}>
+        <MergeResultSection result={mergeResult}/>
+
+        <Show when={!errors().length && !sections() && !mergeResult()}>
           <p class="text-color-muted">Parsed data will appear here.</p>
         </Show>
 
