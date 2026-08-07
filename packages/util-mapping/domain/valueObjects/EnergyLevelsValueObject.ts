@@ -1,11 +1,5 @@
-import {EnergyBreakdownEntryValueObject} from "./EnergyBreakdownEntryValueObject";
-import {OptimizerValueObject} from "./OptimizerValueObject";
+import {PlanetEnergyLevelsValueObject} from "./PlanetEnergyLevelsValueObject";
 
 export interface EnergyLevelsValueObject {
-  production: number;
-  consumption: number;
-  available: number;
-  productionBreakdown: EnergyBreakdownEntryValueObject[];
-  consumptionBreakdown: EnergyBreakdownEntryValueObject[];
-  optimizers: OptimizerValueObject[];
+  planets: PlanetEnergyLevelsValueObject[];
 }

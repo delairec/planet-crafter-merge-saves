@@ -11,66 +11,86 @@ describe('EnergyLevelsPresenter', () => {
 
     // Assert
     expect(presenter.viewModel).toEqual<EnergyLevelsViewModel>({
-      energyLevels: {
-        columns: [
-          {
-            header: 'Production',
-            values: ['']
-          },
-          {
-            header: 'Consumption',
-            values: ['']
-          },
-          {
-            header: 'Available',
-            values: ['']
-          }
-        ]
-      },
-      productionBreakdown: [],
-      consumptionBreakdown: [],
-      optimizers: []
+      planets: []
     });
   });
 
-  it('should present energy levels', () => {
+  it('should present energy levels for a planet', () => {
     // Arrange
     const presenter = new EnergyLevelsPresenter();
 
     // Act
     presenter.present({
-      production: 80_000,
-      consumption: 0,
-      available: 80_000,
-      productionBreakdown: [],
-      consumptionBreakdown: [],
-      optimizers: []
+      planets: [{
+        planetId: 'Planet 1',
+        production: 80_000,
+        consumption: 0,
+        available: 80_000,
+        productionBreakdown: [],
+        consumptionBreakdown: [],
+        optimizers: []
+      }]
     });
 
     // Assert
     expect(presenter.viewModel).toEqual<EnergyLevelsViewModel>(
       {
-        energyLevels: {
-          columns: [
-            {
-              header: 'Production',
-              values: ['80,000' + `${nbsp}kW`]
-            },
-            {
-              header: 'Consumption',
-              values: ['0' + `${nbsp}kW 🚧 Work In Progress`]
-            },
-            {
-              header: 'Available',
-              values: ['80,000' + `${nbsp}kW 🚧 Work In Progress`]
-            }
-          ]
-        },
-        productionBreakdown: [],
-        consumptionBreakdown: [],
-        optimizers: []
+        planets: [{
+          planetId: 'Planet 1',
+          energyLevels: {
+            columns: [
+              {
+                header: 'Production',
+                values: ['80,000' + `${nbsp}kW`]
+              },
+              {
+                header: 'Consumption',
+                values: ['0' + `${nbsp}kW 🚧 Work In Progress`]
+              },
+              {
+                header: 'Available',
+                values: ['80,000' + `${nbsp}kW 🚧 Work In Progress`]
+              }
+            ]
+          },
+          productionBreakdown: [],
+          consumptionBreakdown: [],
+          optimizers: []
+        }]
       }
     );
+  });
+
+  it('should present multiple planets independently', () => {
+    // Arrange
+    const presenter = new EnergyLevelsPresenter();
+
+    // Act
+    presenter.present({
+      planets: [
+        {
+          planetId: 'Planet 1',
+          production: 100,
+          consumption: 0,
+          available: 100,
+          productionBreakdown: [],
+          consumptionBreakdown: [],
+          optimizers: []
+        },
+        {
+          planetId: 'Planet 2',
+          production: 200,
+          consumption: 0,
+          available: 200,
+          productionBreakdown: [],
+          consumptionBreakdown: [],
+          optimizers: []
+        }
+      ]
+    });
+
+    // Assert
+    expect(presenter.viewModel.planets.map((planet) => planet.planetId)).toEqual(['Planet 1', 'Planet 2']);
   });
 
   it('should present the production and consumption breakdowns as rows', () => {
@@ -79,32 +99,35 @@ describe('EnergyLevelsPresenter', () => {
 
     // Act
     presenter.present({
-      production: 590,
-      consumption: 182,
-      available: 408,
-      productionBreakdown: [{
-        label: 'Wind turbine T2',
-        quantity: 2,
-        unitLevel: 290,
-        totalLevel: 580
-      }],
-      consumptionBreakdown: [{
-        label: 'Drill T3',
-        quantity: 4,
-        unitLevel: 45.5,
-        totalLevel: 182
-      }],
-      optimizers: []
+      planets: [{
+        planetId: 'Planet 1',
+        production: 590,
+        consumption: 182,
+        available: 408,
+        productionBreakdown: [{
+          label: 'Wind turbine T2',
+          quantity: 2,
+          unitLevel: 290,
+          totalLevel: 580
+        }],
+        consumptionBreakdown: [{
+          label: 'Drill T3',
+          quantity: 4,
+          unitLevel: 45.5,
+          totalLevel: 182
+        }],
+        optimizers: []
+      }]
     });
 
     // Assert
-    expect(presenter.viewModel.productionBreakdown).toEqual([{
+    expect(presenter.viewModel.planets[0].productionBreakdown).toEqual([{
       label: 'Wind turbine T2',
       quantity: '2',
       unitLevel: `290${nbsp}kW`,
       totalLevel: `580${nbsp}kW (98%)`
     }]);
-    expect(presenter.viewModel.consumptionBreakdown).toEqual([{
+    expect(presenter.viewModel.planets[0].consumptionBreakdown).toEqual([{
       label: 'Drill T3',
       quantity: '4',
       unitLevel: `45.5${nbsp}kW`,
@@ -118,24 +141,27 @@ describe('EnergyLevelsPresenter', () => {
 
     // Act
     presenter.present({
-      production: 590,
-      consumption: 0,
-      available: 590,
-      productionBreakdown: [],
-      consumptionBreakdown: [],
-      optimizers: [{
-        label: 'Machine Optimizer T2',
-        fuseCount: 2,
-        boostedMachines: [
-          {label: 'Nuclear Reactor T2', quantity: 3},
-          {label: 'Solar panel T2', quantity: 2}
-        ],
-        contribution: 994.5
+      planets: [{
+        planetId: 'Planet 1',
+        production: 590,
+        consumption: 0,
+        available: 590,
+        productionBreakdown: [],
+        consumptionBreakdown: [],
+        optimizers: [{
+          label: 'Machine Optimizer T2',
+          fuseCount: 2,
+          boostedMachines: [
+            {label: 'Nuclear Reactor T2', quantity: 3},
+            {label: 'Solar panel T2', quantity: 2}
+          ],
+          contribution: 994.5
+        }]
       }]
     });
 
     // Assert
-    expect(presenter.viewModel.optimizers).toEqual([{
+    expect(presenter.viewModel.planets[0].optimizers).toEqual([{
       label: 'Machine Optimizer T2',
       fuseCount: '2',
       boostedMachines: '3 Nuclear Reactor T2, 2 Solar panel T2',

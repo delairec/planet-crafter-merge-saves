@@ -173,6 +173,22 @@ All properties except `id` and `gId` are optional depending on object type.
 | `hunger`   | `float`  | Animal hunger                                                                               |
 | `set`      | `int`    | Equipment set identifier                                                                    |
 
+**Planet numeric IDs:** `planet` (here) as well as `WorldEvent.planet` (see below) reference a planet using a
+numeric ID rather than the textual `planetId` used elsewhere (`TerraformationLevel.planetId`,
+`Player.planetId`, `SaveConfiguration.planetId`). This numeric ID is **stable across saves** (not derived from
+the save's world seed or content) — confirmed by cross-referencing several real save files:
+
+| Numeric `planet` ID | Planet name (`planetId`) |
+|--------------------:|--------------------------|
+|       `-1140328421` | `Prime`                  |
+|         `110910045` | `Toxicity`               |
+|       `-1016990411` | `Selenea`                |
+|        `-486276833` | `Humble`                 |
+|       `-1291310150` | `Aqualis`                |
+
+No known deterministic hash function (crc32, fnv1a, djb2, sdbm, Java-style `hashCode`, …) reproduces these IDs
+from the planet name, so this table is currently maintained as a fixed lookup rather than computed.
+
 ---
 
 ### #4 — Inventories & equipment

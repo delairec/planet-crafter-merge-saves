@@ -1,10 +1,5 @@
-import {TableViewModel} from "./TableViewModel";
-import {EnergyBreakdownRowViewModel} from "./EnergyBreakdownRowViewModel";
-import {OptimizerViewModel} from "./OptimizerViewModel";
+import {PlanetEnergyLevelsViewModel} from "./PlanetEnergyLevelsViewModel";
 
 export interface EnergyLevelsViewModel {
-  energyLevels: TableViewModel;
-  productionBreakdown: EnergyBreakdownRowViewModel[];
-  consumptionBreakdown: EnergyBreakdownRowViewModel[];
-  optimizers: OptimizerViewModel[];
+  planets: PlanetEnergyLevelsViewModel[];
 }

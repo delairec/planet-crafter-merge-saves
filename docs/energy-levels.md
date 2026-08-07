@@ -1,7 +1,8 @@
 # Energy Levels — Business Rules
 
 > This document establishes the rules used to compute the available energy level (in kW) for a save file:
-> total production, total consumption, and the balance.
+> total production, total consumption, and the balance — computed independently **per planet** (Rule
+> EN-PLANET-1), since each planet has its own power grid in-game.
 > It complements [`docs/game-rules.md`](./game-rules.md) and [`docs/save-format.md`](./save-format.md).
 >
 > Sources: in-game data cross-checked with the community wiki
@@ -157,19 +158,41 @@ To compute the true available energy level of a save, accounting for Optimizers:
 **Validated against real save data** (see Rule EN-FUSE-3 above): this algorithm reproduces the exact in-game
 HUD production value (24075.45 kW) for a real save containing 2 active Optimizers with Energy Fuses.
 
+**Rule EN-PLANET-1 (per-planet scoping, resolved):** each planet has its own independent power grid in-game.
+Steps 1–7 above are therefore applied **once per distinct `WorldObject.planet`** rather than once globally:
+positioned world objects are grouped by `planet` first, and production, consumption, available, breakdowns
+and Optimizers are all computed from each planet's own subset only (`SaveSectionsReaderService.getEnergyLevels`
+returns `EnergyLevelsValueObject.planets`, one entry per planet). Optimizer targeting was already restricted to
+producers on the same `planet` (Rule EN-OPT-2), so no cross-planet leakage was possible there; this rule only
+formalizes that production/consumption/breakdowns are scoped the same way.
+
+**Rule EN-PLANET-2 (planet label resolution):** each planet is labelled using the fixed numeric-id → name
+lookup table documented in [`docs/save-format.md`](./save-format.md#3--world-objects) ("Planet numeric IDs"),
+looked up by `SaveSectionsReaderService.resolvePlanetLabel`. For planet ids not in that table (e.g. future
+planets, modded content), a fallback heuristic applies: some world object `gId`s embed the planet name in
+plain text (e.g. `Seed7Humble` on planet `Humble`) — if exactly one of the save's known planet names (from
+`TerraformationLevels`) is found as a substring of a `gId` among that planet's world objects, that name is
+used as the label; otherwise the label falls back to `` `Planet ${planetId}` ``.
+
 **Open points:**
 - Distance metric implemented: straight-line 3D distance using `pos` (`"x,y,z"`), restricted to producers on
   the same `planet` as the Optimizer. Height (`y`) is included; this matched real save data as well as a
   horizontal-only (`x,z`) distance would have, so it hasn't been possible to distinguish the two — both gave
   the same targeting result in the validated save.
 - A `FuseEnergy1` with `liId` unset / not inside an Optimizer inventory has no effect (ignored), as implemented.
+- The planet label fallback heuristic (Rule EN-PLANET-2) only applies to planet ids missing from the static
+  lookup table (e.g. planets added by a future game update, or modded content); if that ever fails too, the
+  label falls back to a plain numeric id.
 
 ---
 
 ## 5. Optimizers section (UI)
 
-The UI's Power section displays one card per qualifying Optimizer (`EnergyLevelsValueObject.optimizers`, built
-by `SaveSectionsReaderService.computeOptimizers`), showing:
+The UI's Power section displays one card per planet (`EnergyLevelsViewModel.planets`, one
+`PlanetEnergyLevelsViewModel` per distinct `WorldObject.planet` — see Rule EN-PLANET-1), each labelled with its
+resolved planet name (Rule EN-PLANET-2). Within each planet's card, one sub-card per qualifying Optimizer
+(`PlanetEnergyLevelsValueObject.optimizers`, built by `SaveSectionsReaderService.computeOptimizers` scoped to
+that planet's world objects) shows:
 
 - the label (`Machine optimizer T1` / `Machine Optimizer T2`);
 - its Energy Fuse count (`fuseCount`);

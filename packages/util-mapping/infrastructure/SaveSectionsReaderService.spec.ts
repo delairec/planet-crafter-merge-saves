@@ -204,17 +204,20 @@ describe('SaveSectionsReaderService', () => {
 
         // Assert
         expect(energyLevels).toEqual<EnergyLevelsValueObject>({
-          production: kilowatts,
-          consumption: 0,
-          available: kilowatts,
-          productionBreakdown: [{
-            label: worldObjectLabels[worldObjectName as WorldObjectName],
-            quantity: 1,
-            unitLevel: kilowatts,
-            totalLevel: kilowatts
-          }],
-          consumptionBreakdown: [],
-          optimizers: [],
+          planets: [{
+            planetId: 'Planet 1',
+            production: kilowatts,
+            consumption: 0,
+            available: kilowatts,
+            productionBreakdown: [{
+              label: worldObjectLabels[worldObjectName as WorldObjectName],
+              quantity: 1,
+              unitLevel: kilowatts,
+              totalLevel: kilowatts
+            }],
+            consumptionBreakdown: [],
+            optimizers: [],
+          }]
         });
       }
     );
@@ -237,17 +240,20 @@ describe('SaveSectionsReaderService', () => {
 
         // Assert
         expect(energyLevels).toEqual<EnergyLevelsValueObject>({
-          production: 0,
-          consumption: kilowatts,
-          available: -kilowatts,
-          productionBreakdown: [],
-          consumptionBreakdown: [{
-            label: worldObjectLabels[worldObjectName as WorldObjectName],
-            quantity: 1,
-            unitLevel: kilowatts,
-            totalLevel: kilowatts
-          }],
-          optimizers: [],
+          planets: [{
+            planetId: 'Planet 1',
+            production: 0,
+            consumption: kilowatts,
+            available: -kilowatts,
+            productionBreakdown: [],
+            consumptionBreakdown: [{
+              label: worldObjectLabels[worldObjectName as WorldObjectName],
+              quantity: 1,
+              unitLevel: kilowatts,
+              totalLevel: kilowatts
+            }],
+            optimizers: [],
+          }]
         });
       }
     );
@@ -270,22 +276,25 @@ describe('SaveSectionsReaderService', () => {
 
       // Assert
       expect(energyLevels).toEqual<EnergyLevelsValueObject>({
-        production: 2.4,
-        consumption: 1,
-        available: 1.4,
-        productionBreakdown: [{
-          label: 'Wind turbine',
-          quantity: 2,
-          unitLevel: 1.2,
-          totalLevel: 2.4
-        }],
-        consumptionBreakdown: [{
-          label: 'Drill T1',
-          quantity: 2,
-          unitLevel: 0.5,
-          totalLevel: 1
-        }],
-        optimizers: [],
+        planets: [{
+          planetId: 'Planet 1',
+          production: 2.4,
+          consumption: 1,
+          available: 1.4,
+          productionBreakdown: [{
+            label: 'Wind turbine',
+            quantity: 2,
+            unitLevel: 1.2,
+            totalLevel: 2.4
+          }],
+          consumptionBreakdown: [{
+            label: 'Drill T1',
+            quantity: 2,
+            unitLevel: 0.5,
+            totalLevel: 1
+          }],
+          optimizers: [],
+        }]
       });
     });
 
@@ -305,22 +314,25 @@ describe('SaveSectionsReaderService', () => {
 
       // Assert
       expect(energyLevels).toEqual<EnergyLevelsValueObject>({
-        production: 1485,
-        consumption: 375.5,
-        available: 1109.5,
-        productionBreakdown: [{
-          label: 'Nuclear Fusion generator',
-          quantity: 1,
-          unitLevel: 1485,
-          totalLevel: 1485
-        }],
-        consumptionBreakdown: [{
-          label: 'Drill T5',
-          quantity: 1,
-          unitLevel: 375.5,
-          totalLevel: 375.5
-        }],
-        optimizers: [],
+        planets: [{
+          planetId: 'Planet 1',
+          production: 1485,
+          consumption: 375.5,
+          available: 1109.5,
+          productionBreakdown: [{
+            label: 'Nuclear Fusion generator',
+            quantity: 1,
+            unitLevel: 1485,
+            totalLevel: 1485
+          }],
+          consumptionBreakdown: [{
+            label: 'Drill T5',
+            quantity: 1,
+            unitLevel: 375.5,
+            totalLevel: 375.5
+          }],
+          optimizers: [],
+        }]
       });
     });
 
@@ -342,22 +354,137 @@ describe('SaveSectionsReaderService', () => {
 
       // Assert
       expect(energyLevels).toEqual<EnergyLevelsValueObject>({
-        production: 1.2,
-        consumption: 0.5,
-        available: 0.7,
-        productionBreakdown: [{
-          label: 'Wind turbine',
-          quantity: 1,
-          unitLevel: 1.2,
-          totalLevel: 1.2
-        }],
-        consumptionBreakdown: [{
-          label: 'Drill T1',
-          quantity: 1,
-          unitLevel: 0.5,
-          totalLevel: 0.5
-        }],
-        optimizers: [],
+        planets: [{
+          planetId: 'Planet 1',
+          production: 1.2,
+          consumption: 0.5,
+          available: 0.7,
+          productionBreakdown: [{
+            label: 'Wind turbine',
+            quantity: 1,
+            unitLevel: 1.2,
+            totalLevel: 1.2
+          }],
+          consumptionBreakdown: [{
+            label: 'Drill T1',
+            quantity: 1,
+            unitLevel: 0.5,
+            totalLevel: 0.5
+          }],
+          optimizers: [],
+        }]
+      });
+    });
+
+    describe('When a save has world objects on multiple planets (Rule EN-PLANET-1)', () => {
+      it('should compute independent production and consumption per planet without mixing them', () => {
+        // Arrange
+        const fakeSaveContent = createFakeSaveContent({
+          worldObjects: [
+            {id: 1, gId: 'EnergyGenerator1', pos: '0,0,0', planet: 1},
+            {id: 2, gId: 'Drill0', pos: '10,0,0', planet: 1},
+            {id: 3, gId: 'EnergyGenerator6', pos: '0,0,0', planet: 2},
+            {id: 4, gId: 'Drill4', pos: '10,0,0', planet: 2},
+          ],
+        });
+        const {sections} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sections);
+
+        // Act
+        const energyLevels = service.getEnergyLevels();
+
+        // Assert
+        expect(energyLevels).toEqual<EnergyLevelsValueObject>({
+          planets: [
+            {
+              planetId: 'Planet 1',
+              production: 1.2,
+              consumption: 0.5,
+              available: 0.7,
+              productionBreakdown: [{
+                label: 'Wind turbine',
+                quantity: 1,
+                unitLevel: 1.2,
+                totalLevel: 1.2
+              }],
+              consumptionBreakdown: [{
+                label: 'Drill T1',
+                quantity: 1,
+                unitLevel: 0.5,
+                totalLevel: 0.5
+              }],
+              optimizers: [],
+            },
+            {
+              planetId: 'Planet 2',
+              production: 1485,
+              consumption: 375.5,
+              available: 1109.5,
+              productionBreakdown: [{
+                label: 'Nuclear Fusion generator',
+                quantity: 1,
+                unitLevel: 1485,
+                totalLevel: 1485
+              }],
+              consumptionBreakdown: [{
+                label: 'Drill T5',
+                quantity: 1,
+                unitLevel: 375.5,
+                totalLevel: 375.5
+              }],
+              optimizers: [],
+            }
+          ]
+        });
+      });
+    });
+
+    describe('When a world object is on a planet with a known numeric ID (Rule EN-PLANET-3)', () => {
+      it('should label the planet using the static planet names table, without relying on gId', () => {
+        // Arrange
+        const fakeSaveContent = createFakeSaveContent({
+          worldObjects: [
+            {id: 1, gId: 'EnergyGenerator1', pos: '0,0,0', planet: -1140328421},
+          ],
+        });
+        const {sections} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sections);
+
+        // Act
+        const energyLevels = service.getEnergyLevels();
+
+        // Assert
+        expect(energyLevels.planets[0].planetId).toBe('Prime');
+      });
+    });
+
+    describe('When a world object gId embeds a known planet name (Rule EN-PLANET-2)', () => {
+      it('should label the planet using the matching planet name instead of the fallback', () => {
+        // Arrange
+        const fakeSaveContent = createFakeSaveContent({
+          terraformationLevels: [{
+            planetId: 'Humble',
+            unitOxygenLevel: 0,
+            unitHeatLevel: 0,
+            unitPressureLevel: 0,
+            unitPlantsLevel: 0,
+            unitInsectsLevel: 0,
+            unitAnimalsLevel: 0,
+            unitPurificationLevel: -1
+          }],
+          worldObjects: [
+            {id: 1, gId: 'Seed7Humble', pos: '0,0,0', planet: 1},
+            {id: 2, gId: 'EnergyGenerator1', pos: '10,0,0', planet: 1},
+          ],
+        });
+        const {sections} = parseSaveSections(fakeSaveContent);
+        const service = new SaveSectionsReaderService(sections);
+
+        // Act
+        const energyLevels = service.getEnergyLevels();
+
+        // Assert
+        expect(energyLevels.planets[0].planetId).toBe('Humble');
       });
     });
 
@@ -379,7 +506,7 @@ describe('SaveSectionsReaderService', () => {
         const energyLevels = service.getEnergyLevels();
 
         // Assert
-        expect(energyLevels.production).toBeCloseTo(1.2 * 1.5);
+        expect(energyLevels.planets[0].production).toBeCloseTo(1.2 * 1.5);
       });
 
       it('should not boost a producer beyond the optimizer radius', () => {
@@ -399,7 +526,7 @@ describe('SaveSectionsReaderService', () => {
         const energyLevels = service.getEnergyLevels();
 
         // Assert
-        expect(energyLevels.production).toBeCloseTo(1.2);
+        expect(energyLevels.planets[0].production).toBeCloseTo(1.2);
       });
 
       it('should not boost a producer on a different planet', () => {
@@ -418,8 +545,9 @@ describe('SaveSectionsReaderService', () => {
         // Act
         const energyLevels = service.getEnergyLevels();
 
-        // Assert
-        expect(energyLevels.production).toBeCloseTo(1.2);
+        // Assert: the producer's own planet keeps its unboosted base production
+        const producerPlanet = energyLevels.planets.find((planet) => planet.production > 0);
+        expect(producerPlanet?.production).toBeCloseTo(1.2);
       });
 
       it('should ignore an Optimizer without any Energy Fuse in its inventory', () => {
@@ -438,7 +566,7 @@ describe('SaveSectionsReaderService', () => {
         const energyLevels = service.getEnergyLevels();
 
         // Assert
-        expect(energyLevels.production).toBeCloseTo(1.2);
+        expect(energyLevels.planets[0].production).toBeCloseTo(1.2);
       });
 
       it('should stack multiple fuses in a T2 Optimizer additively by raw percentage (EN-FUSE-3)', () => {
@@ -459,7 +587,7 @@ describe('SaveSectionsReaderService', () => {
         const energyLevels = service.getEnergyLevels();
 
         // Assert: 2 fuses => 2 × 150% = 300%
-        expect(energyLevels.production).toBeCloseTo(1.2 * 3);
+        expect(energyLevels.planets[0].production).toBeCloseTo(1.2 * 3);
       });
 
       it('should stack fuses from two different Optimizers reaching the same producer (EN-OPT-3)', () => {
@@ -484,7 +612,7 @@ describe('SaveSectionsReaderService', () => {
         const energyLevels = service.getEnergyLevels();
 
         // Assert: 2 fuses total (1 from each optimizer) => 2 × 150% = 300%
-        expect(energyLevels.production).toBeCloseTo(1.2 * 3);
+        expect(energyLevels.planets[0].production).toBeCloseTo(1.2 * 3);
       });
 
       it('should only boost the closest machines up to the optimizer capacity (EN-OPT-2)', () => {
@@ -510,7 +638,7 @@ describe('SaveSectionsReaderService', () => {
         const energyLevels = service.getEnergyLevels();
 
         // Assert: 5 boosted producers at 150% + 1 unboosted at 100%
-        expect(energyLevels.production).toBeCloseTo(1.2 * 1.5 * 5 + 1.2);
+        expect(energyLevels.planets[0].production).toBeCloseTo(1.2 * 1.5 * 5 + 1.2);
       });
     });
 
@@ -532,7 +660,7 @@ describe('SaveSectionsReaderService', () => {
         const energyLevels = service.getEnergyLevels();
 
         // Assert: 1 fuse boosting 1 Wind turbine => contribution = 1.2 × (1 × 1.5 − 1) (base already counted in production breakdown)
-        expect(energyLevels.optimizers).toEqual([{
+        expect(energyLevels.planets[0].optimizers).toEqual([{
           label: 'Machine optimizer T1',
           fuseCount: 1,
           boostedMachines: [{label: 'Wind turbine', quantity: 1}],
@@ -556,7 +684,7 @@ describe('SaveSectionsReaderService', () => {
         const energyLevels = service.getEnergyLevels();
 
         // Assert
-        expect(energyLevels.optimizers).toEqual([]);
+        expect(energyLevels.planets[0].optimizers).toEqual([]);
       });
 
       it('should split a shared producer\'s boost between optimizers proportionally to their fuse count', () => {
@@ -582,7 +710,7 @@ describe('SaveSectionsReaderService', () => {
 
         // Assert: each Optimizer holds 1 fuse; the producer's real combined boost (2 fuses × 1.5 −
         // base) is split evenly between the two Optimizers since they each hold 1 fuse.
-        expect(energyLevels.optimizers).toEqual([
+        expect(energyLevels.planets[0].optimizers).toEqual([
           {
             label: 'Machine optimizer T1',
             fuseCount: 1,
