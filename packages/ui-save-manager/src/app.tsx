@@ -2,12 +2,13 @@ import {Router, RouteSectionProps} from "@solidjs/router";
 import {FileRoutes} from "@solidjs/start/router";
 import "./app.css";
 import {Component} from "solid-js";
+import {appName} from "../../util-messages/appMessages";
 
 const Layout: Component<RouteSectionProps> = (props) => {
   return (
     <>
       <header>
-        <h1 class="text-center drop-shadow-engraved">Planet Crafter Save Manager</h1>
+        <h1 class="text-center drop-shadow-engraved">{appName}</h1>
       </header>
       <div class="container rounded-lg">
         {props.children}

@@ -3,8 +3,7 @@ import {SaveMergerPort} from "./ports/SaveMergerPort";
 import {MergeResultPresenterPort} from "./ports/MergeResultPresenterPort";
 import {SaveValidationResultValueObject} from "../domain/valueObjects/SaveValidationResultValueObject";
 import {hasJsonExtension} from "../../util-parsing/hasJsonExtension.js";
-
-const invalidExtensionErrorMessage = 'Invalid file extension: expected a .json file.';
+import {invalidExtensionErrorMessage} from "../../util-messages/validationMessages.js";
 
 export class MergeSaveFiles {
   constructor(

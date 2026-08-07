@@ -3,6 +3,7 @@ import {LoadGlobalProgressionSectionController} from "../../../util-mapping/cont
 import FieldsGroup from "./structure/FieldsGroup";
 import {GlobalProgressionViewModel} from "../../../util-mapping/presentation/viewModels/GlobalProgressionViewModel";
 import {ParsedSections} from "../../../util-types/gameDefinitions";
+import {globalProgressionSectionTitle} from "../../../util-messages/globalProgressionSectionMessages";
 
 interface GlobalProgressionProps {
   sections: Accessor<ParsedSections>;
@@ -20,7 +21,7 @@ export default function GlobalProgressionSection({sections}: GlobalProgressionPr
 
   return (
     <div>
-      <h3>Global progression</h3>
+      <h3>{globalProgressionSectionTitle}</h3>
       <div class="fields-group-container">
         <FieldsGroup columns={statisticsColumns}/>
       </div>

@@ -3,6 +3,11 @@ import FieldsGroup from "./structure/FieldsGroup";
 import {EnergyLevelsViewModel} from "../../../util-mapping/presentation/viewModels/EnergyLevelsViewModel";
 import {ParsedSections} from "../../../util-types/gameDefinitions";
 import {LoadEnergyLevelsSectionController} from "../../../util-mapping/controllers/LoadEnergyLevelsSectionController";
+import {
+  energyLevelsSectionTitle,
+  energyLevelsSectionOptimizersTitle,
+  energyLevelsSectionProductionTitle
+} from "../../../util-messages/energyLevelsSectionMessages";
 
 interface EnergyLevelsProps {
   sections: Accessor<ParsedSections>;
@@ -18,7 +23,7 @@ export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
 
   return (
     <div>
-      <h3>Power</h3>
+      <h3>{energyLevelsSectionTitle}</h3>
       <For each={planets()}>
         {(planet) => (
           <div>
@@ -27,7 +32,7 @@ export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
               <FieldsGroup columns={() => planet.energyLevels.columns}/>
             </div>
 
-            <h5>Optimizers</h5>
+            <h5>{energyLevelsSectionOptimizersTitle}</h5>
             <div class="grid-container">
               <For each={planet.optimizers}>
                 {(optimizer) => (
@@ -43,7 +48,7 @@ export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
               </For>
             </div>
 
-            <h5>Production</h5>
+            <h5>{energyLevelsSectionProductionTitle}</h5>
             <div class="grid-container">
               <For each={planet.productionBreakdown}>
                 {(row) => (
