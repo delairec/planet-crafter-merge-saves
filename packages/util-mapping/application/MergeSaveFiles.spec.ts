@@ -50,4 +50,27 @@ describe('MergeSaveFiles', () => {
       });
     });
   });
+
+  describe('When a save file has an invalid extension', () => {
+    it('should present a validation error result without validating its content', () => {
+      // Arrange
+      const validator: SaveValidatorPort = {validate: mock(() => ({isValid: true, errorMessages: []}))};
+      const merger: SaveMergerPort = {merge: mock()};
+      const presenter: MergeResultPresenterPort = {present: mock()};
+      const useCase = new MergeSaveFiles(validator, merger, presenter);
+
+      // Act
+      useCase.execute('Save-A.txt', 'contentA', 'Save-B.json', 'contentB');
+
+      // Assert
+      expect(validator.validate).toHaveBeenCalledTimes(1);
+      expect(validator.validate).toHaveBeenCalledWith('contentB');
+      expect(merger.merge).not.toHaveBeenCalled();
+      expect(presenter.present).toHaveBeenCalledWith({
+        status: 'validationError',
+        saveAErrorMessages: ['Invalid file extension: expected a .json file.'],
+        saveBErrorMessages: []
+      });
+    });
+  });
 });

@@ -9,6 +9,7 @@ import EnergyLevelsSection from "~/components/EnergyLevelsSection";
 import MergeSection from "~/components/MergeSection";
 import MergeResultSection from "~/components/MergeResultSection";
 import {MergeResultViewModel} from "../../../util-mapping/presentation/viewModels/MergeResultViewModel";
+import {hasJsonExtension} from "../../../util-parsing/hasJsonExtension";
 
 export default function Home() {
   const [file, setFile] = createSignal<File | null>(null);
@@ -33,8 +34,8 @@ export default function Home() {
     const fileInput = file();
     if (fileInput) {
 
-      if (!fileInput.name.endsWith('.json')) {
-        setErrors(['INVALID: not a .json file']);
+      if (!hasJsonExtension(fileInput.name)) {
+        setErrors(['Invalid file extension: expected a .json file.']);
         setWarnings([]);
         return;
       }
