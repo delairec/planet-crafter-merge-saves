@@ -1,11 +1,12 @@
-import {exitProcess, getBasename, isEntryPoint, joinPath, readDirectory, readTextFile, writeTextFile} from '../../util-platforms/platform.js';
+import {exitProcess, isEntryPoint, joinPath, readDirectory, readTextFile, writeTextFile} from '../../util-platforms/platform.js';
 import {resolveIdConflicts} from '../../util-parsing/resolveIdConflicts.js';
+import {buildMergedFileName} from '../../util-parsing/buildMergedFileName.js';
 import {merge} from '../merge.js';
 
 const INPUT_DIR = 'input';
 const OUTPUT_DIR = 'output';
 
-const CLI = initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirectory, getBasename, writeTextFile, joinPath});
+const CLI = initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirectory, writeTextFile, joinPath});
 if (CLI.isEntryPoint(import.meta)) {
   CLI.main().catch(err => {
     console.error('Error:', err);
@@ -13,7 +14,7 @@ if (CLI.isEntryPoint(import.meta)) {
   });
 }
 
-export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirectory, getBasename, writeTextFile, joinPath}) {
+export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirectory, writeTextFile, joinPath}) {
   async function filterByValidSaveFolders(folders) {
     const results = [];
     for (const folder of folders) {
@@ -47,16 +48,14 @@ export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirec
   }
 
   async function writeOutput(folder, fileA, fileB, content) {
-    const outputFileName = buildOutputFileName(fileA, fileB);
+    const outputFileName = buildMergedFileName(fileA, fileB);
     const outputPath = joinPath(OUTPUT_DIR, folder, outputFileName);
     await writeTextFile(outputPath, content);
     console.log(`  ✓ Written to ${outputPath}`);
   }
 
-  function buildOutputFileName(fileA, fileB) {
-    const nameA = getBasename(fileA, '.json');
-    const nameB = getBasename(fileB, '.json');
-    return `${nameA}-${nameB}-merged.json`;
+  function isJson(file) {
+    return file.endsWith('.json');
   }
 
   async function main() {
@@ -71,10 +70,6 @@ export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirec
 
   function isValidSaveFolderContent(files) {
     return files.filter(isJson).length >= 2;
-  }
-
-  function isJson(file) {
-    return file.endsWith('.json');
   }
 
   return {isEntryPoint, main, exitProcess};
