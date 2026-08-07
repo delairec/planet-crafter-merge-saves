@@ -77,11 +77,11 @@ export default function Home() {
         </Show>
 
         <Show when={sections() && !errors().length}>
-          <SaveConfigurationSection sections={() => sections()!}/>
           <div class="grid-container">
+          <SaveConfigurationSection sections={() => sections()!}/>
             <GlobalProgressionSection sections={() => sections()!}/>
-            <EnergyLevelsSection sections={() => sections()!}/>
           </div>
+            <EnergyLevelsSection sections={() => sections()!}/>
           <TerraformationLevelsSection sections={() => sections()!}/>
           <PlayersSection sections={() => sections()!}/>
         </Show>

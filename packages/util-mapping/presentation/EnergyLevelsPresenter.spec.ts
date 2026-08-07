@@ -27,7 +27,9 @@ describe('EnergyLevelsPresenter', () => {
           }
         ]
       },
-      balanceInsight: ''
+      balanceInsight: '',
+      productionBreakdown: [],
+      consumptionBreakdown: []
     });
   });
 
@@ -41,6 +43,8 @@ describe('EnergyLevelsPresenter', () => {
         production: 80_000,
         consumption: 0,
         available: 80_000,
+        productionBreakdown: [],
+        consumptionBreakdown: []
       });
 
       // Assert
@@ -58,6 +62,8 @@ describe('EnergyLevelsPresenter', () => {
         production: 5_000,
         consumption: 8_000,
         available: -3_000,
+        productionBreakdown: [],
+        consumptionBreakdown: []
       });
 
       // Assert
@@ -74,6 +80,8 @@ describe('EnergyLevelsPresenter', () => {
       production: 80_000,
       consumption: 0,
       available: 80_000,
+      productionBreakdown: [],
+      consumptionBreakdown: []
     });
 
     // Assert
@@ -95,8 +103,48 @@ describe('EnergyLevelsPresenter', () => {
             }
           ]
         },
-        balanceInsight: `Surplus of 80,000${nbsp}kW`
+        balanceInsight: `Surplus of 80,000${nbsp}kW`,
+        productionBreakdown: [],
+        consumptionBreakdown: []
       }
     );
+  });
+
+  it('should present the production and consumption breakdowns as rows', () => {
+    // Arrange
+    const presenter = new EnergyLevelsPresenter();
+
+    // Act
+    presenter.present({
+      production: 590,
+      consumption: 182,
+      available: 408,
+      productionBreakdown: [{
+        label: 'Wind turbine T2',
+        quantity: 2,
+        unitLevel: 290,
+        totalLevel: 580
+      }],
+      consumptionBreakdown: [{
+        label: 'Drill T3',
+        quantity: 4,
+        unitLevel: 45.5,
+        totalLevel: 182
+      }]
+    });
+
+    // Assert
+    expect(presenter.viewModel.productionBreakdown).toEqual([{
+      label: 'Wind turbine T2',
+      quantity: '2',
+      unitLevel: `290${nbsp}kW`,
+      totalLevel: `580${nbsp}kW`
+    }]);
+    expect(presenter.viewModel.consumptionBreakdown).toEqual([{
+      label: 'Drill T3',
+      quantity: '4',
+      unitLevel: `45.5${nbsp}kW`,
+      totalLevel: `182${nbsp}kW`
+    }]);
   });
 });
