@@ -23,11 +23,11 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
           },
           {
             header: 'Consumption',
-            values: ['Not yet implemented']
+            values: ['']
           },
           {
             header: 'Available',
-            values: ['Not yet implemented']
+            values: ['']
           }
         ]
       },
@@ -47,11 +47,11 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
             },
             {
               header: 'Consumption',
-              values: [formatNumber(energyLevels.consumption) + `${nbsp}kW`]
+              values: [formatNumber(energyLevels.consumption) + `${nbsp}kW 🚧 Work In Progress`]
             },
             {
               header: 'Available',
-              values: [formatNumber(energyLevels.available) + `${nbsp}kW`]
+              values: [formatNumber(energyLevels.available) + `${nbsp}kW 🚧 Work In Progress`]
             }
           ]
         },

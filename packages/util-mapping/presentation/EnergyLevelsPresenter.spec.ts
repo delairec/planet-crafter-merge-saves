@@ -19,11 +19,11 @@ describe('EnergyLevelsPresenter', () => {
           },
           {
             header: 'Consumption',
-            values: ['Not yet implemented']
+            values: ['']
           },
           {
             header: 'Available',
-            values: ['Not yet implemented']
+            values: ['']
           }
         ]
       },
@@ -58,11 +58,11 @@ describe('EnergyLevelsPresenter', () => {
             },
             {
               header: 'Consumption',
-              values: ['0' + `${nbsp}kW`]
+              values: ['0' + `${nbsp}kW 🚧 Work In Progress`]
             },
             {
               header: 'Available',
-              values: ['80,000' + `${nbsp}kW`]
+              values: ['80,000' + `${nbsp}kW 🚧 Work In Progress`]
             }
           ]
         },
