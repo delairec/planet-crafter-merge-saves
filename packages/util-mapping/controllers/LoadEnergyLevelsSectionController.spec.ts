@@ -32,7 +32,6 @@ describe('LoadEnergyLevelsSectionController', () => {
           }
         ]
       },
-      balanceInsight: `Surplus of 2,218.7${nbsp}kW`,
       productionBreakdown: [
         {label: 'Nuclear Fusion generator', quantity: '1', unitLevel: `1,485${nbsp}kW`, totalLevel: `1,485${nbsp}kW (67%)`},
         {label: 'Nuclear Reactor T2', quantity: '1', unitLevel: `331.5${nbsp}kW`, totalLevel: `331.5${nbsp}kW (15%)`},

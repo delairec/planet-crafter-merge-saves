@@ -10,15 +10,13 @@ interface EnergyLevelsProps {
 
 export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
   const [energyLevelsColumns, setEnergyLevelsColumns] = createSignal<EnergyLevelsViewModel['energyLevels']['columns']>([]);
-  const [balanceInsight, setBalanceInsight] = createSignal<string>('');
   const [productionBreakdown, setProductionBreakdown] = createSignal<EnergyLevelsViewModel['productionBreakdown']>([]);
   const [consumptionBreakdown, setConsumptionBreakdown] = createSignal<EnergyLevelsViewModel['consumptionBreakdown']>([]);
   const [optimizers, setOptimizers] = createSignal<EnergyLevelsViewModel['optimizers']>([]);
 
   createEffect(() => {
-    const {energyLevels, balanceInsight, productionBreakdown, consumptionBreakdown, optimizers} = LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections());
+    const {energyLevels, productionBreakdown, consumptionBreakdown, optimizers} = LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections());
     setEnergyLevelsColumns(energyLevels.columns);
-    setBalanceInsight(balanceInsight);
     setProductionBreakdown(productionBreakdown);
     setConsumptionBreakdown(consumptionBreakdown);
     setOptimizers(optimizers);
@@ -27,7 +25,6 @@ export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
   return (
     <div>
       <h3>Power</h3>
-      <p class="fields-group-main-value">{balanceInsight()}</p>
       <div class="fields-group-container">
         <FieldsGroup columns={energyLevelsColumns}/>
       </div>

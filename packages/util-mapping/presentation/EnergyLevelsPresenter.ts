@@ -31,7 +31,6 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
           }
         ]
       },
-      balanceInsight: '',
       productionBreakdown: [],
       consumptionBreakdown: [],
       optimizers: []
@@ -56,19 +55,10 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
             }
           ]
         },
-        balanceInsight: this.buildBalanceInsight(energyLevels.available),
         productionBreakdown: this.buildBreakdownRows(energyLevels.productionBreakdown, energyLevels.production),
         consumptionBreakdown: this.buildBreakdownRows(energyLevels.consumptionBreakdown),
         optimizers: this.buildOptimizers(energyLevels.optimizers, energyLevels.production)
       };
-  }
-
-  private buildBalanceInsight(available: number): string {
-  if (available >= 0) {
-    return `Surplus of ${formatNumber(available)}${nbsp}kW`;
-  }
-
-  return `⚠️ Power deficit of ${formatNumber(Math.abs(available))}${nbsp}kW — your base is at risk`;
   }
 
   private buildBreakdownRows(breakdown: EnergyBreakdownEntryValueObject[], totalProduction?: number): EnergyBreakdownRowViewModel[] {
