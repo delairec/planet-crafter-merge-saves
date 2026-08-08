@@ -1,5 +1,5 @@
 import {readdir} from 'node:fs/promises';
-import {join, basename} from 'node:path';
+import {basename, join} from 'node:path';
 import process from 'node:process';
 
 /**
@@ -60,7 +60,7 @@ export function getCliArguments() {
 }
 
 /**
- * @param {object} importMeta
+ * @param {{main?: boolean, url?: string}} importMeta
  * @returns {boolean}
  */
 export function isEntryPoint(importMeta) {

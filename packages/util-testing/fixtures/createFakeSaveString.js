@@ -1,5 +1,20 @@
 /** @import { GlobalMetadata, TerraformationLevel, Player, WorldObject, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, WorldEvent } from '../../util-types/gameDefinitions' */
 
+/**
+ * @typedef {{
+ *   globalMetadata?: GlobalMetadata,
+ *   terraformationLevels?: TerraformationLevel[],
+ *   players?: Player[],
+ *   worldObjects?: WorldObject[],
+ *   inventories?: Inventory[],
+ *   statistics?: Statistics,
+ *   mailboxes?: MailboxMessage[],
+ *   storyEvents?: StoryEvent[],
+ *   saveConfiguration?: SaveConfiguration,
+ *   worldEvents?: WorldEvent[]
+ * }} FakeSaveOptions
+ */
+
 import {stringifyEntry} from '../../util-parsing/stringifyEntry.js';
 
 const DEFAULT_GLOBAL_METADATA = /** @type {GlobalMetadata} */ ({
@@ -43,18 +58,7 @@ function serializeSectionWithStringifyEntry(entries) {
 /**
  * Builds a save string in the current format (10 real sections; the Terrain Layers section was
  * removed from the save format by a game update).
- * @param {{
- *   globalMetadata?: GlobalMetadata,
- *   terraformationLevels?: TerraformationLevel[],
- *   players?: Player[],
- *   worldObjects?: WorldObject[],
- *   inventories?: Inventory[],
- *   statistics?: Statistics,
- *   mailboxes?: MailboxMessage[],
- *   storyEvents?: StoryEvent[],
- *   saveConfiguration?: SaveConfiguration,
- *   worldEvents?: WorldEvent[]
- * }} options
+ * @param {FakeSaveOptions} options
  * @returns {string}
  */
 export function createFakeSaveString({
@@ -88,8 +92,7 @@ export function createFakeSaveString({
 /**
  * Builds a save string in the legacy format (11 real sections, still containing the Terrain
  * Layers section removed by a later game update). Used to test backward compatibility only.
- * @param terrainLayers
- * @param options
+ * @param {{terrainLayers?: Array<{layerId: string, planet: number, colorBase: string}>} & FakeSaveOptions} options
  * @returns {string}
  */
 export function createLegacyFakeSaveString({terrainLayers = [], ...options}) {
