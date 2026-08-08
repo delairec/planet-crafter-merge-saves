@@ -8,8 +8,6 @@ body {
     margin: 0;
     background: var(--canvas);
     color: var(--content);
-    font: var(--text-base) var(--font-sans);
-    font-size: var(--text-base);
     line-height: 1.5;
 }
 
@@ -23,6 +21,10 @@ body {
     background-color: var(--surface);
 }
 
+.inline-block {
+    display: inline-block;
+}
+
 hr {
     border-color: var(--border);
     margin-top: 1.5rem;
@@ -30,12 +32,12 @@ hr {
 }
 
 code {
-    padding: 0.25rem 0.375rem;
-    border-radius: 0.25rem;
+    padding: 0.25rem 0.25rem;
+    border-radius: 0.5rem;
     background-color: var(--elevated);
-    color: var(--accent);
-    font-size: 0.875rem;
+    color: var(--muted);
 }
+
 
 pre {
     padding: 1rem;

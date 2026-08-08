@@ -2,10 +2,10 @@ import {createSignal} from 'solid-js';
 import {MergeSaveFilesController} from '../../../util-mapping/controllers/MergeSaveFilesController';
 import {MergeResultViewModel} from '../../../util-mapping/presentation/viewModels/MergeResultViewModel';
 import {
-  mergeSectionTitle,
+  mergeButtonLabel,
   mergeSectionSaveALabel,
   mergeSectionSaveBLabel,
-  mergeButtonLabel
+  mergeSectionTitle
 } from '../../../util-messages/mergeSectionMessages';
 
 interface MergeSectionProps {
@@ -40,9 +40,15 @@ export default function MergeSection(props: MergeSectionProps) {
 
   return (
     <div>
-      <h2>{mergeSectionTitle}</h2>
-      <label>{mergeSectionSaveALabel}<input type="file" accept="application/json" onChange={(event) => setFileA(event.currentTarget.files?.[0] ?? null)}/></label>
-      <label>{mergeSectionSaveBLabel}<input type="file" accept="application/json" onChange={(event) => setFileB(event.currentTarget.files?.[0] ?? null)}/></label>
+      <div class="inline-block">
+        <h2>{mergeSectionTitle}</h2>
+        <p><label>{mergeSectionSaveALabel}<input type="file" accept="application/json"
+                                                 onChange={(event) => setFileA(event.currentTarget.files?.[0] ?? null)}/></label>
+        </p>
+        <p><label>{mergeSectionSaveBLabel}<input type="file" accept="application/json"
+                                                 onChange={(event) => setFileB(event.currentTarget.files?.[0] ?? null)}/></label>
+        </p>
+      </div>
       <button onClick={handleMerge} disabled={!fileA() || !fileB()}>{mergeButtonLabel}</button>
     </div>
   );
