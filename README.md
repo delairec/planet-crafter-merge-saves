@@ -61,6 +61,14 @@ bun run lint:types
 
 Checks typings in all the project files (using `tsc --noEmit` under the hood).
 
+```
+bun run audit
+```
+
+Audits production and development dependencies. The two Picomatch advisories are explicitly allowlisted because
+`micromatch` still requires the affected 2.x dependency transitively; they should be removed as soon as that upstream
+constraint is updated.
+
 #### With Node.js
 
 If you prefer to run the scripts using Node.js instead of Bun, use the following commands:
