@@ -25,6 +25,8 @@ import ValidationMessagesList from "~/components/validation/ValidationMessagesLi
 import HomeDisclaimer from "~/components/HomeDisclaimer";
 
 export default function Home() {
+  let fileInputElement!: HTMLInputElement;
+
   const [file, setFile] = createSignal<File | null>(null);
   const [sections, setSections] = createSignal<ParsedSections | null>(null);
   const [errors, setErrors] = createSignal<string[]>([]);
@@ -40,6 +42,7 @@ export default function Home() {
     setErrors([]);
     setWarnings([]);
     setSections(null);
+    setMergeResult(null);
   }
 
   const handleFileChange = (event: Event) => {
@@ -84,6 +87,9 @@ export default function Home() {
 
   const handleSubmitMerge = (result: MergeResultViewModel) => {
     resetDisplayFields();
+    if (fileInputElement) {
+      fileInputElement.value = '';
+    }
 
     setMergeResult(result);
   }
@@ -95,23 +101,26 @@ export default function Home() {
         <HomeDisclaimer/>
 
         <h2>{displayRouteDisplayTitle}</h2>
-        <input type="file" accept="application/json" onChange={handleFileChange}/>
+        <input ref={fileInputElement} type="file" accept="application/json" onChange={handleFileChange}/>
         <button onClick={handleSubmit} disabled={!file()}>{displayRouteSubmitButtonLabel}</button>
 
         <MergeSection onMergeResult={handleSubmitMerge}/>
 
         <h2>{displayRouteVisualizationTitle}</h2>
-        <MergeResultSection result={mergeResult}/>
 
         <Show when={!errors().length && !sections() && !mergeResult()}>
           <p class="text-color-muted">{displayRouteParsedDataPlaceholder}</p>
         </Show>
 
+        <MergeResultSection result={mergeResult}/>
+
         <Show when={errors().length}>
+          <code>{file()?.name}</code>
           <ValidationMessagesList title={displayRouteErrorsTitle} severity="danger" messages={errors()}/>
         </Show>
 
         <Show when={warnings().length}>
+          <code>{file()?.name}</code>
           <ValidationMessagesList title={displayRouteWarningsTitle} severity="warning" messages={warnings()}/>
         </Show>
 
