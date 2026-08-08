@@ -1,4 +1,4 @@
-import {describe, it, expect} from 'bun:test';
+import {describe, expect, it} from 'bun:test';
 import {buildMergedFileName} from './buildMergedFileName.js';
 
 describe('buildMergedFileName', () => {
@@ -25,5 +25,11 @@ describe('buildMergedFileName', () => {
 
     // Assert
     expect(result).toBe('Standard-1-Standard-2-merged.json');
+  });
+
+  it('should remove path separators and unsafe characters from file names', () => {
+    const result = buildMergedFileName('../malicious/<script>', 'safe.JSON');
+
+    expect(result).toBe('_malicious__script_-safe-merged.json');
   });
 });
