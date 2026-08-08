@@ -1,0 +1,27 @@
+entry = [
+    "packages/cli-merge/cli/merge-cli.js",
+    "packages/cli-validate/cli/validate-cli.js",
+    "packages/ui-save-manager/src/entry-client.tsx",
+    "packages/ui-save-manager/src/entry-server.tsx",
+    "packages/**/*.spec.js",
+    "packages/**/*.spec.ts",
+]
+
+ignorePatterns = [
+    "output/**",
+    "packages/ui-save-manager/.output/**",
+]
+
+[audit]
+gate = "new-only"
+
+[rules]
+unused-files = "error"
+unused-exports = "warn"
+unused-types = "warn"
+unresolved-imports = "error"
+
+[typeAware]
+enabled = true
+projects = ["tsconfig.json"]
+require = "best-effort"

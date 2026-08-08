@@ -17,6 +17,7 @@
     "test:watch": "bun test --watch",
     "lint:types": "tsc --noEmit",
     "build:ui": "bun run --filter ui-save-manager build",
+    "audit:quality": "fallow audit",
     "audit": "bun audit --audit-level=high --ignore=GHSA-3v7f-55p6-f55p --ignore=GHSA-c2c7-rcm5-vvqj",
     "dev:ui": "bun run --filter ui-save-manager dev",
     "preview:ui": "bun run --filter ui-save-manager preview",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "@types/bun": "^1.3.14",
+    "fallow": "3.14.0",
     "typescript": "^5.9.3",
     "ui-save-manager": "workspace:*"
   },
