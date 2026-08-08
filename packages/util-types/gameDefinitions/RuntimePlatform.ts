@@ -6,5 +6,5 @@ export interface RuntimePlatform {
   getBasename: (path: string, extension?: string) => string;
   exitProcess: (code: number) => never;
   getCliArguments: () => string[];
-  isEntryPoint: (importMeta: { main?: boolean }) => boolean;
+  isEntryPoint: (importMeta: { main?: boolean; url?: string }) => boolean;
 }
