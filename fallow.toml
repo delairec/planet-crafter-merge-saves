@@ -20,8 +20,3 @@ unused-files = "error"
 unused-exports = "warn"
 unused-types = "warn"
 unresolved-imports = "error"
-
-[typeAware]
-enabled = true
-projects = ["tsconfig.json"]
-require = "best-effort"
