@@ -1,7 +1,7 @@
 import {Router, RouteSectionProps} from "@solidjs/router";
 import {FileRoutes} from "@solidjs/start/router";
 import "./app.css";
-import {Component} from "solid-js";
+import {Component, Suspense} from "solid-js";
 import {appName} from "../../util-messages/appMessages";
 
 const Layout: Component<RouteSectionProps> = (props) => {
@@ -23,8 +23,10 @@ const Layout: Component<RouteSectionProps> = (props) => {
 
 export default function App() {
   return (
-    <Router root={Layout}>
-      <FileRoutes/>
-    </Router>
+    <Suspense>
+      <Router root={Layout}>
+        <FileRoutes/>
+      </Router>
+    </Suspense>
   );
 }

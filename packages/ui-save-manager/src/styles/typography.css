@@ -19,14 +19,17 @@
 }
 
 .font-sans {
+    /*noinspection CssNoGenericFontName*/
     font-family: var(--font-sans);
 }
 
 .font-serif {
+    /*noinspection CssNoGenericFontName*/
     font-family: var(--font-serif);
 }
 
 .font-mono {
+    /*noinspection CssNoGenericFontName*/
     font-family: var(--font-mono);
 }
 
@@ -71,6 +74,11 @@
 .antialiased {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font: var(--text-base) var(--font-sans);
+    font-size: var(--text-base);
 }
 
 h1 {
@@ -131,6 +139,10 @@ ul {
     color: var(--muted);
 }
 
+li.code {
+    line-height: 2rem;
+}
+
 ol {
     /*@apply list-decimal pl-6 text-color-muted;*/
     list-style: decimal;
@@ -140,6 +152,13 @@ ol {
 
 strong {
     font-weight: var(--semibold);
+    color: var(--neon-purple);
+}
+
+code {
+    font-size: var(--text-base);
+    /*noinspection CssNoGenericFontName*/
+    font-family: var(--font-mono);
 }
 
 .uppercase {
@@ -164,4 +183,16 @@ strong {
 
 .text-color-muted {
     color: var(--muted);
+}
+
+.text-color-success {
+    color: var(--success);
+}
+
+.text-color-warning {
+    color: var(--warning);
+}
+
+.text-color-danger {
+    color: var(--danger);
 }

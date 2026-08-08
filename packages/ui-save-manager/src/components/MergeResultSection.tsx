@@ -1,12 +1,13 @@
 import {Accessor, createEffect, createSignal, onCleanup, Show} from 'solid-js';
 import {MergeResultViewModel} from '../../../util-mapping/presentation/viewModels/MergeResultViewModel';
 import {
-  mergeResultSectionSuccessPrefix,
   mergeResultSectionDownloadLinkLabel,
+  mergeResultSectionFileCreatedMessage,
   mergeResultSectionSaveAInvalidMessage,
   mergeResultSectionSaveBInvalidMessage,
-  mergeResultSectionShowDetailsLabel
+  mergeResultSectionSuccessMessage
 } from '../../../util-messages/mergeResultSectionMessages';
+import ValidationMessagesList from "~/components/validation/ValidationMessagesList";
 
 interface MergeResultSectionProps {
   result: Accessor<MergeResultViewModel | null>;
@@ -14,53 +15,44 @@ interface MergeResultSectionProps {
 
 export default function MergeResultSection(props: MergeResultSectionProps) {
   const [downloadUrl, setDownloadUrl] = createSignal<string | null>(null);
-  let previousUrl: string | null = null;
+  let downloadFileUrl: string | null = null;
 
   createEffect(() => {
     const result = props.result();
 
-    if (previousUrl) {
-      URL.revokeObjectURL(previousUrl);
+    if (downloadFileUrl) {
+      URL.revokeObjectURL(downloadFileUrl);
     }
 
-    previousUrl = result?.status === 'success' ? URL.createObjectURL(new Blob([result.content], {type: 'application/json'})) : null;
-    setDownloadUrl(previousUrl);
+    downloadFileUrl = result?.status === 'success' ? URL.createObjectURL(new Blob([result.content], {type: 'application/json'})) : null;
+    setDownloadUrl(downloadFileUrl);
   });
 
   onCleanup(() => {
-    if (previousUrl) {
-      URL.revokeObjectURL(previousUrl);
+    if (downloadFileUrl) {
+      URL.revokeObjectURL(downloadFileUrl);
     }
   });
 
   return (
     <Show when={props.result()}>
       <Show when={props.result()!.status === 'success'}>
-        <p>{mergeResultSectionSuccessPrefix}{props.result()!.fileName}</p>
-        <p>
-          <a class="button-link" href={downloadUrl() ?? undefined} download={props.result()!.fileName}>{mergeResultSectionDownloadLinkLabel}</a>
+        <p class="text-color-success">{mergeResultSectionSuccessMessage}</p>
+        <p>{mergeResultSectionFileCreatedMessage} <code>{props.result()!.fileName}</code> <a class="button-link"
+                                                                                             href={downloadUrl() ?? undefined}
+                                                                                             download={props.result()!.fileName}>{mergeResultSectionDownloadLinkLabel}</a>
         </p>
       </Show>
 
       <Show when={props.result()!.status === 'validationError'}>
         <div>
           <Show when={props.result()!.saveAErrorMessages.length > 0}>
-            <p class="text-color-muted">{mergeResultSectionSaveAInvalidMessage}</p>
-            <details>
-              <summary>{mergeResultSectionShowDetailsLabel}</summary>
-              <ul>
-                {props.result()!.saveAErrorMessages.map((message) => <li>{message}</li>)}
-              </ul>
-            </details>
+            <ValidationMessagesList title={mergeResultSectionSaveAInvalidMessage} severity="danger"
+                                    messages={props.result()!.saveAErrorMessages}/>
           </Show>
           <Show when={props.result()!.saveBErrorMessages.length > 0}>
-            <p class="text-color-muted">{mergeResultSectionSaveBInvalidMessage}</p>
-            <details>
-              <summary>{mergeResultSectionShowDetailsLabel}</summary>
-              <ul>
-                {props.result()!.saveBErrorMessages.map((message) => <li>{message}</li>)}
-              </ul>
-            </details>
+            <ValidationMessagesList title={mergeResultSectionSaveBInvalidMessage} severity="danger"
+                                    messages={props.result()!.saveBErrorMessages}/>
           </Show>
         </div>
       </Show>

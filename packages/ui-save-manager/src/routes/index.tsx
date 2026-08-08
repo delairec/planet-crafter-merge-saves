@@ -12,15 +12,16 @@ import {MergeResultViewModel} from "../../../util-mapping/presentation/viewModel
 import {hasJsonExtension} from "../../../util-parsing/hasJsonExtension";
 import {SaveValidatorService} from "../../../util-mapping/infrastructure/SaveValidatorService";
 import {
-  displayRouteLoadingLabel,
   displayRouteDisplayTitle,
+  displayRouteErrorsTitle,
+  displayRouteLoadingLabel,
+  displayRouteParsedDataPlaceholder,
   displayRouteSubmitButtonLabel,
   displayRouteVisualizationTitle,
-  displayRouteParsedDataPlaceholder,
-  displayRouteErrorsTitle,
   displayRouteWarningsTitle
 } from "../../../util-messages/displayRouteMessages";
 import {invalidExtensionErrorMessage} from "../../../util-messages/validationMessages";
+import ValidationMessagesList from "~/components/validation/ValidationMessagesList";
 
 export default function Home() {
   const [file, setFile] = createSignal<File | null>(null);
@@ -34,7 +35,15 @@ export default function Home() {
     setIsReady(true);
   });
 
+  const resetDisplayFields = () => {
+    setErrors([]);
+    setWarnings([]);
+    setSections(null);
+  }
+
   const handleFileChange = (event: Event) => {
+    resetDisplayFields();
+
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       setFile(input.files[0]);
@@ -42,9 +51,10 @@ export default function Home() {
   };
 
   const handleSubmit = () => {
+    resetDisplayFields();
     const fileInput = file();
-    if (fileInput) {
 
+    if (fileInput) {
       if (!hasJsonExtension(fileInput.name)) {
         setErrors([invalidExtensionErrorMessage]);
         setWarnings([]);
@@ -71,6 +81,12 @@ export default function Home() {
     }
   };
 
+  const handleSubmitMerge = (result: MergeResultViewModel) => {
+    resetDisplayFields();
+
+    setMergeResult(result);
+  }
+
   return (
     <Show when={isReady()} fallback={<p class="text-color-muted">{displayRouteLoadingLabel}</p>}>
       <main>
@@ -78,7 +94,7 @@ export default function Home() {
         <input type="file" accept="application/json" onChange={handleFileChange}/>
         <button onClick={handleSubmit} disabled={!file()}>{displayRouteSubmitButtonLabel}</button>
 
-        <MergeSection onMergeResult={setMergeResult}/>
+        <MergeSection onMergeResult={handleSubmitMerge}/>
 
         <h2>{displayRouteVisualizationTitle}</h2>
         <MergeResultSection result={mergeResult}/>
@@ -88,21 +104,11 @@ export default function Home() {
         </Show>
 
         <Show when={errors().length}>
-          <h3>{displayRouteErrorsTitle}</h3>
-          <ul>
-            {errors().map((error) => (
-              <li>{error}</li>
-            ))}
-          </ul>
+          <ValidationMessagesList title={displayRouteErrorsTitle} severity="danger" messages={errors()}/>
         </Show>
 
         <Show when={warnings().length}>
-          <h3>{displayRouteWarningsTitle}</h3>
-          <ul>
-            {warnings().map((warning) => (
-              <li>{warning}</li>
-            ))}
-          </ul>
+          <ValidationMessagesList title={displayRouteWarningsTitle} severity="warning" messages={warnings()}/>
         </Show>
 
         <Show when={sections() && !errors().length}>
