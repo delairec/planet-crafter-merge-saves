@@ -9,11 +9,23 @@ entry = [
 
 ignorePatterns = [
     "output/**",
-    "packages/ui-save-manager/.output/**",
+    "input/**",
+    "packages/ui-save-manager/**",
+    "packages/util-messages/**",
+]
+
+ignoreDependencies = [
+    "bun",
+    "@types/bun",
+    "typescript",
+    "ui-save-manager"
 ]
 
 [audit]
 gate = "new-only"
+
+[health]
+
 
 [rules]
 unused-files = "error"
