@@ -11,6 +11,30 @@ body {
     line-height: 1.5;
 }
 
+details.surface summary {
+    padding-left: 8px;
+}
+
+details summary:hover {
+    cursor: pointer;
+}
+
+details.surface summary::marker {
+    content: '👋🧑‍🚀 '
+}
+
+details:open.surface summary::marker {
+    content: '  🧑‍🚀 '
+}
+
+details summary::marker {
+    content: '👉 '
+}
+
+details:open summary::marker {
+    content: '👇 '
+}
+
 .container {
     max-width: calc(100vw - 2rem);
     padding-left: 1rem;
@@ -18,7 +42,13 @@ body {
 }
 
 .surface {
+    padding: 0.25rem 0.25rem;
+    border-radius: 0.25rem;
     background-color: var(--surface);
+}
+
+.surface.surface-warning {
+    background-color: var(--disclaimer);
 }
 
 .inline-block {

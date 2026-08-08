@@ -3,6 +3,7 @@
     --canvas: #0af;
     --surface: #ffffff;
     --elevated: #f1f4ff;
+    --disclaimer: #cccfdc;
 
     /* TEXTE */
     --content: #0f1226;
@@ -34,6 +35,7 @@
         --canvas: #0a0d1a;
         --surface: #11152b;
         --elevated: #161b36;
+        --disclaimer: #293055;
 
         --content: #f1f3ff;
         --muted: #a4a9d4;

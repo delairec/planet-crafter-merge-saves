@@ -22,6 +22,7 @@ import {
 } from "../../../util-messages/displayRouteMessages";
 import {invalidExtensionErrorMessage} from "../../../util-messages/validationMessages";
 import ValidationMessagesList from "~/components/validation/ValidationMessagesList";
+import HomeDisclaimer from "~/components/HomeDisclaimer";
 
 export default function Home() {
   const [file, setFile] = createSignal<File | null>(null);
@@ -90,6 +91,9 @@ export default function Home() {
   return (
     <Show when={isReady()} fallback={<p class="text-color-muted">{displayRouteLoadingLabel}</p>}>
       <main>
+
+        <HomeDisclaimer/>
+
         <h2>{displayRouteDisplayTitle}</h2>
         <input type="file" accept="application/json" onChange={handleFileChange}/>
         <button onClick={handleSubmit} disabled={!file()}>{displayRouteSubmitButtonLabel}</button>
@@ -113,10 +117,10 @@ export default function Home() {
 
         <Show when={sections() && !errors().length}>
           <div class="grid-container">
-          <SaveConfigurationSection sections={() => sections()!}/>
+            <SaveConfigurationSection sections={() => sections()!}/>
             <GlobalProgressionSection sections={() => sections()!}/>
           </div>
-            <EnergyLevelsSection sections={() => sections()!}/>
+          <EnergyLevelsSection sections={() => sections()!}/>
           <TerraformationLevelsSection sections={() => sections()!}/>
           <PlayersSection sections={() => sections()!}/>
         </Show>
