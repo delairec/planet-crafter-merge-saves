@@ -1,6 +1,5 @@
 /** @import { Player } from '../../util-types/gameDefinitions' */
 /** @typedef {Omit<Player, 'cameraView'|'totalCraftedObjects'|'totalTerraTokenEarned'> & Partial<Pick<Player, 'cameraView'|'totalCraftedObjects'|'totalTerraTokenEarned'>>} LegacyCompatiblePlayer */
-/** @typedef {Omit<Player, 'cameraView'|'totalCraftedObjects'|'totalTerraTokenEarned'> & Partial<Pick<Player, 'cameraView'|'totalCraftedObjects'|'totalTerraTokenEarned'>>} LegacyCompatiblePlayer */
 
 import {stringifyEntry} from '../../util-parsing/stringifyEntry.js';
 
@@ -32,4 +31,3 @@ export function mergePlayers(playersA, playersB) {
     stringifyEntry({...NUMBER_FIELD_FALLBACKS, ...player, host: player.id === hostFromSaveA?.id})
   ).join('|\n');
 }
-

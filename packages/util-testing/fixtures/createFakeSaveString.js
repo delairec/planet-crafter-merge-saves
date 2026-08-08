@@ -102,4 +102,3 @@ export function createLegacyFakeSaveString({terrainLayers = [], ...options}) {
 
   return beforeWorldEvents + serializeSection(terrainLayers) + separator + worldEventsAndTerminator;
 }
-
