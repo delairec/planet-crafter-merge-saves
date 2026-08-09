@@ -1,6 +1,6 @@
 import {createSignal} from 'solid-js';
-import {MergeSaveFilesController} from '../../../util-mapping/controllers/MergeSaveFilesController';
-import {MergeResultViewModel} from '../../../util-mapping/presentation/viewModels/MergeResultViewModel';
+import {MergeSaveFilesController} from '../../../core-mapping/src/controllers/MergeSaveFilesController';
+import {MergeResultViewModel} from '../../../core-mapping/src/presentation/viewModels/MergeResultViewModel';
 import {
   mergeButtonLabel,
   mergeSectionSaveALabel,

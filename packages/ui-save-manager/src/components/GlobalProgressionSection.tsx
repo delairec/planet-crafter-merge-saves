@@ -1,7 +1,9 @@
 import {Accessor, createEffect, createSignal} from "solid-js";
-import {LoadGlobalProgressionSectionController} from "../../../util-mapping/controllers/LoadGlobalProgressionSectionController";
+import {
+  LoadGlobalProgressionSectionController
+} from "../../../core-mapping/src/controllers/LoadGlobalProgressionSectionController";
 import FieldsGroup from "./structure/FieldsGroup";
-import {GlobalProgressionViewModel} from "../../../util-mapping/presentation/viewModels/GlobalProgressionViewModel";
+import {GlobalProgressionViewModel} from "../../../core-mapping/src/presentation/viewModels/GlobalProgressionViewModel";
 import {ParsedSections} from "../../../util-types/gameDefinitions";
 import {globalProgressionSectionTitle} from "../../../util-messages/globalProgressionSectionMessages";
 

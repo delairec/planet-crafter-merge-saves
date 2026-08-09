@@ -1,5 +1,5 @@
 import {Accessor, createEffect, createSignal, onCleanup, Show} from 'solid-js';
-import {MergeResultViewModel} from '../../../util-mapping/presentation/viewModels/MergeResultViewModel';
+import {MergeResultViewModel} from '../../../core-mapping/src/presentation/viewModels/MergeResultViewModel';
 import {
   mergeResultSectionDownloadLinkLabel,
   mergeResultSectionFileCreatedMessage,

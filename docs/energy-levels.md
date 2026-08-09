@@ -15,7 +15,8 @@
 
 Base production and consumption values (kW) per `WorldObject.gId`, **before any Optimizer/Fuse bonus**, are
 defined in
-[`packages/util-mapping/domain/energyLevelsByWorldObjectName.ts`](../packages/util-mapping/domain/energyLevelsByWorldObjectName.ts):
+[
+`packages/util-mapping/domain/energyLevelsByWorldObjectName.ts`](../packages/core-mapping/src/domain/energyLevelsByWorldObjectName.ts):
 
 - `energyProductionLevelsByWorldObjectName` — energy producers (`EnergyGenerator1..6`, `WindTurbine1`).
 - `energyConsumptionLevelsByWorldObjectName` — energy consumers: drills, heaters, extractors, spreaders,
@@ -134,7 +135,8 @@ never affected by the Energy Fuse.
 ## 4. Computation algorithm (implemented)
 
 Implemented in
-[`SaveSectionsReaderService.computeEnergyProductionLevel`](../packages/util-mapping/infrastructure/SaveSectionsReaderService.ts)
+[
+`SaveSectionsReaderService.computeEnergyProductionLevel`](../packages/core-mapping/src/infrastructure/SaveSectionsReaderService.ts)
 (and its private helper `computeEnergyFuseCountsByProducerId`).
 
 To compute the true available energy level of a save, accounting for Optimizers:

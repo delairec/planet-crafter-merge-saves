@@ -1,12 +1,14 @@
 import {Accessor, createEffect, createSignal, For} from "solid-js";
 import FieldsGroup from "./structure/FieldsGroup";
-import {EnergyLevelsViewModel} from "../../../util-mapping/presentation/viewModels/EnergyLevelsViewModel";
+import {EnergyLevelsViewModel} from "../../../core-mapping/src/presentation/viewModels/EnergyLevelsViewModel";
 import {ParsedSections} from "../../../util-types/gameDefinitions";
-import {LoadEnergyLevelsSectionController} from "../../../util-mapping/controllers/LoadEnergyLevelsSectionController";
 import {
-  energyLevelsSectionTitle,
+  LoadEnergyLevelsSectionController
+} from "../../../core-mapping/src/controllers/LoadEnergyLevelsSectionController";
+import {
   energyLevelsSectionOptimizersTitle,
-  energyLevelsSectionProductionTitle
+  energyLevelsSectionProductionTitle,
+  energyLevelsSectionTitle
 } from "../../../util-messages/energyLevelsSectionMessages";
 
 interface EnergyLevelsProps {
