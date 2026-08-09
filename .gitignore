@@ -15,4 +15,4 @@ input/
 .github/agents
 next-steps.txt
 /AGENTS.md
-/.plan/
+/.do-not-commit/**
