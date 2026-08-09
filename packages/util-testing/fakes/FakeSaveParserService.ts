@@ -1,11 +1,11 @@
-import {SaveParserPort} from "../../util-mapping/application/ports/SaveParserPort";
-import {GlobalProgressionValueObject} from "../../util-mapping/domain/valueObjects/GlobalProgressionValueObject";
-import {PlayerEntity} from "../../util-mapping/domain/entities/PlayerEntity";
-import {TerraformationLevelEntity} from "../../util-mapping/domain/entities/TerraformationLevelEntity";
-import {InventoryEntity} from "../../util-mapping/domain/entities/InventoryEntity";
-import {StatisticsValueObject} from "../../util-mapping/domain/valueObjects/StatisticsValueObject";
-import {SaveConfigurationValueObject} from "../../util-mapping/domain/valueObjects/SaveConfigurationValueObject";
-import { EnergyLevelsValueObject } from "../../util-mapping/domain/valueObjects/EnergyLevelsValueObject";
+import {SaveParserPort} from "../../core-mapping/src/application/ports/SaveParserPort";
+import {GlobalProgressionValueObject} from "../../core-mapping/src/domain/valueObjects/GlobalProgressionValueObject";
+import {PlayerEntity} from "../../core-mapping/src/domain/entities/PlayerEntity";
+import {TerraformationLevelEntity} from "../../core-mapping/src/domain/entities/TerraformationLevelEntity";
+import {InventoryEntity} from "../../core-mapping/src/domain/entities/InventoryEntity";
+import {StatisticsValueObject} from "../../core-mapping/src/domain/valueObjects/StatisticsValueObject";
+import {SaveConfigurationValueObject} from "../../core-mapping/src/domain/valueObjects/SaveConfigurationValueObject";
+import {EnergyLevelsValueObject} from "../../core-mapping/src/domain/valueObjects/EnergyLevelsValueObject";
 
 export class FakeSaveParserService implements SaveParserPort {
   getEnergyLevels(): EnergyLevelsValueObject {

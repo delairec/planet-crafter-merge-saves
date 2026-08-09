@@ -8,9 +8,9 @@ import {ParsedSections} from "../../../util-types/gameDefinitions";
 import EnergyLevelsSection from "~/components/EnergyLevelsSection";
 import MergeSection from "~/components/MergeSection";
 import MergeResultSection from "~/components/MergeResultSection";
-import {MergeResultViewModel} from "../../../util-mapping/presentation/viewModels/MergeResultViewModel";
+import {MergeResultViewModel} from "../../../core-mapping/src/presentation/viewModels/MergeResultViewModel";
 import {hasJsonExtension} from "../../../util-parsing/hasJsonExtension";
-import {SaveValidatorService} from "../../../util-mapping/infrastructure/SaveValidatorService";
+import {SaveValidatorService} from "../../../core-mapping/src/infrastructure/SaveValidatorService";
 import {
   displayRouteDisplayTitle,
   displayRouteErrorsTitle,

@@ -1,11 +1,15 @@
 import {Accessor, createEffect, createSignal, For, Show} from "solid-js";
-import {LoadTerraformationLevelsSectionController} from "../../../util-mapping/controllers/LoadTerraformationLevelsSectionController";
+import {
+  LoadTerraformationLevelsSectionController
+} from "../../../core-mapping/src/controllers/LoadTerraformationLevelsSectionController";
 import FieldsGroup from "./structure/FieldsGroup";
-import {TerraformationLevelsViewModel} from "../../../util-mapping/presentation/viewModels/TerraformationLevelsViewModel";
+import {
+  TerraformationLevelsViewModel
+} from "../../../core-mapping/src/presentation/viewModels/TerraformationLevelsViewModel";
 import {ParsedSections} from "../../../util-types/gameDefinitions";
 import {
-  terraformationLevelsSectionTitle,
-  terraformationLevelsSectionBiomassLabel
+  terraformationLevelsSectionBiomassLabel,
+  terraformationLevelsSectionTitle
 } from "../../../util-messages/terraformationLevelsSectionMessages";
 
 interface TerraformationLevelsProps {
