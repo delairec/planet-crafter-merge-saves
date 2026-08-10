@@ -10,6 +10,6 @@ export class LoadEnergyLevelsSection {
 
   execute() {
     const energyLevels = this.saveParser.getEnergyLevels();
-    this.presenter.present(energyLevels);
+    this.presenter.displayEnergyLevels(energyLevels);
   }
 }

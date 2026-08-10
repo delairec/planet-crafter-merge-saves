@@ -1,5 +1,5 @@
-import {SaveValidationResultValueObject} from "../../domain/valueObjects/SaveValidationResultValueObject";
+import {SaveValidationResult} from "./SaveValidationResult";
 
 export interface SaveValidatorPort {
-  validate(content: string): SaveValidationResultValueObject;
+  validate(fileName: string, content: string): SaveValidationResult;
 }

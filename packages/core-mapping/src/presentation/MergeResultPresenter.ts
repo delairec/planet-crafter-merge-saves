@@ -1,4 +1,4 @@
-import {MergeOutcomeValueObject, MergeResultPresenterPort} from "../application/ports/MergeResultPresenterPort";
+import {MergeResultPresenterPort} from "../application/ports/MergeResultPresenterPort";
 import {MergeResultViewModel} from "./viewModels/MergeResultViewModel";
 
 export class MergeResultPresenter implements MergeResultPresenterPort {
@@ -14,24 +14,23 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
     };
   }
 
-  present(outcome: MergeOutcomeValueObject): void {
-    if (outcome.status === 'success') {
-      this.viewModel = {
-        status: 'success',
-        fileName: outcome.fileName,
-        content: outcome.content,
-        saveAErrorMessages: [],
-        saveBErrorMessages: []
-      };
-      return;
-    }
+  presentMergeSucceeded(fileName: string, content: string): void {
+    this.viewModel = {
+      status: 'success',
+      fileName,
+      content,
+      saveAErrorMessages: [],
+      saveBErrorMessages: []
+    };
+  }
 
+  presentSaveFilesInvalid(saveAErrorMessages: string[], saveBErrorMessages: string[]): void {
     this.viewModel = {
       status: 'validationError',
       fileName: '',
       content: '',
-      saveAErrorMessages: outcome.saveAErrorMessages,
-      saveBErrorMessages: outcome.saveBErrorMessages
+      saveAErrorMessages,
+      saveBErrorMessages
     };
   }
 }

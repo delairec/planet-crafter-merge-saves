@@ -9,6 +9,6 @@ export class LoadTerraformationLevelsSection {
 
   execute(): void {
     const levels = this.saveParser.getTerraformationLevels();
-    this.presenter.present(levels);
+    this.presenter.displayTerraformationLevels(levels);
   }
 }

@@ -9,6 +9,12 @@ import {OptimizerViewModel} from "./viewModels/OptimizerViewModel";
 import {formatNumber} from "./formatters/formatNumber/formatNumber";
 import {FormatNumberStrategies} from "./formatters/formatNumber/FormatNumberStrategies";
 import {EnergyLevelsPresenterPort} from "../application/ports/EnergyLevelsPresenterPort";
+import {
+  energyLevelsSectionAvailableTitle,
+  energyLevelsSectionConsumptionTitle,
+  energyLevelsSectionProductionTitle,
+  energyLevelsSectionWorkInProgressLabel
+} from "../../../util-messages/energyLevelsSectionMessages.js";
 
 const nbsp = '\u00A0';
 
@@ -21,7 +27,7 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
     };
   }
 
-  present(energyLevels: EnergyLevelsValueObject): void {
+  displayEnergyLevels(energyLevels: EnergyLevelsValueObject): void {
     this.viewModel = {
       planets: energyLevels.planets.map((planet): PlanetEnergyLevelsViewModel => this.buildPlanet(planet))
     };
@@ -33,16 +39,16 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
       energyLevels: {
         columns: [
           {
-            header: 'Production',
+            header: energyLevelsSectionProductionTitle,
             values: [formatNumber(planet.production) + `${nbsp}kW`]
           },
           {
-            header: 'Consumption',
-            values: [formatNumber(planet.consumption) + `${nbsp}kW 🚧 Work In Progress`]
+            header: energyLevelsSectionConsumptionTitle,
+            values: [formatNumber(planet.consumption) + `${nbsp}kW ${energyLevelsSectionWorkInProgressLabel}`]
           },
           {
-            header: 'Available',
-            values: [formatNumber(planet.available) + `${nbsp}kW 🚧 Work In Progress`]
+            header: energyLevelsSectionAvailableTitle,
+            values: [formatNumber(planet.available) + `${nbsp}kW ${energyLevelsSectionWorkInProgressLabel}`]
           }
         ]
       },

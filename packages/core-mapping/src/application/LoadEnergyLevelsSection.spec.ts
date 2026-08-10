@@ -7,15 +7,15 @@ describe('LoadEnergyLevelsSection', () => {
   it('should present computed energy levels from parsed save', () => {
     // Arrange
     const saveParser: SaveParserPort = new FakeSaveParserService();
-    const presenter = {present: mock()};
+    const presenter = {displayEnergyLevels: mock()};
     const useCase = new LoadEnergyLevelsSection(saveParser, presenter);
 
     // Act
     useCase.execute();
 
     // Assert
-    expect(presenter.present).toHaveBeenCalledTimes(1);
-    expect(presenter.present).toHaveBeenCalledWith({
+    expect(presenter.displayEnergyLevels).toHaveBeenCalledTimes(1);
+    expect(presenter.displayEnergyLevels).toHaveBeenCalledWith({
       planets: [{
         planetId: 'Planet 1',
         production: 22_220.5,

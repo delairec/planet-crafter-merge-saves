@@ -1,14 +1,13 @@
 import {Accessor, createEffect, createSignal, For, Show} from "solid-js";
 import {
   LoadTerraformationLevelsSectionController
-} from "../../../core-mapping/src/controllers/LoadTerraformationLevelsSectionController";
+} from "core-mapping/controllers/LoadTerraformationLevelsSectionController";
 import FieldsGroup from "./structure/FieldsGroup";
-import {
-  TerraformationLevelsViewModel
-} from "../../../core-mapping/src/presentation/viewModels/TerraformationLevelsViewModel";
+import {TerraformationLevelsViewModel} from "core-mapping/presentation/viewModels/TerraformationLevelsViewModel";
 import {ParsedSections} from "../../../util-types/gameDefinitions";
 import {
   terraformationLevelsSectionBiomassLabel,
+  terraformationLevelsSectionIndexLabel,
   terraformationLevelsSectionTitle
 } from "../../../util-messages/terraformationLevelsSectionMessages";
 
@@ -35,7 +34,7 @@ export default function TerraformationLevelsSection({sections}: TerraformationLe
               <div class="fields-group-container">
                 <div>
                   <div class="fields-group-main-value">
-                    <span>Terraformation&nbsp;Index: </span>
+                    <span>{terraformationLevelsSectionIndexLabel} </span>
                     {planet.terraformationIndex}</div>
                   <FieldsGroup columns={() => planet.environmentalLevels.columns}/>
                 </div>

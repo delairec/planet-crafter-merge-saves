@@ -7,15 +7,15 @@ describe('LoadTerraformationLevelsSection', () => {
   it('should present all terraformation levels from the parsed save', () => {
     // Arrange
     const saveParser: SaveParserPort = new FakeSaveParserService();
-    const presenter = {present: mock()};
+    const presenter = {displayTerraformationLevels: mock()};
     const useCase = new LoadTerraformationLevelsSection(saveParser, presenter);
 
     // Act
     useCase.execute();
 
     // Assert
-    expect(presenter.present).toHaveBeenCalledTimes(1);
-    expect(presenter.present).toHaveBeenCalledWith([
+    expect(presenter.displayTerraformationLevels).toHaveBeenCalledTimes(1);
+    expect(presenter.displayTerraformationLevels).toHaveBeenCalledWith([
       {
         planetId: 'Toxicity',
         unitOxygenLevel: 100,

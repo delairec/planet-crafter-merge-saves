@@ -1,32 +1,44 @@
 import {TerraformationLevelsViewModel} from "./viewModels/TerraformationLevelsViewModel";
-import {TerraformationLevel} from "../../../util-types/gameDefinitions";
+import {TerraformationLevelEntity} from "../domain/entities/TerraformationLevelEntity";
+import {TerraformationLevelsPresenterPort} from "../application/ports/TerraformationLevelsPresenterPort";
+import {computeTerraformationSummary} from "../domain/rules/computeTerraformationSummary";
 import {formatNumber} from "./formatters/formatNumber/formatNumber";
 import {FormatNumberStrategies} from "./formatters/formatNumber/FormatNumberStrategies";
+import {
+  terraformationLevelsSectionAnimalsLabel,
+  terraformationLevelsSectionDefaultPlanetName,
+  terraformationLevelsSectionHeatLabel,
+  terraformationLevelsSectionInsectsLabel,
+  terraformationLevelsSectionOxygenLabel,
+  terraformationLevelsSectionPlantsLabel,
+  terraformationLevelsSectionPressureLabel,
+  terraformationLevelsSectionPurificationLabel
+} from "../../../util-messages/terraformationLevelsSectionMessages.js";
 
-export class TerraformationLevelsPresenter {
+export class TerraformationLevelsPresenter implements TerraformationLevelsPresenterPort {
   viewModel: TerraformationLevelsViewModel;
 
   constructor() {
     this.viewModel = {
       planets: [
         {
-          name: 'Planet',
+          name: terraformationLevelsSectionDefaultPlanetName,
           environmentalLevels: {
             columns: [
               {
-                header: 'O²',
+                header: terraformationLevelsSectionOxygenLabel,
                 values: []
               },
               {
-                header: 'Heat',
+                header: terraformationLevelsSectionHeatLabel,
                 values: []
               },
               {
-                header: 'Pressure',
+                header: terraformationLevelsSectionPressureLabel,
                 values: []
               },
               {
-                header: 'Purification',
+                header: terraformationLevelsSectionPurificationLabel,
                 values: []
               }
             ]
@@ -34,15 +46,15 @@ export class TerraformationLevelsPresenter {
           organicLevels: {
             columns: [
               {
-                header: 'Plants',
+                header: terraformationLevelsSectionPlantsLabel,
                 values: []
               },
               {
-                header: 'Insects',
+                header: terraformationLevelsSectionInsectsLabel,
                 values: []
               },
               {
-                header: 'Animals',
+                header: terraformationLevelsSectionAnimalsLabel,
                 values: []
               },
             ]
@@ -54,57 +66,51 @@ export class TerraformationLevelsPresenter {
     };
   }
 
-  present(levels: TerraformationLevel[]): void {
-    this.viewModel.planets = levels.map(level => ({
-      name: level.planetId,
-      environmentalLevels: {
-        columns: [
-          {
-            header: 'O²',
-            values: [formatNumber(level.unitOxygenLevel, FormatNumberStrategies.PARTS_PER)]
-          },
-          {
-            header: 'Heat',
-            values: [formatNumber(level.unitHeatLevel, FormatNumberStrategies.KELVIN)]
-          },
-          {
-            header: 'Pressure',
-            values: [formatNumber(level.unitPressureLevel, FormatNumberStrategies.PASCAL)]
-          },
-          {
-            header: 'Purification',
-            values: [formatNumber(level.unitPurificationLevel, FormatNumberStrategies.SYMBOL) + 'Pu']
-          }
-        ]
-      },
-      organicLevels: {
-        columns: [
-          {
-            header: 'Plants',
-            values: [formatNumber(level.unitPlantsLevel, FormatNumberStrategies.WEIGHT)]
-          },
-          {
-            header: 'Insects',
-            values: [formatNumber(level.unitInsectsLevel, FormatNumberStrategies.WEIGHT)]
-          },
-          {
-            header: 'Animals',
-            values: [formatNumber(level.unitAnimalsLevel, FormatNumberStrategies.WEIGHT)]
-          },
-        ]
-      },
-      terraformationIndex: formatNumber(this.computeTerraformationIndex(level), FormatNumberStrategies.SYMBOL) + 'Ti',
-      biomass: formatNumber(this.computeBiomass(level), FormatNumberStrategies.WEIGHT)
-    }));
-  }
+  displayTerraformationLevels(levels: TerraformationLevelEntity[]): void {
+    this.viewModel.planets = levels.map(level => {
+      const summary = computeTerraformationSummary(level);
 
-  private computeTerraformationIndex(level: TerraformationLevel) {
-    const totalEnvironmental = level.unitOxygenLevel + level.unitHeatLevel + level.unitPressureLevel + level.unitPurificationLevel;
-    const totalOrganic = this.computeBiomass(level);
-    return totalEnvironmental + totalOrganic;
-  }
-
-  private computeBiomass(level: TerraformationLevel) {
-    return level.unitPlantsLevel + level.unitInsectsLevel + level.unitAnimalsLevel;
+      return {
+        name: level.planetId,
+        environmentalLevels: {
+          columns: [
+            {
+              header: terraformationLevelsSectionOxygenLabel,
+              values: [formatNumber(level.unitOxygenLevel, FormatNumberStrategies.PARTS_PER)]
+            },
+            {
+              header: terraformationLevelsSectionHeatLabel,
+              values: [formatNumber(level.unitHeatLevel, FormatNumberStrategies.KELVIN)]
+            },
+            {
+              header: terraformationLevelsSectionPressureLabel,
+              values: [formatNumber(level.unitPressureLevel, FormatNumberStrategies.PASCAL)]
+            },
+            {
+              header: terraformationLevelsSectionPurificationLabel,
+              values: [formatNumber(level.unitPurificationLevel, FormatNumberStrategies.SYMBOL) + 'Pu']
+            }
+          ]
+        },
+        organicLevels: {
+          columns: [
+            {
+              header: terraformationLevelsSectionPlantsLabel,
+              values: [formatNumber(level.unitPlantsLevel, FormatNumberStrategies.WEIGHT)]
+            },
+            {
+              header: terraformationLevelsSectionInsectsLabel,
+              values: [formatNumber(level.unitInsectsLevel, FormatNumberStrategies.WEIGHT)]
+            },
+            {
+              header: terraformationLevelsSectionAnimalsLabel,
+              values: [formatNumber(level.unitAnimalsLevel, FormatNumberStrategies.WEIGHT)]
+            },
+          ]
+        },
+        terraformationIndex: formatNumber(summary.terraformationIndex, FormatNumberStrategies.SYMBOL) + 'Ti',
+        biomass: formatNumber(summary.biomass, FormatNumberStrategies.WEIGHT)
+      };
+    });
   }
 }

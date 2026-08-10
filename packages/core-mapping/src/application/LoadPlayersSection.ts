@@ -9,6 +9,6 @@ export class LoadPlayersSection {
 
   execute(): void {
     const players = this.saveParser.getPlayers();
-    this.presenter.present(players);
+    this.presenter.displayPlayers(players);
   }
 }

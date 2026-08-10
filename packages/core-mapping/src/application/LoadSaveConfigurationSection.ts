@@ -10,6 +10,6 @@ export class LoadSaveConfigurationSection {
 
   execute(): void {
     const saveConfiguration = this.saveParser.getSaveConfiguration();
-    this.presenter.present(saveConfiguration);
+    this.presenter.displaySaveConfiguration(saveConfiguration);
   }
 }

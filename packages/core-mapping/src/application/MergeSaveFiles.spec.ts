@@ -11,18 +11,14 @@ describe('MergeSaveFiles', () => {
       // Arrange
       const validator: SaveValidatorPort = {validate: mock(() => ({isValid: true, errorMessages: []}))};
       const merger: SaveMergerPort = {merge: mock(() => ({fileName: 'Save-A-Save-B-merged.json', content: 'merged content'}))};
-      const presenter: MergeResultPresenterPort = {present: mock()};
+      const presenter: MergeResultPresenterPort = {presentMergeSucceeded: mock(), presentSaveFilesInvalid: mock()};
       const useCase = new MergeSaveFiles(validator, merger, presenter);
 
       // Act
       useCase.execute('Save-A.json', 'contentA', 'Save-B.json', 'contentB');
 
       // Assert
-      expect(presenter.present).toHaveBeenCalledWith({
-        status: 'success',
-        fileName: 'Save-A-Save-B-merged.json',
-        content: 'merged content'
-      });
+      expect(presenter.presentMergeSucceeded).toHaveBeenCalledWith('Save-A-Save-B-merged.json', 'merged content');
     });
   });
 
@@ -30,12 +26,12 @@ describe('MergeSaveFiles', () => {
     it('should present a validation error result without merging', () => {
       // Arrange
       const validator: SaveValidatorPort = {
-        validate: mock((content: string) => content === 'contentA'
+        validate: mock((fileName: string, content: string) => content === 'contentA'
           ? {isValid: false, errorMessages: ['Invalid JSON: contentA']}
           : {isValid: true, errorMessages: []})
       };
       const merger: SaveMergerPort = {merge: mock()};
-      const presenter: MergeResultPresenterPort = {present: mock()};
+      const presenter: MergeResultPresenterPort = {presentMergeSucceeded: mock(), presentSaveFilesInvalid: mock()};
       const useCase = new MergeSaveFiles(validator, merger, presenter);
 
       // Act
@@ -43,34 +39,34 @@ describe('MergeSaveFiles', () => {
 
       // Assert
       expect(merger.merge).not.toHaveBeenCalled();
-      expect(presenter.present).toHaveBeenCalledWith({
-        status: 'validationError',
-        saveAErrorMessages: ['Invalid JSON: contentA'],
-        saveBErrorMessages: []
-      });
+      expect(presenter.presentSaveFilesInvalid).toHaveBeenCalledWith(['Invalid JSON: contentA'], []);
     });
   });
 
   describe('When a save file has an invalid extension', () => {
-    it('should present a validation error result without validating its content', () => {
+    it('should present a validation error result reported by the validator', () => {
       // Arrange
-      const validator: SaveValidatorPort = {validate: mock(() => ({isValid: true, errorMessages: []}))};
+      const validator: SaveValidatorPort = {
+        validate: mock((fileName: string) => fileName === 'Save-A.txt'
+          ? {isValid: false, errorMessages: ['Invalid file extension: expected a .json file.']}
+          : {isValid: true, errorMessages: []})
+      };
       const merger: SaveMergerPort = {merge: mock()};
-      const presenter: MergeResultPresenterPort = {present: mock()};
+      const presenter: MergeResultPresenterPort = {presentMergeSucceeded: mock(), presentSaveFilesInvalid: mock()};
       const useCase = new MergeSaveFiles(validator, merger, presenter);
 
       // Act
       useCase.execute('Save-A.txt', 'contentA', 'Save-B.json', 'contentB');
 
       // Assert
-      expect(validator.validate).toHaveBeenCalledTimes(1);
-      expect(validator.validate).toHaveBeenCalledWith('contentB');
+      expect(validator.validate).toHaveBeenCalledTimes(2);
+      expect(validator.validate).toHaveBeenCalledWith('Save-A.txt', 'contentA');
+      expect(validator.validate).toHaveBeenCalledWith('Save-B.json', 'contentB');
       expect(merger.merge).not.toHaveBeenCalled();
-      expect(presenter.present).toHaveBeenCalledWith({
-        status: 'validationError',
-        saveAErrorMessages: ['Invalid file extension: expected a .json file.'],
-        saveBErrorMessages: []
-      });
+      expect(presenter.presentSaveFilesInvalid).toHaveBeenCalledWith(
+        ['Invalid file extension: expected a .json file.'],
+        []
+      );
     });
   });
 });

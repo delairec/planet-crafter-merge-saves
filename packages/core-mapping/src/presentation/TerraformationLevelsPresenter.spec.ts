@@ -62,7 +62,7 @@ describe('TerraformationLevelsPresenter', () => {
     const presenter = new TerraformationLevelsPresenter();
 
     // Act
-    presenter.present([
+    presenter.displayTerraformationLevels([
       {
         planetId: "Earth",
         unitOxygenLevel: 123123,

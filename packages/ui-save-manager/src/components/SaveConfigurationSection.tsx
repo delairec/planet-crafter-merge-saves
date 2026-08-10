@@ -1,10 +1,9 @@
 import {Accessor, createEffect, createSignal} from "solid-js";
-import {
-  LoadSaveConfigurationSectionController
-} from "../../../core-mapping/src/controllers/LoadSaveConfigurationSectionController";
+import {LoadSaveConfigurationSectionController} from "core-mapping/controllers/LoadSaveConfigurationSectionController";
 import FieldsGroup from "./structure/FieldsGroup";
-import {SaveConfigurationViewModel} from "../../../core-mapping/src/presentation/viewModels/SaveConfigurationViewModel";
+import {SaveConfigurationViewModel} from "core-mapping/presentation/viewModels/SaveConfigurationViewModel";
 import {ParsedSections} from "../../../util-types/gameDefinitions";
+import {saveConfigurationSectionTitleLabel} from "../../../util-messages/saveConfigurationSectionMessages";
 
 interface SaveConfigurationProps {
   sections: Accessor<ParsedSections>;
@@ -24,7 +23,7 @@ export default function SaveConfigurationSection({sections}: SaveConfigurationPr
 
   return (
     <div>
-      <h3>Save Configuration: {title()} ({mode()})</h3>
+      <h3>{saveConfigurationSectionTitleLabel} {title()} ({mode()})</h3>
       <div class="fields-group-container">
         <FieldsGroup columns={modifiersColumns}/>
       </div>
