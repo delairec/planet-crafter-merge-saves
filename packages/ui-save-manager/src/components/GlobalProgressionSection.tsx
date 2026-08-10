@@ -1,9 +1,7 @@
 import {Accessor, createEffect, createSignal} from "solid-js";
-import {
-  LoadGlobalProgressionSectionController
-} from "../../../core-mapping/src/controllers/LoadGlobalProgressionSectionController";
+import {LoadGlobalProgressionSectionController} from "core-mapping/controllers/LoadGlobalProgressionSectionController";
 import FieldsGroup from "./structure/FieldsGroup";
-import {GlobalProgressionViewModel} from "../../../core-mapping/src/presentation/viewModels/GlobalProgressionViewModel";
+import {GlobalProgressionViewModel} from "core-mapping/presentation/viewModels/GlobalProgressionViewModel";
 import {ParsedSections} from "../../../util-types/gameDefinitions";
 import {globalProgressionSectionTitle} from "../../../util-messages/globalProgressionSectionMessages";
 
@@ -13,12 +11,10 @@ interface GlobalProgressionProps {
 
 export default function GlobalProgressionSection({sections}: GlobalProgressionProps) {
   const [statisticsColumns, setStatisticsColumns] = createSignal<GlobalProgressionViewModel['statistics']['columns']>([]);
-  const [title, setTitle] = createSignal<string | null>(null);
 
   createEffect(() => {
     const {statistics} = LoadGlobalProgressionSectionController.loadGlobalProgressionSection(sections());
     setStatisticsColumns(statistics.columns);
-    setTitle(title);
   });
 
   return (

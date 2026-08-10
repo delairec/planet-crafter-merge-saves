@@ -1,14 +1,20 @@
 import {Accessor, createEffect, createSignal, For} from "solid-js";
 import FieldsGroup from "./structure/FieldsGroup";
-import {EnergyLevelsViewModel} from "../../../core-mapping/src/presentation/viewModels/EnergyLevelsViewModel";
+import {EnergyLevelsViewModel} from "core-mapping/presentation/viewModels/EnergyLevelsViewModel";
 import {ParsedSections} from "../../../util-types/gameDefinitions";
+import {LoadEnergyLevelsSectionController} from "core-mapping/controllers/LoadEnergyLevelsSectionController";
 import {
-  LoadEnergyLevelsSectionController
-} from "../../../core-mapping/src/controllers/LoadEnergyLevelsSectionController";
-import {
+  energyLevelsSectionBoostedMachinesLabel,
+  energyLevelsSectionConsumptionTitle,
+  energyLevelsSectionContributionLabel,
+  energyLevelsSectionEnergyFusesLabel,
   energyLevelsSectionOptimizersTitle,
   energyLevelsSectionProductionTitle,
-  energyLevelsSectionTitle
+  energyLevelsSectionQuantityLabel,
+  energyLevelsSectionTitle,
+  energyLevelsSectionTotalLabel,
+  energyLevelsSectionUnitLabel,
+  energyLevelsSectionWorkInProgressLabel
 } from "../../../util-messages/energyLevelsSectionMessages";
 
 interface EnergyLevelsProps {
@@ -41,9 +47,9 @@ export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
                   <div class="grid-item">
                     <h5>{optimizer.label}</h5>
                     <FieldsGroup columns={() => [
-                      {header: 'Energy Fuses', values: [optimizer.fuseCount]},
-                      {header: 'Boosted machines', values: [optimizer.boostedMachines]},
-                      {header: 'Contribution', values: [optimizer.contribution]}
+                      {header: energyLevelsSectionEnergyFusesLabel, values: [optimizer.fuseCount]},
+                      {header: energyLevelsSectionBoostedMachinesLabel, values: [optimizer.boostedMachines]},
+                      {header: energyLevelsSectionContributionLabel, values: [optimizer.contribution]}
                     ]}/>
                   </div>
                 )}
@@ -57,25 +63,25 @@ export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
                   <div class="grid-item">
                     <h5>{row.label}</h5>
                     <FieldsGroup columns={() => [
-                      {header: 'Quantity', values: [row.quantity]},
-                      {header: 'Unit', values: [row.unitLevel]},
-                      {header: 'Total', values: [row.totalLevel]}
+                      {header: energyLevelsSectionQuantityLabel, values: [row.quantity]},
+                      {header: energyLevelsSectionUnitLabel, values: [row.unitLevel]},
+                      {header: energyLevelsSectionTotalLabel, values: [row.totalLevel]}
                     ]}/>
                   </div>
                 )}
               </For>
             </div>
 
-            <h5>Consumption 🚧 Work In Progress</h5>
+            <h5>{energyLevelsSectionConsumptionTitle} {energyLevelsSectionWorkInProgressLabel}</h5>
             <div class="grid-container">
               <For each={planet.consumptionBreakdown}>
                 {(row) => (
                   <div class="grid-item">
                     <h5>{row.label}</h5>
                     <FieldsGroup columns={() => [
-                      {header: 'Quantity', values: [row.quantity]},
-                      {header: 'Unit', values: [row.unitLevel]},
-                      {header: 'Total', values: [row.totalLevel]}
+                      {header: energyLevelsSectionQuantityLabel, values: [row.quantity]},
+                      {header: energyLevelsSectionUnitLabel, values: [row.unitLevel]},
+                      {header: energyLevelsSectionTotalLabel, values: [row.totalLevel]}
                     ]}/>
                   </div>
                 )}

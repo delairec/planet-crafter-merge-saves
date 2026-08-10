@@ -8,15 +8,15 @@ describe('LoadSaveConfigurationSection', () => {
   it('should present save configuration from the parsed save', () => {
     // Arrange
     const saveParser: SaveParserPort = new FakeSaveParserService();
-    const presenter: SaveConfigurationPresenterPort = {present: mock()}
+    const presenter: SaveConfigurationPresenterPort = {displaySaveConfiguration: mock()}
     const useCase = new LoadSaveConfigurationSection(saveParser, presenter);
 
     // Act
     useCase.execute();
 
     // Assert
-      expect(presenter.present).toHaveBeenCalledTimes(1);
-      expect(presenter.present).toHaveBeenCalledWith({
+    expect(presenter.displaySaveConfiguration).toHaveBeenCalledTimes(1);
+    expect(presenter.displaySaveConfiguration).toHaveBeenCalledWith({
         mode: 'Standard',
         title: 'Fake Save',
         modifiers: {

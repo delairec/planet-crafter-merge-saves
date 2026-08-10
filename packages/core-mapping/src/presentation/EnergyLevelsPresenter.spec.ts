@@ -20,7 +20,7 @@ describe('EnergyLevelsPresenter', () => {
     const presenter = new EnergyLevelsPresenter();
 
     // Act
-    presenter.present({
+    presenter.displayEnergyLevels({
       planets: [{
         planetId: 'Planet 1',
         production: 80_000,
@@ -66,7 +66,7 @@ describe('EnergyLevelsPresenter', () => {
     const presenter = new EnergyLevelsPresenter();
 
     // Act
-    presenter.present({
+    presenter.displayEnergyLevels({
       planets: [
         {
           planetId: 'Planet 1',
@@ -98,7 +98,7 @@ describe('EnergyLevelsPresenter', () => {
     const presenter = new EnergyLevelsPresenter();
 
     // Act
-    presenter.present({
+    presenter.displayEnergyLevels({
       planets: [{
         planetId: 'Planet 1',
         production: 590,
@@ -140,7 +140,7 @@ describe('EnergyLevelsPresenter', () => {
     const presenter = new EnergyLevelsPresenter();
 
     // Act
-    presenter.present({
+    presenter.displayEnergyLevels({
       planets: [{
         planetId: 'Planet 1',
         production: 590,

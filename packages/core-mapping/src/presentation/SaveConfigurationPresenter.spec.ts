@@ -55,7 +55,7 @@ describe('SaveConfigurationPresenter', () => {
     };
 
     // Act
-    presenter.present(saveConfiguration);
+    presenter.displaySaveConfiguration(saveConfiguration);
 
     // Assert
     expect(presenter.viewModel).toEqual<SaveConfigurationViewModel>({

@@ -33,7 +33,7 @@ describe('GlobalProgressionPresenter', () => {
     const statistics = {totalCraftedObjects:10};
 
     // Act
-    presenter.present(globalProgression, statistics);
+    presenter.displayGlobalProgression(globalProgression, statistics);
 
     // Assert
     expect(presenter.viewModel).toEqual<GlobalProgressionViewModel>({

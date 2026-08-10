@@ -8,15 +8,15 @@ describe('LoadPlayersSection', () => {
   it('should present all players from the parsed save', () => {
     // Arrange
     const saveParser: SaveParserPort = new FakeSaveParserService();
-    const presenter: PlayersPresenterPort = {present: mock()};
+    const presenter: PlayersPresenterPort = {displayPlayers: mock()};
     const useCase = new LoadPlayersSection(saveParser, presenter);
 
     // Act
     useCase.execute();
 
     // Assert
-    expect(presenter.present).toHaveBeenCalledTimes(1);
-    expect(presenter.present).toHaveBeenCalledWith([{
+    expect(presenter.displayPlayers).toHaveBeenCalledTimes(1);
+    expect(presenter.displayPlayers).toHaveBeenCalledWith([{
       name: 'Nikowa',
       equipment: [],
       inventory: []

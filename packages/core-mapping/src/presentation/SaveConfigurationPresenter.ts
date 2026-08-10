@@ -3,17 +3,17 @@ import {SaveConfigurationViewModel} from "./viewModels/SaveConfigurationViewMode
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
 import {formatNumber} from "./formatters/formatNumber/formatNumber";
 import {FormatNumberStrategies} from "./formatters/formatNumber/FormatNumberStrategies";
+import {
+  saveConfigurationSectionGaugeDrainLabel,
+  saveConfigurationSectionMeteoOccurrenceLabel,
+  saveConfigurationSectionMultiplayerFactorLabel,
+  saveConfigurationSectionPowerConsumptionLabel,
+  saveConfigurationSectionTerraformationPaceLabel
+} from "../../../util-messages/saveConfigurationSectionMessages.js";
 
 export class SaveConfigurationPresenter implements SaveConfigurationPresenterPort {
   viewModel: SaveConfigurationViewModel;
 
-  /**{
-   terraformationPace: number;
-   gaugeDrain: number;
-   meteoOccurrence: number;
-   multiplayerFactor: number;
-   powerConsumption: number;
-   }*/
   constructor() {
     this.viewModel = {
       mode: '',
@@ -21,23 +21,23 @@ export class SaveConfigurationPresenter implements SaveConfigurationPresenterPor
       modifiers: {
         columns: [
           {
-            header: 'Terraformation Pace',
+            header: saveConfigurationSectionTerraformationPaceLabel,
             values: []
           },
           {
-            header: 'Gauge Drain',
+            header: saveConfigurationSectionGaugeDrainLabel,
             values: []
           },
           {
-            header: 'Meteo Occurrence',
+            header: saveConfigurationSectionMeteoOccurrenceLabel,
             values: []
           },
           {
-            header: 'Multiplayer Factor',
+            header: saveConfigurationSectionMultiplayerFactorLabel,
             values: []
           },
           {
-            header: 'Power Consumption',
+            header: saveConfigurationSectionPowerConsumptionLabel,
             values: []
           }
         ]
@@ -45,30 +45,30 @@ export class SaveConfigurationPresenter implements SaveConfigurationPresenterPor
     };
   }
 
-  present(saveConfiguration: SaveConfigurationValueObject): void {
+  displaySaveConfiguration(saveConfiguration: SaveConfigurationValueObject): void {
     this.viewModel = {
       mode: saveConfiguration.mode,
       title: saveConfiguration.title,
       modifiers: {
         columns: [
           {
-            header: 'Terraformation Pace',
+            header: saveConfigurationSectionTerraformationPaceLabel,
             values: [formatNumber(saveConfiguration.modifiers.terraformationPace, FormatNumberStrategies.PERCENTAGE)]
           },
           {
-            header: 'Gauge Drain',
+            header: saveConfigurationSectionGaugeDrainLabel,
             values: [formatNumber(saveConfiguration.modifiers.gaugeDrain, FormatNumberStrategies.PERCENTAGE)]
           },
           {
-            header: 'Meteo Occurrence',
+            header: saveConfigurationSectionMeteoOccurrenceLabel,
             values: [formatNumber(saveConfiguration.modifiers.meteoOccurrence, FormatNumberStrategies.PERCENTAGE)]
           },
           {
-            header: 'Multiplayer Factor',
+            header: saveConfigurationSectionMultiplayerFactorLabel,
             values: [formatNumber(saveConfiguration.modifiers.multiplayerFactor, FormatNumberStrategies.PERCENTAGE)]
           },
           {
-            header: 'Power Consumption',
+            header: saveConfigurationSectionPowerConsumptionLabel,
             values: [formatNumber(saveConfiguration.modifiers.powerConsumption, FormatNumberStrategies.PERCENTAGE)]
           }
         ]

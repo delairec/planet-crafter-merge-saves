@@ -25,7 +25,7 @@ describe('PlayersPresenter', () => {
     const playerChileny: PlayerEntity = {name: 'Chileny', inventory: [], equipment: []};
 
     // Act
-    presenter.present([playerNikowa, playerChileny]);
+    presenter.displayPlayers([playerNikowa, playerChileny]);
 
     // Assert
     expect(presenter.viewModel).toEqual<PlayersViewModel>({
@@ -65,7 +65,7 @@ describe('PlayersPresenter', () => {
       const playerNikowa: PlayerEntity = {name: 'Nikowa', inventory: ['Phytoplankton99'], equipment: ['Backpack99']};
 
       // Act
-      presenter.present([playerNikowa]);
+      presenter.displayPlayers([playerNikowa]);
 
       // Assert
       expect(presenter.viewModel).toEqual<PlayersViewModel>({

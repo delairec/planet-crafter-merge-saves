@@ -3,6 +3,10 @@ import {GlobalProgressionPresenterPort} from '../application/ports/GlobalProgres
 import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
 import {formatNumber} from "./formatters/formatNumber/formatNumber";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
+import {
+  globalProgressionSectionAllTimeTerraTokensLabel,
+  globalProgressionSectionTotalCraftedObjectsLabel
+} from "../../../util-messages/globalProgressionSectionMessages.js";
 
 export class GlobalProgressionPresenter implements GlobalProgressionPresenterPort {
   viewModel: GlobalProgressionViewModel;
@@ -12,11 +16,11 @@ export class GlobalProgressionPresenter implements GlobalProgressionPresenterPor
       statistics: {
         columns: [
           {
-            header: 'All time Terra Tokens',
+            header: globalProgressionSectionAllTimeTerraTokensLabel,
             values: []
           },
           {
-            header: 'Total crafted objects',
+            header: globalProgressionSectionTotalCraftedObjectsLabel,
             values: []
           },
         ]
@@ -24,7 +28,7 @@ export class GlobalProgressionPresenter implements GlobalProgressionPresenterPor
     }
   }
 
-  present(globalProgression: GlobalProgressionValueObject, statistics: StatisticsValueObject): void {
+  displayGlobalProgression(globalProgression: GlobalProgressionValueObject, statistics: StatisticsValueObject): void {
     const allTimeTerraTokens = formatNumber(globalProgression.allTimeTerraTokens);
     const [allTimeTerraTokensColumn, totalCrafterObjects] = this.viewModel.statistics.columns;
     allTimeTerraTokensColumn.values = [`${allTimeTerraTokens} =tt=`];

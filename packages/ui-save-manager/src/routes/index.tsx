@@ -8,9 +8,8 @@ import {ParsedSections} from "../../../util-types/gameDefinitions";
 import EnergyLevelsSection from "~/components/EnergyLevelsSection";
 import MergeSection from "~/components/MergeSection";
 import MergeResultSection from "~/components/MergeResultSection";
-import {MergeResultViewModel} from "../../../core-mapping/src/presentation/viewModels/MergeResultViewModel";
-import {hasJsonExtension} from "../../../util-parsing/hasJsonExtension";
-import {SaveValidatorService} from "../../../core-mapping/src/infrastructure/SaveValidatorService";
+import {MergeResultViewModel} from "core-mapping/presentation/viewModels/MergeResultViewModel";
+import {ValidateSaveFileController} from "core-mapping/controllers/ValidateSaveFileController";
 import {
   displayRouteDisplayTitle,
   displayRouteErrorsTitle,
@@ -20,7 +19,6 @@ import {
   displayRouteVisualizationTitle,
   displayRouteWarningsTitle
 } from "../../../util-messages/displayRouteMessages";
-import {invalidExtensionErrorMessage} from "../../../util-messages/validationMessages";
 import ValidationMessagesList from "~/components/validation/ValidationMessagesList";
 import HomeDisclaimer from "~/components/HomeDisclaimer";
 
@@ -59,17 +57,12 @@ export default function Home() {
     const fileInput = file();
 
     if (fileInput) {
-      if (!hasJsonExtension(fileInput.name)) {
-        setErrors([invalidExtensionErrorMessage]);
-        setWarnings([]);
-        return;
-      }
-
       const reader = new FileReader();
       reader.onload = (event) => {
         const content = event.target?.result as string;
-        const validation = new SaveValidatorService().validate(content);
-        if (!validation.isValid) {
+        const validation = ValidateSaveFileController.validateSaveFile(fileInput.name, content);
+
+        if (validation.status === 'invalid') {
           setSections(null);
           setErrors(validation.errorMessages);
           setWarnings([]);
