@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'bun:test';
 import {merge} from '../merge.js';
-import {createFakeSaveString, FAKE_SAVE_CONFIGURATION} from '../../util-testing/fixtures/createFakeSaveString.js';
+import {createFakeSaveString, FAKE_SAVE_CONFIGURATION} from '../../shared-mapping/testing/createFakeSaveString.js';
 
 describe('Merge saves — #determineSaveOrder', () => {
   const saveDisplayName = 'SAVE_NAME';

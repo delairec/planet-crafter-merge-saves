@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'bun:test';
 import {mergeWorldObjects} from './mergeWorldObjects.js';
-import {inventory, player} from '../../util-testing/fixtures/createFakeSaveContent.js';
+import {inventory, player} from '../../shared-mapping/testing/createFakeSaveContent.js';
 
 describe('Merge world objects', () => {
   function* createWorldObjectsGenerator(worldObjects) {

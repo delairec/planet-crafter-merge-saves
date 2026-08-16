@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 import {MergeSaveFilesController} from './MergeSaveFilesController';
-import {createFakeSaveContent} from '../../../util-testing/fixtures/createFakeSaveContent.js';
+import {createFakeSaveContent} from '../../../shared-mapping/testing/createFakeSaveContent.js';
 
 describe('MergeSaveFilesController', () => {
 

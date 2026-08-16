@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 import {ValidateSaveFileController} from './ValidateSaveFileController';
-import {createFakeSaveContent} from '../../../util-testing/fixtures/createFakeSaveContent.js';
+import {createFakeSaveContent} from '../../../shared-mapping/testing/createFakeSaveContent.js';
 
 describe('ValidateSaveFileController', () => {
 

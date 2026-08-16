@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, it} from 'bun:test';
-import {createFakeSaveContent, player} from '../../../util-testing/fixtures/createFakeSaveContent';
+import {createFakeSaveContent, player} from '../../../shared-mapping/testing/createFakeSaveContent';
 import {parseSaveSections} from '../../../util-parsing/parseSaveSections.js';
 import {PlayerEntity} from "../domain/entities/PlayerEntity";
 import {SaveSectionsReaderService} from './SaveSectionsReaderService';
