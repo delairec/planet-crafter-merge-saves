@@ -1,8 +1,8 @@
 import {beforeEach, describe, expect, it, mock, spyOn} from 'bun:test';
 import {initValidateCli} from './validate-cli.js';
 import {VALIDATE_SAVE_FILE_PATH} from '../../util-testing/fixtures/fakePaths.js';
-import {VALID_SAVE_CONTENT} from '../../util-testing/fixtures/validate-cli/fakeValidSaveContent.js';
-import {INVALID_SAVE_CONTENT} from '../../util-testing/fixtures/validate-cli/fakeInvalidSaveContent.js';
+import {VALID_SAVE_CONTENT} from '../testing/fakeValidSaveContent.js';
+import {INVALID_SAVE_CONTENT} from '../testing/fakeInvalidSaveContent.js';
 
 describe('Validate CLI', () => {
   let consoleLogSpy;
