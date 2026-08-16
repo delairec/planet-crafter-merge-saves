@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'bun:test';
 import {mergeInventories} from './mergeInventories.js';
-import {inventory} from '../../util-testing/fixtures/createFakeSaveContent.js';
+import {inventory} from '../../shared-mapping/testing/createFakeSaveContent.js';
 
 describe('Merge Inventories', () => {
   const inventoryA = {...inventory, id: 44};

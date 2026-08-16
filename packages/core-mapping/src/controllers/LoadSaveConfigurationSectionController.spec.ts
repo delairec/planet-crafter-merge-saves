@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 import {parseSaveSections} from '../../../util-parsing/parseSaveSections.js';
-import {createFakeSaveContent} from '../../../util-testing/fixtures/createFakeSaveContent';
+import {createFakeSaveContent} from '../../../shared-mapping/testing/createFakeSaveContent';
 import {LoadSaveConfigurationSectionController} from "./LoadSaveConfigurationSectionController";
 import {SaveConfigurationViewModel} from "../presentation/viewModels/SaveConfigurationViewModel";
 

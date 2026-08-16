@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 import {SaveValidatorService} from './SaveValidatorService';
-import {createFakeSaveContent} from '../../../util-testing/fixtures/createFakeSaveContent.js';
+import {createFakeSaveContent} from '../../../shared-mapping/testing/createFakeSaveContent.js';
 
 describe('SaveValidatorService', () => {
 

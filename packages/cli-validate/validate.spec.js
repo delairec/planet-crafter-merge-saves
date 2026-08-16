@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 import {validateMergedSave} from './validate.js';
-import {createFakeSaveString, createLegacyFakeSaveString} from '../util-testing/fixtures/createFakeSaveString.js';
+import {createFakeSaveString, createLegacyFakeSaveString} from '../shared-mapping/testing/createFakeSaveString.js';
 import {
   createFakeSaveContent,
   equipment,
@@ -10,7 +10,7 @@ import {
   saveConfiguration,
   statistics,
   terraformationLevel
-} from '../util-testing/fixtures/createFakeSaveContent.js';
+} from '../shared-mapping/testing/createFakeSaveContent.js';
 
 describe('validateMergedSave', () => {
 

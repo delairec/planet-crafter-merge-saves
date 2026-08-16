@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'bun:test';
 import {merge} from './merge.js';
 import {resolveIdConflicts} from '../util-parsing/resolveIdConflicts.js';
-import {createFakeSaveString} from '../util-testing/fixtures/createFakeSaveString.js';
+import {createFakeSaveString} from '../shared-mapping/testing/createFakeSaveString.js';
 
 describe('Merge saves', () => {
   const saveDisplayName = 'SAVE_NAME';
