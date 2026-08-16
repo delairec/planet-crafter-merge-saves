@@ -1,4 +1,4 @@
-import {createFakeSaveString} from '../createFakeSaveString.js';
+import {createFakeSaveString} from '../../util-testing/fixtures/createFakeSaveString.js';
 
 const validSaveConfiguration = {
   saveDisplayName: 'Merged Save',
