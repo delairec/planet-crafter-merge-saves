@@ -1,6 +1,6 @@
 import {beforeEach, describe, expect, it, mock, spyOn} from 'bun:test';
 import {initMergeCli} from './merge-cli.js';
-import {FAKE_SAVE_STRING_A, FAKE_SAVE_STRING_B} from '../../util-testing/fixtures/merge-cli/fakeSaveStrings.js';
+import {FAKE_SAVE_STRING_A, FAKE_SAVE_STRING_B} from '../testing/fakeSaveStrings.js';
 import {
   MERGED_SAVE_OUTPUT_PATH,
   SAVE_A_FILENAME,
