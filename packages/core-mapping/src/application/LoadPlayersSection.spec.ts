@@ -1,5 +1,5 @@
 import {describe, expect, it, mock} from 'bun:test';
-import {FakeSaveParserService} from "../../../util-testing/fakes/FakeSaveParserService";
+import {FakeSaveParserService} from "../testing/FakeSaveParserService";
 import {SaveParserPort} from "./ports/SaveParserPort";
 import {PlayersPresenterPort} from "./ports/PlayersPresenterPort";
 import {LoadPlayersSection} from './LoadPlayersSection';
