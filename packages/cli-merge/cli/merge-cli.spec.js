@@ -9,7 +9,7 @@ import {
   SAVE_B_INPUT_PATH,
   INPUT_SUBFOLDER_ALPHA,
   OUTPUT_DIR
-} from '../../util-testing/fixtures/fakePaths.js';
+} from '../testing/fakePaths.js';
 
 describe('Merge CLI', () => {
   let consoleLogSpy;
