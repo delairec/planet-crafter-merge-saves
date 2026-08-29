@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@types/bun": "catalog:typescript",
-    "fallow": "3.14.0",
+    "fallow": "^3.20.0",
     "typescript": "catalog:typescript",
     "ui-save-manager": "workspace:*"
   },
