@@ -2,6 +2,7 @@ import {exitProcess, isEntryPoint, joinPath, readDirectory, readTextFile, writeT
 import {resolveIdConflicts} from '../../util-parsing/resolveIdConflicts.js';
 import {buildMergedFileName} from '../../util-parsing/buildMergedFileName.js';
 import {merge} from '../merge.js';
+import {parseSaveSections} from "../../util-parsing/parseSaveSections.js";
 
 const INPUT_DIR = 'input';
 const OUTPUT_DIR = 'output';
@@ -35,7 +36,11 @@ export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirec
       readTextFile(joinPath(folderPath, files[0])),
       readTextFile(joinPath(folderPath, files[1]))
     ]);
-    const {mergeSaves, saveAWorldObjectIds, indexFileA, indexFileB} = merge(contentA, contentB, saveDisplayName);
+
+    const parsedSaveA = parseSaveSections(contentA);
+    const parsedSaveB = parseSaveSections(contentB);
+
+    const {mergeSaves, saveAWorldObjectIds, indexFileA, indexFileB} = merge(parsedSaveA, parsedSaveB, saveDisplayName);
     const fileA = files[indexFileA];
     const fileB = files[indexFileB];
     console.log(`  Merging ${fileB} (save B) into ${fileA} (save A)...`);

@@ -1,6 +1,5 @@
 /** @import { ParsedSave } from '../util-types/gameDefinitions' */
 
-import {parseSaveSections} from '../util-parsing/parseSaveSections.js';
 import {mergeGlobalMetadata} from './sections/mergeGlobalMetadata.js';
 import {mergeTerraformationLevels} from './sections/mergeTerraformationLevels.js';
 import {mergePlayers} from './sections/mergePlayers.js';
@@ -21,50 +20,54 @@ function* EMPTY_GENERATOR() {
 /**
  * Merges two Planet Crafter save strings section by section.
  * If one save has `planetId === 'Prime'` in its configuration, it is promoted to save A.
- * @param {string} saveA
- * @param {string} saveB
+ * @param {ParsedSave} saveA
+ * @param {ParsedSave} saveB
  * @param {string} saveDisplayName - Overrides `saveDisplayName` in the merged configuration.
  * @returns {{ mergeSaves: () => string, saveAWorldObjectIds: Set<number>, indexFileA: number, indexFileB: number }}
  */
 export function merge(saveA, saveB, saveDisplayName) {
-  const parsedSaveA = parseSaveSections(saveA);
-  const parsedSaveB = parseSaveSections(saveB);
+    if (!Array.isArray(saveA.sections) && !Array.isArray(saveB.sections)) {
+        throw Error('ERROR_INVALID_INPUT_FORMAT');
+    }
 
-  const [mainSave, secondarySave] = determineSaveOrder(parsedSaveA.sections, parsedSaveB.sections);
+    const [mainSave, secondarySave] = determineSaveOrder(saveA.sections, saveB.sections);
 
-  const [metadataA = [], terraformationLevelsA = [], playersA = [], worldObjectsFactoryA = () => EMPTY_GENERATOR(), inventoriesA = [], statisticsA = [], mailboxA = [], storyEventsA = [], saveConfigurationsA = [], worldEventsA = []] = mainSave;
-  const [metadataB = [], terraformationLevelsB = [], playersB = [], worldObjectsFactoryB = () => EMPTY_GENERATOR(), inventoriesB = [], statisticsB = [], mailboxB = [], storyEventsB = [], saveConfigurationsB = [], worldEventsB = []] = secondarySave;
+    const [metadataA = [], terraformationLevelsA = [], playersA = [], worldObjectsFactoryA = () => EMPTY_GENERATOR(), inventoriesA = [], statisticsA = [], mailboxA = [], storyEventsA = [], saveConfigurationsA = [], worldEventsA = []] = mainSave;
+    const [metadataB = [], terraformationLevelsB = [], playersB = [], worldObjectsFactoryB = () => EMPTY_GENERATOR(), inventoriesB = [], statisticsB = [], mailboxB = [], storyEventsB = [], saveConfigurationsB = [], worldEventsB = []] = secondarySave;
 
-  const saveAWorldObjectIds = new Set();
+    const saveAWorldObjectIds = new Set();
 
-  function mergeSaves() {
-    const ejectedPlayerIds = collectEjectedPlayerInventoryIds(playersA, playersB, inventoriesB);
+    function mergeSaves() {
+        const ejectedPlayerIds = collectEjectedPlayerInventoryIds(playersA, playersB, inventoriesB);
 
-    const {serialized: serializedWorldObjects, saveAWorldObjectIds: collectedIds} = mergeWorldObjects(worldObjectsFactoryA(), worldObjectsFactoryB(), ejectedPlayerIds.orphanWorldObjectIds);
-    for (const id of collectedIds) saveAWorldObjectIds.add(id);
+        const {
+            serialized: serializedWorldObjects,
+            saveAWorldObjectIds: collectedIds
+        } = mergeWorldObjects(worldObjectsFactoryA(), worldObjectsFactoryB(), ejectedPlayerIds.orphanWorldObjectIds);
+        for (const id of collectedIds) saveAWorldObjectIds.add(id);
 
-    const sections = [
-      mergeGlobalMetadata(metadataA, metadataB),
-      mergeTerraformationLevels(terraformationLevelsA, terraformationLevelsB),
-      mergePlayers(playersA, playersB),
-      serializedWorldObjects,
-      mergeInventories(inventoriesA, inventoriesB, ejectedPlayerIds.orphanInventoryIds),
-      mergeStatistics(statisticsA, statisticsB),
-      mergeMailboxes(mailboxA, mailboxB),
-      mergeStoryEvents(storyEventsA, storyEventsB),
-      mergeSaveConfigurations(saveConfigurationsA, saveConfigurationsB, saveDisplayName),
-      mergeWorldEvents(worldEventsA, worldEventsB)
-    ];
+        const sections = [
+            mergeGlobalMetadata(metadataA, metadataB),
+            mergeTerraformationLevels(terraformationLevelsA, terraformationLevelsB),
+            mergePlayers(playersA, playersB),
+            serializedWorldObjects,
+            mergeInventories(inventoriesA, inventoriesB, ejectedPlayerIds.orphanInventoryIds),
+            mergeStatistics(statisticsA, statisticsB),
+            mergeMailboxes(mailboxA, mailboxB),
+            mergeStoryEvents(storyEventsA, storyEventsB),
+            mergeSaveConfigurations(saveConfigurationsA, saveConfigurationsB, saveDisplayName),
+            mergeWorldEvents(worldEventsA, worldEventsB)
+        ];
 
-    return sections.join('\n@\n') + '\n@';
-  }
+        return sections.join('\n@\n') + '\n@';
+    }
 
-  return {
-    mergeSaves,
-    saveAWorldObjectIds,
-    indexFileA: mainSave === parsedSaveA.sections ? 0 : 1,
-    indexFileB: secondarySave === parsedSaveB.sections ? 1 : 0
-  };
+    return {
+        mergeSaves,
+        saveAWorldObjectIds,
+        indexFileA: mainSave === saveA.sections ? 0 : 1,
+        indexFileB: secondarySave === saveB.sections ? 1 : 0
+    };
 }
 
 
