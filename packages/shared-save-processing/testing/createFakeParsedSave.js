@@ -1,35 +1,62 @@
-import {GLOBAL_METADATA_SECTION_INDEX} from "../sectionIndexes.js";
-import {DEFAULT_GLOBAL_METADATA} from "./createFakeSaveString.js";
+/** @import { ParsedSave, GlobalMetadata, TerraformationLevel, Player, WorldObject, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, WorldEvent } from '../gameDefinitions' */
 
-/**
- * Creates a fake parsed save object with the given overrides.
- * @param {Partial<ParsedSave>} overrides
- * @returns {ParsedSave}
- */
-export function createFakeParsedSave(overrides = {}) {
+import {DEFAULT_GLOBAL_METADATA} from './createFakeSaveString.js';
 
-    const {sections, errors, warnings} = {
-        ...overrides
-    };
-
-    return {
-        warnings: warnings ?? [],
-        errors: errors ?? [],
-        sections: createFakeParsedSections(sections)
-    }
+/** @returns {Generator<never>} */
+function* EMPTY_GENERATOR() {
 }
 
-function createFakeParsedSections(overrides = []) {
+/**
+ * @typedef {Object} FakeParsedSaveOptions
+ * @property {GlobalMetadata[]} [globalMetadata]
+ * @property {TerraformationLevel[]} [terraformationLevels]
+ * @property {Player[]} [players]
+ * @property {() => Generator<WorldObject>} [worldObjects]
+ * @property {Inventory[]} [inventories]
+ * @property {Statistics[]} [statistics]
+ * @property {MailboxMessage[]} [mailboxes]
+ * @property {StoryEvent[]} [storyEvents]
+ * @property {SaveConfiguration[]} [saveConfigurations]
+ * @property {WorldEvent[]} [worldEvents]
+ * @property {string[]} [errors]
+ * @property {string[]} [warnings]
+ */
 
-    if (!overrides[GLOBAL_METADATA_SECTION_INDEX]) {
-        overrides[GLOBAL_METADATA_SECTION_INDEX] = [DEFAULT_GLOBAL_METADATA];
-    }
-
-    return overrides.map(override => {
-        if (typeof override === 'function') {
-            return override;
-        }
-
-        return override ?? [];
-    })
+/**
+ * Creates a fake parsed save (see `ParsedSave`) with one override per section, in business
+ * language rather than raw section indexes.
+ * @param {FakeParsedSaveOptions} [options]
+ * @returns {ParsedSave}
+ */
+export function createFakeParsedSave({
+    globalMetadata = [DEFAULT_GLOBAL_METADATA],
+    terraformationLevels = [],
+    players = [],
+    worldObjects = () => EMPTY_GENERATOR(),
+    inventories = [],
+    statistics = [],
+    mailboxes = [],
+    storyEvents = [],
+    saveConfigurations = [],
+    worldEvents = [],
+    errors = [],
+    warnings = [],
+} = {}) {
+    return {
+        errors,
+        warnings,
+        sections: [
+            globalMetadata,
+            terraformationLevels,
+            players,
+            worldObjects,
+            inventories,
+            statistics,
+            mailboxes,
+            storyEvents,
+            saveConfigurations,
+            worldEvents,
+            []
+        ]
+    };
 }

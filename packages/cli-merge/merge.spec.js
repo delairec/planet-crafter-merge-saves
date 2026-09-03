@@ -14,7 +14,7 @@ describe('Merge saves', () => {
 
     it('should handle error in case of wrong save format', () => {
         // Act
-        const result = () => merge('invalidSaveFormatA', 'invalidSaveFormatB', saveDisplayName);
+        const result = () => merge(/** @type {any} */ ('invalidSaveFormatA'), /** @type {any} */ ('invalidSaveFormatB'), saveDisplayName);
 
         // Assert
         expect(result).toThrow(`ERROR_INVALID_INPUT_FORMAT`);
@@ -63,39 +63,27 @@ describe('Merge saves', () => {
             };
 
             const parsedSaveA = createFakeParsedSave({
-                sections: [
-                    [metadata],
-                    [terraformationLevel],
-                    [playerA],
-                    function* worldObjectsGenerator() {
-                        yield saveAContainer;
-                    },
-                    [inventoryA, equipmentA, saveAContainerInventory],
-                    [statistics],
-                    [],
-                    [],
-                    [saveConfiguration],
-                    [],
-                    []
-                ]
+                globalMetadata: [metadata],
+                terraformationLevels: [terraformationLevel],
+                players: [playerA],
+                worldObjects: function* worldObjectsGenerator() {
+                    yield saveAContainer;
+                },
+                inventories: [inventoryA, equipmentA, saveAContainerInventory],
+                statistics: [statistics],
+                saveConfigurations: [saveConfiguration]
             });
 
             const parsedSaveB = createFakeParsedSave({
-                sections: [
-                    [metadata],
-                    [terraformationLevel],
-                    [playerA],
-                    function* worldObjectsGenerator() {
-                        yield saveBVegetube;
-                    },
-                    [inventoryA, equipmentA, saveBVegetubeInventory],
-                    [statistics],
-                    [],
-                    [],
-                    [saveConfiguration],
-                    [],
-                    []
-                ]
+                globalMetadata: [metadata],
+                terraformationLevels: [terraformationLevel],
+                players: [playerA],
+                worldObjects: function* worldObjectsGenerator() {
+                    yield saveBVegetube;
+                },
+                inventories: [inventoryA, equipmentA, saveBVegetubeInventory],
+                statistics: [statistics],
+                saveConfigurations: [saveConfiguration]
             });
 
             const {mergeSaves, saveAWorldObjectIds} = merge(parsedSaveA, parsedSaveB, saveDisplayName);

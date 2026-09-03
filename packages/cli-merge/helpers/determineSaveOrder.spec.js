@@ -2,7 +2,6 @@ import {describe, expect, it} from 'bun:test';
 import {merge} from '../merge.js';
 import {createFakeSaveString, FAKE_SAVE_CONFIGURATION} from 'shared-save-processing/testing/createFakeSaveString.js';
 import {createFakeParsedSave} from "shared-save-processing/testing/createFakeParsedSave.js";
-import {SAVE_CONFIGURATION_SECTION_INDEX} from "shared-save-processing/sectionIndexes.js";
 
 describe('Merge saves — #determineSaveOrder', () => {
     const saveDisplayName = 'SAVE_NAME';
@@ -14,13 +13,8 @@ describe('Merge saves — #determineSaveOrder', () => {
     describe('When one save has Prime as planetId and the other does not', () => {
         it('should return the Prime save as save A when it is passed second', () => {
             // Arrange
-            const sectionsA = [];
-            sectionsA[SAVE_CONFIGURATION_SECTION_INDEX] = [toxicityConfig];
-            const saveA = createFakeParsedSave({sections: sectionsA});
-
-            const sectionsB = [];
-            sectionsB[SAVE_CONFIGURATION_SECTION_INDEX] = [primeConfig];
-            const saveB = createFakeParsedSave({sections: sectionsB});
+            const saveA = createFakeParsedSave({saveConfigurations: [toxicityConfig]});
+            const saveB = createFakeParsedSave({saveConfigurations: [primeConfig]});
 
             const {mergeSaves} = merge(saveA, saveB, saveDisplayName);
 
@@ -33,13 +27,8 @@ describe('Merge saves — #determineSaveOrder', () => {
 
         it('should keep the Prime save as save A when it is already passed first', () => {
             // Arrange
-            const sectionsA = [];
-            sectionsA[SAVE_CONFIGURATION_SECTION_INDEX] = [primeConfig];
-            const saveA = createFakeParsedSave({sections: sectionsA});
-
-            const sectionsB = [];
-            sectionsB[SAVE_CONFIGURATION_SECTION_INDEX] = [toxicityConfig];
-            const saveB = createFakeParsedSave({sections: sectionsB});
+            const saveA = createFakeParsedSave({saveConfigurations: [primeConfig]});
+            const saveB = createFakeParsedSave({saveConfigurations: [toxicityConfig]});
 
             const {mergeSaves} = merge(saveA, saveB, saveDisplayName);
 
@@ -54,13 +43,8 @@ describe('Merge saves — #determineSaveOrder', () => {
     describe('When neither save has Prime as planetId', () => {
         it('should return saves in the original order', () => {
             // Arrange
-            const sectionsA = [];
-            sectionsA[SAVE_CONFIGURATION_SECTION_INDEX] = [toxicityConfig];
-            const saveA = createFakeParsedSave({sections: sectionsA});
-
-            const sectionsB = [];
-            sectionsB[SAVE_CONFIGURATION_SECTION_INDEX] = [aqualisConfig];
-            const saveB = createFakeParsedSave({sections: sectionsB});
+            const saveA = createFakeParsedSave({saveConfigurations: [toxicityConfig]});
+            const saveB = createFakeParsedSave({saveConfigurations: [aqualisConfig]});
 
             const {mergeSaves} = merge(saveA, saveB, saveDisplayName);
 
@@ -75,13 +59,8 @@ describe('Merge saves — #determineSaveOrder', () => {
     describe('When both saves have Prime as planetId', () => {
         it('should return saves in the original order', () => {
             // Arrange
-            const sectionsA = [];
-            sectionsA[SAVE_CONFIGURATION_SECTION_INDEX] = [{...primeConfig, worldSeed: 1}];
-            const saveA = createFakeParsedSave({sections: sectionsA});
-
-            const sectionsB = [];
-            sectionsB[SAVE_CONFIGURATION_SECTION_INDEX] = [{...primeConfig, worldSeed: 2}];
-            const saveB = createFakeParsedSave({sections: sectionsB});
+            const saveA = createFakeParsedSave({saveConfigurations: [{...primeConfig, worldSeed: 1}]});
+            const saveB = createFakeParsedSave({saveConfigurations: [{...primeConfig, worldSeed: 2}]});
 
             const {mergeSaves} = merge(saveA, saveB, saveDisplayName);
 
@@ -103,10 +82,7 @@ describe('Merge saves — #determineSaveOrder', () => {
         it('should still promote the Prime save to save A', () => {
             // Arrange
             const saveA = createFakeParsedSave();
-
-            const sections = [];
-            sections[SAVE_CONFIGURATION_SECTION_INDEX] = [primeConfig];
-            const saveB = createFakeParsedSave({sections});
+            const saveB = createFakeParsedSave({saveConfigurations: [primeConfig]});
 
             const {mergeSaves} = merge(saveA, saveB, saveDisplayName);
 
@@ -118,4 +94,3 @@ describe('Merge saves — #determineSaveOrder', () => {
         });
     });
 });
-
