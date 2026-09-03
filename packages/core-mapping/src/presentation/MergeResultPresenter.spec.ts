@@ -1,5 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 import {MergeResultPresenter} from './MergeResultPresenter';
+import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue';
 
 describe('MergeResultPresenter', () => {
 
@@ -28,7 +29,7 @@ describe('MergeResultPresenter', () => {
       const presenter = new MergeResultPresenter();
 
       // Act
-      presenter.presentSaveFilesInvalid(['Invalid JSON: contentA'], []);
+      presenter.presentSaveFilesInvalid([{code: VALIDATION_ISSUE_CODES.INVALID_JSON, detail: 'Invalid JSON: contentA'}], []);
 
       // Assert
       expect(presenter.viewModel).toEqual({

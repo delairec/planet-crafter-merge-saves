@@ -55,7 +55,7 @@
     "typescript": "catalog:typescript"
   },
   "engines": {
-    "node": ">=22",
+    "node": ">=23.6.0",
     "bun": ">=1.3.14"
   },
   "overrides": {

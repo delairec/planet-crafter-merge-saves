@@ -3,6 +3,7 @@
     "checkJs": true,
     "allowJs": true,
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "strict": true,
     "skipLibCheck": true,
     "noImplicitAny": false,

@@ -1,4 +1,5 @@
 import {SaveFileValidationPresenterPort} from "../application/ports/SaveFileValidationPresenterPort";
+import {ValidationIssue} from "../application/ports/ValidationIssue";
 import {SaveFileValidationViewModel} from "./viewModels/SaveFileValidationViewModel";
 
 export class SaveFileValidationPresenter implements SaveFileValidationPresenterPort {
@@ -12,7 +13,11 @@ export class SaveFileValidationPresenter implements SaveFileValidationPresenterP
     this.viewModel = {status: 'valid', errorMessages: []};
   }
 
-  presentInvalidSaveFile(errorMessages: string[]): void {
-    this.viewModel = {status: 'invalid', errorMessages};
+  presentInvalidSaveFile(errors: ValidationIssue[]): void {
+    this.viewModel = {status: 'invalid', errorMessages: errors.map(formatValidationIssue)};
   }
+}
+
+function formatValidationIssue(issue: ValidationIssue): string {
+  return issue.detail;
 }
