@@ -6,7 +6,7 @@ import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObjec
 import {
   globalProgressionSectionAllTimeTerraTokensLabel,
   globalProgressionSectionTotalCraftedObjectsLabel
-} from "../../../util-messages/globalProgressionSectionMessages.js";
+} from "util-messages/globalProgressionSectionMessages.js";
 
 export class GlobalProgressionPresenter implements GlobalProgressionPresenterPort {
   viewModel: GlobalProgressionViewModel;

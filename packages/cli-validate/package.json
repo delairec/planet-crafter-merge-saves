@@ -13,6 +13,8 @@
     "node:validate": "node cli/validate-cli.js --platform=node"
   },
   "dependencies": {
-    "ajv": "catalog:testing"
+    "ajv": "catalog:testing",
+    "shared-save-processing": "workspace:*",
+    "util-platforms": "workspace:*"
   }
 }

@@ -16,3 +16,4 @@ input/
 next-steps.txt
 /AGENTS.md
 /.do-not-commit/**
+/docs/tasks/**

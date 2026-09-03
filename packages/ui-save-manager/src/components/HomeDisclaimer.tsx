@@ -5,7 +5,7 @@ import {
   privacyDisclaimerMessage,
   securityDisclaimerLabel,
   securityDisclaimerMessage
-} from "../../../util-messages/appMessages";
+} from "util-messages/appMessages";
 import {createSignal} from "solid-js";
 import Emoji from "~/components/Emoji";
 

@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'bun:test';
 import {EnergyLevelsViewModel} from "../presentation/viewModels/EnergyLevelsViewModel";
-import {parseSaveSections} from "../../../util-parsing/parseSaveSections";
-import {createFakeSaveContent} from "../../../shared-mapping/testing/createFakeSaveContent";
+import {parseSaveSections} from "shared-save-processing/parseSaveSections.js";
+import {createFakeSaveContent} from "shared-save-processing/testing/createFakeSaveContent.js";
 import {LoadEnergyLevelsSectionController} from "./LoadEnergyLevelsSectionController";
 
 const nbsp = '\u00A0';

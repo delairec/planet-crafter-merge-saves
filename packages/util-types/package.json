@@ -1,0 +1,14 @@
+{
+  "name": "util-types",
+  "version": "1.0.0",
+  "description": "Runtime platform contract (fs/process adapters)",
+  "type": "module",
+  "exports": {
+    "./gameDefinitions": "./gameDefinitions/index.ts",
+    "./*": "./*"
+  },
+  "scripts": {
+    "test": "bun test",
+    "lint:types": "tsc --noEmit"
+  }
+}

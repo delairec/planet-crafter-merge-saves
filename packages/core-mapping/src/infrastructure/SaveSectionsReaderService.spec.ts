@@ -1,6 +1,6 @@
 import {beforeEach, describe, expect, it} from 'bun:test';
-import {createFakeSaveContent, player} from '../../../shared-mapping/testing/createFakeSaveContent';
-import {parseSaveSections} from '../../../util-parsing/parseSaveSections.js';
+import {createFakeSaveContent, createPlayer} from 'shared-save-processing/testing/createFakeSaveContent.js';
+import {parseSaveSections} from 'shared-save-processing/parseSaveSections.js';
 import {PlayerEntity} from "../domain/entities/PlayerEntity";
 import {SaveSectionsReaderService} from './SaveSectionsReaderService';
 import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
@@ -9,7 +9,7 @@ import {InventoryEntity} from "../domain/entities/InventoryEntity";
 import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
-import {ParsedSections} from "../../../util-types/gameDefinitions";
+import {ParsedSections} from "shared-save-processing/gameDefinitions";
 import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
 import {
   energyConsumptionLevelsByWorldObjectName,
@@ -23,15 +23,10 @@ describe('SaveSectionsReaderService', () => {
   beforeEach(() => {
     const fakeSaveContent = createFakeSaveContent(
       {
-        players: [{
-          ...player,
-          name: 'Nikowa',
-        }, {
-          ...player,
-          name: 'Chileny',
-          inventoryId: 46,
-          equipmentId: 47
-        }],
+        players: [
+          createPlayer({name: 'Nikowa'}),
+          createPlayer({name: 'Chileny', inventoryId: 46, equipmentId: 47})
+        ],
       }
     );
 

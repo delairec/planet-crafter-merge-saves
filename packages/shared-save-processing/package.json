@@ -1,0 +1,15 @@
+{
+  "name": "shared-save-processing",
+  "version": "1.0.0",
+  "description": "Save file wire format: types, parsing, serialization and schemas",
+  "type": "module",
+  "exports": {
+    "./gameDefinitions": "./gameDefinitions/index.ts",
+    "./schemas/*": "./schemas/*",
+    "./*": "./*"
+  },
+  "scripts": {
+    "test": "bun test",
+    "lint:types": "tsc --noEmit"
+  }
+}

@@ -1,4 +1,4 @@
-/** @import { Inventory } from '../../util-types/gameDefinitions' */
+/** @import { Inventory } from 'shared-save-processing/gameDefinitions' */
 
 /**
  * @param {Inventory[]} inventoriesA

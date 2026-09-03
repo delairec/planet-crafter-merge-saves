@@ -1,4 +1,4 @@
-/** @import { StoryEvent } from '../../util-types/gameDefinitions' */
+/** @import { StoryEvent } from 'shared-save-processing/gameDefinitions' */
 
 /**
  * @param {StoryEvent[]} storyEventsA
