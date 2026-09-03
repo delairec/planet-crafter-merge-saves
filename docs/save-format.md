@@ -20,7 +20,7 @@ The file ends with `@`.
 > shifting World Events to index 10), which a game update removed. Legacy saves in that older format are only
 > supported at the user-input boundary (loading a save file): they are automatically adapted to the current
 > 11-section format described below, discarding the Terrain Layers data, and a warning is reported to the user.
-> See `packages/util-parsing/normalizeSaveSections.js`.
+> See `packages/shared-save-processing/normalizeRawSections.js`.
 
 ```
 entry1|
