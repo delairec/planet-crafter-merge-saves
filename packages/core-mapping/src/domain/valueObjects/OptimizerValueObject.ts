@@ -6,4 +6,5 @@ export interface OptimizerValueObject {
   fuseCount: number;
   boostedMachines: OptimizerBoostedMachineValueObject[];
   contribution: number;
+  productionRatio?: number;
 }

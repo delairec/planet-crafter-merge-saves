@@ -5,30 +5,20 @@ import {TerraformationLevelEntity} from "../domain/entities/TerraformationLevelE
 import {InventoryEntity} from "../domain/entities/InventoryEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
-import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
+import {EnergyLevelsRawDataValueObject} from "../domain/valueObjects/EnergyLevelsRawDataValueObject";
 
 export class FakeSaveParserService implements SaveSectionsReaderPort {
-  getEnergyLevels(): EnergyLevelsValueObject {
+  getEnergyLevelsRawData(): EnergyLevelsRawDataValueObject {
+    const producer = {id: '1', name: 'EnergyGenerator6' as const, position: [0, 0, 0] as [number, number, number], planetId: 1};
+    const consumer = {id: '2', name: 'Drill4' as const, position: [10, 0, 0] as [number, number, number], planetId: 1};
+
     return {
+      allWorldObjects: [producer, consumer],
+      inventories: [],
       planets: [{
         planetId: 1,
         planetName: undefined,
-        production: 22_220.5,
-        consumption: 11_110.5,
-        available: 11_110,
-        productionBreakdown: [{
-          name: 'EnergyGenerator6',
-          quantity: 1,
-          unitLevel: 22_220.5,
-          totalLevel: 22_220.5
-        }],
-        consumptionBreakdown: [{
-          name: 'EnergyGenerator4',
-          quantity: 1,
-          unitLevel: 11_110.5,
-          totalLevel: 11_110.5
-        }],
-        optimizers: []
+        placedWorldObjects: [producer, consumer]
       }]
     }
   }

@@ -5,4 +5,5 @@ export interface EnergyBreakdownEntryValueObject {
   quantity: number;
   unitLevel: number;
   totalLevel: number;
+  productionRatio?: number;
 }

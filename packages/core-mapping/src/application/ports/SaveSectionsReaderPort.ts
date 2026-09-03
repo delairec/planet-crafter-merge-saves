@@ -4,7 +4,7 @@ import {TerraformationLevelEntity} from "../../domain/entities/TerraformationLev
 import {InventoryEntity} from "../../domain/entities/InventoryEntity";
 import {StatisticsValueObject} from "../../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../../domain/valueObjects/SaveConfigurationValueObject";
-import {EnergyLevelsValueObject} from "../../domain/valueObjects/EnergyLevelsValueObject";
+import {EnergyLevelsRawDataValueObject} from "../../domain/valueObjects/EnergyLevelsRawDataValueObject";
 
 export interface SaveSectionsReaderPort {
   getPlayers(): PlayerEntity[];
@@ -19,5 +19,5 @@ export interface SaveSectionsReaderPort {
 
   getSaveConfiguration(): SaveConfigurationValueObject;
 
-  getEnergyLevels(): EnergyLevelsValueObject;
+  getEnergyLevelsRawData(): EnergyLevelsRawDataValueObject;
 }

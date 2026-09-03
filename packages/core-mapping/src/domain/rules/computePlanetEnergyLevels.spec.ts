@@ -43,7 +43,8 @@ describe('computePlanetEnergyLevels', () => {
       name: expect.any(String),
       fuseCount: 1,
       boostedMachines: [{name: expect.any(String), quantity: 1}],
-      contribution: 1.2 * (1.5 - 1)
+      contribution: 1.2 * (1.5 - 1),
+      productionRatio: expect.any(Number)
     }]);
   });
 

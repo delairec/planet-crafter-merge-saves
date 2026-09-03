@@ -19,20 +19,21 @@ describe('LoadEnergyLevelsSection', () => {
       planets: [{
         planetId: 1,
         planetName: undefined,
-        production: 22_220.5,
-        consumption: 11_110.5,
-        available: 11_110,
+        production: 1_485,
+        consumption: 375.5,
+        available: 1_109.5,
         productionBreakdown: [{
           name: 'EnergyGenerator6',
           quantity: 1,
-          unitLevel: 22_220.5,
-          totalLevel: 22_220.5
+          unitLevel: 1_485,
+          totalLevel: 1_485,
+          productionRatio: 1
         }],
         consumptionBreakdown: [{
-          name: 'EnergyGenerator4',
+          name: 'Drill4',
           quantity: 1,
-          unitLevel: 11_110.5,
-          totalLevel: 11_110.5
+          unitLevel: 375.5,
+          totalLevel: 375.5
         }],
         optimizers: []
       }]

@@ -24,11 +24,9 @@ import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {PlacedWorldObjectEntity} from "../domain/entities/PlacedWorldObjectEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
-import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
-import {PlanetEnergyLevelsValueObject} from "../domain/valueObjects/PlanetEnergyLevelsValueObject";
+import {EnergyLevelsRawDataValueObject, PlanetWorldObjectsValueObject} from "../domain/valueObjects/EnergyLevelsRawDataValueObject";
 import {WorldObjectName} from "../domain/worldObjectNames";
 import {resolvePlanetName} from "../domain/rules/resolvePlanetName";
-import {computePlanetEnergyLevels} from "../domain/rules/computePlanetEnergyLevels";
 
 function parsePosition(pos: string): [number, number, number] {
   const [x, y, z] = pos.split(',').map(Number);
@@ -143,7 +141,7 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
     }))[0];
   }
 
-  getEnergyLevels(): EnergyLevelsValueObject {
+  getEnergyLevelsRawData(): EnergyLevelsRawDataValueObject {
 
     // NOTE: production/consumption are scoped per-planet — each planet has its own independent
     // power grid in-game (see docs/energy-levels.md, section 4). The actual production/
@@ -172,13 +170,12 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
       name: worldObject.gId as WorldObjectName
     }));
     const inventories = this.getInventories();
+    const knownPlanetNames = [...new Set(this.terraformationLevels.map((level) => level.planetId))];
 
-    const planets: PlanetEnergyLevelsValueObject[] = [...placedWorldObjectsByPlanet.entries()]
+    const planets: PlanetWorldObjectsValueObject[] = [...placedWorldObjectsByPlanet.entries()]
       .map(([planetId, placedWorldObjectsOnPlanet]) => {
         const rawWorldObjectsOnPlanet = placedWorldObjectsOnPlanet.map(({raw}) => raw);
         const entitiesOnPlanet = placedWorldObjectsOnPlanet.map(({entity}) => entity);
-
-        const knownPlanetNames = [...new Set(this.terraformationLevels.map((level) => level.planetId))];
 
         return {
           planetId,
@@ -187,11 +184,11 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
             rawWorldObjectsOnPlanet.map((worldObject) => worldObject.gId),
             knownPlanetNames
           ),
-          ...computePlanetEnergyLevels(allWorldObjectEntities, entitiesOnPlanet, inventories)
+          placedWorldObjects: entitiesOnPlanet
         };
       });
 
-    return {planets};
+    return {allWorldObjects: allWorldObjectEntities, inventories, planets};
   }
 
   private toPlacedWorldObjectEntity(worldObject: WorldObject): PlacedWorldObjectEntity {

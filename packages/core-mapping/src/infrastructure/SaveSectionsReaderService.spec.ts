@@ -16,6 +16,8 @@ import {
   energyProductionLevelsByWorldObjectName
 } from "../domain/energyLevelsByWorldObjectName";
 import {WorldObjectName} from "../domain/worldObjectNames";
+import {LoadEnergyLevelsSection} from "../application/LoadEnergyLevelsSection";
+import {EnergyLevelsPresenterPort} from "../application/ports/EnergyLevelsPresenterPort";
 
 describe('SaveSectionsReaderService', () => {
   let sections: ParsedSections;
@@ -32,6 +34,21 @@ describe('SaveSectionsReaderService', () => {
 
     ({sections} = parseSaveSections(fakeSaveContent));
   });
+
+
+  function loadEnergyLevels(sectionsToRead: ParsedSections): EnergyLevelsValueObject {
+    const service = new SaveSectionsReaderService(sectionsToRead);
+    let energyLevels!: EnergyLevelsValueObject;
+    const presenter: EnergyLevelsPresenterPort = {
+      displayEnergyLevels: (levels) => {
+        energyLevels = levels;
+      }
+    };
+
+    new LoadEnergyLevelsSection(service, presenter).execute();
+
+    return energyLevels;
+  }
 
   it('should extract global metadata', () => {
     // Arrange
@@ -192,10 +209,8 @@ describe('SaveSectionsReaderService', () => {
           worldObjects: [{id: 1, gId: worldObjectName, pos: '0,0,0', planet: 1}],
         });
         const {sections: sectionsWithProducer} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sectionsWithProducer);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sectionsWithProducer);
 
         // Assert
         expect(energyLevels).toEqual<EnergyLevelsValueObject>({
@@ -209,7 +224,8 @@ describe('SaveSectionsReaderService', () => {
               name: worldObjectName as WorldObjectName,
               quantity: 1,
               unitLevel: kilowatts,
-              totalLevel: kilowatts
+              totalLevel: kilowatts,
+              productionRatio: 1
             }],
             consumptionBreakdown: [],
             optimizers: [],
@@ -229,10 +245,8 @@ describe('SaveSectionsReaderService', () => {
           worldObjects: [{id: 1, gId: worldObjectName, pos: '0,0,0', planet: 1}],
         });
         const {sections: sectionsWithConsumer} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sectionsWithConsumer);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sectionsWithConsumer);
 
         // Assert
         expect(energyLevels).toEqual<EnergyLevelsValueObject>({
@@ -266,10 +280,8 @@ describe('SaveSectionsReaderService', () => {
         ],
       });
       const {sections: sectionsWithTwoProducersAndTwoConsumers} = parseSaveSections(fakeSaveContent);
-      const service = new SaveSectionsReaderService(sectionsWithTwoProducersAndTwoConsumers);
-
       // Act
-      const energyLevels = service.getEnergyLevels();
+      const energyLevels = loadEnergyLevels(sectionsWithTwoProducersAndTwoConsumers);
 
       // Assert
       expect(energyLevels).toEqual<EnergyLevelsValueObject>({
@@ -283,7 +295,8 @@ describe('SaveSectionsReaderService', () => {
             name: 'EnergyGenerator1',
             quantity: 2,
             unitLevel: 1.2,
-            totalLevel: 2.4
+            totalLevel: 2.4,
+            productionRatio: 1
           }],
           consumptionBreakdown: [{
             name: 'Drill0',
@@ -305,10 +318,8 @@ describe('SaveSectionsReaderService', () => {
         ],
       });
       const {sections: sectionsWithProducerAndConsumer} = parseSaveSections(fakeSaveContent);
-      const service = new SaveSectionsReaderService(sectionsWithProducerAndConsumer);
-
       // Act
-      const energyLevels = service.getEnergyLevels();
+      const energyLevels = loadEnergyLevels(sectionsWithProducerAndConsumer);
 
       // Assert
       expect(energyLevels).toEqual<EnergyLevelsValueObject>({
@@ -322,7 +333,8 @@ describe('SaveSectionsReaderService', () => {
             name: 'EnergyGenerator6',
             quantity: 1,
             unitLevel: 1485,
-            totalLevel: 1485
+            totalLevel: 1485,
+            productionRatio: 1
           }],
           consumptionBreakdown: [{
             name: 'Drill4',
@@ -346,10 +358,8 @@ describe('SaveSectionsReaderService', () => {
         ],
       });
       const {sections} = parseSaveSections(fakeSaveContent);
-      const service = new SaveSectionsReaderService(sections);
-
       // Act
-      const energyLevels = service.getEnergyLevels();
+      const energyLevels = loadEnergyLevels(sections);
 
       // Assert
       expect(energyLevels).toEqual<EnergyLevelsValueObject>({
@@ -363,7 +373,8 @@ describe('SaveSectionsReaderService', () => {
             name: 'EnergyGenerator1',
             quantity: 1,
             unitLevel: 1.2,
-            totalLevel: 1.2
+            totalLevel: 1.2,
+            productionRatio: 1
           }],
           consumptionBreakdown: [{
             name: 'Drill0',
@@ -388,10 +399,8 @@ describe('SaveSectionsReaderService', () => {
           ],
         });
         const {sections} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sections);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sections);
 
         // Assert
         expect(energyLevels).toEqual<EnergyLevelsValueObject>({
@@ -406,7 +415,8 @@ describe('SaveSectionsReaderService', () => {
                 name: 'EnergyGenerator1',
                 quantity: 1,
                 unitLevel: 1.2,
-                totalLevel: 1.2
+                totalLevel: 1.2,
+                productionRatio: 1
               }],
               consumptionBreakdown: [{
                 name: 'Drill0',
@@ -426,7 +436,8 @@ describe('SaveSectionsReaderService', () => {
                 name: 'EnergyGenerator6',
                 quantity: 1,
                 unitLevel: 1485,
-                totalLevel: 1485
+                totalLevel: 1485,
+                productionRatio: 1
               }],
               consumptionBreakdown: [{
                 name: 'Drill4',
@@ -450,10 +461,8 @@ describe('SaveSectionsReaderService', () => {
           ],
         });
         const {sections} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sections);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sections);
 
         // Assert
         expect(energyLevels.planets[0].planetName).toBe('Prime');
@@ -480,10 +489,8 @@ describe('SaveSectionsReaderService', () => {
           ],
         });
         const {sections} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sections);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sections);
 
         // Assert
         expect(energyLevels.planets[0].planetName).toBe('Humble');
@@ -502,10 +509,8 @@ describe('SaveSectionsReaderService', () => {
           inventories: [{id: 100, woIds: '20', size: 1}],
         });
         const {sections} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sections);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sections);
 
         // Assert
         expect(energyLevels.planets[0].production).toBeCloseTo(1.2 * 1.5);
@@ -522,10 +527,8 @@ describe('SaveSectionsReaderService', () => {
           inventories: [{id: 100, woIds: '20', size: 1}],
         });
         const {sections} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sections);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sections);
 
         // Assert
         expect(energyLevels.planets[0].production).toBeCloseTo(1.2);
@@ -542,10 +545,8 @@ describe('SaveSectionsReaderService', () => {
           inventories: [{id: 100, woIds: '20', size: 1}],
         });
         const {sections} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sections);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sections);
 
         // Assert: the producer's own planet keeps its unboosted base production
         const producerPlanet = energyLevels.planets.find((planet) => planet.production > 0);
@@ -562,10 +563,8 @@ describe('SaveSectionsReaderService', () => {
           inventories: [{id: 100, woIds: '', size: 1}],
         });
         const {sections} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sections);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sections);
 
         // Assert
         expect(energyLevels.planets[0].production).toBeCloseTo(1.2);
@@ -583,10 +582,8 @@ describe('SaveSectionsReaderService', () => {
           inventories: [{id: 100, woIds: '20,21', size: 3}],
         });
         const {sections} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sections);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sections);
 
         // Assert: 2 fuses => 2 × 150% = 300%
         expect(energyLevels.planets[0].production).toBeCloseTo(1.2 * 3);
@@ -608,10 +605,8 @@ describe('SaveSectionsReaderService', () => {
           ],
         });
         const {sections} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sections);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sections);
 
         // Assert: 2 fuses total (1 from each optimizer) => 2 × 150% = 300%
         expect(energyLevels.planets[0].production).toBeCloseTo(1.2 * 3);
@@ -634,10 +629,8 @@ describe('SaveSectionsReaderService', () => {
           inventories: [{id: 100, woIds: '20', size: 1}],
         });
         const {sections} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sections);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sections);
 
         // Assert: 5 boosted producers at 150% + 1 unboosted at 100%
         expect(energyLevels.planets[0].production).toBeCloseTo(1.2 * 1.5 * 5 + 1.2);
@@ -656,17 +649,16 @@ describe('SaveSectionsReaderService', () => {
           inventories: [{id: 100, woIds: '20', size: 1}],
         });
         const {sections} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sections);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sections);
 
         // Assert: 1 fuse boosting 1 Wind turbine => contribution = 1.2 × (1 × 1.5 − 1) (base already counted in production breakdown)
         expect(energyLevels.planets[0].optimizers).toEqual([{
           name: 'Optimizer1',
           fuseCount: 1,
           boostedMachines: [{name: 'EnergyGenerator1', quantity: 1}],
-          contribution: 1.2 * (1 * 1.5 - 1)
+          contribution: 1.2 * (1 * 1.5 - 1),
+          productionRatio: (1.2 * (1 * 1.5 - 1)) / (1.2 * 1.5)
         }]);
       });
 
@@ -680,10 +672,8 @@ describe('SaveSectionsReaderService', () => {
           inventories: [{id: 100, woIds: '', size: 1}],
         });
         const {sections} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sections);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sections);
 
         // Assert
         expect(energyLevels.planets[0].optimizers).toEqual([]);
@@ -705,10 +695,8 @@ describe('SaveSectionsReaderService', () => {
           ],
         });
         const {sections} = parseSaveSections(fakeSaveContent);
-        const service = new SaveSectionsReaderService(sections);
-
         // Act
-        const energyLevels = service.getEnergyLevels();
+        const energyLevels = loadEnergyLevels(sections);
 
         // Assert: each Optimizer holds 1 fuse; the producer's real combined boost (2 fuses × 1.5 −
         // base) is split evenly between the two Optimizers since they each hold 1 fuse.
@@ -717,13 +705,15 @@ describe('SaveSectionsReaderService', () => {
             name: 'Optimizer1',
             fuseCount: 1,
             boostedMachines: [{name: 'EnergyGenerator1', quantity: 1}],
-            contribution: 1.2 * (2 * 1.5 - 1) / 2
+            contribution: 1.2 * (2 * 1.5 - 1) / 2,
+            productionRatio: (1.2 * (2 * 1.5 - 1) / 2) / (1.2 * 3)
           },
           {
             name: 'Optimizer1',
             fuseCount: 1,
             boostedMachines: [{name: 'EnergyGenerator1', quantity: 1}],
-            contribution: 1.2 * (2 * 1.5 - 1) / 2
+            contribution: 1.2 * (2 * 1.5 - 1) / 2,
+            productionRatio: (1.2 * (2 * 1.5 - 1) / 2) / (1.2 * 3)
           }
         ]);
       });

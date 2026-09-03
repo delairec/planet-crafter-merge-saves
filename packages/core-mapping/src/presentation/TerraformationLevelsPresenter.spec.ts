@@ -72,6 +72,8 @@ describe('TerraformationLevelsPresenter', () => {
         unitInsectsLevel: 112112,
         unitAnimalsLevel: 131131,
         unitPurificationLevel: 415415,
+        terraformationIndex: 2_129_127,
+        biomass: 344_344
       }
     ]);
 

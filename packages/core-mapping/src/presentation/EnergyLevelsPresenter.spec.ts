@@ -108,7 +108,8 @@ describe('EnergyLevelsPresenter', () => {
           name: 'WindTurbine1',
           quantity: 2,
           unitLevel: 290,
-          totalLevel: 580
+          totalLevel: 580,
+          productionRatio: 580 / 590
         }],
         consumptionBreakdown: [{
           name: 'Drill2',
@@ -155,7 +156,8 @@ describe('EnergyLevelsPresenter', () => {
             {name: 'EnergyGenerator5', quantity: 3},
             {name: 'EnergyGenerator3', quantity: 2}
           ],
-          contribution: 994.5
+          contribution: 994.5,
+          productionRatio: 994.5 / 590
         }]
       }]
     });

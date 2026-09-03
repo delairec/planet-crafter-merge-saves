@@ -1,7 +1,6 @@
 import {TerraformationLevelsViewModel} from "./viewModels/TerraformationLevelsViewModel";
-import {TerraformationLevelEntity} from "../domain/entities/TerraformationLevelEntity";
+import {TerraformationLevelSummaryValueObject} from "../domain/valueObjects/TerraformationLevelSummaryValueObject";
 import {TerraformationLevelsPresenterPort} from "../application/ports/TerraformationLevelsPresenterPort";
-import {computeTerraformationSummary} from "../domain/rules/computeTerraformationSummary";
 import {formatNumber} from "./formatters/formatNumber/formatNumber";
 import {FormatNumberStrategies} from "./formatters/formatNumber/FormatNumberStrategies";
 import {
@@ -66,10 +65,8 @@ export class TerraformationLevelsPresenter implements TerraformationLevelsPresen
     };
   }
 
-  displayTerraformationLevels(levels: TerraformationLevelEntity[]): void {
+  displayTerraformationLevels(levels: TerraformationLevelSummaryValueObject[]): void {
     this.viewModel.planets = levels.map(level => {
-      const summary = computeTerraformationSummary(level);
-
       return {
         name: level.planetId,
         environmentalLevels: {
@@ -108,8 +105,8 @@ export class TerraformationLevelsPresenter implements TerraformationLevelsPresen
             },
           ]
         },
-        terraformationIndex: formatNumber(summary.terraformationIndex, FormatNumberStrategies.SYMBOL) + 'Ti',
-        biomass: formatNumber(summary.biomass, FormatNumberStrategies.WEIGHT)
+        terraformationIndex: formatNumber(level.terraformationIndex, FormatNumberStrategies.SYMBOL) + 'Ti',
+        biomass: formatNumber(level.biomass, FormatNumberStrategies.WEIGHT)
       };
     });
   }
