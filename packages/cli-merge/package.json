@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "core-mapping": "workspace:*",
-    "shared-save-processing": "workspace:*",
-    "util-platforms": "workspace:*"
+    "shared-platforms": "workspace:*",
+    "shared-save-processing": "workspace:*"
   }
 }
