@@ -1,4 +1,5 @@
 import {MergeResultPresenterPort} from "../application/ports/MergeResultPresenterPort";
+import {ValidationIssue} from "../application/ports/ValidationIssue";
 import {MergeResultViewModel} from "./viewModels/MergeResultViewModel";
 
 export class MergeResultPresenter implements MergeResultPresenterPort {
@@ -24,13 +25,17 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
     };
   }
 
-  presentSaveFilesInvalid(saveAErrorMessages: string[], saveBErrorMessages: string[]): void {
+  presentSaveFilesInvalid(saveAErrors: ValidationIssue[], saveBErrors: ValidationIssue[]): void {
     this.viewModel = {
       status: 'validationError',
       fileName: '',
       content: '',
-      saveAErrorMessages,
-      saveBErrorMessages
+      saveAErrorMessages: saveAErrors.map(formatValidationIssue),
+      saveBErrorMessages: saveBErrors.map(formatValidationIssue)
     };
   }
+}
+
+function formatValidationIssue(issue: ValidationIssue): string {
+  return issue.detail;
 }

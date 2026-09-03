@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'bun:test';
 import {validateUniqueHost} from './validateUniqueHost';
 import {Player} from 'shared-save-processing/gameDefinitions';
+import {VALIDATION_ISSUE_CODES} from '../../application/ports/ValidationIssue';
 
 function createPlayer(overrides: Partial<Player> = {}): Player {
   return {
@@ -16,7 +17,7 @@ describe('validateUniqueHost', () => {
 
   describe('When there are no players', () => {
     it('should return no issue', () => {
-      // Arrange / Act
+      // Act
       const issues = validateUniqueHost([]);
 
       // Assert
@@ -46,7 +47,7 @@ describe('validateUniqueHost', () => {
       const issues = validateUniqueHost(players);
 
       // Assert
-      expect(issues).toEqual([{code: 'unique-host', detail: 'Expected exactly one host player, found 0'}]);
+      expect(issues).toEqual([{code: VALIDATION_ISSUE_CODES.UNIQUE_HOST, detail: 'Expected exactly one host player, found 0'}]);
     });
   });
 
@@ -59,7 +60,7 @@ describe('validateUniqueHost', () => {
       const issues = validateUniqueHost(players);
 
       // Assert
-      expect(issues).toEqual([{code: 'unique-host', detail: 'Expected exactly one host player, found 2'}]);
+      expect(issues).toEqual([{code: VALIDATION_ISSUE_CODES.UNIQUE_HOST, detail: 'Expected exactly one host player, found 2'}]);
     });
   });
 });

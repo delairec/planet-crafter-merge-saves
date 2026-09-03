@@ -1,10 +1,13 @@
-export type ValidationIssueCode =
-  | 'invalid-extension'
-  | 'invalid-structure'
-  | 'invalid-json'
-  | 'schema-violation'
-  | 'float-serialization'
-  | 'unique-host';
+export const VALIDATION_ISSUE_CODES = {
+  INVALID_EXTENSION: 'invalid-extension',
+  INVALID_STRUCTURE: 'invalid-structure',
+  INVALID_JSON: 'invalid-json',
+  SCHEMA_VIOLATION: 'schema-violation',
+  FLOAT_SERIALIZATION: 'float-serialization',
+  UNIQUE_HOST: 'unique-host'
+} as const;
+
+export type ValidationIssueCode = typeof VALIDATION_ISSUE_CODES[keyof typeof VALIDATION_ISSUE_CODES];
 
 /**
  * A single validation failure, carrying a stable `code` for callers that need to branch on the

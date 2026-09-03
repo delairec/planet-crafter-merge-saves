@@ -1,5 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 import {validateFloatSerialization} from './validateFloatSerialization';
+import {VALIDATION_ISSUE_CODES} from '../../application/ports/ValidationIssue';
 
 describe('validateFloatSerialization', () => {
 
@@ -26,7 +27,7 @@ describe('validateFloatSerialization', () => {
 
       // Assert
       expect(issues).toEqual([{
-        code: 'float-serialization',
+        code: VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION,
         detail: 'Field "playerGaugeOxygen" has integer value serialized without .0 suffix (got: 280)'
       }]);
     });

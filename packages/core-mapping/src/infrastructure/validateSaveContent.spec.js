@@ -1,5 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 import {validateSaveContent} from './validateSaveContent.js';
+import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue.ts';
 import {createFakeSaveString, createLegacyFakeSaveString} from 'shared-save-processing/testing/createFakeSaveString.js';
 import {
   createEquipment,
@@ -279,7 +280,7 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.code === 'float-serialization')).toBeTruthy();
+        expect(result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION)).toBeTruthy();
       });
 
       it('should accept a save where gauge values have proper decimal notation', () => {
@@ -291,7 +292,7 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(true);
-        expect(!result.errors.some(e => e.code === 'float-serialization')).toBeTruthy();
+        expect(!result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION)).toBeTruthy();
       });
 
       it('should reject a save where all gauge values are missing their decimal notation', () => {
@@ -319,7 +320,7 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        const floatErrors = result.errors.filter(e => e.code === 'float-serialization');
+        const floatErrors = result.errors.filter(e => e.code === VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION);
         expect(floatErrors.length >= 4).toBeTruthy();
       });
     });
@@ -334,7 +335,7 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.code === 'unique-host')).toBeTruthy();
+        expect(result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.UNIQUE_HOST)).toBeTruthy();
       });
 
       it('should report an error when more than one player is host', () => {
@@ -357,7 +358,7 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.code === 'unique-host')).toBeTruthy();
+        expect(result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.UNIQUE_HOST)).toBeTruthy();
       });
 
       it('should not report a host error for a valid save with one host', () => {
@@ -368,7 +369,7 @@ describe('validateSaveContent', () => {
         const result = validateSaveContent(save);
 
         // Assert
-        expect(!result.errors.some(e => e.code === 'unique-host')).toBeTruthy();
+        expect(!result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.UNIQUE_HOST)).toBeTruthy();
       });
     });
 
@@ -449,7 +450,7 @@ describe('validateSaveContent', () => {
       // Assert
       expect(result.isValid).toBe(false);
       expect(result.errors).toEqual([
-        {code: 'invalid-structure', detail: `Expected 11 sections but found 2`}
+        {code: VALIDATION_ISSUE_CODES.INVALID_STRUCTURE, detail: `Expected 11 sections but found 2`}
       ]);
     });
   });

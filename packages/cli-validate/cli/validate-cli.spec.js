@@ -42,7 +42,7 @@ describe('Validate CLI', () => {
 
   describe('When no file path is provided', () => {
     it('should exit with code 1', async () => {
-      // Arrange / Act
+      // Act
       await main(undefined);
 
       // Assert
@@ -50,7 +50,7 @@ describe('Validate CLI', () => {
     });
 
     it('should print a usage message', async () => {
-      // Arrange / Act
+      // Act
       await main(undefined);
 
       // Assert
@@ -58,7 +58,7 @@ describe('Validate CLI', () => {
     });
 
     it('should not read any file', async () => {
-      // Arrange / Act
+      // Act
       await main(undefined);
 
       // Assert

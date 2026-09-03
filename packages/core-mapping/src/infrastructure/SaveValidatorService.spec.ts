@@ -1,5 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 import {SaveValidatorService} from './SaveValidatorService';
+import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue';
 import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
 
 describe('SaveValidatorService', () => {
@@ -16,7 +17,7 @@ describe('SaveValidatorService', () => {
       // Assert
       expect(result).toEqual({
         isValid: false,
-        errors: [{code: 'invalid-extension', detail: 'Invalid file extension: expected a .json file.'}]
+        errors: [{code: VALIDATION_ISSUE_CODES.INVALID_EXTENSION, detail: 'Invalid file extension: expected a .json file.'}]
       });
     });
   });
@@ -47,7 +48,7 @@ describe('SaveValidatorService', () => {
       // Assert
       expect(result).toEqual({
         isValid: false,
-        errors: [{code: 'invalid-structure', detail: 'Expected 11 sections but found 1'}]
+        errors: [{code: VALIDATION_ISSUE_CODES.INVALID_STRUCTURE, detail: 'Expected 11 sections but found 1'}]
       });
     });
   });

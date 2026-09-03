@@ -1,5 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 import {validateSchemas} from './validateSchemas.js';
+import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue.ts';
 
 describe('validateSchemas', () => {
 
@@ -33,7 +34,7 @@ describe('validateSchemas', () => {
 
       // Assert
       expect(issues.length > 0).toBeTruthy();
-      expect(issues.every(issue => issue.code === 'schema-violation' && issue.section === 2 && issue.entryIndex === 0)).toBeTruthy();
+      expect(issues.every(issue => issue.code === VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION && issue.section === 2 && issue.entryIndex === 0)).toBeTruthy();
     });
   });
 });

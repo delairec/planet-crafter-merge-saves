@@ -2,6 +2,7 @@ import {describe, expect, it, mock} from 'bun:test';
 import {ValidateSaveFile} from './ValidateSaveFile';
 import {SaveValidatorPort} from './ports/SaveValidatorPort';
 import {SaveFileValidationPresenterPort} from './ports/SaveFileValidationPresenterPort';
+import {VALIDATION_ISSUE_CODES} from './ports/ValidationIssue';
 
 describe('ValidateSaveFile', () => {
 
@@ -25,7 +26,7 @@ describe('ValidateSaveFile', () => {
   describe('When the save file is invalid', () => {
     it('should present an invalid save file with the validation errors', () => {
       // Arrange
-      const errors = [{code: 'invalid-extension' as const, detail: 'Invalid file extension: expected a .json file.'}];
+      const errors = [{code: VALIDATION_ISSUE_CODES.INVALID_EXTENSION, detail: 'Invalid file extension: expected a .json file.'}];
       const validator: SaveValidatorPort = {
         validate: mock(() => ({isValid: false, errors}))
       };

@@ -1,8 +1,9 @@
 import {normalizeRawSections} from 'shared-save-processing/normalizeRawSections.js';
 import {verifySectionCount} from 'shared-save-processing/verifySectionCount.js';
-import {validateSchemas} from './ajv/validateSchemas.js';
+import {validateSchemas} from './validateSchemas.js';
 import {validateFloatSerialization} from '../domain/rules/validateFloatSerialization.ts';
 import {validateUniqueHost} from '../domain/rules/validateUniqueHost.ts';
+import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue.ts';
 
 // Real sections in the current save format (Terrain Layers was removed from the save format by a game update).
 const SECTION_COUNT = 10;
@@ -22,7 +23,7 @@ export function validateSaveContent(mergedSave) {
   if (sectionCountErrors.length > 0) {
     return {
       isValid: false,
-      errors: [{code: 'invalid-structure', detail: sectionCountErrors[0].replace(/^INVALID: /, '')}],
+      errors: [{code: VALIDATION_ISSUE_CODES.INVALID_STRUCTURE, detail: sectionCountErrors[0].replace(/^INVALID: /, '')}],
       warnings: []
     };
   }
@@ -47,7 +48,7 @@ function parseSections(sections, errors) {
         const parsed = JSON.parse(line);
         if (parsed !== null && parsed !== undefined) entries.push(parsed);
       } catch {
-        errors.push({code: 'invalid-json', detail: `Invalid JSON: ${line.slice(0, 60)}`, section: sectionIndex, entryIndex});
+        errors.push({code: VALIDATION_ISSUE_CODES.INVALID_JSON, detail: `Invalid JSON: ${line.slice(0, 60)}`, section: sectionIndex, entryIndex});
       }
       return entries;
     }, []);

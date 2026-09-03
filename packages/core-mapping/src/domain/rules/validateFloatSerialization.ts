@@ -1,3 +1,4 @@
+import {VALIDATION_ISSUE_CODES} from "../../application/ports/ValidationIssue.ts";
 import type {ValidationIssue} from "../../application/ports/ValidationIssue.ts";
 
 /** Gauge and level fields must always serialize with a decimal point, even for whole values. */
@@ -17,7 +18,7 @@ export function validateFloatSerialization(mergedSave: string): ValidationIssue[
   let match;
   while ((match = regex.exec(mergedSave)) !== null) {
     issues.push({
-      code: 'float-serialization',
+      code: VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION,
       detail: `Field "${match[1]}" has integer value serialized without .0 suffix (got: ${match[2] ?? ''}${match[3]})`
     });
   }

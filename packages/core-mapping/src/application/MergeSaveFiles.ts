@@ -14,10 +14,7 @@ export class MergeSaveFiles {
     const validationB = this.validator.validate(fileNameB, contentB);
 
     if (!validationA.isValid || !validationB.isValid) {
-      this.presenter.presentSaveFilesInvalid(
-        validationA.errors.map(error => error.detail),
-        validationB.errors.map(error => error.detail)
-      );
+      this.presenter.presentSaveFilesInvalid(validationA.errors, validationB.errors);
       return;
     }
 

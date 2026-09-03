@@ -3,6 +3,7 @@ import {MergeSaveFiles} from './MergeSaveFiles';
 import {SaveValidatorPort} from './ports/SaveValidatorPort';
 import {SaveFilesMergerPort} from './ports/SaveFilesMergerPort';
 import {MergeResultPresenterPort} from './ports/MergeResultPresenterPort';
+import {VALIDATION_ISSUE_CODES} from './ports/ValidationIssue';
 
 describe('MergeSaveFiles', () => {
 
@@ -25,9 +26,10 @@ describe('MergeSaveFiles', () => {
   describe('When at least one save is invalid', () => {
     it('should present a validation error result without merging', () => {
       // Arrange
+      const invalidJsonError = {code: VALIDATION_ISSUE_CODES.INVALID_JSON, detail: 'Invalid JSON: contentA'};
       const validator: SaveValidatorPort = {
         validate: mock((fileName: string, content: string) => content === 'contentA'
-          ? {isValid: false, errors: [{code: 'invalid-json' as const, detail: 'Invalid JSON: contentA'}]}
+          ? {isValid: false, errors: [invalidJsonError]}
           : {isValid: true, errors: []})
       };
       const merger: SaveFilesMergerPort = {merge: mock()};
@@ -39,16 +41,17 @@ describe('MergeSaveFiles', () => {
 
       // Assert
       expect(merger.merge).not.toHaveBeenCalled();
-      expect(presenter.presentSaveFilesInvalid).toHaveBeenCalledWith(['Invalid JSON: contentA'], []);
+      expect(presenter.presentSaveFilesInvalid).toHaveBeenCalledWith([invalidJsonError], []);
     });
   });
 
   describe('When a save file has an invalid extension', () => {
     it('should present a validation error result reported by the validator', () => {
       // Arrange
+      const invalidExtensionError = {code: VALIDATION_ISSUE_CODES.INVALID_EXTENSION, detail: 'Invalid file extension: expected a .json file.'};
       const validator: SaveValidatorPort = {
         validate: mock((fileName: string) => fileName === 'Save-A.txt'
-          ? {isValid: false, errors: [{code: 'invalid-extension' as const, detail: 'Invalid file extension: expected a .json file.'}]}
+          ? {isValid: false, errors: [invalidExtensionError]}
           : {isValid: true, errors: []})
       };
       const merger: SaveFilesMergerPort = {merge: mock()};
@@ -63,10 +66,7 @@ describe('MergeSaveFiles', () => {
       expect(validator.validate).toHaveBeenCalledWith('Save-A.txt', 'contentA');
       expect(validator.validate).toHaveBeenCalledWith('Save-B.json', 'contentB');
       expect(merger.merge).not.toHaveBeenCalled();
-      expect(presenter.presentSaveFilesInvalid).toHaveBeenCalledWith(
-        ['Invalid file extension: expected a .json file.'],
-        []
-      );
+      expect(presenter.presentSaveFilesInvalid).toHaveBeenCalledWith([invalidExtensionError], []);
     });
   });
 });
