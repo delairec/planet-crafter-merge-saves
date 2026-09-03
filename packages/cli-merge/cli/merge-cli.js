@@ -1,4 +1,6 @@
-import {exitProcess, isEntryPoint, joinPath, readDirectory, readTextFile, writeTextFile, getCliArguments} from 'util-platforms/platform.js';
+import {getCliArguments} from 'shared-platforms/platformCommon.js';
+import {extractPlatformParameter} from 'shared-platforms/extractPlatformParameter.js';
+import {createPlatform} from 'shared-platforms/platform.js';
 import {MergeSaveFilesController} from 'core-mapping/controllers/MergeSaveFilesController';
 import {parseMergeCliArguments} from './parseMergeCliArguments.js';
 import {
@@ -14,7 +16,10 @@ import {
 const NO_VALID_FOLDERS_EXIT_CODE = 2;
 const UNEXPECTED_ERROR_EXIT_CODE = 1;
 
-const CLI = initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirectory, writeTextFile, joinPath}, getCliArguments());
+const argv = getCliArguments();
+const {isEntryPoint, readTextFile, exitProcess, readDirectory, writeTextFile, joinPath} = createPlatform(extractPlatformParameter(argv));
+
+const CLI = initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirectory, writeTextFile, joinPath}, argv);
 
 if (CLI.isEntryPoint(import.meta)) {
   CLI.main().catch(err => {

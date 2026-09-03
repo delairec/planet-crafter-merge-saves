@@ -1,7 +1,11 @@
-import {readTextFile, exitProcess, isEntryPoint, getCliArguments} from 'util-platforms/platform.js';
+import {getCliArguments} from 'shared-platforms/platformCommon.js';
+import {extractPlatformParameter} from 'shared-platforms/extractPlatformParameter.js';
+import {createPlatform} from 'shared-platforms/platform.js';
 import {validateSaveContent} from 'core-mapping/infrastructure/validateSaveContent.js';
 
 const USAGE_MESSAGE = `Usage: bun validate-cli.js --file=<path-to-save-file>`;
+
+const {readTextFile, exitProcess, isEntryPoint} = createPlatform(extractPlatformParameter(getCliArguments()));
 
 const CLI = initValidateCli({readTextFile, exitProcess, isEntryPoint, getCliArguments});
 
