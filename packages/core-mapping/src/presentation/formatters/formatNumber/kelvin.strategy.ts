@@ -1,4 +1,4 @@
-import {formatDecimalNumberOptions} from "./formatNumberOptions";
+import {formatDecimalNumberWithSuffix} from "./formatDecimalNumberWithSuffix";
 
 interface Threshold {
   value: number;
@@ -19,23 +19,13 @@ export function formatNumberByKelvinThresholds(value: number|bigint) {
   for (const threshold of thresholds) {
     if (isNumberBiggerThanThreshold(num * 0.001, threshold)) {
       const result = num / threshold.value;
-      return formatDecimalNumberWithSymbol(result, threshold);
+      return formatDecimalNumberWithSuffix(result, threshold.suffix);
     }
   }
 
-  return formatDecimalNumberWithSymbol(num, thresholds[4]);
-}
-
-function formatDecimalNumberWithSymbol(value: number, t: Threshold) {
-  return `${(formatDecimalNumber(value))}${t.suffix}`;
+  return formatDecimalNumberWithSuffix(num, thresholds[4].suffix);
 }
 
 function isNumberBiggerThanThreshold(num: number, threshold: Threshold) {
   return num >= threshold.value;
-}
-
-function formatDecimalNumber(value: number) {
-  const locales = undefined;
-  const nbsp = '\u00A0';
-  return new Intl.NumberFormat(locales, formatDecimalNumberOptions).format(value) + nbsp;
 }

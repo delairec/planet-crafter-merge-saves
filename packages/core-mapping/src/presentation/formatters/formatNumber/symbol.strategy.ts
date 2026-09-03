@@ -1,4 +1,4 @@
-import {formatDecimalNumberOptions} from "./formatNumberOptions";
+import {formatDecimalNumberWithSuffix} from "./formatDecimalNumberWithSuffix";
 
 interface Threshold {
   value: number | bigint;
@@ -34,29 +34,25 @@ export function formatNumberByUnitThresholds(numberOrBigint: number | bigint) {
 
     if (isNumberBiggerThanThreshold(num, threshold) && !isBigIntType(threshold.value)) {
       if (!threshold.suffix) {
-        return formatDecimalNumber(num);
+        return formatDecimalNumberWithSuffix(num, '');
       }
       if (threshold.multiply) {
         const result = num * threshold.multiply;
-        return formatDecimalNumberWithSymbol(result, threshold);
+        return formatDecimalNumberWithSuffix(result, threshold.suffix);
       }
 
       const result = num / threshold.value;
-      return formatDecimalNumberWithSymbol(result, threshold);
+      return formatDecimalNumberWithSuffix(result, threshold.suffix);
     }
   }
 
-  return formatDecimalNumber(num);
+  return formatDecimalNumberWithSuffix(num, '');
 }
 
 function formatBigIntegerWithSymbol(bigNum: bigint, threshold: Threshold) {
   const quotient = bigNum / BigInt(threshold.value);
   const result = Number(quotient);
-  return formatDecimalNumberWithSymbol(result, threshold);
-}
-
-function formatDecimalNumberWithSymbol(value: number, t: Threshold) {
-  return `${(formatDecimalNumber(value))}${t.suffix}`;
+  return formatDecimalNumberWithSuffix(result, threshold.suffix);
 }
 
 function isBigIntType(num: number | bigint): num is bigint {
@@ -69,10 +65,4 @@ function isBigIntegerBiggerThanThreshold(num: bigint, threshold: Threshold) {
 
 function isNumberBiggerThanThreshold(num: number, threshold: Threshold) {
   return !isBigIntType(num) && num >= threshold.value;
-}
-
-function formatDecimalNumber(value: number) {
-  const locales = undefined;
-  const nbsp = '\u00A0';
-  return new Intl.NumberFormat(locales, formatDecimalNumberOptions).format(value) + nbsp;
 }
