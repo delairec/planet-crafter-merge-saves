@@ -1,10 +1,10 @@
-import {SaveParserPort} from "./ports/SaveParserPort";
+import {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort";
 import {SaveConfigurationPresenterPort} from "./ports/SaveConfigurationPresenterPort";
 
 
 export class LoadSaveConfigurationSection {
   constructor(
-    private readonly saveParser: SaveParserPort,
+    private readonly saveParser: SaveSectionsReaderPort,
     private readonly presenter: SaveConfigurationPresenterPort
   ) {}
 

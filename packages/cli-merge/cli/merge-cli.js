@@ -1,25 +1,35 @@
-import {exitProcess, isEntryPoint, joinPath, readDirectory, readTextFile, writeTextFile} from 'util-platforms/platform.js';
-import {resolveIdConflicts} from '../resolveIdConflicts.js';
-import {buildMergedFileName} from '../helpers/buildMergedFileName.js';
-import {merge} from '../merge.js';
-import {parseSaveSections} from "shared-save-processing/parseSaveSections.js";
+import {exitProcess, isEntryPoint, joinPath, readDirectory, readTextFile, writeTextFile, getCliArguments} from 'util-platforms/platform.js';
+import {MergeSaveFilesController} from 'core-mapping/controllers/MergeSaveFilesController';
+import {parseMergeCliArguments} from './parseMergeCliArguments.js';
+import {
+  renderDone,
+  renderFoldersFound,
+  renderMergeFailed,
+  renderMergeSucceeded,
+  renderNoValidFolders,
+  renderProcessingFolder,
+  renderUnexpectedError
+} from './renderMergeCliOutput.js';
 
-const INPUT_DIR = 'input';
-const OUTPUT_DIR = 'output';
+const NO_VALID_FOLDERS_EXIT_CODE = 2;
+const UNEXPECTED_ERROR_EXIT_CODE = 1;
 
-const CLI = initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirectory, writeTextFile, joinPath});
+const CLI = initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirectory, writeTextFile, joinPath}, getCliArguments());
+
 if (CLI.isEntryPoint(import.meta)) {
   CLI.main().catch(err => {
-    console.error('Error:', err);
-    CLI.exitProcess(1);
+    renderUnexpectedError(err);
+    CLI.exitProcess(UNEXPECTED_ERROR_EXIT_CODE);
   });
 }
 
-export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirectory, writeTextFile, joinPath}) {
+export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirectory, writeTextFile, joinPath}, argv = []) {
+  const {inputDir, outputDir} = parseMergeCliArguments(argv);
+
   async function filterByValidSaveFolders(folders) {
     const results = [];
     for (const folder of folders) {
-      const files = await readDirectory(joinPath(INPUT_DIR, folder));
+      const files = await readDirectory(joinPath(inputDir, folder));
       if (isValidSaveFolderContent(files)) {
         results.push(folder);
       }
@@ -28,35 +38,34 @@ export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirec
   }
 
   async function processFolder(folder) {
-    console.log(`\nProcessing "${folder}"...`);
-    const folderPath = joinPath(INPUT_DIR, folder);
+    renderProcessingFolder(folder);
+    const folderPath = joinPath(inputDir, folder);
     const files = (await readDirectory(folderPath)).filter(isJson).sort();
-    const saveDisplayName = folder;
-    const [contentA, contentB] = await Promise.all([
-      readTextFile(joinPath(folderPath, files[0])),
-      readTextFile(joinPath(folderPath, files[1]))
-    ]);
 
-    const parsedSaveA = parseSaveSections(contentA);
-    const parsedSaveB = parseSaveSections(contentB);
+    let mergedFileName = files[0];
+    let mergedContent = await readTextFile(joinPath(folderPath, files[0]));
 
-    const {mergeSaves, saveAWorldObjectIds, indexFileA, indexFileB} = merge(parsedSaveA, parsedSaveB, saveDisplayName);
-    const fileA = files[indexFileA];
-    const fileB = files[indexFileB];
-    console.log(`  Merging ${fileB} (save B) into ${fileA} (save A)...`);
-    const merged = mergeSaves();
-    console.log(`  ✓ Sections merged`);
-    console.log(`  Resolving id conflicts...`);
-    const resolved = resolveIdConflicts(merged, saveAWorldObjectIds);
-    console.log(`  ✓ Id conflicts resolved`);
-    await writeOutput(folder, fileA, fileB, resolved);
+    for (let index = 1; index < files.length; index++) {
+      const nextFileName = files[index];
+      const nextContent = await readTextFile(joinPath(folderPath, nextFileName));
+      const viewModel = MergeSaveFilesController.mergeSaveFiles(mergedFileName, mergedContent, nextFileName, nextContent, folder);
+
+      if (viewModel.status !== 'success') {
+        renderMergeFailed(folder, viewModel.saveAErrorMessages, viewModel.saveBErrorMessages);
+        return;
+      }
+
+      mergedFileName = viewModel.fileName;
+      mergedContent = viewModel.content;
+    }
+
+    await writeOutput(folder, mergedFileName, mergedContent);
   }
 
-  async function writeOutput(folder, fileA, fileB, content) {
-    const outputFileName = buildMergedFileName(fileA, fileB);
-    const outputPath = joinPath(OUTPUT_DIR, folder, outputFileName);
+  async function writeOutput(folder, outputFileName, content) {
+    const outputPath = joinPath(outputDir, folder, outputFileName);
     await writeTextFile(outputPath, content);
-    console.log(`  ✓ Written to ${outputPath}`);
+    renderMergeSucceeded(outputPath);
   }
 
   function isJson(file) {
@@ -64,13 +73,21 @@ export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirec
   }
 
   async function main() {
-    const inputFolders = await readDirectory(INPUT_DIR);
+    const inputFolders = await readDirectory(inputDir);
     const validSaveFolders = await filterByValidSaveFolders(inputFolders);
-    console.log(`Found ${validSaveFolders.length} folder(s) to process:`);
+
+    if (validSaveFolders.length === 0) {
+      renderNoValidFolders(inputDir);
+      exitProcess(NO_VALID_FOLDERS_EXIT_CODE);
+      return;
+    }
+
+    renderFoldersFound(validSaveFolders.length);
     for (const folder of validSaveFolders) {
       await processFolder(folder);
     }
-    console.log('\nDone!\n');
+    renderDone();
+    exitProcess(0);
   }
 
   function isValidSaveFolderContent(files) {

@@ -1,9 +1,9 @@
-import {SaveParserPort} from './ports/SaveParserPort';
+import {SaveSectionsReaderPort} from './ports/SaveSectionsReaderPort';
 import {GlobalProgressionPresenterPort} from "./ports/GlobalProgressionPresenterPort";
 
 export class LoadGlobalProgressionSection {
   constructor(
-    private readonly saveParser: SaveParserPort,
+    private readonly saveParser: SaveSectionsReaderPort,
     private readonly presenter: GlobalProgressionPresenterPort,
   ) {}
 

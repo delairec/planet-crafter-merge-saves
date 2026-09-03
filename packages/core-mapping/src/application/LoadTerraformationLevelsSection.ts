@@ -1,9 +1,9 @@
 import {TerraformationLevelsPresenterPort} from './ports/TerraformationLevelsPresenterPort';
-import {SaveParserPort} from "./ports/SaveParserPort";
+import {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort";
 
 export class LoadTerraformationLevelsSection {
   constructor(
-    private saveParser: SaveParserPort,
+    private saveParser: SaveSectionsReaderPort,
     private presenter: TerraformationLevelsPresenterPort
   ) {}
 

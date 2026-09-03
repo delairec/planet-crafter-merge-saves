@@ -6,6 +6,8 @@ export interface WorldObject {
   planet?: number;
   liId?: number;
   woIds?: string;
+  siIds?: string;
+  linkedWo?: number;
   hunger?: number;
   grwth?: number;
   count?: string;

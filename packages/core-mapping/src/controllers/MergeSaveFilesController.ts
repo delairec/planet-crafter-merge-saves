@@ -4,13 +4,13 @@ import {MergeResultPresenter} from "../presentation/MergeResultPresenter";
 import {MergeSaveFiles} from "../application/MergeSaveFiles";
 
 export class MergeSaveFilesController {
-  static mergeSaveFiles(fileNameA: string, contentA: string, fileNameB: string, contentB: string): MergeResultViewModel {
+  static mergeSaveFiles(fileNameA: string, contentA: string, fileNameB: string, contentB: string, saveDisplayName?: string): MergeResultViewModel {
     const validator = createSaveValidator();
     const merger = createSaveFilesMerger();
     const presenter = new MergeResultPresenter();
     const useCase = new MergeSaveFiles(validator, merger, presenter);
 
-    useCase.execute(fileNameA, contentA, fileNameB, contentB);
+    useCase.execute(fileNameA, contentA, fileNameB, contentB, saveDisplayName);
 
     return presenter.viewModel;
   }

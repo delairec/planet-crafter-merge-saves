@@ -1,9 +1,9 @@
-import {SaveParserPort} from "./ports/SaveParserPort";
+import {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort";
 import {EnergyLevelsPresenterPort} from "./ports/EnergyLevelsPresenterPort";
 
 export class LoadEnergyLevelsSection {
   constructor(
-    private readonly saveParser: SaveParserPort,
+    private readonly saveParser: SaveSectionsReaderPort,
     private readonly presenter: EnergyLevelsPresenterPort
   ) {
   }
