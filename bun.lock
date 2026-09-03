@@ -15,8 +15,8 @@
       "version": "1.0.0",
       "dependencies": {
         "core-mapping": "workspace:*",
+        "shared-platforms": "workspace:*",
         "shared-save-processing": "workspace:*",
-        "util-platforms": "workspace:*",
       },
     },
     "packages/cli-validate": {
@@ -24,8 +24,8 @@
       "version": "1.0.0",
       "dependencies": {
         "core-mapping": "workspace:*",
+        "shared-platforms": "workspace:*",
         "shared-save-processing": "workspace:*",
-        "util-platforms": "workspace:*",
       },
     },
     "packages/core-mapping": {
@@ -36,6 +36,10 @@
         "shared-save-processing": "workspace:*",
         "util-messages": "workspace:*",
       },
+    },
+    "packages/shared-platforms": {
+      "name": "shared-platforms",
+      "version": "1.0.0",
     },
     "packages/shared-save-processing": {
       "name": "shared-save-processing",
@@ -56,10 +60,6 @@
     },
     "packages/util-messages": {
       "name": "util-messages",
-      "version": "1.0.0",
-    },
-    "packages/util-platforms": {
-      "name": "util-platforms",
       "version": "1.0.0",
     },
     "packages/util-types": {
@@ -541,6 +541,8 @@
 
     "seroval-plugins": ["seroval-plugins@1.6.2", "", { "peerDependencies": { "seroval": "^1.0" } }, "sha512-TfxuUjlbBESzUOWdTkTKqvSmav0ABym+itetDXLK6mDz8SmrpdI30aF8RTXE8Bvq+tH/1yIDkvy3W0lfQb1ipQ=="],
 
+    "shared-platforms": ["shared-platforms@workspace:packages/shared-platforms"],
+
     "shared-save-processing": ["shared-save-processing@workspace:packages/shared-save-processing"],
 
     "shiki": ["shiki@4.4.2", "", { "dependencies": { "@shikijs/core": "4.4.2", "@shikijs/engine-javascript": "4.4.2", "@shikijs/engine-oniguruma": "4.4.2", "@shikijs/langs": "4.4.2", "@shikijs/themes": "4.4.2", "@shikijs/types": "4.4.2", "@shikijs/vscode-textmate": "^10.0.2", "@types/hast": "^3.0.5" } }, "sha512-P8F/dFhRevaw2uSdeIYlq/5SXZNY85DPtmXQ947gD1Zj2JqO5AkNvVVBar0Me9JkFx3uzVud/qOtP5ek9NEQGA=="],
@@ -594,8 +596,6 @@
     "update-browserslist-db": ["update-browserslist-db@1.3.2", "", { "dependencies": { "escalade": "^3.2.0", "picocolors": "^1.1.1" }, "peerDependencies": { "browserslist": ">= 4.21.0" }, "bin": { "update-browserslist-db": "cli.js" } }, "sha512-UQ+MSxlhRm1bzjhU+DcuXfjFO1FzNtqhK5+9Yvlp90ItDLk5vT932A0rFu619nf7RVS+Y/VeaUW1jaRDqZ8VJw=="],
 
     "util-messages": ["util-messages@workspace:packages/util-messages"],
-
-    "util-platforms": ["util-platforms@workspace:packages/util-platforms"],
 
     "util-types": ["util-types@workspace:packages/util-types"],
 
