@@ -1,4 +1,4 @@
-import {getCliArguments} from 'shared-platforms/platformCommon.js';
+import {getCliArguments} from 'shared-platforms/platform.common.js';
 import {extractPlatformParameter} from 'shared-platforms/extractPlatformParameter.js';
 import {createPlatform} from 'shared-platforms/platform.js';
 import {MergeSaveFilesController} from 'core-mapping/controllers/MergeSaveFilesController';

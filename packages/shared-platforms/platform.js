@@ -1,6 +1,6 @@
 /** @import { RuntimePlatform } from 'util-types/gameDefinitions' */
 import {SUPPORTED_PLATFORMS} from './extractPlatformParameter.js';
-import * as platformCommon from './platformCommon.js';
+import * as platformCommon from './platform.common.js';
 import * as nodePlatform from './platform.node.js';
 import * as bunPlatform from './platform.bun.js';
 
