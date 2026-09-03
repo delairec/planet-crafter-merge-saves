@@ -1,5 +1,5 @@
 import {hasJsonExtension} from "shared-save-processing/hasJsonExtension.js";
-import {invalidExtensionErrorMessage} from "util-messages/validationMessages.js";
+import {invalidExtensionErrorMessage} from "../presentation/messages/validationMessages.js";
 import {validateSaveContent} from "./validateSaveContent.js";
 import {SaveValidatorPort} from "../application/ports/SaveValidatorPort";
 import {SaveValidationResult} from "../application/ports/SaveValidationResult";

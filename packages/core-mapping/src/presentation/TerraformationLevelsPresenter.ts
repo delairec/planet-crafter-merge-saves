@@ -13,7 +13,7 @@ import {
   terraformationLevelsSectionPlantsLabel,
   terraformationLevelsSectionPressureLabel,
   terraformationLevelsSectionPurificationLabel
-} from "util-messages/terraformationLevelsSectionMessages.js";
+} from "./messages/terraformationLevelsSectionMessages.js";
 
 export class TerraformationLevelsPresenter implements TerraformationLevelsPresenterPort {
   viewModel: TerraformationLevelsViewModel;

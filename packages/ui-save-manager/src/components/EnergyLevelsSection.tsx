@@ -15,7 +15,7 @@ import {
   energyLevelsSectionTotalLabel,
   energyLevelsSectionUnitLabel,
   energyLevelsSectionWorkInProgressLabel
-} from "util-messages/energyLevelsSectionMessages";
+} from "core-mapping/presentation/messages/energyLevelsSectionMessages";
 
 interface EnergyLevelsProps {
   sections: Accessor<ParsedSections>;

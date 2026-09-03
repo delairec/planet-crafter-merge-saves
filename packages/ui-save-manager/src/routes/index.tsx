@@ -18,7 +18,7 @@ import {
   displayRouteSubmitButtonLabel,
   displayRouteVisualizationTitle,
   displayRouteWarningsTitle
-} from "util-messages/displayRouteMessages";
+} from "~/messages/displayRouteMessages";
 import ValidationMessagesList from "~/components/validation/ValidationMessagesList";
 import HomeDisclaimer from "~/components/HomeDisclaimer";
 
