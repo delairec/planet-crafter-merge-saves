@@ -104,18 +104,30 @@ describe('formatNumber', () => {
       expect(result).toBe(`1${nbsp}ppq`);
     });
 
+    // Rule EN-FMT-1: the unit steps up as soon as the value reaches the next threshold (matching
+    // WEIGHT/SYMBOL strategies below) — regression test for a bug where the threshold check was
+    // divided by an extra 1000 versus the division used for the displayed value, keeping large
+    // values stuck on the base "ppq" unit far longer than intended (e.g. 1_000_000 used to render
+    // as "1,000 ppt" instead of "1 ppb").
     it.each([
-      {symbol:'ppq', value: 1_000},
-      {symbol:'ppt', value: 1_000_000},
-      {symbol:'ppb', value: 1_000_000_000},
-      {symbol:'ppm', value: 1_000_000_000_000},
-      {symbol:'ppk', value: 1_000_000_000_000_000},
+      {symbol:'ppt', value: 1_000},
+      {symbol:'ppb', value: 1_000_000},
+      {symbol:'ppm', value: 1_000_000_000},
+      {symbol:'ppk', value: 1_000_000_000_000},
     ])('should format number with $symbol unit symbol', ({symbol, value}) => {
       // Act
       const result = formatNumber(value, FormatNumberStrategies.PARTS_PER);
 
       // Assert
-      expect(result).toBe(`1,000${nbsp}${symbol}`);
+      expect(result).toBe(`1${nbsp}${symbol}`);
+    });
+
+    it('should keep formatting with the largest unit once past its threshold', () => {
+      // Act
+      const result = formatNumber(1_000_000_000_000_000, FormatNumberStrategies.PARTS_PER);
+
+      // Assert
+      expect(result).toBe(`1,000${nbsp}ppk`);
     });
   });
 
@@ -129,17 +141,24 @@ describe('formatNumber', () => {
     });
 
     it.each([
-      {symbol:'pK', value: 1_000},
-      {symbol:'nK', value: 1_000_000},
-      {symbol:'µK', value: 1_000_000_000},
-      {symbol:'mK', value: 1_000_000_000_000},
-      {symbol:'K', value: 1_000_000_000_000_000},
+      {symbol:'nK', value: 1_000},
+      {symbol:'µK', value: 1_000_000},
+      {symbol:'mK', value: 1_000_000_000},
+      {symbol:'K', value: 1_000_000_000_000},
     ])('should format number with $symbol unit symbol', ({symbol, value}) => {
       // Act
       const result = formatNumber(value, FormatNumberStrategies.KELVIN);
 
       // Assert
-      expect(result).toBe(`1,000${nbsp}${symbol}`);
+      expect(result).toBe(`1${nbsp}${symbol}`);
+    });
+
+    it('should keep formatting with the largest unit once past its threshold', () => {
+      // Act
+      const result = formatNumber(1_000_000_000_000_000, FormatNumberStrategies.KELVIN);
+
+      // Assert
+      expect(result).toBe(`1,000${nbsp}K`);
     });
   });
 
@@ -153,16 +172,23 @@ describe('formatNumber', () => {
     });
 
     it.each([
-      {symbol:'nPa', value: 1_000},
-      {symbol:'µPa', value: 1_000_000},
-      {symbol:'mPa', value: 1_000_000_000},
-      {symbol:'Pa', value: 1_000_000_000_000},
+      {symbol:'µPa', value: 1_000},
+      {symbol:'mPa', value: 1_000_000},
+      {symbol:'Pa', value: 1_000_000_000},
     ])('should format number with $symbol unit symbol', ({symbol, value}) => {
       // Act
       const result = formatNumber(value, FormatNumberStrategies.PASCAL);
 
       // Assert
-      expect(result).toBe(`1,000${nbsp}${symbol}`);
+      expect(result).toBe(`1${nbsp}${symbol}`);
+    });
+
+    it('should keep formatting with the largest unit once past its threshold', () => {
+      // Act
+      const result = formatNumber(1_000_000_000_000, FormatNumberStrategies.PASCAL);
+
+      // Assert
+      expect(result).toBe(`1,000${nbsp}Pa`);
     });
   });
 

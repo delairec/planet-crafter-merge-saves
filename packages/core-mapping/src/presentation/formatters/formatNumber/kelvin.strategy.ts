@@ -17,7 +17,7 @@ export function formatNumberByKelvinThresholds(value: number|bigint) {
   const num = Number(value);
 
   for (const threshold of thresholds) {
-    if (isNumberBiggerThanThreshold(num * 0.001, threshold)) {
+    if (isNumberBiggerThanThreshold(num, threshold)) {
       const result = num / threshold.value;
       return formatDecimalNumberWithSuffix(result, threshold.suffix);
     }
