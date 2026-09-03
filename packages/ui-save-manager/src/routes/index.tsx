@@ -2,9 +2,9 @@ import {createSignal, onMount, Show} from 'solid-js';
 import PlayersSection from '../components/PlayersSection';
 import GlobalProgressionSection from "../components/GlobalProgressionSection";
 import TerraformationLevelsSection from '../components/TerraformationLevelsSection';
-import {parseSaveSections} from "../../../util-parsing/parseSaveSections";
+import {parseSaveSections} from "util-parsing/parseSaveSections";
 import SaveConfigurationSection from "../components/SaveConfigurationSection";
-import {ParsedSections} from "../../../util-types/gameDefinitions";
+import {ParsedSections} from "util-types/gameDefinitions";
 import EnergyLevelsSection from "~/components/EnergyLevelsSection";
 import MergeSection from "~/components/MergeSection";
 import MergeResultSection from "~/components/MergeResultSection";
@@ -18,7 +18,7 @@ import {
   displayRouteSubmitButtonLabel,
   displayRouteVisualizationTitle,
   displayRouteWarningsTitle
-} from "../../../util-messages/displayRouteMessages";
+} from "util-messages/displayRouteMessages";
 import ValidationMessagesList from "~/components/validation/ValidationMessagesList";
 import HomeDisclaimer from "~/components/HomeDisclaimer";
 

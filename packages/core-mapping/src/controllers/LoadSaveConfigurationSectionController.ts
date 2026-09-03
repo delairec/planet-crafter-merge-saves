@@ -1,4 +1,4 @@
-import {ParsedSections} from "../../../util-types/gameDefinitions";
+import {ParsedSections} from "util-types/gameDefinitions";
 import {SaveConfigurationViewModel} from "../presentation/viewModels/SaveConfigurationViewModel";
 import {createSaveParser} from "../composition/compositionRoot";
 import {SaveConfigurationPresenter} from "../presentation/SaveConfigurationPresenter";

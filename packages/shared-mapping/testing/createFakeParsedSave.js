@@ -1,4 +1,4 @@
-import {GLOBAL_METADATA_SECTION_INDEX} from "../../util-types/sectionIndexes.js";
+import {GLOBAL_METADATA_SECTION_INDEX} from "util-types/sectionIndexes.js";
 import {DEFAULT_GLOBAL_METADATA} from "./createFakeSaveString.js";
 
 /**

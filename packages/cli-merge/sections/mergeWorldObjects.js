@@ -1,6 +1,6 @@
-/** @import { WorldObject } from '../../util-types/gameDefinitions' */
+/** @import { WorldObject } from 'util-types/gameDefinitions' */
 
-import {stringifyEntry} from '../../util-parsing/stringifyEntry.js';
+import {stringifyEntry} from 'util-parsing/stringifyEntry.js';
 
 /**
  * @param {Generator<WorldObject>} worldObjectsGeneratorA

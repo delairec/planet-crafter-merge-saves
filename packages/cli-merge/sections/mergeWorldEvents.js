@@ -1,4 +1,4 @@
-/** @import { WorldEvent } from '../../util-types/gameDefinitions' */
+/** @import { WorldEvent } from 'util-types/gameDefinitions' */
 
 /**
  * @param {WorldEvent[]} worldEventsA

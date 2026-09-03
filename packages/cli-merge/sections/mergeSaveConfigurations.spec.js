@@ -3,7 +3,7 @@ import {mergeSaveConfigurations} from './mergeSaveConfigurations.js';
 
 describe('Merge save configurations', () => {
   const saveDisplayName = 'SAVE_NAME';
-  /** @type {import('../../util-types/gameDefinitions').SaveConfiguration} */
+  /** @type {import('util-types/gameDefinitions').SaveConfiguration} */
   const baseSaveConfiguration = {
     saveDisplayName: 'Merged Save',
     planetId: 'Toxicity',

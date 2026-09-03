@@ -1,8 +1,8 @@
 import {describe, expect, it} from 'bun:test';
 import {merge} from '../merge.js';
-import {createFakeSaveString, FAKE_SAVE_CONFIGURATION} from '../../shared-mapping/testing/createFakeSaveString.js';
-import {createFakeParsedSave} from "../../shared-mapping/testing/createFakeParsedSave.js";
-import {SAVE_CONFIGURATION_SECTION_INDEX} from "../../util-types/sectionIndexes.js";
+import {createFakeSaveString, FAKE_SAVE_CONFIGURATION} from 'shared-mapping/testing/createFakeSaveString.js';
+import {createFakeParsedSave} from "shared-mapping/testing/createFakeParsedSave.js";
+import {SAVE_CONFIGURATION_SECTION_INDEX} from "util-types/sectionIndexes.js";
 
 describe('Merge saves — #determineSaveOrder', () => {
     const saveDisplayName = 'SAVE_NAME';

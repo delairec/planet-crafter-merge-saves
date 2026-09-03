@@ -1,4 +1,4 @@
-/** @import { GlobalMetadata } from '../../util-types/gameDefinitions' */
+/** @import { GlobalMetadata } from 'util-types/gameDefinitions' */
 
 const DEFAULT_METADATA = {
     terraTokens: 0,

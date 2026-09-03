@@ -1,0 +1,14 @@
+{
+  "name": "util-types",
+  "version": "1.0.0",
+  "description": "Wire-format type definitions for Planet Crafter save files",
+  "type": "module",
+  "exports": {
+    "./gameDefinitions": "./gameDefinitions/index.ts",
+    "./*": "./*"
+  },
+  "scripts": {
+    "test": "bun test",
+    "lint:types": "tsc --noEmit"
+  }
+}

@@ -1,4 +1,4 @@
-import {createFakeSaveString} from '../../shared-mapping/testing/createFakeSaveString.js';
+import {createFakeSaveString} from 'shared-mapping/testing/createFakeSaveString.js';
 
 const validSaveConfiguration = {
   saveDisplayName: 'Merged Save',

@@ -4,12 +4,12 @@ import {
 } from "core-mapping/controllers/LoadTerraformationLevelsSectionController";
 import FieldsGroup from "./structure/FieldsGroup";
 import {TerraformationLevelsViewModel} from "core-mapping/presentation/viewModels/TerraformationLevelsViewModel";
-import {ParsedSections} from "../../../util-types/gameDefinitions";
+import {ParsedSections} from "util-types/gameDefinitions";
 import {
   terraformationLevelsSectionBiomassLabel,
   terraformationLevelsSectionIndexLabel,
   terraformationLevelsSectionTitle
-} from "../../../util-messages/terraformationLevelsSectionMessages";
+} from "util-messages/terraformationLevelsSectionMessages";
 
 interface TerraformationLevelsProps {
   sections: Accessor<ParsedSections>;

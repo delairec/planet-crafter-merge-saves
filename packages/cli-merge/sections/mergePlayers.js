@@ -1,7 +1,7 @@
-/** @import { Player } from '../../util-types/gameDefinitions' */
+/** @import { Player } from 'util-types/gameDefinitions' */
 /** @typedef {Omit<Player, 'cameraView'|'totalCraftedObjects'|'totalTerraTokenEarned'> & Partial<Pick<Player, 'cameraView'|'totalCraftedObjects'|'totalTerraTokenEarned'>>} LegacyCompatiblePlayer */
 
-import {stringifyEntry} from '../../util-parsing/stringifyEntry.js';
+import {stringifyEntry} from 'util-parsing/stringifyEntry.js';
 
 const NUMBER_FIELD_FALLBACKS = {
   cameraView: 0,

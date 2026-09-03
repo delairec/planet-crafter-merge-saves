@@ -2,7 +2,7 @@ import {TerraformationLevelsViewModel} from '../presentation/viewModels/Terrafor
 import {TerraformationLevelsPresenter} from '../presentation/TerraformationLevelsPresenter';
 import {LoadTerraformationLevelsSection} from '../application/LoadTerraformationLevelsSection';
 import {createSaveParser} from '../composition/compositionRoot';
-import {ParsedSections} from "../../../util-types/gameDefinitions";
+import {ParsedSections} from "util-types/gameDefinitions";
 
 export class LoadTerraformationLevelsSectionController {
   static loadTerraformationLevelsSection(sections: ParsedSections): TerraformationLevelsViewModel {

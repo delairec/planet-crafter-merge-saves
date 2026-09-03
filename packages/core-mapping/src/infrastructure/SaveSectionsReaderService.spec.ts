@@ -1,6 +1,6 @@
 import {beforeEach, describe, expect, it} from 'bun:test';
-import {createFakeSaveContent, player} from '../../../shared-mapping/testing/createFakeSaveContent';
-import {parseSaveSections} from '../../../util-parsing/parseSaveSections.js';
+import {createFakeSaveContent, player} from 'shared-mapping/testing/createFakeSaveContent.js';
+import {parseSaveSections} from 'util-parsing/parseSaveSections.js';
 import {PlayerEntity} from "../domain/entities/PlayerEntity";
 import {SaveSectionsReaderService} from './SaveSectionsReaderService';
 import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
@@ -9,7 +9,7 @@ import {InventoryEntity} from "../domain/entities/InventoryEntity";
 import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
-import {ParsedSections} from "../../../util-types/gameDefinitions";
+import {ParsedSections} from "util-types/gameDefinitions";
 import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
 import {
   energyConsumptionLevelsByWorldObjectName,

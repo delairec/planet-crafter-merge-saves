@@ -1,9 +1,9 @@
 import {merge} from "cli-merge/merge.js";
-import {resolveIdConflicts} from "../../../util-parsing/resolveIdConflicts.js";
-import {buildMergedFileName} from "../../../util-parsing/buildMergedFileName.js";
+import {resolveIdConflicts} from "util-parsing/resolveIdConflicts.js";
+import {buildMergedFileName} from "util-parsing/buildMergedFileName.js";
 import {SaveMergerPort} from "../application/ports/SaveMergerPort";
 import {MergedSaveValueObject} from "../domain/valueObjects/MergedSaveValueObject";
-import {parseSaveSections} from "../../../util-parsing/parseSaveSections";
+import {parseSaveSections} from "util-parsing/parseSaveSections.js";
 
 export class SaveFilesMergerService implements SaveMergerPort {
   merge(fileNameA: string, contentA: string, fileNameB: string, contentB: string): MergedSaveValueObject {

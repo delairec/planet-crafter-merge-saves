@@ -1,4 +1,4 @@
-/** @import { ParsedSave, Player, Inventory, WorldObject } from '../util-types/gameDefinitions' */
+/** @import { ParsedSave, Player, Inventory, WorldObject } from 'util-types/gameDefinitions' */
 import {parseSaveSections} from './parseSaveSections.js';
 import {stringifyEntry} from './stringifyEntry.js';
 import {serializeSave} from './serializeSave.js';

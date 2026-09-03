@@ -1,4 +1,4 @@
-/** @import { TerraformationLevel, Player, WorldObject } from '../util-types/gameDefinitions' */
+/** @import { TerraformationLevel, Player, WorldObject } from 'util-types/gameDefinitions' */
 
 const FLOAT_FIELDS = new Set([
   'unitOxygenLevel', 'unitHeatLevel', 'unitPressureLevel', 'unitPlantsLevel',

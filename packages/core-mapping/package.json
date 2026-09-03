@@ -10,5 +10,15 @@
   "exports": {
     "./controllers/*": "./src/controllers/*.ts",
     "./presentation/viewModels/*": "./src/presentation/viewModels/*.ts"
+  },
+  "dependencies": {
+    "cli-merge": "workspace:*",
+    "cli-validate": "workspace:*",
+    "util-messages": "workspace:*",
+    "util-parsing": "workspace:*",
+    "util-types": "workspace:*"
+  },
+  "devDependencies": {
+    "shared-mapping": "workspace:*"
   }
 }

@@ -1,4 +1,4 @@
-import {readTextFile, exitProcess, isEntryPoint, getCliArguments} from '../../util-platforms/platform.js';
+import {readTextFile, exitProcess, isEntryPoint, getCliArguments} from 'util-platforms/platform.js';
 import {validateMergedSave} from '../validate.js';
 
 const USAGE_MESSAGE = `Usage: bun src/validate-cli.js <path-to-save-file>`;

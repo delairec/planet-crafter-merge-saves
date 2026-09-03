@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {parseSaveSections} from '../../../util-parsing/parseSaveSections.js';
-import {createFakeSaveContent} from '../../../shared-mapping/testing/createFakeSaveContent';
+import {parseSaveSections} from 'util-parsing/parseSaveSections.js';
+import {createFakeSaveContent} from 'shared-mapping/testing/createFakeSaveContent.js';
 import {LoadGlobalProgressionSectionController} from './LoadGlobalProgressionSectionController';
 import {GlobalProgressionViewModel} from '../presentation/viewModels/GlobalProgressionViewModel';
 

@@ -1,5 +1,5 @@
 import Ajv from 'ajv';
-import {normalizeRawSections, verifySectionCount} from '../util-parsing/normalizeSaveSections.js';
+import {normalizeRawSections, verifySectionCount} from 'util-parsing/normalizeSaveSections.js';
 import schema0 from '../../docs/schemas/section0-player-progression.schema.json' with {type: 'json'};
 import schema1 from '../../docs/schemas/section1-terraformation-levels.schema.json' with {type: 'json'};
 import schema2 from '../../docs/schemas/section2-players.schema.json' with {type: 'json'};

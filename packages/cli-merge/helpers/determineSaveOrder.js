@@ -1,4 +1,4 @@
-/** @import { ParsedSections } from '../../util-types/gameDefinitions' */
+/** @import { ParsedSections } from 'util-types/gameDefinitions' */
 
 /**
  * @param {ParsedSections} parsedSaveA

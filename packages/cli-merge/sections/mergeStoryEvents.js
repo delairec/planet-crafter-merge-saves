@@ -1,4 +1,4 @@
-/** @import { StoryEvent } from '../../util-types/gameDefinitions' */
+/** @import { StoryEvent } from 'util-types/gameDefinitions' */
 
 /**
  * @param {StoryEvent[]} storyEventsA

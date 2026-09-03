@@ -1,4 +1,4 @@
-/** @import { Inventory } from '../../util-types/gameDefinitions' */
+/** @import { Inventory } from 'util-types/gameDefinitions' */
 
 /**
  * @param {Inventory[]} inventoriesA
