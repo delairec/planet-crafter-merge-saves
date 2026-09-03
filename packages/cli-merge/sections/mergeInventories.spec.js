@@ -1,10 +1,10 @@
 import {describe, it, expect} from 'bun:test';
 import {mergeInventories} from './mergeInventories.js';
-import {inventory} from 'shared-save-processing/testing/createFakeSaveContent.js';
+import {createInventory} from 'shared-save-processing/testing/createFakeSaveContent.js';
 
 describe('Merge Inventories', () => {
-  const inventoryA = {...inventory, id: 44};
-  const inventoryB = {...inventory, id: 77};
+  const inventoryA = createInventory({id: 44});
+  const inventoryB = createInventory({id: 77});
 
   describe('When inventories come from both saves', () => {
     it('should keep all inventories from both saves', () => {
@@ -76,7 +76,7 @@ describe('Merge Inventories', () => {
   describe('When save B contains inventories from an ejected player', () => {
     const orphanInventory = {id: 77, woIds: '901,902', size: 10};
     const orphanEquipment = {id: 78, woIds: '903', size: 5};
-    const remainingInventory = {...inventory, id: 79};
+    const remainingInventory = createInventory({id: 79});
     const orphanInventoryIds = new Set([orphanInventory.id, orphanEquipment.id]);
 
     it('should drop the orphan inventories of the ejected player', () => {

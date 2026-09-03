@@ -2,10 +2,10 @@ import {describe, expect, it} from 'bun:test';
 import {merge} from './merge.js';
 import {resolveIdConflicts} from './resolveIdConflicts.js';
 import {
-    metadata,
-    saveConfiguration,
-    statistics,
-    terraformationLevel
+    createGlobalMetadata,
+    createSaveConfiguration,
+    createStatistics,
+    createTerraformationLevel
 } from "shared-save-processing/testing/createFakeSaveContent.js";
 import {createFakeParsedSave} from "shared-save-processing/testing/createFakeParsedSave.js";
 
@@ -63,27 +63,27 @@ describe('Merge saves', () => {
             };
 
             const parsedSaveA = createFakeParsedSave({
-                globalMetadata: [metadata],
-                terraformationLevels: [terraformationLevel],
+                globalMetadata: [createGlobalMetadata()],
+                terraformationLevels: [createTerraformationLevel()],
                 players: [playerA],
                 worldObjects: function* worldObjectsGenerator() {
                     yield saveAContainer;
                 },
                 inventories: [inventoryA, equipmentA, saveAContainerInventory],
-                statistics: [statistics],
-                saveConfigurations: [saveConfiguration]
+                statistics: [createStatistics()],
+                saveConfigurations: [createSaveConfiguration()]
             });
 
             const parsedSaveB = createFakeParsedSave({
-                globalMetadata: [metadata],
-                terraformationLevels: [terraformationLevel],
+                globalMetadata: [createGlobalMetadata()],
+                terraformationLevels: [createTerraformationLevel()],
                 players: [playerA],
                 worldObjects: function* worldObjectsGenerator() {
                     yield saveBVegetube;
                 },
                 inventories: [inventoryA, equipmentA, saveBVegetubeInventory],
-                statistics: [statistics],
-                saveConfigurations: [saveConfiguration]
+                statistics: [createStatistics()],
+                saveConfigurations: [createSaveConfiguration()]
             });
 
             const {mergeSaves, saveAWorldObjectIds} = merge(parsedSaveA, parsedSaveB, saveDisplayName);

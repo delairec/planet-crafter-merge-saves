@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, it} from 'bun:test';
-import {createFakeSaveContent, player} from 'shared-save-processing/testing/createFakeSaveContent.js';
+import {createFakeSaveContent, createPlayer} from 'shared-save-processing/testing/createFakeSaveContent.js';
 import {parseSaveSections} from 'shared-save-processing/parseSaveSections.js';
 import {PlayerEntity} from "../domain/entities/PlayerEntity";
 import {SaveSectionsReaderService} from './SaveSectionsReaderService';
@@ -23,15 +23,10 @@ describe('SaveSectionsReaderService', () => {
   beforeEach(() => {
     const fakeSaveContent = createFakeSaveContent(
       {
-        players: [{
-          ...player,
-          name: 'Nikowa',
-        }, {
-          ...player,
-          name: 'Chileny',
-          inventoryId: 46,
-          equipmentId: 47
-        }],
+        players: [
+          createPlayer({name: 'Nikowa'}),
+          createPlayer({name: 'Chileny', inventoryId: 46, equipmentId: 47})
+        ],
       }
     );
 
