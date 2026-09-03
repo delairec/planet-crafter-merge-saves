@@ -1,5 +1,8 @@
 export const energyLevelsSectionTitle = 'Power';
 export const energyLevelsSectionOptimizersTitle = 'Optimizers';
+export const energyLevelsSectionProductionTitle = 'Production';
+export const energyLevelsSectionConsumptionTitle = 'Consumption';
+export const energyLevelsSectionWorkInProgressLabel = '🚧 Work In Progress';
 export const energyLevelsSectionEnergyFusesLabel = 'Energy Fuses';
 export const energyLevelsSectionBoostedMachinesLabel = 'Boosted machines';
 export const energyLevelsSectionContributionLabel = 'Contribution';

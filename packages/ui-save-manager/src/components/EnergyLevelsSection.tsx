@@ -4,19 +4,17 @@ import {EnergyLevelsViewModel} from "core-mapping/presentation/viewModels/Energy
 import {ParsedSections} from "shared-save-processing/gameDefinitions";
 import {LoadEnergyLevelsSectionController} from "core-mapping/controllers/LoadEnergyLevelsSectionController";
 import {
-  energyLevelsSectionConsumptionTitle,
-  energyLevelsSectionProductionTitle,
-  energyLevelsSectionWorkInProgressLabel
-} from "core-mapping/presentation/messages/energyLevelsSectionMessages";
-import {
   energyLevelsSectionBoostedMachinesLabel,
+  energyLevelsSectionConsumptionTitle,
   energyLevelsSectionContributionLabel,
   energyLevelsSectionEnergyFusesLabel,
   energyLevelsSectionOptimizersTitle,
+  energyLevelsSectionProductionTitle,
   energyLevelsSectionQuantityLabel,
   energyLevelsSectionTitle,
   energyLevelsSectionTotalLabel,
-  energyLevelsSectionUnitLabel
+  energyLevelsSectionUnitLabel,
+  energyLevelsSectionWorkInProgressLabel
 } from "~/messages/energyLevelsSectionMessages";
 
 interface EnergyLevelsProps {

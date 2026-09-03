@@ -10,7 +10,6 @@
   "exports": {
     "./controllers/*": "./src/controllers/*.ts",
     "./presentation/viewModels/*": "./src/presentation/viewModels/*.ts",
-    "./presentation/messages/*": "./src/presentation/messages/*.js",
     "./infrastructure/validateSaveContent.js": "./src/infrastructure/validateSaveContent.js"
   },
   "dependencies": {
