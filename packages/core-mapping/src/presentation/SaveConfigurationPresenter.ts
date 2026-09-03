@@ -45,7 +45,11 @@ export class SaveConfigurationPresenter implements SaveConfigurationPresenterPor
     };
   }
 
-  displaySaveConfiguration(saveConfiguration: SaveConfigurationValueObject): void {
+  displaySaveConfiguration(saveConfiguration: SaveConfigurationValueObject | undefined): void {
+    if (!saveConfiguration) {
+      return;
+    }
+
     this.viewModel = {
       mode: saveConfiguration.mode,
       title: saveConfiguration.title,

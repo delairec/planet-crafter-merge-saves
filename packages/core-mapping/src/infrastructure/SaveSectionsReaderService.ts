@@ -68,7 +68,7 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
   }
 
   getPlayers(): PlayerEntity[] {
-    const inventories = this.getInventories();
+    const inventories = this.mapInventories();
 
     return this.players.map((player: Player): PlayerEntity => {
       const playerInventory = inventories.find(inventory => inventory.id === player.inventoryId);
@@ -99,35 +99,13 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
     }));
   }
 
-  getInventories(): InventoryEntity[] {
-    return this.inventories.map((inventory: Inventory): InventoryEntity => ({
-      id: inventory.id,
-      worldObjectIds: inventory.woIds.split(',').filter(Boolean),
-      size: inventory.size
-    }));
-  }
-
-  getWorldObjects(): (sections: ParsedSections) => Generator<WorldObjectEntity> {
-
-    const worldObjectsFactory = this.worldObjectsFactory;
-
-    return (function* () {
-      for (const worldObject of worldObjectsFactory()) {
-        yield {
-          id: String(worldObject.id),
-          name: worldObject.gId as WorldObjectName
-        };
-      }
-    });
-  }
-
-  getStatistics(): StatisticsValueObject {
+  getStatistics(): StatisticsValueObject | undefined {
     return this.statistics.map((stat) => ({
       totalCraftedObjects: stat.craftedObjects
     }))[0];
   }
 
-  getSaveConfiguration(): SaveConfigurationValueObject {
+  getSaveConfiguration(): SaveConfigurationValueObject | undefined {
     return this.saveConfiguration.map((config) => ({
       title: config.saveDisplayName,
       mode: config.mode,
@@ -169,7 +147,7 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
       id: String(worldObject.id),
       name: worldObject.gId as WorldObjectName
     }));
-    const inventories = this.getInventories();
+    const inventories = this.mapInventories();
     const knownPlanetNames = [...new Set(this.terraformationLevels.map((level) => level.planetId))];
 
     const planets: PlanetWorldObjectsValueObject[] = [...placedWorldObjectsByPlanet.entries()]
@@ -201,12 +179,19 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
     };
   }
 
+  private mapInventories(): InventoryEntity[] {
+    return this.inventories.map((inventory: Inventory): InventoryEntity => ({
+      id: inventory.id,
+      worldObjectIds: inventory.woIds.split(',').filter(Boolean),
+      size: inventory.size
+    }));
+  }
 
   private findWorldObjectByIds(ids: string[]): WorldObjectEntity[] {
     const result: WorldObjectEntity[] = [];
-    for (const worldObject of this.getWorldObjects()(this.sections)) {
-      if (ids.includes(worldObject.id)) {
-        result.push(worldObject);
+    for (const worldObject of this.worldObjectsFactory()) {
+      if (ids.includes(String(worldObject.id))) {
+        result.push({id: String(worldObject.id), name: worldObject.gId as WorldObjectName});
       }
     }
     return result;

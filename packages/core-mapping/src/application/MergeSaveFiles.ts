@@ -10,7 +10,7 @@ export class MergeSaveFiles {
     private readonly presenter: MergeResultPresenterPort
   ) {}
 
-  execute(request: MergeSaveFilesRequest): void {
+  async execute(request: MergeSaveFilesRequest): Promise<void> {
     const {fileNameA, contentA, fileNameB, contentB, saveDisplayName} = request;
     const validationA = this.validator.validate(fileNameA, contentA);
     const validationB = this.validator.validate(fileNameB, contentB);

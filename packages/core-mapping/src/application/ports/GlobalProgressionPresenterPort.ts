@@ -2,5 +2,5 @@ import {GlobalProgressionValueObject} from "../../domain/valueObjects/GlobalProg
 import {StatisticsValueObject} from "../../domain/valueObjects/StatisticsValueObject";
 
 export interface GlobalProgressionPresenterPort {
-  displayGlobalProgression(metadata: GlobalProgressionValueObject, statistics: StatisticsValueObject): void;
+  displayGlobalProgression(metadata: GlobalProgressionValueObject, statistics: StatisticsValueObject | undefined): void;
 }

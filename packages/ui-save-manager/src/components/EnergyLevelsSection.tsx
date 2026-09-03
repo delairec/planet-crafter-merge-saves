@@ -25,8 +25,8 @@ export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
   const [planets, setPlanets] = createSignal<EnergyLevelsViewModel['planets']>([]);
 
   createEffect(() => {
-    const {planets} = LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections());
-    setPlanets(planets);
+    LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections())
+      .then(({planets}) => setPlanets(planets));
   });
 
   return (

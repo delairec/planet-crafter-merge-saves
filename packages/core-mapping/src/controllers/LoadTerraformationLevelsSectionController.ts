@@ -5,12 +5,12 @@ import {SaveSectionsReaderService} from '../infrastructure/SaveSectionsReaderSer
 import {ParsedSections} from "shared-save-processing/gameDefinitions";
 
 export class LoadTerraformationLevelsSectionController {
-  static loadTerraformationLevelsSection(sections: ParsedSections): TerraformationLevelsViewModel {
+  static async loadTerraformationLevelsSection(sections: ParsedSections): Promise<TerraformationLevelsViewModel> {
     const saveParser = new SaveSectionsReaderService(sections);
     const presenter = new TerraformationLevelsPresenter();
     const useCase = new LoadTerraformationLevelsSection(saveParser, presenter);
 
-    useCase.execute();
+    await useCase.execute();
 
     return presenter.viewModel;
   }

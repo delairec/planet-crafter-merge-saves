@@ -15,10 +15,12 @@ export default function SaveConfigurationSection({sections}: SaveConfigurationPr
   const [mode, setMode] = createSignal<string>('');
 
   createEffect(() => {
-    const {title, modifiers, mode} = LoadSaveConfigurationSectionController.loadSaveConfigurationSection(sections());
-    setModifiersColumns(modifiers.columns);
-    setTitle(title);
-    setMode(mode);
+    LoadSaveConfigurationSectionController.loadSaveConfigurationSection(sections())
+      .then(({title, modifiers, mode}) => {
+        setModifiersColumns(modifiers.columns);
+        setTitle(title);
+        setMode(mode);
+      });
   });
 
   return (

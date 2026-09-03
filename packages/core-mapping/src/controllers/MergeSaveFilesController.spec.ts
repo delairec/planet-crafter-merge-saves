@@ -5,13 +5,13 @@ import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSa
 describe('MergeSaveFilesController', () => {
 
   describe('When both saves are valid', () => {
-    it('should return a success view model with the merged file name', () => {
+    it('should return a success view model with the merged file name', async () => {
       // Arrange
       const contentA = createFakeSaveContent();
       const contentB = createFakeSaveContent();
 
       // Act
-      const viewModel = MergeSaveFilesController.mergeSaveFiles('Standard-1.json', contentA, 'Standard-2.json', contentB);
+      const viewModel = await MergeSaveFilesController.mergeSaveFiles('Standard-1.json', contentA, 'Standard-2.json', contentB);
 
       // Assert
       expect(viewModel.status).toBe('success');
@@ -20,13 +20,13 @@ describe('MergeSaveFilesController', () => {
   });
 
   describe('When at least one save is invalid', () => {
-    it('should return a validation error view model with the invalid save error messages', () => {
+    it('should return a validation error view model with the invalid save error messages', async () => {
       // Arrange
       const contentA = 'not a valid save at all';
       const contentB = createFakeSaveContent();
 
       // Act
-      const viewModel = MergeSaveFilesController.mergeSaveFiles('Standard-1.json', contentA, 'Standard-2.json', contentB);
+      const viewModel = await MergeSaveFilesController.mergeSaveFiles('Standard-1.json', contentA, 'Standard-2.json', contentB);
 
       // Assert
       expect(viewModel.status).toBe('validationError');

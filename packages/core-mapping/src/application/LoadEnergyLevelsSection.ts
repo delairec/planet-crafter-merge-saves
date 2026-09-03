@@ -11,7 +11,7 @@ export class LoadEnergyLevelsSection {
   ) {
   }
 
-  execute() {
+  async execute(): Promise<void> {
     const {allWorldObjects, inventories, planets} = this.saveParser.getEnergyLevelsRawData();
 
     const energyLevels: EnergyLevelsValueObject = {

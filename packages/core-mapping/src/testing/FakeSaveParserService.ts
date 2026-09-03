@@ -2,7 +2,6 @@ import {SaveSectionsReaderPort} from "../application/ports/SaveSectionsReaderPor
 import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
 import {PlayerEntity} from "../domain/entities/PlayerEntity";
 import {TerraformationLevelEntity} from "../domain/entities/TerraformationLevelEntity";
-import {InventoryEntity} from "../domain/entities/InventoryEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
 import {EnergyLevelsRawDataValueObject} from "../domain/valueObjects/EnergyLevelsRawDataValueObject";
@@ -41,10 +40,6 @@ export class FakeSaveParserService implements SaveSectionsReaderPort {
     return {
       totalCraftedObjects: 10
     }
-  }
-
-  getInventories(): InventoryEntity[] {
-    throw new Error("Method not implemented.");
   }
 
   getGlobalMetadata(): GlobalProgressionValueObject {

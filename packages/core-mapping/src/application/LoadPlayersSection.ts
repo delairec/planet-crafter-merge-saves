@@ -7,7 +7,7 @@ export class LoadPlayersSection {
     private readonly presenter: PlayersPresenterPort,
   ) {}
 
-  execute(): void {
+  async execute(): Promise<void> {
     const players = this.saveParser.getPlayers();
     this.presenter.displayPlayers(players);
   }

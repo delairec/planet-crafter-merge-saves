@@ -9,7 +9,7 @@ export class LoadTerraformationLevelsSection {
     private presenter: TerraformationLevelsPresenterPort
   ) {}
 
-  execute(): void {
+  async execute(): Promise<void> {
     const levels = this.saveParser.getTerraformationLevels();
     const levelsWithSummary: TerraformationLevelSummaryValueObject[] = levels.map((level) => ({
       ...level,

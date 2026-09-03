@@ -5,12 +5,12 @@ import {LoadPlayersSectionController} from './LoadPlayersSectionController';
 import {PlayersViewModel} from '../presentation/viewModels/PlayersViewModel';
 
 describe('LoadPlayersSectionController', () => {
-  it('should present players from parsed save', () => {
+  it('should present players from parsed save', async () => {
     // Arrange
     const {sections} = parseSaveSections(createFakeSaveContent());
 
     // Act
-    const viewModel = LoadPlayersSectionController.loadPlayersSection(sections);
+    const viewModel = await LoadPlayersSectionController.loadPlayersSection(sections);
 
     // Assert
     expect(viewModel).toEqual<PlayersViewModel>({

@@ -5,14 +5,14 @@ import {MergeSaveFiles} from "../application/MergeSaveFiles";
 import {MergeSaveFilesRequest} from "../application/MergeSaveFilesRequest";
 
 export class MergeSaveFilesController {
-  static mergeSaveFiles(fileNameA: string, contentA: string, fileNameB: string, contentB: string, saveDisplayName?: string): MergeResultViewModel {
+  static async mergeSaveFiles(fileNameA: string, contentA: string, fileNameB: string, contentB: string, saveDisplayName?: string): Promise<MergeResultViewModel> {
     const request: MergeSaveFilesRequest = {fileNameA, contentA, fileNameB, contentB, saveDisplayName};
     const validator = createSaveValidator();
     const merger = createSaveFilesMerger();
     const presenter = new MergeResultPresenter();
     const useCase = new MergeSaveFiles(validator, merger, presenter);
 
-    useCase.execute(request);
+    await useCase.execute(request);
 
     return presenter.viewModel;
   }

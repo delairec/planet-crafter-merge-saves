@@ -8,7 +8,7 @@ export class LoadSaveConfigurationSection {
     private readonly presenter: SaveConfigurationPresenterPort
   ) {}
 
-  execute(): void {
+  async execute(): Promise<void> {
     const saveConfiguration = this.saveParser.getSaveConfiguration();
     this.presenter.displaySaveConfiguration(saveConfiguration);
   }

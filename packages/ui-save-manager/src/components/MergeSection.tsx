@@ -33,7 +33,7 @@ export default function MergeSection(props: MergeSectionProps) {
     }
 
     const [contentA, contentB] = await Promise.all([readFileAsText(savedFileA), readFileAsText(savedFileB)]);
-    const viewModel = MergeSaveFilesController.mergeSaveFiles(savedFileA.name, contentA, savedFileB.name, contentB);
+    const viewModel = await MergeSaveFilesController.mergeSaveFiles(savedFileA.name, contentA, savedFileB.name, contentB);
 
     props.onMergeResult(viewModel);
   };

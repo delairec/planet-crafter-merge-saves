@@ -7,7 +7,7 @@ export class LoadGlobalProgressionSection {
     private readonly presenter: GlobalProgressionPresenterPort,
   ) {}
 
-  execute(): void {
+  async execute(): Promise<void> {
     const globalProgression = this.saveParser.getGlobalMetadata();
     const statistics = this.saveParser.getStatistics();
     this.presenter.displayGlobalProgression(globalProgression, statistics);

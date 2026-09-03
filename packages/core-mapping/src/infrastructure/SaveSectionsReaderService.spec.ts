@@ -5,8 +5,6 @@ import {PlayerEntity} from "../domain/entities/PlayerEntity";
 import {SaveSectionsReaderService} from './SaveSectionsReaderService';
 import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
 import {TerraformationLevelEntity} from "../domain/entities/TerraformationLevelEntity";
-import {InventoryEntity} from "../domain/entities/InventoryEntity";
-import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
 import {ParsedSections} from "shared-save-processing/gameDefinitions";
@@ -18,6 +16,7 @@ import {
 import {WorldObjectName} from "../domain/worldObjectNames";
 import {LoadEnergyLevelsSection} from "../application/LoadEnergyLevelsSection";
 import {EnergyLevelsPresenterPort} from "../application/ports/EnergyLevelsPresenterPort";
+import {SAVE_CONFIGURATION_SECTION_INDEX, STATISTICS_SECTION_INDEX} from "shared-save-processing/gameDefinitions";
 
 describe('SaveSectionsReaderService', () => {
   let sections: ParsedSections;
@@ -120,49 +119,6 @@ describe('SaveSectionsReaderService', () => {
     }]);
   });
 
-  it('should extract inventories', () => {
-    // Arrange
-    const service = new SaveSectionsReaderService(sections);
-
-    // Act
-    const inventories = service.getInventories();
-
-    // Assert
-    expect(inventories).toEqual<InventoryEntity[]>([
-      {id: 44, worldObjectIds: ['79111656', '58524136'], size: 20},
-      {id: 45, worldObjectIds: ['85274195', '48456321'], size: 10},
-      {id: 46, worldObjectIds: ['15974863', '28491667'], size: 20},
-      {id: 47, worldObjectIds: ['39187611', '65514812'], size: 10},
-    ]);
-  });
-
-  it('should extract world objects', () => {
-    // Arrange
-    const service = new SaveSectionsReaderService(sections);
-
-    // Act
-    const worldObjects = service.getWorldObjects();
-
-    // Assert
-    const worldObjectsGenerator = worldObjects(sections);
-    expect(worldObjectsGenerator.next().value).toEqual<WorldObjectEntity>({
-      id: '79111656',
-      name: 'Phytoplankton3'
-    });
-    expect(worldObjectsGenerator.next().value).toEqual<WorldObjectEntity>({
-      id: '58524136',
-      name: 'MagnetarQuartz'
-    });
-    expect(worldObjectsGenerator.next().value).toEqual<WorldObjectEntity>({
-      id: '85274195',
-      name: 'Backpack4'
-    });
-    expect(worldObjectsGenerator.next().value).toEqual<WorldObjectEntity>({
-      id: '48456321',
-      name: 'OxygenTank5'
-    });
-  });
-
   it('should extract statistics', () => {
     // Arrange
     const service = new SaveSectionsReaderService(sections);
@@ -173,6 +129,22 @@ describe('SaveSectionsReaderService', () => {
     // Assert
     expect(statistics).toEqual<StatisticsValueObject>({
       totalCraftedObjects: 10
+    });
+  });
+
+  describe('When statistics are missing', () => {
+    it('should return undefined', () => {
+      // Arrange
+      const sectionsWithoutStatistics = [...sections];
+      sectionsWithoutStatistics[STATISTICS_SECTION_INDEX] = [];
+      // @ts-ignore invalid section on purpose
+      const service = new SaveSectionsReaderService(sectionsWithoutStatistics);
+
+      // Act
+      const statistics = service.getStatistics();
+
+      // Assert
+      expect(statistics).toBeUndefined();
     });
   });
 
@@ -194,6 +166,22 @@ describe('SaveSectionsReaderService', () => {
         meteoOccurrence: 0.4,
         multiplayerFactor: 0.5
       }
+    });
+  });
+
+  describe('When save configuration is missing', () => {
+    it('should return undefined', () => {
+      // Arrange
+      const sectionsWithoutSaveConfiguration = [...sections];
+      sectionsWithoutSaveConfiguration[SAVE_CONFIGURATION_SECTION_INDEX] = [];
+      // @ts-ignore invalid section on purpose
+      const service = new SaveSectionsReaderService(sectionsWithoutSaveConfiguration);
+
+      // Act
+      const saveConfiguration = service.getSaveConfiguration();
+
+      // Assert
+      expect(saveConfiguration).toBeUndefined();
     });
   });
 

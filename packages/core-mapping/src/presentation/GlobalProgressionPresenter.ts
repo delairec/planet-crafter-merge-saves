@@ -28,10 +28,10 @@ export class GlobalProgressionPresenter implements GlobalProgressionPresenterPor
     }
   }
 
-  displayGlobalProgression(globalProgression: GlobalProgressionValueObject, statistics: StatisticsValueObject): void {
+  displayGlobalProgression(globalProgression: GlobalProgressionValueObject, statistics: StatisticsValueObject | undefined): void {
     const allTimeTerraTokens = formatNumber(globalProgression.allTimeTerraTokens);
     const [allTimeTerraTokensColumn, totalCrafterObjects] = this.viewModel.statistics.columns;
     allTimeTerraTokensColumn.values = [`${allTimeTerraTokens} =tt=`];
-    totalCrafterObjects.values = [`${statistics.totalCraftedObjects}`];
+    totalCrafterObjects.values = [`${statistics?.totalCraftedObjects ?? 0}`];
   }
 }
