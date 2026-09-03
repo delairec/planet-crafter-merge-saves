@@ -9,7 +9,7 @@ export class MergeSaveFiles {
     private readonly presenter: MergeResultPresenterPort
   ) {}
 
-  execute(fileNameA: string, contentA: string, fileNameB: string, contentB: string): void {
+  execute(fileNameA: string, contentA: string, fileNameB: string, contentB: string, saveDisplayName?: string): void {
     const validationA = this.validator.validate(fileNameA, contentA);
     const validationB = this.validator.validate(fileNameB, contentB);
 
@@ -18,7 +18,7 @@ export class MergeSaveFiles {
       return;
     }
 
-    const {fileName, content} = this.merger.merge(fileNameA, contentA, fileNameB, contentB);
+    const {fileName, content} = this.merger.merge(fileNameA, contentA, fileNameB, contentB, saveDisplayName);
     this.presenter.presentMergeSucceeded(fileName, content);
   }
 }

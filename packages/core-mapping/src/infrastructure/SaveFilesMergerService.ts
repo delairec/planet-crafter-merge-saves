@@ -6,14 +6,14 @@ import {MergedSaveValueObject} from "../domain/valueObjects/MergedSaveValueObjec
 import {parseSaveSections} from "shared-save-processing/parseSaveSections.js";
 
 export class SaveFilesMergerService implements SaveMergerPort {
-  merge(fileNameA: string, contentA: string, fileNameB: string, contentB: string): MergedSaveValueObject {
+  merge(fileNameA: string, contentA: string, fileNameB: string, contentB: string, saveDisplayName?: string): MergedSaveValueObject {
     const fileName = buildMergedFileName(fileNameA, fileNameB);
-    const saveDisplayName = fileName.replace(/\.json$/, '');
+    const resolvedSaveDisplayName = saveDisplayName ?? fileName.replace(/\.json$/, '');
 
     const parsedSaveA = parseSaveSections(contentA);
     const parsedSaveB = parseSaveSections(contentB);
 
-    const {mergeSaves, saveAWorldObjectIds} = mergeParsedSaveSections(parsedSaveA, parsedSaveB, saveDisplayName);
+    const {mergeSaves, saveAWorldObjectIds} = mergeParsedSaveSections(parsedSaveA, parsedSaveB, resolvedSaveDisplayName);
     const mergedSections = mergeSaves();
     const content = resolveIdConflicts(mergedSections, saveAWorldObjectIds);
 

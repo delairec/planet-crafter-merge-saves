@@ -48,7 +48,7 @@ export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirec
     for (let index = 1; index < files.length; index++) {
       const nextFileName = files[index];
       const nextContent = await readTextFile(joinPath(folderPath, nextFileName));
-      const viewModel = MergeSaveFilesController.mergeSaveFiles(mergedFileName, mergedContent, nextFileName, nextContent);
+      const viewModel = MergeSaveFilesController.mergeSaveFiles(mergedFileName, mergedContent, nextFileName, nextContent, folder);
 
       if (viewModel.status !== 'success') {
         renderMergeFailed(folder, viewModel.saveAErrorMessages, viewModel.saveBErrorMessages);
