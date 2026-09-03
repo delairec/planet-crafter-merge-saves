@@ -1,13 +1,13 @@
 import {ParsedSections} from "shared-save-processing/gameDefinitions";
 import {EnergyLevelsViewModel} from "../presentation/viewModels/EnergyLevelsViewModel";
-import {createSaveParser} from "../composition/compositionRoot";
+import {SaveSectionsReaderService} from "../infrastructure/SaveSectionsReaderService";
 import {EnergyLevelsPresenter} from "../presentation/EnergyLevelsPresenter";
 import {LoadEnergyLevelsSection} from "../application/LoadEnergyLevelsSection";
 
 export class LoadEnergyLevelsSectionController {
 
   static loadEnergyLevelsSection(sections: ParsedSections): EnergyLevelsViewModel {
-    const saveParser = createSaveParser(sections);
+    const saveParser = new SaveSectionsReaderService(sections);
     const presenter = new EnergyLevelsPresenter();
     const useCase = new LoadEnergyLevelsSection(saveParser, presenter);
 

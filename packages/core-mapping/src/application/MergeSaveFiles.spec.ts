@@ -16,7 +16,7 @@ describe('MergeSaveFiles', () => {
       const useCase = new MergeSaveFiles(validator, merger, presenter);
 
       // Act
-      useCase.execute('Save-A.json', 'contentA', 'Save-B.json', 'contentB');
+      useCase.execute({fileNameA: 'Save-A.json', contentA: 'contentA', fileNameB: 'Save-B.json', contentB: 'contentB'});
 
       // Assert
       expect(presenter.presentMergeSucceeded).toHaveBeenCalledWith('Save-A-Save-B-merged.json', 'merged content');
@@ -37,7 +37,7 @@ describe('MergeSaveFiles', () => {
       const useCase = new MergeSaveFiles(validator, merger, presenter);
 
       // Act
-      useCase.execute('Save-A.json', 'contentA', 'Save-B.json', 'contentB');
+      useCase.execute({fileNameA: 'Save-A.json', contentA: 'contentA', fileNameB: 'Save-B.json', contentB: 'contentB'});
 
       // Assert
       expect(merger.merge).not.toHaveBeenCalled();
@@ -59,7 +59,7 @@ describe('MergeSaveFiles', () => {
       const useCase = new MergeSaveFiles(validator, merger, presenter);
 
       // Act
-      useCase.execute('Save-A.txt', 'contentA', 'Save-B.json', 'contentB');
+      useCase.execute({fileNameA: 'Save-A.txt', contentA: 'contentA', fileNameB: 'Save-B.json', contentB: 'contentB'});
 
       // Assert
       expect(validator.validate).toHaveBeenCalledTimes(2);

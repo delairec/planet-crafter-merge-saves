@@ -1,6 +1,7 @@
 import {SaveValidatorPort} from "./ports/SaveValidatorPort";
 import {SaveFilesMergerPort} from "./ports/SaveFilesMergerPort";
 import {MergeResultPresenterPort} from "./ports/MergeResultPresenterPort";
+import {MergeSaveFilesRequest} from "./MergeSaveFilesRequest";
 
 export class MergeSaveFiles {
   constructor(
@@ -9,7 +10,8 @@ export class MergeSaveFiles {
     private readonly presenter: MergeResultPresenterPort
   ) {}
 
-  execute(fileNameA: string, contentA: string, fileNameB: string, contentB: string, saveDisplayName?: string): void {
+  execute(request: MergeSaveFilesRequest): void {
+    const {fileNameA, contentA, fileNameB, contentB, saveDisplayName} = request;
     const validationA = this.validator.validate(fileNameA, contentA);
     const validationB = this.validator.validate(fileNameB, contentB);
 
