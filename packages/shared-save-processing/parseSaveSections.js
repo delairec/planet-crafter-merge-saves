@@ -8,7 +8,7 @@ import {verifySectionCount} from './verifySectionCount.js';
  * section was removed from the save format by a game update).
  * Section 3 (WorldObjects) is a Generator factory; all others are arrays.
  * Legacy saves (still containing Terrain Layers) are transparently adapted to the current format —
- * see `normalizeSaveSections.js` — and produce a warning instead of an error.
+ * see `normalizeRawSections.js` — and produce a warning instead of an error.
  * @param {string} save
  * @returns {ParsedSave}
  */
@@ -24,7 +24,7 @@ export function parseSaveSections(save) {
     warnings,
     sections: normalizedSections.map((section, index) => {
       if (isWorldObjectsSection(index)) {
-        return () => createSectionEntriesGenerator(section);
+        return () => createSectionEntriesGenerator(section, errors);
       }
 
       try {
@@ -44,7 +44,13 @@ function isWorldObjectsSection(index) {
   return index === 3;
 }
 
-function* createSectionEntriesGenerator(section) {
+/**
+ * @param {string} section
+ * @param {string[]} errors - shared with the `ParsedSave` returned by `parseSaveSections`; a
+ * malformed line is only discovered once this generator is iterated, so errors are pushed here
+ * rather than returned.
+ */
+function* createSectionEntriesGenerator(section, errors) {
   if (!section.trim()) {
     return;
   }
@@ -53,7 +59,7 @@ function* createSectionEntriesGenerator(section) {
     try {
       yield JSON.parse(line);
     } catch {
-      console.log('Failed to parse world object line:', line);
+      errors.push(`Failed to parse world object line: ${line}`);
     }
   }
 }

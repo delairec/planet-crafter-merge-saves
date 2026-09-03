@@ -1,4 +1,4 @@
-import {describe, it, expect} from 'bun:test';
+import {describe, it, expect, spyOn} from 'bun:test';
 import {parseSaveSections} from './parseSaveSections.js';
 import {createFakeSaveString, createLegacyFakeSaveString} from './testing/createFakeSaveString.js';
 
@@ -132,6 +132,26 @@ describe('utils/parseSaveSections', () => {
     // Assert
     const [, , , , inventories] = sections;
     expect(inventories).toEqual([]);
+  });
+
+  describe('When a world object line is malformed', () => {
+    it('should record a parse error instead of logging to the console', () => {
+      // Arrange
+      const save = createFakeSaveString({worldObjects: [expectedWorldObject]})
+        .replace(JSON.stringify(expectedWorldObject), '{not valid json');
+      const consoleLogSpy = spyOn(console, 'log');
+
+      // Act
+      const {sections, errors} = parseSaveSections(save);
+      const [, , , worldObjectsFactory] = sections;
+      [...worldObjectsFactory()];
+
+      // Assert
+      expect(errors.some(error => error.includes('{not valid json'))).toBe(true);
+      expect(consoleLogSpy).not.toHaveBeenCalled();
+
+      consoleLogSpy.mockRestore();
+    });
   });
 
   it('should parse an empty world objects section as empty', () => {
