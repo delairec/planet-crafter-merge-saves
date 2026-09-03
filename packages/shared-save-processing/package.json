@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     "./gameDefinitions": "./gameDefinitions/index.ts",
+    "./schemas/*": "./schemas/*",
     "./*": "./*"
   },
   "scripts": {
