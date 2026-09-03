@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {validateMergedSave} from './validate.js';
+import {validateSaveContent} from './validateSaveContent.js';
 import {createFakeSaveString, createLegacyFakeSaveString} from 'shared-save-processing/testing/createFakeSaveString.js';
 import {
   createEquipment,
@@ -12,7 +12,7 @@ import {
   createTerraformationLevel
 } from 'shared-save-processing/testing/createFakeSaveContent.js';
 
-describe('validateMergedSave', () => {
+describe('validateSaveContent', () => {
 
   describe('Return value shape', () => {
     it('should return a validation result with a validity flag and a list of errors', () => {
@@ -20,7 +20,7 @@ describe('validateMergedSave', () => {
       const save = createFakeSaveContent();
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect('isValid' in result).toBeTruthy();
@@ -32,7 +32,7 @@ describe('validateMergedSave', () => {
       const save = createFakeSaveContent();
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(true);
@@ -46,7 +46,7 @@ describe('validateMergedSave', () => {
       const invalidSave = 'not a valid save';
 
       // Act
-      const result = validateMergedSave(invalidSave);
+      const result = validateSaveContent(invalidSave);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -67,7 +67,7 @@ describe('validateMergedSave', () => {
       });
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -82,7 +82,7 @@ describe('validateMergedSave', () => {
       const save = createFakeSaveString({globalMetadata: {...createGlobalMetadata(), terraTokens: 'abc'}});
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -96,7 +96,7 @@ describe('validateMergedSave', () => {
       const save = createFakeSaveString({globalMetadata: metadataWithoutTimeLeft});
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -111,7 +111,7 @@ describe('validateMergedSave', () => {
       const save = createFakeSaveContent({terraformationLevels: [levelWithoutPlanetId]});
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -125,7 +125,7 @@ describe('validateMergedSave', () => {
       });
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -140,7 +140,7 @@ describe('validateMergedSave', () => {
       const save = createFakeSaveContent({players: [playerWithoutHost]});
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -152,7 +152,7 @@ describe('validateMergedSave', () => {
       const save = createFakeSaveContent({players: [createPlayer({playerPosition: 'bad-format'})]});
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -164,7 +164,7 @@ describe('validateMergedSave', () => {
       const save = createFakeSaveContent({players: [createPlayer({playerGaugeOxygen: -1})]});
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -177,7 +177,7 @@ describe('validateMergedSave', () => {
       const save = createFakeSaveContent({players: [legacyPlayer]});
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(true);
@@ -191,7 +191,7 @@ describe('validateMergedSave', () => {
       const save = createFakeSaveContent({inventories: [inventoryWithoutSize, createEquipment()]});
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -203,7 +203,7 @@ describe('validateMergedSave', () => {
       const save = createFakeSaveContent({inventories: [createInventory({size: -1}), createEquipment()]});
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -217,7 +217,7 @@ describe('validateMergedSave', () => {
       const save = createFakeSaveContent({statistics: createStatistics({craftedObjects: -5})});
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -232,7 +232,7 @@ describe('validateMergedSave', () => {
       const save = createFakeSaveContent({saveConfiguration: configWithoutName});
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -246,7 +246,7 @@ describe('validateMergedSave', () => {
       });
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -260,7 +260,7 @@ describe('validateMergedSave', () => {
       const save = createFakeSaveContent({worldEvents: [{planet: 110910045, seed: 42, pos: 'bad-pos'}]});
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -275,11 +275,11 @@ describe('validateMergedSave', () => {
         const saveWithBadFloat = createFakeSaveContent().replace('"playerGaugeOxygen":280.0', '"playerGaugeOxygen":280');
 
         // Act
-        const result = validateMergedSave(saveWithBadFloat);
+        const result = validateSaveContent(saveWithBadFloat);
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.rule === 'float-serialization')).toBeTruthy();
+        expect(result.errors.some(e => e.code === 'float-serialization')).toBeTruthy();
       });
 
       it('should accept a save where gauge values have proper decimal notation', () => {
@@ -287,11 +287,11 @@ describe('validateMergedSave', () => {
         const save = createFakeSaveContent();
 
         // Act
-        const result = validateMergedSave(save);
+        const result = validateSaveContent(save);
 
         // Assert
         expect(result.isValid).toBe(true);
-        expect(!result.errors.some(e => e.rule === 'float-serialization')).toBeTruthy();
+        expect(!result.errors.some(e => e.code === 'float-serialization')).toBeTruthy();
       });
 
       it('should reject a save where all gauge values are missing their decimal notation', () => {
@@ -315,11 +315,11 @@ describe('validateMergedSave', () => {
           .replace(/"playerGaugeToxic":0\.0/g, '"playerGaugeToxic":0');
 
         // Act
-        const result = validateMergedSave(saveWithBadFloats);
+        const result = validateSaveContent(saveWithBadFloats);
 
         // Assert
         expect(result.isValid).toBe(false);
-        const floatErrors = result.errors.filter(e => e.rule === 'float-serialization');
+        const floatErrors = result.errors.filter(e => e.code === 'float-serialization');
         expect(floatErrors.length >= 4).toBeTruthy();
       });
     });
@@ -330,11 +330,11 @@ describe('validateMergedSave', () => {
         const save = createFakeSaveContent({players: [createPlayer({host: false})]});
 
         // Act
-        const result = validateMergedSave(save);
+        const result = validateSaveContent(save);
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.rule === 'unique-host')).toBeTruthy();
+        expect(result.errors.some(e => e.code === 'unique-host')).toBeTruthy();
       });
 
       it('should report an error when more than one player is host', () => {
@@ -353,11 +353,11 @@ describe('validateMergedSave', () => {
         });
 
         // Act
-        const result = validateMergedSave(save);
+        const result = validateSaveContent(save);
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.rule === 'unique-host')).toBeTruthy();
+        expect(result.errors.some(e => e.code === 'unique-host')).toBeTruthy();
       });
 
       it('should not report a host error for a valid save with one host', () => {
@@ -365,10 +365,10 @@ describe('validateMergedSave', () => {
         const save = createFakeSaveContent();
 
         // Act
-        const result = validateMergedSave(save);
+        const result = validateSaveContent(save);
 
         // Assert
-        expect(!result.errors.some(e => e.rule === 'unique-host')).toBeTruthy();
+        expect(!result.errors.some(e => e.code === 'unique-host')).toBeTruthy();
       });
     });
 
@@ -390,7 +390,7 @@ describe('validateMergedSave', () => {
         });
 
         // Act
-        const result = validateMergedSave(save);
+        const result = validateSaveContent(save);
 
         // Assert
         expect(result.isValid).toBe(true);
@@ -412,7 +412,7 @@ describe('validateMergedSave', () => {
       });
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(true);
@@ -431,7 +431,7 @@ describe('validateMergedSave', () => {
       });
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.warnings.length).toBe(1);
@@ -444,12 +444,12 @@ describe('validateMergedSave', () => {
       const save = 'This is not @ a valid save string';
 
       // Act
-      const result = validateMergedSave(save);
+      const result = validateSaveContent(save);
 
       // Assert
       expect(result.isValid).toBe(false);
       expect(result.errors).toEqual([
-        {message: `Expected 11 sections but found 2`}
+        {code: 'invalid-structure', detail: `Expected 11 sections but found 2`}
       ]);
     });
   });

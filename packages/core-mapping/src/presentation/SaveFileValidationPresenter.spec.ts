@@ -17,12 +17,12 @@ describe('SaveFileValidationPresenter', () => {
   });
 
   describe('When presenting an invalid save file', () => {
-    it('should update the view model with the invalid status and the error messages', () => {
+    it('should update the view model with the invalid status and the formatted error messages', () => {
       // Arrange
       const presenter = new SaveFileValidationPresenter();
 
       // Act
-      presenter.presentInvalidSaveFile(['Invalid file extension: expected a .json file.']);
+      presenter.presentInvalidSaveFile([{code: 'invalid-extension', detail: 'Invalid file extension: expected a .json file.'}]);
 
       // Assert
       expect(presenter.viewModel).toEqual({

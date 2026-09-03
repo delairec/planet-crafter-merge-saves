@@ -1,3 +1,5 @@
+import {ValidationIssue} from "./ValidationIssue";
+
 /**
  * Outcome of validating a save file's technical acceptability (extension, structural validity),
  * as reported by SaveValidatorPort. These are infrastructure-detected technical failures (bad
@@ -7,5 +9,5 @@
  */
 export interface SaveValidationResult {
   isValid: boolean;
-  errorMessages: string[];
+  errors: ValidationIssue[];
 }

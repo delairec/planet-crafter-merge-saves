@@ -9,7 +9,7 @@ describe('MergeSaveFiles', () => {
   describe('When both saves are valid', () => {
     it('should present a success result with the merged file name and content', () => {
       // Arrange
-      const validator: SaveValidatorPort = {validate: mock(() => ({isValid: true, errorMessages: []}))};
+      const validator: SaveValidatorPort = {validate: mock(() => ({isValid: true, errors: []}))};
       const merger: SaveFilesMergerPort = {merge: mock(() => ({fileName: 'Save-A-Save-B-merged.json', content: 'merged content'}))};
       const presenter: MergeResultPresenterPort = {presentMergeSucceeded: mock(), presentSaveFilesInvalid: mock()};
       const useCase = new MergeSaveFiles(validator, merger, presenter);
@@ -27,8 +27,8 @@ describe('MergeSaveFiles', () => {
       // Arrange
       const validator: SaveValidatorPort = {
         validate: mock((fileName: string, content: string) => content === 'contentA'
-          ? {isValid: false, errorMessages: ['Invalid JSON: contentA']}
-          : {isValid: true, errorMessages: []})
+          ? {isValid: false, errors: [{code: 'invalid-json' as const, detail: 'Invalid JSON: contentA'}]}
+          : {isValid: true, errors: []})
       };
       const merger: SaveFilesMergerPort = {merge: mock()};
       const presenter: MergeResultPresenterPort = {presentMergeSucceeded: mock(), presentSaveFilesInvalid: mock()};
@@ -48,8 +48,8 @@ describe('MergeSaveFiles', () => {
       // Arrange
       const validator: SaveValidatorPort = {
         validate: mock((fileName: string) => fileName === 'Save-A.txt'
-          ? {isValid: false, errorMessages: ['Invalid file extension: expected a .json file.']}
-          : {isValid: true, errorMessages: []})
+          ? {isValid: false, errors: [{code: 'invalid-extension' as const, detail: 'Invalid file extension: expected a .json file.'}]}
+          : {isValid: true, errors: []})
       };
       const merger: SaveFilesMergerPort = {merge: mock()};
       const presenter: MergeResultPresenterPort = {presentMergeSucceeded: mock(), presentSaveFilesInvalid: mock()};

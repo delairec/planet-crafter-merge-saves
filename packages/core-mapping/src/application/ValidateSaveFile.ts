@@ -12,7 +12,7 @@ export class ValidateSaveFile {
     const validation = this.validator.validate(fileName, content);
 
     if (!validation.isValid) {
-      this.presenter.presentInvalidSaveFile(validation.errorMessages);
+      this.presenter.presentInvalidSaveFile(validation.errors);
       return;
     }
 
