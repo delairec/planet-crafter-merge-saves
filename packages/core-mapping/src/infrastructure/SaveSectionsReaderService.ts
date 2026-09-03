@@ -15,7 +15,7 @@ import {
   WORLD_OBJECTS_SECTION_INDEX,
   WorldObject
 } from 'shared-save-processing/gameDefinitions';
-import {SaveParserPort} from '../application/ports/SaveParserPort';
+import {SaveSectionsReaderPort} from '../application/ports/SaveSectionsReaderPort';
 import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
 import {PlayerEntity} from "../domain/entities/PlayerEntity";
 import {TerraformationLevelEntity} from '../domain/entities/TerraformationLevelEntity';
@@ -35,7 +35,7 @@ function parsePosition(pos: string): [number, number, number] {
   return [x, y, z];
 }
 
-export class SaveSectionsReaderService implements SaveParserPort {
+export class SaveSectionsReaderService implements SaveSectionsReaderPort {
 
   private readonly globalMetadata: GlobalMetadata[];
   private readonly terraformationLevels: TerraformationLevel[];

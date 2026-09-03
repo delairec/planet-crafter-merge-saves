@@ -1,7 +1,7 @@
 import {describe, expect, it, mock} from 'bun:test';
 import {MergeSaveFiles} from './MergeSaveFiles';
 import {SaveValidatorPort} from './ports/SaveValidatorPort';
-import {SaveMergerPort} from './ports/SaveMergerPort';
+import {SaveFilesMergerPort} from './ports/SaveFilesMergerPort';
 import {MergeResultPresenterPort} from './ports/MergeResultPresenterPort';
 
 describe('MergeSaveFiles', () => {
@@ -10,7 +10,7 @@ describe('MergeSaveFiles', () => {
     it('should present a success result with the merged file name and content', () => {
       // Arrange
       const validator: SaveValidatorPort = {validate: mock(() => ({isValid: true, errorMessages: []}))};
-      const merger: SaveMergerPort = {merge: mock(() => ({fileName: 'Save-A-Save-B-merged.json', content: 'merged content'}))};
+      const merger: SaveFilesMergerPort = {merge: mock(() => ({fileName: 'Save-A-Save-B-merged.json', content: 'merged content'}))};
       const presenter: MergeResultPresenterPort = {presentMergeSucceeded: mock(), presentSaveFilesInvalid: mock()};
       const useCase = new MergeSaveFiles(validator, merger, presenter);
 
@@ -30,7 +30,7 @@ describe('MergeSaveFiles', () => {
           ? {isValid: false, errorMessages: ['Invalid JSON: contentA']}
           : {isValid: true, errorMessages: []})
       };
-      const merger: SaveMergerPort = {merge: mock()};
+      const merger: SaveFilesMergerPort = {merge: mock()};
       const presenter: MergeResultPresenterPort = {presentMergeSucceeded: mock(), presentSaveFilesInvalid: mock()};
       const useCase = new MergeSaveFiles(validator, merger, presenter);
 
@@ -51,7 +51,7 @@ describe('MergeSaveFiles', () => {
           ? {isValid: false, errorMessages: ['Invalid file extension: expected a .json file.']}
           : {isValid: true, errorMessages: []})
       };
-      const merger: SaveMergerPort = {merge: mock()};
+      const merger: SaveFilesMergerPort = {merge: mock()};
       const presenter: MergeResultPresenterPort = {presentMergeSucceeded: mock(), presentSaveFilesInvalid: mock()};
       const useCase = new MergeSaveFiles(validator, merger, presenter);
 

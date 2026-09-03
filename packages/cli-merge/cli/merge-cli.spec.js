@@ -13,17 +13,14 @@ import {
 
 describe('Merge CLI', () => {
   let consoleLogSpy;
+  let consoleErrorSpy;
   let readDirectory;
   let readTextFile;
   let writeTextFile;
+  let exitProcess;
   let main;
 
-  beforeEach(() => {
-    consoleLogSpy = spyOn(console, 'log').mockImplementation(() => {});
-    readDirectory = mock();
-    readTextFile = mock();
-    writeTextFile = mock(() => Promise.resolve());
-
+  function initCli(argv) {
     const fakePlatform = {
       readDirectory,
       readTextFile,
@@ -31,10 +28,23 @@ describe('Merge CLI', () => {
       joinPath: (...segments) => segments.join('/'),
       getBasename: (path, ext) => ext ? path.replace(ext, '') : path,
       isEntryPoint: () => false,
-      exitProcess: () => {},
+      exitProcess,
     };
 
-    ({main} = initMergeCli(fakePlatform));
+    return initMergeCli(fakePlatform, argv);
+  }
+
+  beforeEach(() => {
+    consoleLogSpy = spyOn(console, 'log').mockImplementation(() => {});
+    consoleErrorSpy = spyOn(console, 'error').mockImplementation(() => {});
+    consoleLogSpy.mockClear();
+    consoleErrorSpy.mockClear();
+    readDirectory = mock();
+    readTextFile = mock();
+    writeTextFile = mock(() => Promise.resolve());
+    exitProcess = mock();
+
+    ({main} = initCli());
   });
 
   describe('When no input folders contain two or more JSON files', () => {
@@ -132,6 +142,127 @@ describe('Merge CLI', () => {
       expect(writeTextFile).toHaveBeenCalledTimes(1);
       const writtenPath = writeTextFile.mock.calls[0][0];
       expect(writtenPath).toBe(MERGED_SAVE_OUTPUT_PATH);
+    });
+  });
+
+  describe('When the merge completes successfully', () => {
+    it('should exit with code 0', async () => {
+      // Arrange
+      readDirectory.mockResolvedValueOnce([INPUT_SUBFOLDER_ALPHA]);
+      readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME]);
+      readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME]);
+      readTextFile.mockImplementation((path) => {
+        if (path === SAVE_A_INPUT_PATH) return Promise.resolve(FAKE_SAVE_STRING_A);
+        if (path === SAVE_B_INPUT_PATH) return Promise.resolve(FAKE_SAVE_STRING_B);
+        return Promise.reject(new Error(`Unexpected path: ${path}`));
+      });
+
+      // Act
+      await main();
+
+      // Assert
+      expect(exitProcess).toHaveBeenCalledWith(0);
+    });
+
+    it('should print the merged output path to stdout', async () => {
+      // Arrange
+      readDirectory.mockResolvedValueOnce([INPUT_SUBFOLDER_ALPHA]);
+      readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME]);
+      readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME]);
+      readTextFile.mockImplementation((path) => {
+        if (path === SAVE_A_INPUT_PATH) return Promise.resolve(FAKE_SAVE_STRING_A);
+        if (path === SAVE_B_INPUT_PATH) return Promise.resolve(FAKE_SAVE_STRING_B);
+        return Promise.reject(new Error(`Unexpected path: ${path}`));
+      });
+
+      // Act
+      await main();
+
+      // Assert
+      expect(consoleLogSpy).toHaveBeenCalledWith(MERGED_SAVE_OUTPUT_PATH);
+    });
+  });
+
+  describe('When no input folders contain two or more JSON files', () => {
+    it('should exit with a distinct exit code', async () => {
+      // Arrange
+      readDirectory.mockResolvedValueOnce([INPUT_SUBFOLDER_ALPHA]);
+      readDirectory.mockResolvedValueOnce(['only-one.json']);
+
+      // Act
+      await main();
+
+      // Assert
+      expect(exitProcess).toHaveBeenCalledWith(2);
+    });
+
+    it('should report the issue on stderr rather than stdout', async () => {
+      // Arrange
+      readDirectory.mockResolvedValueOnce([INPUT_SUBFOLDER_ALPHA]);
+      readDirectory.mockResolvedValueOnce(['only-one.json']);
+
+      // Act
+      await main();
+
+      // Assert
+      expect(consoleErrorSpy).toHaveBeenCalled();
+      expect(consoleLogSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('When an input folder contains more than two JSON files', () => {
+    const SAVE_C_FILENAME = 'Standard-3.json';
+
+    it('should merge all files present in the folder rather than only the first two', async () => {
+      // Arrange
+      readDirectory.mockResolvedValueOnce([INPUT_SUBFOLDER_ALPHA]);
+      readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME, SAVE_C_FILENAME]);
+      readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME, SAVE_C_FILENAME]);
+      readTextFile.mockResolvedValue(FAKE_SAVE_STRING_A);
+
+      // Act
+      await main();
+
+      // Assert
+      expect(writeTextFile).toHaveBeenCalledTimes(1);
+      const writtenContent = writeTextFile.mock.calls[0][1];
+      const terraTokensMatches = writtenContent.match(/"terraTokens":\d+/);
+      expect(terraTokensMatches[0]).toBe('"terraTokens":30');
+    });
+  });
+
+  describe('When a custom input directory is provided', () => {
+    it('should read save folders from that directory', async () => {
+      // Arrange
+      ({main} = initCli(['--input=custom-input']));
+      readDirectory.mockResolvedValueOnce([]);
+
+      // Act
+      await main();
+
+      // Assert
+      expect(readDirectory).toHaveBeenCalledWith('custom-input');
+    });
+  });
+
+  describe('When a custom output directory is provided', () => {
+    it('should write the merged file under that directory', async () => {
+      // Arrange
+      ({main} = initCli(['--output=custom-output']));
+      readDirectory.mockResolvedValueOnce([INPUT_SUBFOLDER_ALPHA]);
+      readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME]);
+      readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME]);
+      readTextFile.mockImplementation((path) => {
+        if (path === SAVE_A_INPUT_PATH) return Promise.resolve(FAKE_SAVE_STRING_A);
+        if (path === SAVE_B_INPUT_PATH) return Promise.resolve(FAKE_SAVE_STRING_B);
+        return Promise.reject(new Error(`Unexpected path: ${path}`));
+      });
+
+      // Act
+      await main();
+
+      // Assert
+      expect(writeTextFile.mock.calls[0][0]).toBe(`custom-output/${INPUT_SUBFOLDER_ALPHA}/Standard-1-Standard-2-merged.json`);
     });
   });
 });

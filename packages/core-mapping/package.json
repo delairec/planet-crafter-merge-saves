@@ -12,7 +12,6 @@
     "./presentation/viewModels/*": "./src/presentation/viewModels/*.ts"
   },
   "dependencies": {
-    "cli-merge": "workspace:*",
     "cli-validate": "workspace:*",
     "shared-save-processing": "workspace:*",
     "util-messages": "workspace:*"

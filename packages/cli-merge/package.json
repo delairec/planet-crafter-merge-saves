@@ -13,6 +13,7 @@
     "node:merge": "node cli/merge-cli.js --platform=node"
   },
   "dependencies": {
+    "core-mapping": "workspace:*",
     "shared-save-processing": "workspace:*",
     "util-platforms": "workspace:*"
   }
