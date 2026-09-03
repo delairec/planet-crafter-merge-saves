@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'bun:test';
 import {parseSaveSections} from './parseSaveSections.js';
-import {createFakeSaveString, createLegacyFakeSaveString} from 'shared-mapping/testing/createFakeSaveString.js';
+import {createFakeSaveString, createLegacyFakeSaveString} from './testing/createFakeSaveString.js';
 
 describe('utils/parseSaveSections', () => {
   const expectedGlobalMetadata = {

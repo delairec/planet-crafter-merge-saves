@@ -1,6 +1,6 @@
-/** @import { TerraformationLevel } from 'util-types/gameDefinitions' */
+/** @import { TerraformationLevel } from 'shared-save-processing/gameDefinitions' */
 
-import {stringifyEntry} from 'util-parsing/stringifyEntry.js';
+import {stringifyEntry} from 'shared-save-processing/stringifyEntry.js';
 
 const PURIFICATION_SENTINEL = -1;
 

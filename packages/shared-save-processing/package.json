@@ -1,7 +1,7 @@
 {
-  "name": "util-types",
+  "name": "shared-save-processing",
   "version": "1.0.0",
-  "description": "Runtime platform contract (fs/process adapters)",
+  "description": "Save file wire format: types, parsing, serialization and schemas",
   "type": "module",
   "exports": {
     "./gameDefinitions": "./gameDefinitions/index.ts",

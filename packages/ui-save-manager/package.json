@@ -12,10 +12,9 @@
     "@solidjs/start": "2.0.0",
     "core-mapping": "workspace:*",
     "nitro": "3.0.260610-beta",
+    "shared-save-processing": "workspace:*",
     "solid-js": "^1.9.14",
     "util-messages": "workspace:*",
-    "util-parsing": "workspace:*",
-    "util-types": "workspace:*",
     "vite": "^8.2.1"
   },
   "engines": {

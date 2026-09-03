@@ -1,7 +1,7 @@
 import {Accessor, createEffect, createSignal, For} from "solid-js";
 import FieldsGroup from "./structure/FieldsGroup";
 import {EnergyLevelsViewModel} from "core-mapping/presentation/viewModels/EnergyLevelsViewModel";
-import {ParsedSections} from "util-types/gameDefinitions";
+import {ParsedSections} from "shared-save-processing/gameDefinitions";
 import {LoadEnergyLevelsSectionController} from "core-mapping/controllers/LoadEnergyLevelsSectionController";
 import {
   energyLevelsSectionBoostedMachinesLabel,

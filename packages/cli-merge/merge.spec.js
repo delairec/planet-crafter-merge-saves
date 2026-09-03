@@ -1,13 +1,13 @@
 import {describe, expect, it} from 'bun:test';
 import {merge} from './merge.js';
-import {resolveIdConflicts} from 'util-parsing/resolveIdConflicts.js';
+import {resolveIdConflicts} from './resolveIdConflicts.js';
 import {
     metadata,
     saveConfiguration,
     statistics,
     terraformationLevel
-} from "shared-mapping/testing/createFakeSaveContent.js";
-import {createFakeParsedSave} from "shared-mapping/testing/createFakeParsedSave.js";
+} from "shared-save-processing/testing/createFakeSaveContent.js";
+import {createFakeParsedSave} from "shared-save-processing/testing/createFakeParsedSave.js";
 
 describe('Merge saves', () => {
     const saveDisplayName = 'SAVE_NAME';

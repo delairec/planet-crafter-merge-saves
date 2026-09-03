@@ -1,4 +1,4 @@
-/** @import { MailboxMessage } from 'util-types/gameDefinitions' */
+/** @import { MailboxMessage } from 'shared-save-processing/gameDefinitions' */
 
 /**
  * @param {MailboxMessage[]} mailboxA

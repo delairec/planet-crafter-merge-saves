@@ -9,10 +9,9 @@
       "packages/cli-merge",
       "packages/cli-validate",
       "packages/core-mapping",
-      "packages/shared-mapping",
+      "packages/shared-save-processing",
       "packages/ui-save-manager",
       "packages/util-messages",
-      "packages/util-parsing",
       "packages/util-platforms",
       "packages/util-types"
     ]

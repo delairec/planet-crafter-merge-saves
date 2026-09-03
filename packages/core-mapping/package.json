@@ -14,11 +14,7 @@
   "dependencies": {
     "cli-merge": "workspace:*",
     "cli-validate": "workspace:*",
-    "util-messages": "workspace:*",
-    "util-parsing": "workspace:*",
-    "util-types": "workspace:*"
-  },
-  "devDependencies": {
-    "shared-mapping": "workspace:*"
+    "shared-save-processing": "workspace:*",
+    "util-messages": "workspace:*"
   }
 }

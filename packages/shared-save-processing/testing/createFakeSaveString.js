@@ -1,4 +1,4 @@
-/** @import { GlobalMetadata, TerraformationLevel, Player, WorldObject, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, WorldEvent } from 'util-types/gameDefinitions' */
+/** @import { GlobalMetadata, TerraformationLevel, Player, WorldObject, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, WorldEvent } from '../gameDefinitions' */
 
 /**
  * @typedef {{
@@ -15,7 +15,7 @@
  * }} FakeSaveOptions
  */
 
-import {stringifyEntry} from 'util-parsing/stringifyEntry.js';
+import {stringifyEntry} from '../stringifyEntry.js';
 
 export const DEFAULT_GLOBAL_METADATA = /** @type {GlobalMetadata} */ ({
     terraTokens: 0,

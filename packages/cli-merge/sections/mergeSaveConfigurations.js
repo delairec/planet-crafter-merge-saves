@@ -1,4 +1,4 @@
-/** @import { SaveConfiguration } from 'util-types/gameDefinitions' */
+/** @import { SaveConfiguration } from 'shared-save-processing/gameDefinitions' */
 
 /**
  * @param {SaveConfiguration[]} saveConfigurationsA

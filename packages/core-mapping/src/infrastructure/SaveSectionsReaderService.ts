@@ -14,7 +14,7 @@ import {
   TerraformationLevel,
   WORLD_OBJECTS_SECTION_INDEX,
   WorldObject
-} from 'util-types/gameDefinitions';
+} from 'shared-save-processing/gameDefinitions';
 import {SaveParserPort} from '../application/ports/SaveParserPort';
 import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
 import {PlayerEntity} from "../domain/entities/PlayerEntity";

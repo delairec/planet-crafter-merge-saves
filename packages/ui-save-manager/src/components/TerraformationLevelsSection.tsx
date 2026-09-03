@@ -4,7 +4,7 @@ import {
 } from "core-mapping/controllers/LoadTerraformationLevelsSectionController";
 import FieldsGroup from "./structure/FieldsGroup";
 import {TerraformationLevelsViewModel} from "core-mapping/presentation/viewModels/TerraformationLevelsViewModel";
-import {ParsedSections} from "util-types/gameDefinitions";
+import {ParsedSections} from "shared-save-processing/gameDefinitions";
 import {
   terraformationLevelsSectionBiomassLabel,
   terraformationLevelsSectionIndexLabel,

@@ -1,7 +1,7 @@
-/** @import { ParsedSave, Player, Inventory, WorldObject } from 'util-types/gameDefinitions' */
-import {parseSaveSections} from './parseSaveSections.js';
-import {stringifyEntry} from './stringifyEntry.js';
-import {serializeSave} from './serializeSave.js';
+/** @import { ParsedSave, Player, Inventory, WorldObject } from 'shared-save-processing/gameDefinitions' */
+import {parseSaveSections} from 'shared-save-processing/parseSaveSections.js';
+import {stringifyEntry} from 'shared-save-processing/stringifyEntry.js';
+import {serializeSave} from 'shared-save-processing/serializeSave.js';
 
 /**
  * Detects duplicate ids across all merged sections and remaps later occurrences to new unique ids.

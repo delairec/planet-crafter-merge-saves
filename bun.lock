@@ -14,12 +14,8 @@
       "name": "cli-merge",
       "version": "1.0.0",
       "dependencies": {
-        "util-parsing": "workspace:*",
+        "shared-save-processing": "workspace:*",
         "util-platforms": "workspace:*",
-      },
-      "devDependencies": {
-        "shared-mapping": "workspace:*",
-        "util-types": "workspace:*",
       },
     },
     "packages/cli-validate": {
@@ -27,11 +23,8 @@
       "version": "1.0.0",
       "dependencies": {
         "ajv": "catalog:testing",
-        "util-parsing": "workspace:*",
+        "shared-save-processing": "workspace:*",
         "util-platforms": "workspace:*",
-      },
-      "devDependencies": {
-        "shared-mapping": "workspace:*",
       },
     },
     "packages/core-mapping": {
@@ -40,21 +33,13 @@
       "dependencies": {
         "cli-merge": "workspace:*",
         "cli-validate": "workspace:*",
+        "shared-save-processing": "workspace:*",
         "util-messages": "workspace:*",
-        "util-parsing": "workspace:*",
-        "util-types": "workspace:*",
-      },
-      "devDependencies": {
-        "shared-mapping": "workspace:*",
       },
     },
-    "packages/shared-mapping": {
-      "name": "shared-mapping",
+    "packages/shared-save-processing": {
+      "name": "shared-save-processing",
       "version": "1.0.0",
-      "dependencies": {
-        "util-parsing": "workspace:*",
-        "util-types": "workspace:*",
-      },
     },
     "packages/ui-save-manager": {
       "name": "ui-save-manager",
@@ -63,24 +48,15 @@
         "@solidjs/start": "2.0.0",
         "core-mapping": "workspace:*",
         "nitro": "3.0.260610-beta",
+        "shared-save-processing": "workspace:*",
         "solid-js": "^1.9.14",
         "util-messages": "workspace:*",
-        "util-parsing": "workspace:*",
-        "util-types": "workspace:*",
         "vite": "^8.2.1",
       },
     },
     "packages/util-messages": {
       "name": "util-messages",
       "version": "1.0.0",
-    },
-    "packages/util-parsing": {
-      "name": "util-parsing",
-      "version": "1.0.0",
-      "devDependencies": {
-        "shared-mapping": "workspace:*",
-        "util-types": "workspace:*",
-      },
     },
     "packages/util-platforms": {
       "name": "util-platforms",
@@ -561,7 +537,7 @@
 
     "seroval-plugins": ["seroval-plugins@1.6.2", "", { "peerDependencies": { "seroval": "^1.0" } }, "sha512-TfxuUjlbBESzUOWdTkTKqvSmav0ABym+itetDXLK6mDz8SmrpdI30aF8RTXE8Bvq+tH/1yIDkvy3W0lfQb1ipQ=="],
 
-    "shared-mapping": ["shared-mapping@workspace:packages/shared-mapping"],
+    "shared-save-processing": ["shared-save-processing@workspace:packages/shared-save-processing"],
 
     "shiki": ["shiki@4.4.2", "", { "dependencies": { "@shikijs/core": "4.4.2", "@shikijs/engine-javascript": "4.4.2", "@shikijs/engine-oniguruma": "4.4.2", "@shikijs/langs": "4.4.2", "@shikijs/themes": "4.4.2", "@shikijs/types": "4.4.2", "@shikijs/vscode-textmate": "^10.0.2", "@types/hast": "^3.0.5" } }, "sha512-P8F/dFhRevaw2uSdeIYlq/5SXZNY85DPtmXQ947gD1Zj2JqO5AkNvVVBar0Me9JkFx3uzVud/qOtP5ek9NEQGA=="],
 
@@ -614,8 +590,6 @@
     "update-browserslist-db": ["update-browserslist-db@1.2.3", "", { "dependencies": { "escalade": "^3.2.0", "picocolors": "^1.1.1" }, "peerDependencies": { "browserslist": ">= 4.21.0" }, "bin": { "update-browserslist-db": "cli.js" } }, "sha512-Js0m9cx+qOgDxo0eMiFGEueWztz+d4+M3rGlmKPT+T4IS/jP4ylw3Nwpu6cpTTP8R1MAC1kF4VbdLt3ARf209w=="],
 
     "util-messages": ["util-messages@workspace:packages/util-messages"],
-
-    "util-parsing": ["util-parsing@workspace:packages/util-parsing"],
 
     "util-platforms": ["util-platforms@workspace:packages/util-platforms"],
 

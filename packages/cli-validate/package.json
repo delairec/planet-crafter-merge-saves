@@ -14,10 +14,7 @@
   },
   "dependencies": {
     "ajv": "catalog:testing",
-    "util-parsing": "workspace:*",
+    "shared-save-processing": "workspace:*",
     "util-platforms": "workspace:*"
-  },
-  "devDependencies": {
-    "shared-mapping": "workspace:*"
   }
 }

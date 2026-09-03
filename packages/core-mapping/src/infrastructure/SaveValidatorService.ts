@@ -1,5 +1,5 @@
 import {validateMergedSave} from "cli-validate/validate.js";
-import {hasJsonExtension} from "util-parsing/hasJsonExtension.js";
+import {hasJsonExtension} from "shared-save-processing/hasJsonExtension.js";
 import {invalidExtensionErrorMessage} from "util-messages/validationMessages.js";
 import {SaveValidatorPort} from "../application/ports/SaveValidatorPort";
 import {SaveValidationResult} from "../application/ports/SaveValidationResult";

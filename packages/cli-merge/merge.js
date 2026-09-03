@@ -1,4 +1,4 @@
-/** @import { ParsedSave } from 'util-types/gameDefinitions' */
+/** @import { ParsedSave } from 'shared-save-processing/gameDefinitions' */
 
 import {mergeGlobalMetadata} from './sections/mergeGlobalMetadata.js';
 import {mergeTerraformationLevels} from './sections/mergeTerraformationLevels.js';

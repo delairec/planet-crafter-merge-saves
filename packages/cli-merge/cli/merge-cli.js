@@ -1,8 +1,8 @@
 import {exitProcess, isEntryPoint, joinPath, readDirectory, readTextFile, writeTextFile} from 'util-platforms/platform.js';
-import {resolveIdConflicts} from 'util-parsing/resolveIdConflicts.js';
-import {buildMergedFileName} from 'util-parsing/buildMergedFileName.js';
+import {resolveIdConflicts} from '../resolveIdConflicts.js';
+import {buildMergedFileName} from '../helpers/buildMergedFileName.js';
 import {merge} from '../merge.js';
-import {parseSaveSections} from "util-parsing/parseSaveSections.js";
+import {parseSaveSections} from "shared-save-processing/parseSaveSections.js";
 
 const INPUT_DIR = 'input';
 const OUTPUT_DIR = 'output';

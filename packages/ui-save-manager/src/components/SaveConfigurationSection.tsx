@@ -2,7 +2,7 @@ import {Accessor, createEffect, createSignal} from "solid-js";
 import {LoadSaveConfigurationSectionController} from "core-mapping/controllers/LoadSaveConfigurationSectionController";
 import FieldsGroup from "./structure/FieldsGroup";
 import {SaveConfigurationViewModel} from "core-mapping/presentation/viewModels/SaveConfigurationViewModel";
-import {ParsedSections} from "util-types/gameDefinitions";
+import {ParsedSections} from "shared-save-processing/gameDefinitions";
 import {saveConfigurationSectionTitleLabel} from "util-messages/saveConfigurationSectionMessages";
 
 interface SaveConfigurationProps {

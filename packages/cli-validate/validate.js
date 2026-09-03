@@ -1,14 +1,15 @@
 import Ajv from 'ajv';
-import {normalizeRawSections, verifySectionCount} from 'util-parsing/normalizeSaveSections.js';
-import schema0 from '../../docs/schemas/section0-player-progression.schema.json' with {type: 'json'};
-import schema1 from '../../docs/schemas/section1-terraformation-levels.schema.json' with {type: 'json'};
-import schema2 from '../../docs/schemas/section2-players.schema.json' with {type: 'json'};
-import schema4 from '../../docs/schemas/section4-inventories.schema.json' with {type: 'json'};
-import schema5 from '../../docs/schemas/section5-statistics.schema.json' with {type: 'json'};
-import schema6 from '../../docs/schemas/section6-messages.schema.json' with {type: 'json'};
-import schema7 from '../../docs/schemas/section7-story-events.schema.json' with {type: 'json'};
-import schema8 from '../../docs/schemas/section8-save-config.schema.json' with {type: 'json'};
-import schema9 from '../../docs/schemas/section9-world-events.schema.json' with {type: 'json'};
+import {normalizeRawSections} from 'shared-save-processing/normalizeRawSections.js';
+import {verifySectionCount} from 'shared-save-processing/verifySectionCount.js';
+import schema0 from 'shared-save-processing/schemas/section0-player-progression.schema.json' with {type: 'json'};
+import schema1 from 'shared-save-processing/schemas/section1-terraformation-levels.schema.json' with {type: 'json'};
+import schema2 from 'shared-save-processing/schemas/section2-players.schema.json' with {type: 'json'};
+import schema4 from 'shared-save-processing/schemas/section4-inventories.schema.json' with {type: 'json'};
+import schema5 from 'shared-save-processing/schemas/section5-statistics.schema.json' with {type: 'json'};
+import schema6 from 'shared-save-processing/schemas/section6-messages.schema.json' with {type: 'json'};
+import schema7 from 'shared-save-processing/schemas/section7-story-events.schema.json' with {type: 'json'};
+import schema8 from 'shared-save-processing/schemas/section8-save-config.schema.json' with {type: 'json'};
+import schema9 from 'shared-save-processing/schemas/section9-world-events.schema.json' with {type: 'json'};
 
 const FLOAT_FIELDS = new Set([
   'unitOxygenLevel', 'unitHeatLevel', 'unitPressureLevel', 'unitPlantsLevel',
