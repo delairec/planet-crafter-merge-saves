@@ -1,11 +1,11 @@
 import {SaveValidatorPort} from "./ports/SaveValidatorPort";
-import {SaveMergerPort} from "./ports/SaveMergerPort";
+import {SaveFilesMergerPort} from "./ports/SaveFilesMergerPort";
 import {MergeResultPresenterPort} from "./ports/MergeResultPresenterPort";
 
 export class MergeSaveFiles {
   constructor(
     private readonly validator: SaveValidatorPort,
-    private readonly merger: SaveMergerPort,
+    private readonly merger: SaveFilesMergerPort,
     private readonly presenter: MergeResultPresenterPort
   ) {}
 

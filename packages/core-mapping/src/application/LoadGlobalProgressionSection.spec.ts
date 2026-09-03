@@ -1,13 +1,13 @@
 import {describe, expect, it, mock} from 'bun:test';
 import {FakeSaveParserService} from "../testing/FakeSaveParserService";
-import {SaveParserPort} from "./ports/SaveParserPort";
+import {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort";
 import {LoadGlobalProgressionSection} from "./LoadGlobalProgressionSection";
 import {GlobalProgressionPresenterPort} from "./ports/GlobalProgressionPresenterPort";
 
 describe('LoadGlobalProgressionSection', () => {
   it('should present global progression and statistics from the parsed save', () => {
     // Arrange
-    const saveParser: SaveParserPort = new FakeSaveParserService();
+    const saveParser: SaveSectionsReaderPort = new FakeSaveParserService();
     const presenter: GlobalProgressionPresenterPort = {displayGlobalProgression: mock()};
     const useCase = new LoadGlobalProgressionSection(saveParser, presenter);
 

@@ -1,11 +1,11 @@
 import {mergeParsedSaveSections} from "../domain/rules/merge/mergeParsedSaveSections";
 import {resolveIdConflicts} from "../domain/rules/merge/resolveIdConflicts";
 import {buildMergedFileName} from "../domain/rules/merge/buildMergedFileName";
-import {SaveMergerPort} from "../application/ports/SaveMergerPort";
+import {SaveFilesMergerPort} from "../application/ports/SaveFilesMergerPort";
 import {MergedSaveValueObject} from "../domain/valueObjects/MergedSaveValueObject";
 import {parseSaveSections} from "shared-save-processing/parseSaveSections.js";
 
-export class SaveFilesMergerService implements SaveMergerPort {
+export class SaveFilesMergerService implements SaveFilesMergerPort {
   merge(fileNameA: string, contentA: string, fileNameB: string, contentB: string, saveDisplayName?: string): MergedSaveValueObject {
     const fileName = buildMergedFileName(fileNameA, fileNameB);
     const resolvedSaveDisplayName = saveDisplayName ?? fileName.replace(/\.json$/, '');

@@ -1,4 +1,4 @@
-import {SaveParserPort} from "../application/ports/SaveParserPort";
+import {SaveSectionsReaderPort} from "../application/ports/SaveSectionsReaderPort";
 import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
 import {PlayerEntity} from "../domain/entities/PlayerEntity";
 import {TerraformationLevelEntity} from "../domain/entities/TerraformationLevelEntity";
@@ -7,7 +7,7 @@ import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObjec
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
 import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
 
-export class FakeSaveParserService implements SaveParserPort {
+export class FakeSaveParserService implements SaveSectionsReaderPort {
   getEnergyLevels(): EnergyLevelsValueObject {
     return {
       planets: [{

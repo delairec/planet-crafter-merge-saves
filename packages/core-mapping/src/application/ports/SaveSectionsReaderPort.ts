@@ -6,7 +6,7 @@ import {StatisticsValueObject} from "../../domain/valueObjects/StatisticsValueOb
 import {SaveConfigurationValueObject} from "../../domain/valueObjects/SaveConfigurationValueObject";
 import {EnergyLevelsValueObject} from "../../domain/valueObjects/EnergyLevelsValueObject";
 
-export interface SaveParserPort {
+export interface SaveSectionsReaderPort {
   getPlayers(): PlayerEntity[];
 
   getGlobalMetadata(): GlobalProgressionValueObject;
