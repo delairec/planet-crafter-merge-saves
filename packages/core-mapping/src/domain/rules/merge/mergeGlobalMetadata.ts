@@ -1,6 +1,6 @@
-/** @import { GlobalMetadata } from 'shared-save-processing/gameDefinitions' */
+import {GlobalMetadata} from 'shared-save-processing/gameDefinitions';
 
-const DEFAULT_METADATA = {
+const DEFAULT_METADATA: GlobalMetadata = {
     terraTokens: 0,
     allTimeTerraTokens: 0,
     unlockedGroups: '',
@@ -9,12 +9,9 @@ const DEFAULT_METADATA = {
 };
 
 /**
- * @param {GlobalMetadata[]} globalMetadataA
- * @param {GlobalMetadata[]} globalMetadataB
- * @returns {string}
  * @see GR-META-1, GR-META-2, GR-META-3, GR-META-4 in docs/game-rules.md
  */
-export function mergeGlobalMetadata([metadataA], [metadataB]) {
+export function mergeGlobalMetadata([metadataA]: GlobalMetadata[], [metadataB]: GlobalMetadata[]): string {
     const validatedMetadataA = metadataA ?? DEFAULT_METADATA;
     const validatedMetadataB = metadataB ?? DEFAULT_METADATA;
 
@@ -32,4 +29,3 @@ export function mergeGlobalMetadata([metadataA], [metadataB]) {
 
     return `{"terraTokens":${terraTokens},"allTimeTerraTokens":${allTimeTerraTokens},"unlockedGroups":${JSON.stringify(unlockedGroups)},"openedInstanceSeed":${openedInstanceSeed},"openedInstanceTimeLeft":${openedInstanceTimeLeft}}`;
 }
-

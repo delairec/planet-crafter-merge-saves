@@ -1,14 +1,11 @@
-/** @import { Statistics } from 'shared-save-processing/gameDefinitions' */
+import {Statistics} from 'shared-save-processing/gameDefinitions';
 
-const DEFAULT_STATISTICS = {craftedObjects: 0, totalSaveFileLoad: 0, totalSaveFileTime: 0};
+const DEFAULT_STATISTICS: Statistics = {craftedObjects: 0, totalSaveFileLoad: 0, totalSaveFileTime: 0};
 
 /**
- * @param {Statistics[]} statisticsA
- * @param {Statistics[]} statisticsB
- * @returns {string}
  * @see GR-STAT-1 in docs/business-rules.md
  */
-export function mergeStatistics([statisticsA], [statisticsB]) {
+export function mergeStatistics([statisticsA]: Statistics[], [statisticsB]: Statistics[]): string {
   if (!statisticsA && !statisticsB) return '';
 
   const validatedStatisticsA = statisticsA ?? DEFAULT_STATISTICS;
@@ -16,4 +13,3 @@ export function mergeStatistics([statisticsA], [statisticsB]) {
 
   return `{"craftedObjects":${validatedStatisticsA.craftedObjects + validatedStatisticsB.craftedObjects},"totalSaveFileLoad":${validatedStatisticsA.totalSaveFileLoad + validatedStatisticsB.totalSaveFileLoad},"totalSaveFileTime":${validatedStatisticsA.totalSaveFileTime + validatedStatisticsB.totalSaveFileTime}}`;
 }
-

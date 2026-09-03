@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {merge} from './merge.js';
-import {resolveIdConflicts} from './resolveIdConflicts.js';
+import {mergeParsedSaveSections} from './mergeParsedSaveSections';
+import {resolveIdConflicts} from './resolveIdConflicts';
 import {
     createGlobalMetadata,
     createSaveConfiguration,
@@ -14,7 +14,7 @@ describe('Merge saves', () => {
 
     it('should handle error in case of wrong save format', () => {
         // Act
-        const result = () => merge(/** @type {any} */ ('invalidSaveFormatA'), /** @type {any} */ ('invalidSaveFormatB'), saveDisplayName);
+        const result = () => mergeParsedSaveSections('invalidSaveFormatA' as any, 'invalidSaveFormatB' as any, saveDisplayName);
 
         // Assert
         expect(result).toThrow(`ERROR_INVALID_INPUT_FORMAT`);
@@ -86,7 +86,7 @@ describe('Merge saves', () => {
                 saveConfigurations: [createSaveConfiguration()]
             });
 
-            const {mergeSaves, saveAWorldObjectIds} = merge(parsedSaveA, parsedSaveB, saveDisplayName);
+            const {mergeSaves, saveAWorldObjectIds} = mergeParsedSaveSections(parsedSaveA, parsedSaveB, saveDisplayName);
 
             // Act
             const merged = mergeSaves();

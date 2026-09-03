@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {merge} from '../merge.js';
+import {mergeParsedSaveSections} from './mergeParsedSaveSections';
 import {createFakeSaveString, FAKE_SAVE_CONFIGURATION} from 'shared-save-processing/testing/createFakeSaveString.js';
 import {createFakeParsedSave} from "shared-save-processing/testing/createFakeParsedSave.js";
 
@@ -16,7 +16,7 @@ describe('Merge saves — #determineSaveOrder', () => {
             const saveA = createFakeParsedSave({saveConfigurations: [toxicityConfig]});
             const saveB = createFakeParsedSave({saveConfigurations: [primeConfig]});
 
-            const {mergeSaves} = merge(saveA, saveB, saveDisplayName);
+            const {mergeSaves} = mergeParsedSaveSections(saveA, saveB, saveDisplayName);
 
             // Act
             const result = mergeSaves();
@@ -30,7 +30,7 @@ describe('Merge saves — #determineSaveOrder', () => {
             const saveA = createFakeParsedSave({saveConfigurations: [primeConfig]});
             const saveB = createFakeParsedSave({saveConfigurations: [toxicityConfig]});
 
-            const {mergeSaves} = merge(saveA, saveB, saveDisplayName);
+            const {mergeSaves} = mergeParsedSaveSections(saveA, saveB, saveDisplayName);
 
             // Act
             const result = mergeSaves();
@@ -46,7 +46,7 @@ describe('Merge saves — #determineSaveOrder', () => {
             const saveA = createFakeParsedSave({saveConfigurations: [toxicityConfig]});
             const saveB = createFakeParsedSave({saveConfigurations: [aqualisConfig]});
 
-            const {mergeSaves} = merge(saveA, saveB, saveDisplayName);
+            const {mergeSaves} = mergeParsedSaveSections(saveA, saveB, saveDisplayName);
 
             // Act
             const result = mergeSaves();
@@ -62,18 +62,18 @@ describe('Merge saves — #determineSaveOrder', () => {
             const saveA = createFakeParsedSave({saveConfigurations: [{...primeConfig, worldSeed: 1}]});
             const saveB = createFakeParsedSave({saveConfigurations: [{...primeConfig, worldSeed: 2}]});
 
-            const {mergeSaves} = merge(saveA, saveB, saveDisplayName);
+            const {mergeSaves} = mergeParsedSaveSections(saveA, saveB, saveDisplayName);
 
             // Act
             const result = mergeSaves();
 
             // Assert
             expect(result).toBe(createFakeSaveString({
-                saveConfiguration: /** @type {any} */ ({
+                saveConfiguration: {
                     ...primeConfig,
                     worldSeed: 1,
                     saveDisplayName
-                })
+                } as any
             }));
         });
     });
@@ -84,7 +84,7 @@ describe('Merge saves — #determineSaveOrder', () => {
             const saveA = createFakeParsedSave();
             const saveB = createFakeParsedSave({saveConfigurations: [primeConfig]});
 
-            const {mergeSaves} = merge(saveA, saveB, saveDisplayName);
+            const {mergeSaves} = mergeParsedSaveSections(saveA, saveB, saveDisplayName);
 
             // Act
             const result = mergeSaves();

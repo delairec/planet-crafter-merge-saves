@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'bun:test';
-import {mergeWorldObjects} from './mergeWorldObjects.js';
+import {mergeWorldObjects} from './mergeWorldObjects';
 
 describe('Merge world objects', () => {
   function* createWorldObjectsGenerator(worldObjects) {

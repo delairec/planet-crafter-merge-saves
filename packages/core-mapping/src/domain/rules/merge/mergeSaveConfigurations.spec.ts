@@ -1,10 +1,10 @@
 import {describe, it, expect} from 'bun:test';
-import {mergeSaveConfigurations} from './mergeSaveConfigurations.js';
+import {mergeSaveConfigurations} from './mergeSaveConfigurations';
+import {SaveConfiguration} from 'shared-save-processing/gameDefinitions';
 
 describe('Merge save configurations', () => {
   const saveDisplayName = 'SAVE_NAME';
-  /** @type {import('shared-save-processing/gameDefinitions').SaveConfiguration} */
-  const baseSaveConfiguration = {
+  const baseSaveConfiguration: SaveConfiguration = {
     saveDisplayName: 'Merged Save',
     planetId: 'Toxicity',
     unlockedSpaceTrading: false,

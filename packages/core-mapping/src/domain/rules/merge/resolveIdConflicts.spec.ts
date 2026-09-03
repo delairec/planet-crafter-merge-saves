@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'bun:test';
-import {resolveIdConflicts} from './resolveIdConflicts.js';
+import {resolveIdConflicts} from './resolveIdConflicts';
 import {parseSaveSections} from 'shared-save-processing/parseSaveSections.js';
 import {createFakeSaveString} from 'shared-save-processing/testing/createFakeSaveString.js';
 import { TERRAFORMATION_LEVELS_SECTION_INDEX, PLAYERS_SECTION_INDEX, WORLD_OBJECTS_SECTION_INDEX, INVENTORIES_SECTION_INDEX } from 'shared-save-processing/sectionIndexes.js';

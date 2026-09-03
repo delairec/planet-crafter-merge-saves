@@ -1,14 +1,14 @@
-export function buildMergedFileName(fileNameA, fileNameB) {
+export function buildMergedFileName(fileNameA: string, fileNameB: string): string {
   const nameA = sanitizeFileName(stripJsonExtension(fileNameA));
   const nameB = sanitizeFileName(stripJsonExtension(fileNameB));
   return `${nameA}-${nameB}-merged.json`;
 }
 
-function stripJsonExtension(fileName) {
+function stripJsonExtension(fileName: string): string {
   return fileName.replace(/\.json$/i, '');
 }
 
-function sanitizeFileName(fileName) {
+function sanitizeFileName(fileName: string): string {
   const sanitized = fileName
       .normalize('NFKC')
       .replace(/[\u0000-\u001f\u007f/\\]+/g, '_')

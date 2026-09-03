@@ -1,12 +1,9 @@
-/** @import { StoryEvent } from 'shared-save-processing/gameDefinitions' */
+import {StoryEvent} from 'shared-save-processing/gameDefinitions';
 
 /**
- * @param {StoryEvent[]} storyEventsA
- * @param {StoryEvent[]} storyEventsB
- * @returns {string}
  * @see GR-STORY-1, GR-STORY-2 in docs/business-rules.md
  */
-export function mergeStoryEvents(storyEventsA, storyEventsB) {
+export function mergeStoryEvents(storyEventsA: StoryEvent[], storyEventsB: StoryEvent[]): string {
   const validatedStoryEventsA = storyEventsA ?? [];
   const validatedStoryEventsB = storyEventsB ?? [];
 
@@ -18,4 +15,3 @@ export function mergeStoryEvents(storyEventsA, storyEventsB) {
     .map(storyEvent => JSON.stringify(storyEvent))
     .join('|\n');
 }
-

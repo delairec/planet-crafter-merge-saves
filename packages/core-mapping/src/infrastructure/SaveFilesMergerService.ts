@@ -1,6 +1,6 @@
-import {merge} from "cli-merge/merge.js";
-import {resolveIdConflicts} from "cli-merge/resolveIdConflicts.js";
-import {buildMergedFileName} from "cli-merge/helpers/buildMergedFileName.js";
+import {mergeParsedSaveSections} from "../domain/rules/merge/mergeParsedSaveSections";
+import {resolveIdConflicts} from "../domain/rules/merge/resolveIdConflicts";
+import {buildMergedFileName} from "../domain/rules/merge/buildMergedFileName";
 import {SaveMergerPort} from "../application/ports/SaveMergerPort";
 import {MergedSaveValueObject} from "../domain/valueObjects/MergedSaveValueObject";
 import {parseSaveSections} from "shared-save-processing/parseSaveSections.js";
@@ -13,7 +13,7 @@ export class SaveFilesMergerService implements SaveMergerPort {
     const parsedSaveA = parseSaveSections(contentA);
     const parsedSaveB = parseSaveSections(contentB);
 
-    const {mergeSaves, saveAWorldObjectIds} = merge(parsedSaveA, parsedSaveB, saveDisplayName);
+    const {mergeSaves, saveAWorldObjectIds} = mergeParsedSaveSections(parsedSaveA, parsedSaveB, saveDisplayName);
     const mergedSections = mergeSaves();
     const content = resolveIdConflicts(mergedSections, saveAWorldObjectIds);
 

@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'bun:test';
-import {mergeWorldEvents} from './mergeWorldEvents.js';
+import {mergeWorldEvents} from './mergeWorldEvents';
 
 describe('Merge world events', () => {
   const worldEventA = {planet: 110910045, seed: 12345, pos: '100,200,300'};

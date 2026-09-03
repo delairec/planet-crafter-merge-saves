@@ -1,16 +1,12 @@
-/** @import { TerraformationLevel } from 'shared-save-processing/gameDefinitions' */
-
+import {TerraformationLevel} from 'shared-save-processing/gameDefinitions';
 import {stringifyEntry} from 'shared-save-processing/stringifyEntry.js';
 
 const PURIFICATION_SENTINEL = -1;
 
 /**
- * @param {TerraformationLevel[]} terraformationLevelsA
- * @param {TerraformationLevel[]} terraformationLevelsB
- * @returns {string}
  * @see GR-TERRA-1, GR-TERRA-2, GR-TERRA-3 in docs/game-rules.md
  */
-export function mergeTerraformationLevels(terraformationLevelsA, terraformationLevelsB) {
+export function mergeTerraformationLevels(terraformationLevelsA: TerraformationLevel[], terraformationLevelsB: TerraformationLevel[]): string {
   const validatedLevelsA = terraformationLevelsA ?? [];
   const validatedLevelsB = terraformationLevelsB ?? [];
 
@@ -34,21 +30,15 @@ export function mergeTerraformationLevels(terraformationLevelsA, terraformationL
       });
     }
 
-    return stringifyEntry(/** @type {TerraformationLevel} */ (levelA || levelB));
+    return stringifyEntry((levelA || levelB) as TerraformationLevel);
   });
 
   return mergedLevels.join('|\n');
 }
 
-/**
- * @param {number} levelA
- * @param {number} levelB
- * @returns {number}
- */
-function mergePurificationLevel(levelA, levelB) {
+function mergePurificationLevel(levelA: number, levelB: number): number {
   if (levelA === PURIFICATION_SENTINEL && levelB === PURIFICATION_SENTINEL) return PURIFICATION_SENTINEL;
   if (levelA === PURIFICATION_SENTINEL) return levelB;
   if (levelB === PURIFICATION_SENTINEL) return levelA;
   return Math.max(levelA, levelB);
 }
-

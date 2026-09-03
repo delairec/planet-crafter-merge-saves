@@ -1,31 +1,34 @@
-/** @import { ParsedSave } from 'shared-save-processing/gameDefinitions' */
+import {ParsedSave} from 'shared-save-processing/gameDefinitions';
+import {mergeGlobalMetadata} from './mergeGlobalMetadata';
+import {mergeTerraformationLevels} from './mergeTerraformationLevels';
+import {mergePlayers} from './mergePlayers';
+import {mergeWorldObjects} from './mergeWorldObjects';
+import {mergeInventories} from './mergeInventories';
+import {mergeStatistics} from './mergeStatistics';
+import {mergeMailboxes} from './mergeMailboxes';
+import {mergeStoryEvents} from './mergeStoryEvents';
+import {mergeSaveConfigurations} from './mergeSaveConfigurations';
+import {mergeWorldEvents} from './mergeWorldEvents';
+import {determineSaveOrder} from './determineSaveOrder';
+import {collectEjectedPlayerInventoryIds} from './collectEjectedPlayerInventoryIds';
 
-import {mergeGlobalMetadata} from './sections/mergeGlobalMetadata.js';
-import {mergeTerraformationLevels} from './sections/mergeTerraformationLevels.js';
-import {mergePlayers} from './sections/mergePlayers.js';
-import {mergeWorldObjects} from './sections/mergeWorldObjects.js';
-import {mergeInventories} from './sections/mergeInventories.js';
-import {mergeStatistics} from './sections/mergeStatistics.js';
-import {mergeMailboxes} from './sections/mergeMailboxes.js';
-import {mergeStoryEvents} from './sections/mergeStoryEvents.js';
-import {mergeSaveConfigurations} from './sections/mergeSaveConfigurations.js';
-import {mergeWorldEvents} from './sections/mergeWorldEvents.js';
-import {determineSaveOrder} from './helpers/determineSaveOrder.js';
-import {collectEjectedPlayerInventoryIds} from './helpers/collectEjectedPlayerInventoryIds.js';
+function* EMPTY_GENERATOR(): Generator<never> {
+}
 
-/** @returns {Generator<never>} */
-function* EMPTY_GENERATOR() {
+export interface MergeParsedSaveSectionsResult {
+  mergeSaves: () => string;
+  saveAWorldObjectIds: Set<number>;
+  indexFileA: number;
+  indexFileB: number;
 }
 
 /**
  * Merges two Planet Crafter save strings section by section.
  * If one save has `planetId === 'Prime'` in its configuration, it is promoted to save A.
- * @param {ParsedSave} saveA
- * @param {ParsedSave} saveB
- * @param {string} saveDisplayName - Overrides `saveDisplayName` in the merged configuration.
- * @returns {{ mergeSaves: () => string, saveAWorldObjectIds: Set<number>, indexFileA: number, indexFileB: number }}
+ * @param saveDisplayName - Overrides `saveDisplayName` in the merged configuration.
+ * @see GR-ORDER-1 in docs/business-rules.md
  */
-export function merge(saveA, saveB, saveDisplayName) {
+export function mergeParsedSaveSections(saveA: ParsedSave, saveB: ParsedSave, saveDisplayName: string): MergeParsedSaveSectionsResult {
     if (!Array.isArray(saveA.sections) && !Array.isArray(saveB.sections)) {
         throw Error('ERROR_INVALID_INPUT_FORMAT');
     }
@@ -35,9 +38,9 @@ export function merge(saveA, saveB, saveDisplayName) {
     const [metadataA = [], terraformationLevelsA = [], playersA = [], worldObjectsFactoryA = () => EMPTY_GENERATOR(), inventoriesA = [], statisticsA = [], mailboxA = [], storyEventsA = [], saveConfigurationsA = [], worldEventsA = []] = mainSave;
     const [metadataB = [], terraformationLevelsB = [], playersB = [], worldObjectsFactoryB = () => EMPTY_GENERATOR(), inventoriesB = [], statisticsB = [], mailboxB = [], storyEventsB = [], saveConfigurationsB = [], worldEventsB = []] = secondarySave;
 
-    const saveAWorldObjectIds = new Set();
+    const saveAWorldObjectIds = new Set<number>();
 
-    function mergeSaves() {
+    function mergeSaves(): string {
         const ejectedPlayerIds = collectEjectedPlayerInventoryIds(playersA, playersB, inventoriesB);
 
         const {
@@ -69,5 +72,3 @@ export function merge(saveA, saveB, saveDisplayName) {
         indexFileB: secondarySave === saveB.sections ? 1 : 0
     };
 }
-
-

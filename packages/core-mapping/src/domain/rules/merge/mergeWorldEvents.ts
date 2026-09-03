@@ -1,12 +1,9 @@
-/** @import { WorldEvent } from 'shared-save-processing/gameDefinitions' */
+import {WorldEvent} from 'shared-save-processing/gameDefinitions';
 
 /**
- * @param {WorldEvent[]} worldEventsA
- * @param {WorldEvent[]} worldEventsB
- * @returns {string}
  * @see GR-EVT-1, GR-EVT-2 in docs/game-rules.md
  */
-export function mergeWorldEvents(worldEventsA, worldEventsB) {
+export function mergeWorldEvents(worldEventsA: WorldEvent[], worldEventsB: WorldEvent[]): string {
   const validatedWorldEventsA = worldEventsA ?? [];
   const validatedWorldEventsB = worldEventsB ?? [];
 
@@ -22,4 +19,3 @@ export function mergeWorldEvents(worldEventsA, worldEventsB) {
     .map(worldEvent => JSON.stringify(worldEvent))
     .join('|\n');
 }
-

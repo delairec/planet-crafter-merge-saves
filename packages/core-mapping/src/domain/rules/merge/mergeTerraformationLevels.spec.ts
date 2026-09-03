@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {mergeTerraformationLevels} from './mergeTerraformationLevels.js';
+import {mergeTerraformationLevels} from './mergeTerraformationLevels';
 
 describe('Merge terraformation levels', () => {
   const baseTerraformationLevel = {
