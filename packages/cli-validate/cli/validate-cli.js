@@ -41,15 +41,18 @@ export function initValidateCli({readTextFile, exitProcess, isEntryPoint, getCli
     } else {
       console.error(`✖ ${filePath} has ${errors.length} error(s):\n`);
       for (const error of errors) {
-        const location = [
-          error.section !== undefined ? `section ${error.section}` : null,
-          error.entryIndex !== undefined ? `entry ${error.entryIndex}` : null
-        ].filter(Boolean).join(', ');
-        console.error(`  [${location || error.rule || 'structure'}] ${error.message}`);
+        console.error(`  [${formatErrorLocation(error)}] ${error.message}`);
       }
       exitProcess(1);
     }
   }
 
   return {isEntryPoint, main, exitProcess, getCliArguments};
+}
+
+function formatErrorLocation(error) {
+  if (error.section !== undefined) {
+    return `section ${error.section}, entry ${error.entryIndex}`;
+  }
+  return error.rule ?? 'structure';
 }
