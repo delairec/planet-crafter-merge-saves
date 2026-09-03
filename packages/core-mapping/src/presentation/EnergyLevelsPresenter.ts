@@ -9,6 +9,7 @@ import {OptimizerViewModel} from "./viewModels/OptimizerViewModel";
 import {formatNumber} from "./formatters/formatNumber/formatNumber";
 import {FormatNumberStrategies} from "./formatters/formatNumber/FormatNumberStrategies";
 import {EnergyLevelsPresenterPort} from "../application/ports/EnergyLevelsPresenterPort";
+import {worldObjectLabels} from "./worldObjectLabels";
 import {
   energyLevelsSectionAvailableTitle,
   energyLevelsSectionConsumptionTitle,
@@ -35,7 +36,7 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
 
   private buildPlanet(planet: PlanetEnergyLevelsValueObject): PlanetEnergyLevelsViewModel {
     return {
-      planetId: planet.planetId,
+      planetId: planet.planetName ?? `Planet ${planet.planetId}`,
       energyLevels: {
         columns: [
           {
@@ -60,7 +61,7 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
 
   private buildBreakdownRows(breakdown: EnergyBreakdownEntryValueObject[], totalProduction?: number): EnergyBreakdownRowViewModel[] {
     return breakdown.map((entry): EnergyBreakdownRowViewModel => ({
-      label: entry.label,
+      label: worldObjectLabels[entry.name],
       quantity: formatNumber(entry.quantity),
       unitLevel: formatNumber(entry.unitLevel) + `${nbsp}kW`,
       totalLevel: formatNumber(entry.totalLevel) + `${nbsp}kW` + this.buildContributionSuffix(entry.totalLevel, totalProduction)
@@ -69,10 +70,10 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
 
   private buildOptimizers(optimizers: OptimizerValueObject[], totalProduction: number): OptimizerViewModel[] {
     return optimizers.map((optimizer): OptimizerViewModel => ({
-      label: optimizer.label,
+      label: worldObjectLabels[optimizer.name],
       fuseCount: formatNumber(optimizer.fuseCount),
       boostedMachines: optimizer.boostedMachines
-        .map((machine) => `${formatNumber(machine.quantity)} ${machine.label}`)
+        .map((machine) => `${formatNumber(machine.quantity)} ${worldObjectLabels[machine.name]}`)
         .join(', '),
       contribution: formatNumber(optimizer.contribution) + `${nbsp}kW` + this.buildContributionSuffix(optimizer.contribution, totalProduction)
     }));

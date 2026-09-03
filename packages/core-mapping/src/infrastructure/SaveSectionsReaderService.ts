@@ -26,8 +26,8 @@ import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObjec
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
 import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
 import {PlanetEnergyLevelsValueObject} from "../domain/valueObjects/PlanetEnergyLevelsValueObject";
-import {WorldObjectName} from "../domain/worldObjectLabels";
-import {planetNamesByNumericId} from "../domain/planetNamesByNumericId";
+import {WorldObjectName} from "../domain/worldObjectNames";
+import {resolvePlanetName} from "../domain/rules/resolvePlanetName";
 import {computePlanetEnergyLevels} from "../domain/rules/computePlanetEnergyLevels";
 
 function parsePosition(pos: string): [number, number, number] {
@@ -178,8 +178,15 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
         const rawWorldObjectsOnPlanet = placedWorldObjectsOnPlanet.map(({raw}) => raw);
         const entitiesOnPlanet = placedWorldObjectsOnPlanet.map(({entity}) => entity);
 
+        const knownPlanetNames = [...new Set(this.terraformationLevels.map((level) => level.planetId))];
+
         return {
-          planetId: this.resolvePlanetLabel(planetId, rawWorldObjectsOnPlanet),
+          planetId,
+          planetName: resolvePlanetName(
+            planetId,
+            rawWorldObjectsOnPlanet.map((worldObject) => worldObject.gId),
+            knownPlanetNames
+          ),
           ...computePlanetEnergyLevels(allWorldObjectEntities, entitiesOnPlanet, inventories)
         };
       });
@@ -197,30 +204,6 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
     };
   }
 
-  /**
-   * Resolves a human-readable label for a numeric `WorldObject.planet` id. The primary source is
-   * the fixed lookup table `planetNamesByNumericId` (see docs/save-format.md, "Planet numeric
-   * IDs"). For planet ids not in that table (e.g. future planets, modded content), falls back to
-   * a heuristic: some world object `gId`s embed the planet name in plain text (e.g. `Seed7Humble`
-   * on planet `Humble`) — if exactly one known planet name (from this save's TerraformationLevels)
-   * is found as a substring of a `gId` on this planet, use it; otherwise fall back to
-   * `Planet ${planetId}`.
-   */
-  private resolvePlanetLabel(planetId: number, positionedWorldObjectsOnPlanet: WorldObject[]): string {
-    const knownPlanetName = planetNamesByNumericId[planetId];
-    if (knownPlanetName !== undefined) {
-      return knownPlanetName;
-    }
-
-    const knownPlanetNames = [...new Set(this.terraformationLevels.map((level) => level.planetId))];
-
-    const matchingPlanetNames = new Set(
-      positionedWorldObjectsOnPlanet
-        .flatMap((worldObject) => knownPlanetNames.filter((planetName) => worldObject.gId.includes(planetName)))
-    );
-
-    return matchingPlanetNames.size === 1 ? [...matchingPlanetNames][0] : `Planet ${planetId}`;
-  }
 
   private findWorldObjectByIds(ids: string[]): WorldObjectEntity[] {
     const result: WorldObjectEntity[] = [];

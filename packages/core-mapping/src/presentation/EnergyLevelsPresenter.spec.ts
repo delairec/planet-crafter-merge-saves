@@ -22,7 +22,7 @@ describe('EnergyLevelsPresenter', () => {
     // Act
     presenter.displayEnergyLevels({
       planets: [{
-        planetId: 'Planet 1',
+        planetId: 1,
         production: 80_000,
         consumption: 0,
         available: 80_000,
@@ -69,7 +69,7 @@ describe('EnergyLevelsPresenter', () => {
     presenter.displayEnergyLevels({
       planets: [
         {
-          planetId: 'Planet 1',
+          planetId: 1,
           production: 100,
           consumption: 0,
           available: 100,
@@ -78,7 +78,7 @@ describe('EnergyLevelsPresenter', () => {
           optimizers: []
         },
         {
-          planetId: 'Planet 2',
+          planetId: 2,
           production: 200,
           consumption: 0,
           available: 200,
@@ -100,18 +100,18 @@ describe('EnergyLevelsPresenter', () => {
     // Act
     presenter.displayEnergyLevels({
       planets: [{
-        planetId: 'Planet 1',
+        planetId: 1,
         production: 590,
         consumption: 182,
         available: 408,
         productionBreakdown: [{
-          label: 'Wind turbine T2',
+          name: 'WindTurbine1',
           quantity: 2,
           unitLevel: 290,
           totalLevel: 580
         }],
         consumptionBreakdown: [{
-          label: 'Drill T3',
+          name: 'Drill2',
           quantity: 4,
           unitLevel: 45.5,
           totalLevel: 182
@@ -142,18 +142,18 @@ describe('EnergyLevelsPresenter', () => {
     // Act
     presenter.displayEnergyLevels({
       planets: [{
-        planetId: 'Planet 1',
+        planetId: 1,
         production: 590,
         consumption: 0,
         available: 590,
         productionBreakdown: [],
         consumptionBreakdown: [],
         optimizers: [{
-          label: 'Machine Optimizer T2',
+          name: 'Optimizer2',
           fuseCount: 2,
           boostedMachines: [
-            {label: 'Nuclear Reactor T2', quantity: 3},
-            {label: 'Solar panel T2', quantity: 2}
+            {name: 'EnergyGenerator5', quantity: 3},
+            {name: 'EnergyGenerator3', quantity: 2}
           ],
           contribution: 994.5
         }]

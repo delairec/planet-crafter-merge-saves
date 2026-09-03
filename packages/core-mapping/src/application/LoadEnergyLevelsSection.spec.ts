@@ -17,18 +17,19 @@ describe('LoadEnergyLevelsSection', () => {
     expect(presenter.displayEnergyLevels).toHaveBeenCalledTimes(1);
     expect(presenter.displayEnergyLevels).toHaveBeenCalledWith({
       planets: [{
-        planetId: 'Planet 1',
+        planetId: 1,
+        planetName: undefined,
         production: 22_220.5,
         consumption: 11_110.5,
         available: 11_110,
         productionBreakdown: [{
-          label: 'Nuclear Fusion generator',
+          name: 'EnergyGenerator6',
           quantity: 1,
           unitLevel: 22_220.5,
           totalLevel: 22_220.5
         }],
         consumptionBreakdown: [{
-          label: 'Nuclear Reactor T1',
+          name: 'EnergyGenerator4',
           quantity: 1,
           unitLevel: 11_110.5,
           totalLevel: 11_110.5

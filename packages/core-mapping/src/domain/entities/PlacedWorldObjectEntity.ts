@@ -1,4 +1,4 @@
-import {WorldObjectName} from "../worldObjectLabels";
+import {WorldObjectName} from "../worldObjectNames";
 
 // Represents a world object placed in the game world (has a position and belongs to a planet),
 // as opposed to `WorldObjectEntity`, which only carries identity/name and is used for

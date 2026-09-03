@@ -1,7 +1,7 @@
 import {PlayersViewModel} from './viewModels/PlayersViewModel';
 import {PlayersPresenterPort} from '../application/ports/PlayersPresenterPort';
 import {PlayerEntity} from "../domain/entities/PlayerEntity";
-import {WorldObjectLabel, worldObjectLabels} from "../domain/worldObjectLabels";
+import {WorldObjectLabel, worldObjectLabels} from "./worldObjectLabels";
 import {
   playersSectionEquipmentLabel,
   playersSectionInventoryLabel,
