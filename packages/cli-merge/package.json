@@ -11,5 +11,9 @@
     "merge": "bun --cwd ../.. packages/cli-merge/cli/merge-cli.js ",
     "merge:test": "bun test packages/cli-merge",
     "node:merge": "node cli/merge-cli.js --platform=node"
+  },
+  "dependencies": {
+    "shared-save-processing": "workspace:*",
+    "util-platforms": "workspace:*"
   }
 }

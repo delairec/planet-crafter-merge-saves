@@ -1,16 +1,16 @@
 import {describe, expect, it} from 'bun:test';
 import {validateMergedSave} from './validate.js';
-import {createFakeSaveString, createLegacyFakeSaveString} from '../shared-mapping/testing/createFakeSaveString.js';
+import {createFakeSaveString, createLegacyFakeSaveString} from 'shared-save-processing/testing/createFakeSaveString.js';
 import {
+  createEquipment,
   createFakeSaveContent,
-  equipment,
-  inventory,
-  metadata,
-  player,
-  saveConfiguration,
-  statistics,
-  terraformationLevel
-} from '../shared-mapping/testing/createFakeSaveContent.js';
+  createGlobalMetadata,
+  createInventory,
+  createPlayer,
+  createSaveConfiguration,
+  createStatistics,
+  createTerraformationLevel
+} from 'shared-save-processing/testing/createFakeSaveContent.js';
 
 describe('validateMergedSave', () => {
 
@@ -79,7 +79,7 @@ describe('validateMergedSave', () => {
     it('should reject when terraTokens is not an integer', () => {
       // Arrange
       // @ts-expect-error intentionally invalid type to test validation
-      const save = createFakeSaveString({globalMetadata: {...metadata, terraTokens: 'abc'}});
+      const save = createFakeSaveString({globalMetadata: {...createGlobalMetadata(), terraTokens: 'abc'}});
 
       // Act
       const result = validateMergedSave(save);
@@ -91,7 +91,7 @@ describe('validateMergedSave', () => {
 
     it('should reject when a required field is missing', () => {
       // Arrange
-      const {openedInstanceTimeLeft: _, ...metadataWithoutTimeLeft} = metadata;
+      const {openedInstanceTimeLeft: _, ...metadataWithoutTimeLeft} = createGlobalMetadata();
       // @ts-expect-error intentionally missing required field to test validation
       const save = createFakeSaveString({globalMetadata: metadataWithoutTimeLeft});
 
@@ -107,7 +107,7 @@ describe('validateMergedSave', () => {
   describe('Section 1 — Terraformation levels schema', () => {
     it('should reject when planetId is missing', () => {
       // Arrange
-      const {planetId: _, ...levelWithoutPlanetId} = terraformationLevel;
+      const {planetId: _, ...levelWithoutPlanetId} = createTerraformationLevel();
       const save = createFakeSaveContent({terraformationLevels: [levelWithoutPlanetId]});
 
       // Act
@@ -121,7 +121,7 @@ describe('validateMergedSave', () => {
     it('should reject when a level field is negative', () => {
       // Arrange
       const save = createFakeSaveContent({
-        terraformationLevels: [{...terraformationLevel, unitOxygenLevel: -1}]
+        terraformationLevels: [createTerraformationLevel({unitOxygenLevel: -1})]
       });
 
       // Act
@@ -136,7 +136,7 @@ describe('validateMergedSave', () => {
   describe('Section 2 — Players schema', () => {
     it('should reject when a required player field is missing', () => {
       // Arrange
-      const {host: _, ...playerWithoutHost} = player;
+      const {host: _, ...playerWithoutHost} = createPlayer();
       const save = createFakeSaveContent({players: [playerWithoutHost]});
 
       // Act
@@ -149,7 +149,7 @@ describe('validateMergedSave', () => {
 
     it('should reject when playerPosition has an invalid format', () => {
       // Arrange
-      const save = createFakeSaveContent({players: [{...player, playerPosition: 'bad-format'}]});
+      const save = createFakeSaveContent({players: [createPlayer({playerPosition: 'bad-format'})]});
 
       // Act
       const result = validateMergedSave(save);
@@ -161,7 +161,7 @@ describe('validateMergedSave', () => {
 
     it('should reject when playerGaugeOxygen is negative', () => {
       // Arrange
-      const save = createFakeSaveContent({players: [{...player, playerGaugeOxygen: -1}]});
+      const save = createFakeSaveContent({players: [createPlayer({playerGaugeOxygen: -1})]});
 
       // Act
       const result = validateMergedSave(save);
@@ -173,7 +173,7 @@ describe('validateMergedSave', () => {
 
     it('should accept players without cameraView, totalCraftedObjects and totalTerraTokenEarned (backward compatibility)', () => {
       // Arrange
-      const {cameraView: _cameraView, totalCraftedObjects: _totalCraftedObjects, totalTerraTokenEarned: _totalTerraTokenEarned, ...legacyPlayer} = player;
+      const {cameraView: _cameraView, totalCraftedObjects: _totalCraftedObjects, totalTerraTokenEarned: _totalTerraTokenEarned, ...legacyPlayer} = createPlayer();
       const save = createFakeSaveContent({players: [legacyPlayer]});
 
       // Act
@@ -187,8 +187,8 @@ describe('validateMergedSave', () => {
   describe('Section 4 — Inventories schema', () => {
     it('should reject when size is missing', () => {
       // Arrange
-      const {size: _, ...inventoryWithoutSize} = inventory;
-      const save = createFakeSaveContent({inventories: [inventoryWithoutSize, equipment]});
+      const {size: _, ...inventoryWithoutSize} = createInventory();
+      const save = createFakeSaveContent({inventories: [inventoryWithoutSize, createEquipment()]});
 
       // Act
       const result = validateMergedSave(save);
@@ -200,7 +200,7 @@ describe('validateMergedSave', () => {
 
     it('should reject when size is negative', () => {
       // Arrange
-      const save = createFakeSaveContent({inventories: [{...inventory, size: -1}, equipment]});
+      const save = createFakeSaveContent({inventories: [createInventory({size: -1}), createEquipment()]});
 
       // Act
       const result = validateMergedSave(save);
@@ -214,7 +214,7 @@ describe('validateMergedSave', () => {
   describe('Section 5 — Statistics schema', () => {
     it('should reject when craftedObjects is negative', () => {
       // Arrange
-      const save = createFakeSaveContent({statistics: {...statistics, craftedObjects: -5}});
+      const save = createFakeSaveContent({statistics: createStatistics({craftedObjects: -5})});
 
       // Act
       const result = validateMergedSave(save);
@@ -228,7 +228,7 @@ describe('validateMergedSave', () => {
   describe('Section 8 — Save configuration schema', () => {
     it('should reject when saveDisplayName is missing', () => {
       // Arrange
-      const {saveDisplayName: _, ...configWithoutName} = saveConfiguration;
+      const {saveDisplayName: _, ...configWithoutName} = createSaveConfiguration();
       const save = createFakeSaveContent({saveConfiguration: configWithoutName});
 
       // Act
@@ -242,7 +242,7 @@ describe('validateMergedSave', () => {
     it('should reject when modifierTerraformationPace is negative', () => {
       // Arrange
       const save = createFakeSaveContent({
-        saveConfiguration: {...saveConfiguration, modifierTerraformationPace: -1}
+        saveConfiguration: createSaveConfiguration({modifierTerraformationPace: -1})
       });
 
       // Act
@@ -296,20 +296,19 @@ describe('validateMergedSave', () => {
 
       it('should reject a save where all gauge values are missing their decimal notation', () => {
         // Arrange
-        const playerWithAllIntegerGauges = {
-          ...player,
+        const playerWithAllIntegerGauges = createPlayer({
           playerGaugeOxygen: 280,
           playerGaugeThirst: 100,
           playerGaugeHealth: 72,
           playerGaugeToxic: 0
-        };
+        });
         const saveWithBadFloats = createFakeSaveString({
-          globalMetadata: metadata,
-          terraformationLevels: [terraformationLevel],
+          globalMetadata: createGlobalMetadata(),
+          terraformationLevels: [createTerraformationLevel()],
           players: [playerWithAllIntegerGauges],
-          inventories: [inventory, equipment],
-          statistics: statistics,
-          saveConfiguration: saveConfiguration
+          inventories: [createInventory(), createEquipment()],
+          statistics: createStatistics(),
+          saveConfiguration: createSaveConfiguration()
         }).replace(/"playerGaugeOxygen":280\.0/g, '"playerGaugeOxygen":280')
           .replace(/"playerGaugeThirst":100\.0/g, '"playerGaugeThirst":100')
           .replace(/"playerGaugeHealth":72\.0/g, '"playerGaugeHealth":72')
@@ -328,7 +327,7 @@ describe('validateMergedSave', () => {
     describe('Unique host rule', () => {
       it('should report an error when no player is host', () => {
         // Arrange
-        const save = createFakeSaveContent({players: [{...player, host: false}]});
+        const save = createFakeSaveContent({players: [createPlayer({host: false})]});
 
         // Act
         const result = validateMergedSave(save);
@@ -340,17 +339,17 @@ describe('validateMergedSave', () => {
 
       it('should report an error when more than one player is host', () => {
         // Arrange
-        const secondPlayer = {
-          ...player,
+        const firstPlayer = createPlayer();
+        const secondPlayer = createPlayer({
           id: 76561198055446664,
           name: 'Chileny',
           inventoryId: 3,
           equipmentId: 4,
           host: true
-        };
+        });
         const save = createFakeSaveContent({
-          players: [player, secondPlayer],
-          inventories: [inventory, equipment, {id: 3, woIds: '', size: 20}, {id: 4, woIds: '', size: 10}]
+          players: [firstPlayer, secondPlayer],
+          inventories: [createInventory(), createEquipment(), {id: 3, woIds: '', size: 20}, {id: 4, woIds: '', size: 10}]
         });
 
         // Act
@@ -376,18 +375,18 @@ describe('validateMergedSave', () => {
     describe('Consistent planetId rule', () => {
       it('should accept players with different planetId values', () => {
         // Arrange
-        const playerOnOtherPlanet = {
-          ...player,
+        const firstPlayer = createPlayer();
+        const playerOnOtherPlanet = createPlayer({
           id: 76561198055446664,
           name: 'Chileny',
           inventoryId: 3,
           equipmentId: 4,
           host: false,
           planetId: 'Prime'
-        };
+        });
         const save = createFakeSaveContent({
-          players: [player, playerOnOtherPlanet],
-          inventories: [inventory, equipment, {id: 3, woIds: '', size: 20}, {id: 4, woIds: '', size: 10}]
+          players: [firstPlayer, playerOnOtherPlanet],
+          inventories: [createInventory(), createEquipment(), {id: 3, woIds: '', size: 20}, {id: 4, woIds: '', size: 10}]
         });
 
         // Act
@@ -403,12 +402,12 @@ describe('validateMergedSave', () => {
     it('should accept the save as valid (backward compatibility)', () => {
       // Arrange
       const save = createLegacyFakeSaveString({
-        globalMetadata: metadata,
-        terraformationLevels: [terraformationLevel],
-        players: [player],
-        inventories: [inventory, equipment],
-        statistics,
-        saveConfiguration,
+        globalMetadata: createGlobalMetadata(),
+        terraformationLevels: [createTerraformationLevel()],
+        players: [createPlayer()],
+        inventories: [createInventory(), createEquipment()],
+        statistics: createStatistics(),
+        saveConfiguration: createSaveConfiguration(),
         terrainLayers: [{layerId: 'PC-Toxicity-Layer2', planet: 110910045, colorBase: '0.5-0.5-0.5-1'}]
       });
 
@@ -422,12 +421,12 @@ describe('validateMergedSave', () => {
     it('should report a warning explaining the save was adapted', () => {
       // Arrange
       const save = createLegacyFakeSaveString({
-        globalMetadata: metadata,
-        terraformationLevels: [terraformationLevel],
-        players: [player],
-        inventories: [inventory, equipment],
-        statistics,
-        saveConfiguration,
+        globalMetadata: createGlobalMetadata(),
+        terraformationLevels: [createTerraformationLevel()],
+        players: [createPlayer()],
+        inventories: [createInventory(), createEquipment()],
+        statistics: createStatistics(),
+        saveConfiguration: createSaveConfiguration(),
         terrainLayers: [{layerId: 'PC-Toxicity-Layer2', planet: 110910045, colorBase: '0.5-0.5-0.5-1'}]
       });
 
@@ -455,4 +454,3 @@ describe('validateMergedSave', () => {
     });
   });
 });
-

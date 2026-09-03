@@ -14,7 +14,7 @@ import {
   energyLevelsSectionConsumptionTitle,
   energyLevelsSectionProductionTitle,
   energyLevelsSectionWorkInProgressLabel
-} from "../../../util-messages/energyLevelsSectionMessages.js";
+} from "util-messages/energyLevelsSectionMessages.js";
 
 const nbsp = '\u00A0';
 

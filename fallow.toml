@@ -11,7 +11,6 @@ ignorePatterns = [
     "output/**",
     "input/**",
     "packages/ui-save-manager/**",
-    "packages/util-messages/**",
 ]
 
 ignoreDependencies = [
@@ -19,6 +18,18 @@ ignoreDependencies = [
     "@types/bun",
     "typescript",
     "ui-save-manager"
+]
+
+ignoreUnresolvedImports = [
+    "shared-save-processing/schemas/section0-player-progression.schema.json",
+    "shared-save-processing/schemas/section1-terraformation-levels.schema.json",
+    "shared-save-processing/schemas/section2-players.schema.json",
+    "shared-save-processing/schemas/section4-inventories.schema.json",
+    "shared-save-processing/schemas/section5-statistics.schema.json",
+    "shared-save-processing/schemas/section6-messages.schema.json",
+    "shared-save-processing/schemas/section7-story-events.schema.json",
+    "shared-save-processing/schemas/section8-save-config.schema.json",
+    "shared-save-processing/schemas/section9-world-events.schema.json",
 ]
 
 [audit]

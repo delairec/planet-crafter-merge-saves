@@ -8,7 +8,7 @@ import {
   playersSectionNoEquipmentMessage,
   playersSectionNoItemsMessage,
   playersSectionUnknownItemLabel
-} from "../../../util-messages/playersSectionMessages.js";
+} from "util-messages/playersSectionMessages.js";
 
 export class PlayersPresenter implements PlayersPresenterPort {
   viewModel: PlayersViewModel;

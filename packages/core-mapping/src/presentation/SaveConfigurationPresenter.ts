@@ -9,7 +9,7 @@ import {
   saveConfigurationSectionMultiplayerFactorLabel,
   saveConfigurationSectionPowerConsumptionLabel,
   saveConfigurationSectionTerraformationPaceLabel
-} from "../../../util-messages/saveConfigurationSectionMessages.js";
+} from "util-messages/saveConfigurationSectionMessages.js";
 
 export class SaveConfigurationPresenter implements SaveConfigurationPresenterPort {
   viewModel: SaveConfigurationViewModel;

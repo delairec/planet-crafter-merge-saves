@@ -1,6 +1,6 @@
-/** @import { WorldObject } from '../../util-types/gameDefinitions' */
+/** @import { WorldObject } from 'shared-save-processing/gameDefinitions' */
 
-import {stringifyEntry} from '../../util-parsing/stringifyEntry.js';
+import {stringifyEntry} from 'shared-save-processing/stringifyEntry.js';
 
 /**
  * @param {Generator<WorldObject>} worldObjectsGeneratorA

@@ -1,4 +1,4 @@
-/** @import { Player, Inventory } from '../../util-types/gameDefinitions' */
+/** @import { Player, Inventory } from 'shared-save-processing/gameDefinitions' */
 
 /**
  * @param {Player[]} playersA

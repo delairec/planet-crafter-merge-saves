@@ -1,4 +1,4 @@
-import {ParsedSections} from "../../../util-types/gameDefinitions";
+import {ParsedSections} from "shared-save-processing/gameDefinitions";
 import {EnergyLevelsViewModel} from "../presentation/viewModels/EnergyLevelsViewModel";
 import {createSaveParser} from "../composition/compositionRoot";
 import {EnergyLevelsPresenter} from "../presentation/EnergyLevelsPresenter";

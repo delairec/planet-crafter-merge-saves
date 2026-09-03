@@ -3,7 +3,7 @@
 > ❗Docs written by AI from save file analysis (proofread, but still can include mistakes)
 
 ---
-**JSON Schemas** : each section has a validation schema in [`docs/schemas/`](./schemas/).
+**JSON Schemas** : each section has a validation schema in [`packages/shared-save-processing/schemas/`](../packages/shared-save-processing/schemas/).
 The root schema [`save-file.schema.json`](./schemas/save-file.schema.json) validates a fully parsed save (array of 11 sections).
 
 ## General structure
@@ -20,7 +20,7 @@ The file ends with `@`.
 > shifting World Events to index 10), which a game update removed. Legacy saves in that older format are only
 > supported at the user-input boundary (loading a save file): they are automatically adapted to the current
 > 11-section format described below, discarding the Terrain Layers data, and a warning is reported to the user.
-> See `packages/util-parsing/normalizeSaveSections.js`.
+> See `packages/shared-save-processing/normalizeRawSections.js`.
 
 ```
 entry1|
