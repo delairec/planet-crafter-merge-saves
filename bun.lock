@@ -15,6 +15,7 @@
       "version": "1.0.0",
       "dependencies": {
         "core-mapping": "workspace:*",
+        "shared-save-processing": "workspace:*",
         "util-platforms": "workspace:*",
       },
     },
@@ -22,7 +23,7 @@
       "name": "cli-validate",
       "version": "1.0.0",
       "dependencies": {
-        "ajv": "catalog:testing",
+        "core-mapping": "workspace:*",
         "shared-save-processing": "workspace:*",
         "util-platforms": "workspace:*",
       },
@@ -31,7 +32,7 @@
       "name": "core-mapping",
       "version": "1.0.0",
       "dependencies": {
-        "cli-validate": "workspace:*",
+        "ajv": "catalog:testing",
         "shared-save-processing": "workspace:*",
         "util-messages": "workspace:*",
       },
