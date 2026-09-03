@@ -6,7 +6,7 @@ import {
   mergeSectionSaveALabel,
   mergeSectionSaveBLabel,
   mergeSectionTitle
-} from 'core-mapping/presentation/messages/mergeSectionMessages';
+} from '~/messages/mergeSectionMessages';
 
 interface MergeSectionProps {
   onMergeResult: (result: MergeResultViewModel) => void;

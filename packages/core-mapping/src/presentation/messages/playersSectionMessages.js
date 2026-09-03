@@ -1,4 +1,3 @@
-export const playersSectionTitle = 'Players';
 export const playersSectionEquipmentLabel = 'Equipment';
 export const playersSectionInventoryLabel = 'Inventory';
 export const playersSectionNoEquipmentMessage = '(/) No equipment';

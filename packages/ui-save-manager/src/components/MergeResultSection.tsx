@@ -6,7 +6,7 @@ import {
   mergeResultSectionSaveAInvalidMessage,
   mergeResultSectionSaveBInvalidMessage,
   mergeResultSectionSuccessMessage
-} from 'core-mapping/presentation/messages/mergeResultSectionMessages';
+} from '~/messages/mergeResultSectionMessages';
 import ValidationMessagesList from "~/components/validation/ValidationMessagesList";
 
 interface MergeResultSectionProps {

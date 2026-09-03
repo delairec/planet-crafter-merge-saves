@@ -9,7 +9,7 @@ import {
   terraformationLevelsSectionBiomassLabel,
   terraformationLevelsSectionIndexLabel,
   terraformationLevelsSectionTitle
-} from "core-mapping/presentation/messages/terraformationLevelsSectionMessages";
+} from "~/messages/terraformationLevelsSectionMessages";
 
 interface TerraformationLevelsProps {
   sections: Accessor<ParsedSections>;

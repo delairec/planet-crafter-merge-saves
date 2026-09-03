@@ -1,4 +1,3 @@
-export const saveConfigurationSectionTitleLabel = 'Save Configuration:';
 export const saveConfigurationSectionTerraformationPaceLabel = 'Terraformation Pace';
 export const saveConfigurationSectionGaugeDrainLabel = 'Gauge Drain';
 export const saveConfigurationSectionMeteoOccurrenceLabel = 'Meteo Occurrence';

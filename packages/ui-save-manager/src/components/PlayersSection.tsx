@@ -3,7 +3,7 @@ import {LoadPlayersSectionController} from "core-mapping/controllers/LoadPlayers
 import FieldsGroup from "~/components/structure/FieldsGroup";
 import {PlayersViewModel} from "core-mapping/presentation/viewModels/PlayersViewModel";
 import {ParsedSections} from "shared-save-processing/gameDefinitions";
-import {playersSectionTitle} from "core-mapping/presentation/messages/playersSectionMessages";
+import {playersSectionTitle} from "~/messages/playersSectionMessages";
 
 interface PlayersProps {
   sections: Accessor<ParsedSections>;
