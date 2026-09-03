@@ -3,10 +3,10 @@ import {ValidationIssue} from "../application/ports/ValidationIssue";
 import {MergeResultViewModel} from "./viewModels/MergeResultViewModel";
 
 export class MergeResultPresenter implements MergeResultPresenterPort {
-  viewModel: MergeResultViewModel;
+  private _viewModel: MergeResultViewModel;
 
   constructor() {
-    this.viewModel = {
+    this._viewModel = {
       status: 'idle',
       fileName: '',
       content: '',
@@ -15,8 +15,12 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
     };
   }
 
+  get viewModel(): MergeResultViewModel {
+    return this._viewModel;
+  }
+
   presentMergeSucceeded(fileName: string, content: string): void {
-    this.viewModel = {
+    this._viewModel = {
       status: 'success',
       fileName,
       content,
@@ -26,7 +30,7 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
   }
 
   presentSaveFilesInvalid(saveAErrors: ValidationIssue[], saveBErrors: ValidationIssue[]): void {
-    this.viewModel = {
+    this._viewModel = {
       status: 'validationError',
       fileName: '',
       content: '',

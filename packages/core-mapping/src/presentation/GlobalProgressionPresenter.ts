@@ -9,10 +9,10 @@ import {
 } from "./messages/globalProgressionSectionMessages.js";
 
 export class GlobalProgressionPresenter implements GlobalProgressionPresenterPort {
-  viewModel: GlobalProgressionViewModel;
+  private _viewModel: GlobalProgressionViewModel;
 
   constructor() {
-    this.viewModel = {
+    this._viewModel = {
       statistics: {
         columns: [
           {
@@ -28,10 +28,26 @@ export class GlobalProgressionPresenter implements GlobalProgressionPresenterPor
     }
   }
 
+  get viewModel(): GlobalProgressionViewModel {
+    return this._viewModel;
+  }
+
   displayGlobalProgression(globalProgression: GlobalProgressionValueObject, statistics: StatisticsValueObject | undefined): void {
     const allTimeTerraTokens = formatNumber(globalProgression.allTimeTerraTokens);
-    const [allTimeTerraTokensColumn, totalCrafterObjects] = this.viewModel.statistics.columns;
-    allTimeTerraTokensColumn.values = [`${allTimeTerraTokens} =tt=`];
-    totalCrafterObjects.values = [`${statistics?.totalCraftedObjects ?? 0}`];
+
+    this._viewModel = {
+      statistics: {
+        columns: [
+          {
+            header: globalProgressionSectionAllTimeTerraTokensLabel,
+            values: [`${allTimeTerraTokens} =tt=`]
+          },
+          {
+            header: globalProgressionSectionTotalCraftedObjectsLabel,
+            values: [`${statistics?.totalCraftedObjects ?? 0}`]
+          },
+        ]
+      }
+    };
   }
 }

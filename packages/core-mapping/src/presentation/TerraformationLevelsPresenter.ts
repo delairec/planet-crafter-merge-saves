@@ -15,10 +15,10 @@ import {
 } from "./messages/terraformationLevelsSectionMessages.js";
 
 export class TerraformationLevelsPresenter implements TerraformationLevelsPresenterPort {
-  viewModel: TerraformationLevelsViewModel;
+  private _viewModel: TerraformationLevelsViewModel;
 
   constructor() {
-    this.viewModel = {
+    this._viewModel = {
       planets: [
         {
           name: terraformationLevelsSectionDefaultPlanetName,
@@ -65,9 +65,13 @@ export class TerraformationLevelsPresenter implements TerraformationLevelsPresen
     };
   }
 
+  get viewModel(): TerraformationLevelsViewModel {
+    return this._viewModel;
+  }
+
   displayTerraformationLevels(levels: TerraformationLevelSummaryValueObject[]): void {
-    this.viewModel.planets = levels.map(level => {
-      return {
+    this._viewModel = {
+      planets: levels.map(level => ({
         name: level.planetId,
         environmentalLevels: {
           columns: [
@@ -107,7 +111,7 @@ export class TerraformationLevelsPresenter implements TerraformationLevelsPresen
         },
         terraformationIndex: formatNumber(level.terraformationIndex, FormatNumberStrategies.SYMBOL) + 'Ti',
         biomass: formatNumber(level.biomass, FormatNumberStrategies.WEIGHT)
-      };
-    });
+      }))
+    };
   }
 }

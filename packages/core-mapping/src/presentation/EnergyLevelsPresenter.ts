@@ -20,16 +20,20 @@ import {
 const nbsp = '\u00A0';
 
 export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
-  viewModel: EnergyLevelsViewModel;
+  private _viewModel: EnergyLevelsViewModel;
 
   constructor() {
-    this.viewModel = {
+    this._viewModel = {
       planets: []
     };
   }
 
+  get viewModel(): EnergyLevelsViewModel {
+    return this._viewModel;
+  }
+
   displayEnergyLevels(energyLevels: EnergyLevelsValueObject): void {
-    this.viewModel = {
+    this._viewModel = {
       planets: energyLevels.planets.map((planet): PlanetEnergyLevelsViewModel => this.buildPlanet(planet))
     };
   }
