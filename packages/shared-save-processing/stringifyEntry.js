@@ -1,11 +1,11 @@
 /** @import { TerraformationLevel, Player, WorldObject } from './gameDefinitions' */
 
-const FLOAT_FIELDS = new Set([
+const FLOAT_FIELDS = Object.freeze(new Set([
   'unitOxygenLevel', 'unitHeatLevel', 'unitPressureLevel', 'unitPlantsLevel',
   'unitInsectsLevel', 'unitAnimalsLevel', 'unitPurificationLevel',
   'playerGaugeOxygen', 'playerGaugeThirst', 'playerGaugeHealth', 'playerGaugeToxic',
   'hunger',
-]);
+]));
 
 /**
  * Like JSON.stringify but preserves `.0` suffix for known float fields (Unity serialization).
