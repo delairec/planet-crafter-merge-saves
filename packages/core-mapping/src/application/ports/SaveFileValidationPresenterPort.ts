@@ -1,5 +1,7 @@
+import {ValidationIssue} from "./ValidationIssue";
+
 export interface SaveFileValidationPresenterPort {
   presentValidSaveFile(): void;
 
-  presentInvalidSaveFile(errorMessages: string[]): void;
+  presentInvalidSaveFile(errors: ValidationIssue[]): void;
 }
