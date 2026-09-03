@@ -17,8 +17,8 @@ const LEGACY_SPLIT_PARTS_COUNT = LEGACY_SECTION_COUNT + 1; // + trailing reserve
 const LEGACY_TERRAIN_LAYERS_SECTION_INDEX = 9;
 const LEGACY_WORLD_EVENTS_SECTION_INDEX = 10;
 
-const LEGACY_FORMAT_WARNING = 'This save uses an outdated format (from an ancient version of the game). '
-  + 'It has been automatically adapted to the current format; some data may have been discarded in the process.';
+/** Warning code reported when a legacy save had to be adapted; presentation maps it to user text. */
+export const LEGACY_SAVE_FORMAT_WARNING = 'legacy-save-format';
 
 /**
  * Adapts the raw `@`-split parts of a save to the current 11-part format.
@@ -35,7 +35,7 @@ export function normalizeRawSections(rawParts) {
         ...rawParts.slice(0, LEGACY_TERRAIN_LAYERS_SECTION_INDEX),
         ...rawParts.slice(LEGACY_WORLD_EVENTS_SECTION_INDEX)
       ],
-      warnings: [LEGACY_FORMAT_WARNING]
+      warnings: [LEGACY_SAVE_FORMAT_WARNING]
     };
   }
 

@@ -1,6 +1,7 @@
 import {describe, it, expect, spyOn} from 'bun:test';
 import {parseSaveSections} from './parseSaveSections.js';
 import {createFakeSaveString, createLegacyFakeSaveString} from './testing/createFakeSaveString.js';
+import {LEGACY_SAVE_FORMAT_WARNING} from './normalizeRawSections.js';
 
 describe('utils/parseSaveSections', () => {
   const expectedGlobalMetadata = {
@@ -209,7 +210,7 @@ describe('utils/parseSaveSections', () => {
       expect(sections.length).toBe(11);
     });
 
-    it('should report a warning explaining the save was adapted', () => {
+    it('should report a legacy-save-format warning code', () => {
       // Arrange
       const save = createLegacyFakeSaveString({
         terrainLayers: [{layerId: 'PC-Toxicity-Layer1', planet: 110910047, colorBase: '1-1-1-1'}]
@@ -219,10 +220,7 @@ describe('utils/parseSaveSections', () => {
       const {warnings} = parseSaveSections(save);
 
       // Assert
-      expect(warnings).toEqual([
-        'This save uses an outdated format (from an ancient version of the game). ' +
-        'It has been automatically adapted to the current format; some data may have been discarded in the process.'
-      ]);
+      expect(warnings).toEqual([LEGACY_SAVE_FORMAT_WARNING]);
     });
 
     it('should still parse world events at the current index (shifted from the legacy index)', () => {
