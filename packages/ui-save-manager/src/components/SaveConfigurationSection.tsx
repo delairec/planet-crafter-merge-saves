@@ -3,7 +3,7 @@ import {LoadSaveConfigurationSectionController} from "core-mapping/controllers/L
 import FieldsGroup from "./structure/FieldsGroup";
 import {SaveConfigurationViewModel} from "core-mapping/presentation/viewModels/SaveConfigurationViewModel";
 import {ParsedSections} from "shared-save-processing/gameDefinitions";
-import {saveConfigurationSectionTitleLabel} from "util-messages/saveConfigurationSectionMessages";
+import {saveConfigurationSectionTitleLabel} from "~/messages/saveConfigurationSectionMessages";
 
 interface SaveConfigurationProps {
   sections: Accessor<ParsedSections>;

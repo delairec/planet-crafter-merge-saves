@@ -1,7 +1,7 @@
 import {
   hideValidationMessagesDetails,
   showValidationMessagesDetails
-} from "util-messages/validationMessages";
+} from "~/messages/validationMessages";
 import {createSignal} from "solid-js";
 
 export default function ValidationMessagesList(props: {

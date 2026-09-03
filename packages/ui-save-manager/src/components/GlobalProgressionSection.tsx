@@ -3,7 +3,7 @@ import {LoadGlobalProgressionSectionController} from "core-mapping/controllers/L
 import FieldsGroup from "./structure/FieldsGroup";
 import {GlobalProgressionViewModel} from "core-mapping/presentation/viewModels/GlobalProgressionViewModel";
 import {ParsedSections} from "shared-save-processing/gameDefinitions";
-import {globalProgressionSectionTitle} from "util-messages/globalProgressionSectionMessages";
+import {globalProgressionSectionTitle} from "~/messages/globalProgressionSectionMessages";
 
 interface GlobalProgressionProps {
   sections: Accessor<ParsedSections>;
