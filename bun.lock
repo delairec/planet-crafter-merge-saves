@@ -14,7 +14,7 @@
       "name": "cli-merge",
       "version": "1.0.0",
       "dependencies": {
-        "shared-save-processing": "workspace:*",
+        "core-mapping": "workspace:*",
         "util-platforms": "workspace:*",
       },
     },
@@ -31,7 +31,6 @@
       "name": "core-mapping",
       "version": "1.0.0",
       "dependencies": {
-        "cli-merge": "workspace:*",
         "cli-validate": "workspace:*",
         "shared-save-processing": "workspace:*",
         "util-messages": "workspace:*",
