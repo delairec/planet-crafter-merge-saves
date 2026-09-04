@@ -1,4 +1,4 @@
-export const WORLD_OBJECT_NAMES = [
+const WORLD_OBJECT_NAMES = [
   'EnergyGenerator1',
   'WindTurbine1',
   'EnergyGenerator2',
