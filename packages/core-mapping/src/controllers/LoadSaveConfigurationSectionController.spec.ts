@@ -5,7 +5,7 @@ import {LoadSaveConfigurationSectionController} from "./LoadSaveConfigurationSec
 import {SaveConfigurationViewModel} from "../presentation/viewModels/SaveConfigurationViewModel";
 
 describe('LoadSaveConfigurationSectionController', () => {
-  it('should present save configuration from parsed save', async () => {
+  it('should present save configuration from parsed save end-to-end with the real dependencies', async () => {
     // Arrange
     const {sections} = parseSaveSections(createFakeSaveContent());
 

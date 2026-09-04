@@ -2,37 +2,15 @@ import {describe, expect, it} from 'bun:test';
 import {ValidateSaveFileController} from './ValidateSaveFileController';
 import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
 
+// Orchestration branches (valid/invalid) are covered with test doubles in application/ValidateSaveFile.spec.ts;
+// the extension/content validation mapping is covered in infrastructure/SaveValidatorService.spec.ts.
+// This spec keeps a single full-stack test wiring the real dependencies as a safety net.
 describe('ValidateSaveFileController', () => {
+  it('should validate a valid save file end-to-end with the real dependencies', async () => {
+    // Act
+    const viewModel = await ValidateSaveFileController.validateSaveFile('Save-A.json', createFakeSaveContent());
 
-  describe('When the file name has an invalid extension', () => {
-    it('should return an invalid view model', async () => {
-      // Act
-      const viewModel = await ValidateSaveFileController.validateSaveFile('Save-A.txt', createFakeSaveContent());
-
-      // Assert
-      expect(viewModel.status).toBe('invalid');
-      expect(viewModel.errorMessages).toEqual(['Invalid file extension: expected a .json file.']);
-    });
-  });
-
-  describe('When the file name has a valid extension and the content is a valid save', () => {
-    it('should return a valid view model', async () => {
-      // Act
-      const viewModel = await ValidateSaveFileController.validateSaveFile('Save-A.json', createFakeSaveContent());
-
-      // Assert
-      expect(viewModel).toEqual({status: 'valid', errorMessages: []});
-    });
-  });
-
-  describe('When the file name has a valid extension but the content is not a valid save', () => {
-    it('should return an invalid view model with the content validation error messages', async () => {
-      // Act
-      const viewModel = await ValidateSaveFileController.validateSaveFile('Save-A.json', 'not a valid save at all');
-
-      // Assert
-      expect(viewModel.status).toBe('invalid');
-      expect(viewModel.errorMessages).toEqual(['Expected 11 sections but found 1']);
-    });
+    // Assert
+    expect(viewModel).toEqual({status: 'valid', errorMessages: []});
   });
 });

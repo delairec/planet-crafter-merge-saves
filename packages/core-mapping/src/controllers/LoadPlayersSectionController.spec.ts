@@ -5,7 +5,7 @@ import {LoadPlayersSectionController} from './LoadPlayersSectionController';
 import {PlayersViewModel} from '../presentation/viewModels/PlayersViewModel';
 
 describe('LoadPlayersSectionController', () => {
-  it('should present players from parsed save', async () => {
+  it('should present players from parsed save end-to-end with the real dependencies', async () => {
     // Arrange
     const {sections} = parseSaveSections(createFakeSaveContent());
 
