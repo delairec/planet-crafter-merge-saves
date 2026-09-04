@@ -13,8 +13,7 @@ export default function PlayersSection({sections}: PlayersProps) {
   const [players, setPlayers] = createSignal<PlayersViewModel['players']>([]);
 
   createEffect(() => {
-    const vm = LoadPlayersSectionController.loadPlayersSection(sections());
-    setPlayers(vm.players);
+    LoadPlayersSectionController.loadPlayersSection(sections()).then((vm) => setPlayers(vm.players));
   });
 
   return (<>

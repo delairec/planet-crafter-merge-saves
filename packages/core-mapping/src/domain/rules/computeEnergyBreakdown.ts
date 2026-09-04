@@ -1,4 +1,4 @@
-import {worldObjectLabels, WorldObjectName} from "../worldObjectLabels";
+import {WorldObjectName} from "../worldObjectNames";
 import {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity";
 import {EnergyBreakdownEntryValueObject} from "../valueObjects/EnergyBreakdownEntryValueObject";
 
@@ -24,7 +24,7 @@ export function computeEnergyBreakdown(
     .map(([name, quantity]): EnergyBreakdownEntryValueObject => {
       const unitLevel = levelsByWorldObjectName[name]!;
       return {
-        label: worldObjectLabels[name],
+        name,
         quantity,
         unitLevel,
         totalLevel: unitLevel * quantity

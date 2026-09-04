@@ -24,11 +24,9 @@ import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
 import {PlacedWorldObjectEntity} from "../domain/entities/PlacedWorldObjectEntity";
 import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
-import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
-import {PlanetEnergyLevelsValueObject} from "../domain/valueObjects/PlanetEnergyLevelsValueObject";
-import {WorldObjectName} from "../domain/worldObjectLabels";
-import {planetNamesByNumericId} from "../domain/planetNamesByNumericId";
-import {computePlanetEnergyLevels} from "../domain/rules/computePlanetEnergyLevels";
+import {EnergyLevelsRawDataValueObject, PlanetWorldObjectsValueObject} from "../domain/valueObjects/EnergyLevelsRawDataValueObject";
+import {WorldObjectName} from "../domain/worldObjectNames";
+import {resolvePlanetName} from "../domain/rules/resolvePlanetName";
 
 function parsePosition(pos: string): [number, number, number] {
   const [x, y, z] = pos.split(',').map(Number);
@@ -70,7 +68,7 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
   }
 
   getPlayers(): PlayerEntity[] {
-    const inventories = this.getInventories();
+    const inventories = this.mapInventories();
 
     return this.players.map((player: Player): PlayerEntity => {
       const playerInventory = inventories.find(inventory => inventory.id === player.inventoryId);
@@ -101,35 +99,13 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
     }));
   }
 
-  getInventories(): InventoryEntity[] {
-    return this.inventories.map((inventory: Inventory): InventoryEntity => ({
-      id: inventory.id,
-      worldObjectIds: inventory.woIds.split(',').filter(Boolean),
-      size: inventory.size
-    }));
-  }
-
-  getWorldObjects(): (sections: ParsedSections) => Generator<WorldObjectEntity> {
-
-    const worldObjectsFactory = this.worldObjectsFactory;
-
-    return (function* () {
-      for (const worldObject of worldObjectsFactory()) {
-        yield {
-          id: String(worldObject.id),
-          name: worldObject.gId as WorldObjectName
-        };
-      }
-    });
-  }
-
-  getStatistics(): StatisticsValueObject {
+  getStatistics(): StatisticsValueObject | undefined {
     return this.statistics.map((stat) => ({
       totalCraftedObjects: stat.craftedObjects
     }))[0];
   }
 
-  getSaveConfiguration(): SaveConfigurationValueObject {
+  getSaveConfiguration(): SaveConfigurationValueObject | undefined {
     return this.saveConfiguration.map((config) => ({
       title: config.saveDisplayName,
       mode: config.mode,
@@ -143,7 +119,7 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
     }))[0];
   }
 
-  getEnergyLevels(): EnergyLevelsValueObject {
+  getEnergyLevelsRawData(): EnergyLevelsRawDataValueObject {
 
     // NOTE: production/consumption are scoped per-planet — each planet has its own independent
     // power grid in-game (see docs/energy-levels.md, section 4). The actual production/
@@ -171,20 +147,26 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
       id: String(worldObject.id),
       name: worldObject.gId as WorldObjectName
     }));
-    const inventories = this.getInventories();
+    const inventories = this.mapInventories();
+    const knownPlanetNames = [...new Set(this.terraformationLevels.map((level) => level.planetId))];
 
-    const planets: PlanetEnergyLevelsValueObject[] = [...placedWorldObjectsByPlanet.entries()]
+    const planets: PlanetWorldObjectsValueObject[] = [...placedWorldObjectsByPlanet.entries()]
       .map(([planetId, placedWorldObjectsOnPlanet]) => {
         const rawWorldObjectsOnPlanet = placedWorldObjectsOnPlanet.map(({raw}) => raw);
         const entitiesOnPlanet = placedWorldObjectsOnPlanet.map(({entity}) => entity);
 
         return {
-          planetId: this.resolvePlanetLabel(planetId, rawWorldObjectsOnPlanet),
-          ...computePlanetEnergyLevels(allWorldObjectEntities, entitiesOnPlanet, inventories)
+          planetId,
+          planetName: resolvePlanetName(
+            planetId,
+            rawWorldObjectsOnPlanet.map((worldObject) => worldObject.gId),
+            knownPlanetNames
+          ),
+          placedWorldObjects: entitiesOnPlanet
         };
       });
 
-    return {planets};
+    return {allWorldObjects: allWorldObjectEntities, inventories, planets};
   }
 
   private toPlacedWorldObjectEntity(worldObject: WorldObject): PlacedWorldObjectEntity {
@@ -197,36 +179,19 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
     };
   }
 
-  /**
-   * Resolves a human-readable label for a numeric `WorldObject.planet` id. The primary source is
-   * the fixed lookup table `planetNamesByNumericId` (see docs/save-format.md, "Planet numeric
-   * IDs"). For planet ids not in that table (e.g. future planets, modded content), falls back to
-   * a heuristic: some world object `gId`s embed the planet name in plain text (e.g. `Seed7Humble`
-   * on planet `Humble`) — if exactly one known planet name (from this save's TerraformationLevels)
-   * is found as a substring of a `gId` on this planet, use it; otherwise fall back to
-   * `Planet ${planetId}`.
-   */
-  private resolvePlanetLabel(planetId: number, positionedWorldObjectsOnPlanet: WorldObject[]): string {
-    const knownPlanetName = planetNamesByNumericId[planetId];
-    if (knownPlanetName !== undefined) {
-      return knownPlanetName;
-    }
-
-    const knownPlanetNames = [...new Set(this.terraformationLevels.map((level) => level.planetId))];
-
-    const matchingPlanetNames = new Set(
-      positionedWorldObjectsOnPlanet
-        .flatMap((worldObject) => knownPlanetNames.filter((planetName) => worldObject.gId.includes(planetName)))
-    );
-
-    return matchingPlanetNames.size === 1 ? [...matchingPlanetNames][0] : `Planet ${planetId}`;
+  private mapInventories(): InventoryEntity[] {
+    return this.inventories.map((inventory: Inventory): InventoryEntity => ({
+      id: inventory.id,
+      worldObjectIds: inventory.woIds.split(',').filter(Boolean),
+      size: inventory.size
+    }));
   }
 
   private findWorldObjectByIds(ids: string[]): WorldObjectEntity[] {
     const result: WorldObjectEntity[] = [];
-    for (const worldObject of this.getWorldObjects()(this.sections)) {
-      if (ids.includes(worldObject.id)) {
-        result.push(worldObject);
+    for (const worldObject of this.worldObjectsFactory()) {
+      if (ids.includes(String(worldObject.id))) {
+        result.push({id: String(worldObject.id), name: worldObject.gId as WorldObjectName});
       }
     }
     return result;

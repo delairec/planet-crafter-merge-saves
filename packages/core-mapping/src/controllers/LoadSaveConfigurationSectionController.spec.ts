@@ -5,12 +5,12 @@ import {LoadSaveConfigurationSectionController} from "./LoadSaveConfigurationSec
 import {SaveConfigurationViewModel} from "../presentation/viewModels/SaveConfigurationViewModel";
 
 describe('LoadSaveConfigurationSectionController', () => {
-  it('should present save configuration from parsed save', () => {
+  it('should present save configuration from parsed save', async () => {
     // Arrange
     const {sections} = parseSaveSections(createFakeSaveContent());
 
     // Act
-    const viewModel = LoadSaveConfigurationSectionController.loadSaveConfigurationSection(sections);
+    const viewModel = await LoadSaveConfigurationSectionController.loadSaveConfigurationSection(sections);
 
     // Assert
       expect(viewModel).toEqual<SaveConfigurationViewModel>({

@@ -3,7 +3,7 @@ import {computePlanetEnergyLevels} from './computePlanetEnergyLevels';
 import {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity';
 import {WorldObjectEntity} from '../entities/WorldObjectEntity';
 import {InventoryEntity} from '../entities/InventoryEntity';
-import {WorldObjectName} from '../worldObjectLabels';
+import {WorldObjectName} from '../worldObjectNames';
 
 describe('computePlanetEnergyLevels', () => {
   it('should sum production and consumption of positioned world objects', () => {
@@ -40,10 +40,11 @@ describe('computePlanetEnergyLevels', () => {
     // Assert
     expect(result.production).toBe(1.2 * 1.5);
     expect(result.optimizers).toEqual([{
-      label: expect.any(String),
+      name: expect.any(String),
       fuseCount: 1,
-      boostedMachines: [{label: expect.any(String), quantity: 1}],
-      contribution: 1.2 * (1.5 - 1)
+      boostedMachines: [{name: expect.any(String), quantity: 1}],
+      contribution: 1.2 * (1.5 - 1),
+      productionRatio: expect.any(Number)
     }]);
   });
 
@@ -64,7 +65,7 @@ describe('computePlanetEnergyLevels', () => {
 
     // Assert: the Optimizer still appears (it holds a fuse) but boosts nothing on this planet
     expect(result.optimizers).toEqual([{
-      label: expect.any(String),
+      name: expect.any(String),
       fuseCount: 1,
       boostedMachines: [],
       contribution: 0

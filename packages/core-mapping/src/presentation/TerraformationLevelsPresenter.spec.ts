@@ -72,6 +72,8 @@ describe('TerraformationLevelsPresenter', () => {
         unitInsectsLevel: 112112,
         unitAnimalsLevel: 131131,
         unitPurificationLevel: 415415,
+        terraformationIndex: 2_129_127,
+        biomass: 344_344
       }
     ]);
 
@@ -84,15 +86,15 @@ describe('TerraformationLevelsPresenter', () => {
             columns: [
               {
                 header: 'O²',
-                values: [`123,123${nbsp}ppq`]
+                values: [`123.123${nbsp}ppt`]
               },
               {
                 header: 'Heat',
-                values: [`456,456${nbsp}pK`]
+                values: [`456.456${nbsp}nK`]
               },
               {
                 header: 'Pressure',
-                values: [`789,789${nbsp}nPa`]
+                values: [`789.789${nbsp}µPa`]
               },
               {
                 header: 'Purification',

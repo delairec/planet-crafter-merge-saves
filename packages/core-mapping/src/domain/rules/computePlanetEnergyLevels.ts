@@ -29,15 +29,20 @@ export function computePlanetEnergyLevels(
   const production = computeEnergyProductionLevel(allWorldObjects, positionedWorldObjectsOnPlanet, inventories);
   const consumption = computeEnergyConsumptionLevel(positionedWorldObjectsOnPlanet);
 
+  // NOTE: breakdowns use base levels only (no Optimizer/Fuse boost) — see Rule EN-FUSE
+  // section in docs/energy-levels.md. Reflecting Optimizer effects in the per-machine
+  // breakdown is a follow-up improvement.
+  const productionBreakdown = computeEnergyBreakdown(positionedWorldObjectsOnPlanet, energyProductionLevelsByWorldObjectName)
+    .map((entry) => ({...entry, productionRatio: production ? entry.totalLevel / production : undefined}));
+  const optimizers = computeOptimizers(allWorldObjects, positionedWorldObjectsOnPlanet, inventories)
+    .map((optimizer) => ({...optimizer, productionRatio: production ? optimizer.contribution / production : undefined}));
+
   return {
     production,
     consumption,
     available: production - consumption,
-    // NOTE: breakdowns use base levels only (no Optimizer/Fuse boost) — see Rule EN-FUSE
-    // section in docs/energy-levels.md. Reflecting Optimizer effects in the per-machine
-    // breakdown is a follow-up improvement.
-    productionBreakdown: computeEnergyBreakdown(positionedWorldObjectsOnPlanet, energyProductionLevelsByWorldObjectName),
+    productionBreakdown,
     consumptionBreakdown: computeEnergyBreakdown(positionedWorldObjectsOnPlanet, energyConsumptionLevelsByWorldObjectName),
-    optimizers: computeOptimizers(allWorldObjects, positionedWorldObjectsOnPlanet, inventories)
+    optimizers
   };
 }

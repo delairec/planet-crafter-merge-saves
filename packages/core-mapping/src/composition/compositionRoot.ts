@@ -1,16 +1,12 @@
-import {SaveSectionsReaderService} from "../infrastructure/SaveSectionsReaderService";
 import {SaveValidatorService} from "../infrastructure/SaveValidatorService";
 import {SaveFilesMergerService} from "../infrastructure/SaveFilesMergerService";
-import {ParsedSections} from "shared-save-processing/gameDefinitions";
+import {SaveValidatorPort} from "../application/ports/SaveValidatorPort";
+import {SaveFilesMergerPort} from "../application/ports/SaveFilesMergerPort";
 
-export function createSaveParser(sections: ParsedSections) {
-  return new SaveSectionsReaderService(sections);
-}
-
-export function createSaveValidator() {
+export function createSaveValidator(): SaveValidatorPort {
   return new SaveValidatorService();
 }
 
-export function createSaveFilesMerger() {
+export function createSaveFilesMerger(): SaveFilesMergerPort {
   return new SaveFilesMergerService();
 }

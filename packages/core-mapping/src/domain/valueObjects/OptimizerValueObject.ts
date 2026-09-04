@@ -1,8 +1,10 @@
 import {OptimizerBoostedMachineValueObject} from "./OptimizerBoostedMachineValueObject";
+import {WorldObjectName} from "../worldObjectNames";
 
 export interface OptimizerValueObject {
-  label: string;
+  name: WorldObjectName;
   fuseCount: number;
   boostedMachines: OptimizerBoostedMachineValueObject[];
   contribution: number;
+  productionRatio?: number;
 }

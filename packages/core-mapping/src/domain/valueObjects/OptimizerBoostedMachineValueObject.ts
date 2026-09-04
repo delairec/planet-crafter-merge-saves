@@ -1,4 +1,6 @@
+import {WorldObjectName} from "../worldObjectNames";
+
 export interface OptimizerBoostedMachineValueObject {
-  label: string;
+  name: WorldObjectName;
   quantity: number;
 }

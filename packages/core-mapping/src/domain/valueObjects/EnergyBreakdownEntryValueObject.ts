@@ -1,6 +1,9 @@
+import {WorldObjectName} from "../worldObjectNames";
+
 export interface EnergyBreakdownEntryValueObject {
-  label: string;
+  name: WorldObjectName;
   quantity: number;
   unitLevel: number;
   totalLevel: number;
+  productionRatio?: number;
 }

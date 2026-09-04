@@ -7,12 +7,12 @@ import {LoadEnergyLevelsSectionController} from "./LoadEnergyLevelsSectionContro
 const nbsp = '\u00A0';
 
 describe('LoadEnergyLevelsSectionController', () => {
-  it('should present computed energy levels from parsed save', () => {
+  it('should present computed energy levels from parsed save', async () => {
     // Arrange
     const {sections} = parseSaveSections(createFakeSaveContent());
 
     // Act
-    const viewModel = LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections);
+    const viewModel = await LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections);
 
     // Assert
     expect(viewModel).toEqual<EnergyLevelsViewModel>({

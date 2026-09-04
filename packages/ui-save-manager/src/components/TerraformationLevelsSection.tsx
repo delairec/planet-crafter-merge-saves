@@ -19,8 +19,8 @@ export default function TerraformationLevelsSection({sections}: TerraformationLe
   const [planets, setPlanets] = createSignal<TerraformationLevelsViewModel['planets']>([]);
 
   createEffect(() => {
-    const {planets} = LoadTerraformationLevelsSectionController.loadTerraformationLevelsSection(sections());
-    setPlanets(planets);
+    LoadTerraformationLevelsSectionController.loadTerraformationLevelsSection(sections())
+      .then(({planets}) => setPlanets(planets));
   });
 
   return (<>

@@ -13,8 +13,8 @@ export default function GlobalProgressionSection({sections}: GlobalProgressionPr
   const [statisticsColumns, setStatisticsColumns] = createSignal<GlobalProgressionViewModel['statistics']['columns']>([]);
 
   createEffect(() => {
-    const {statistics} = LoadGlobalProgressionSectionController.loadGlobalProgressionSection(sections());
-    setStatisticsColumns(statistics.columns);
+    LoadGlobalProgressionSectionController.loadGlobalProgressionSection(sections())
+      .then(({statistics}) => setStatisticsColumns(statistics.columns));
   });
 
   return (

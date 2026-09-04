@@ -2,15 +2,16 @@ import {MergeResultViewModel} from "../presentation/viewModels/MergeResultViewMo
 import {createSaveFilesMerger, createSaveValidator} from "../composition/compositionRoot";
 import {MergeResultPresenter} from "../presentation/MergeResultPresenter";
 import {MergeSaveFiles} from "../application/MergeSaveFiles";
+import {MergeSaveFilesRequest} from "../application/MergeSaveFilesRequest";
 
 export class MergeSaveFilesController {
-  static mergeSaveFiles(fileNameA: string, contentA: string, fileNameB: string, contentB: string, saveDisplayName?: string): MergeResultViewModel {
+  static async mergeSaveFiles(request: MergeSaveFilesRequest): Promise<MergeResultViewModel> {
     const validator = createSaveValidator();
     const merger = createSaveFilesMerger();
     const presenter = new MergeResultPresenter();
     const useCase = new MergeSaveFiles(validator, merger, presenter);
 
-    useCase.execute(fileNameA, contentA, fileNameB, contentB, saveDisplayName);
+    await useCase.execute(request);
 
     return presenter.viewModel;
   }

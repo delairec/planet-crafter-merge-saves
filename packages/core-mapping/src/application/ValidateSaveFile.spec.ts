@@ -14,7 +14,7 @@ describe('ValidateSaveFile', () => {
       const useCase = new ValidateSaveFile(validator, presenter);
 
       // Act
-      useCase.execute('Save-A.json', 'content');
+      useCase.execute({fileName: 'Save-A.json', content: 'content'});
 
       // Assert
       expect(validator.validate).toHaveBeenCalledWith('Save-A.json', 'content');
@@ -34,7 +34,7 @@ describe('ValidateSaveFile', () => {
       const useCase = new ValidateSaveFile(validator, presenter);
 
       // Act
-      useCase.execute('Save-A.txt', 'content');
+      useCase.execute({fileName: 'Save-A.txt', content: 'content'});
 
       // Assert
       expect(presenter.presentInvalidSaveFile).toHaveBeenCalledWith(errors);

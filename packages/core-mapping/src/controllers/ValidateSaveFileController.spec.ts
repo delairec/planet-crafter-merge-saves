@@ -5,9 +5,9 @@ import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSa
 describe('ValidateSaveFileController', () => {
 
   describe('When the file name has an invalid extension', () => {
-    it('should return an invalid view model', () => {
+    it('should return an invalid view model', async () => {
       // Act
-      const viewModel = ValidateSaveFileController.validateSaveFile('Save-A.txt', createFakeSaveContent());
+      const viewModel = await ValidateSaveFileController.validateSaveFile('Save-A.txt', createFakeSaveContent());
 
       // Assert
       expect(viewModel.status).toBe('invalid');
@@ -16,9 +16,9 @@ describe('ValidateSaveFileController', () => {
   });
 
   describe('When the file name has a valid extension and the content is a valid save', () => {
-    it('should return a valid view model', () => {
+    it('should return a valid view model', async () => {
       // Act
-      const viewModel = ValidateSaveFileController.validateSaveFile('Save-A.json', createFakeSaveContent());
+      const viewModel = await ValidateSaveFileController.validateSaveFile('Save-A.json', createFakeSaveContent());
 
       // Assert
       expect(viewModel).toEqual({status: 'valid', errorMessages: []});
@@ -26,9 +26,9 @@ describe('ValidateSaveFileController', () => {
   });
 
   describe('When the file name has a valid extension but the content is not a valid save', () => {
-    it('should return an invalid view model with the content validation error messages', () => {
+    it('should return an invalid view model with the content validation error messages', async () => {
       // Act
-      const viewModel = ValidateSaveFileController.validateSaveFile('Save-A.json', 'not a valid save at all');
+      const viewModel = await ValidateSaveFileController.validateSaveFile('Save-A.json', 'not a valid save at all');
 
       // Assert
       expect(viewModel.status).toBe('invalid');

@@ -5,12 +5,12 @@ import {LoadGlobalProgressionSectionController} from './LoadGlobalProgressionSec
 import {GlobalProgressionViewModel} from '../presentation/viewModels/GlobalProgressionViewModel';
 
 describe('LoadGlobalProgressionSectionController', () => {
-  it('should present global progression from parsed save', () => {
+  it('should present global progression from parsed save', async () => {
     // Arrange
     const {sections} = parseSaveSections(createFakeSaveContent());
 
     // Act
-    const viewModel = LoadGlobalProgressionSectionController.loadGlobalProgressionSection(sections);
+    const viewModel = await LoadGlobalProgressionSectionController.loadGlobalProgressionSection(sections);
 
     // Assert
     expect(viewModel).toEqual<GlobalProgressionViewModel>({

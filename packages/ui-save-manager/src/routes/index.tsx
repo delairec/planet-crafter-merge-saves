@@ -58,9 +58,9 @@ export default function Home() {
 
     if (fileInput) {
       const reader = new FileReader();
-      reader.onload = (event) => {
+      reader.onload = async (event) => {
         const content = event.target?.result as string;
-        const validation = ValidateSaveFileController.validateSaveFile(fileInput.name, content);
+        const validation = await ValidateSaveFileController.validateSaveFile(fileInput.name, content);
 
         if (validation.status === 'invalid') {
           setSections(null);

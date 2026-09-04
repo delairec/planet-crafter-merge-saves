@@ -1,4 +1,4 @@
-import {WorldObjectName} from './worldObjectLabels';
+import {WorldObjectName} from './worldObjectNames';
 
 export const energyProductionLevelsByWorldObjectName: Partial<Record<WorldObjectName, number>> = {
   EnergyGenerator1: 1.2,

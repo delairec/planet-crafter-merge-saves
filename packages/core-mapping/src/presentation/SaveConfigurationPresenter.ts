@@ -12,10 +12,10 @@ import {
 } from "./messages/saveConfigurationSectionMessages.js";
 
 export class SaveConfigurationPresenter implements SaveConfigurationPresenterPort {
-  viewModel: SaveConfigurationViewModel;
+  private _viewModel: SaveConfigurationViewModel;
 
   constructor() {
-    this.viewModel = {
+    this._viewModel = {
       mode: '',
       title: '',
       modifiers: {
@@ -45,8 +45,16 @@ export class SaveConfigurationPresenter implements SaveConfigurationPresenterPor
     };
   }
 
-  displaySaveConfiguration(saveConfiguration: SaveConfigurationValueObject): void {
-    this.viewModel = {
+  get viewModel(): SaveConfigurationViewModel {
+    return this._viewModel;
+  }
+
+  displaySaveConfiguration(saveConfiguration: SaveConfigurationValueObject | undefined): void {
+    if (!saveConfiguration) {
+      return;
+    }
+
+    this._viewModel = {
       mode: saveConfiguration.mode,
       title: saveConfiguration.title,
       modifiers: {

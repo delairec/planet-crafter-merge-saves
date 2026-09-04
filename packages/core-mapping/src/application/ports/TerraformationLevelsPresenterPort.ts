@@ -1,5 +1,5 @@
-import {TerraformationLevelEntity} from '../../domain/entities/TerraformationLevelEntity';
+import {TerraformationLevelSummaryValueObject} from '../../domain/valueObjects/TerraformationLevelSummaryValueObject';
 
 export interface TerraformationLevelsPresenterPort {
-  displayTerraformationLevels(levels: TerraformationLevelEntity[]): void;
+  displayTerraformationLevels(levels: TerraformationLevelSummaryValueObject[]): void;
 }

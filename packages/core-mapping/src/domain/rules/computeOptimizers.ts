@@ -1,4 +1,4 @@
-import {worldObjectLabels, WorldObjectName} from "../worldObjectLabels";
+import {WorldObjectName} from "../worldObjectNames";
 import {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity";
 import {WorldObjectEntity} from "../entities/WorldObjectEntity";
 import {InventoryEntity} from "../entities/InventoryEntity";
@@ -39,10 +39,10 @@ export function computeOptimizers(
       }
 
       return {
-        label: worldObjectLabels[optimizer.name],
+        name: optimizer.name,
         fuseCount,
         boostedMachines: [...quantityByName.entries()].map(([name, quantity]) => ({
-          label: worldObjectLabels[name],
+          name,
           quantity
         })),
         contribution

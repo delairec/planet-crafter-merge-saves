@@ -1,10 +1,9 @@
 import {PlayerEntity} from "../../domain/entities/PlayerEntity";
 import {GlobalProgressionValueObject} from "../../domain/valueObjects/GlobalProgressionValueObject";
 import {TerraformationLevelEntity} from "../../domain/entities/TerraformationLevelEntity";
-import {InventoryEntity} from "../../domain/entities/InventoryEntity";
 import {StatisticsValueObject} from "../../domain/valueObjects/StatisticsValueObject";
 import {SaveConfigurationValueObject} from "../../domain/valueObjects/SaveConfigurationValueObject";
-import {EnergyLevelsValueObject} from "../../domain/valueObjects/EnergyLevelsValueObject";
+import {EnergyLevelsRawDataValueObject} from "../../domain/valueObjects/EnergyLevelsRawDataValueObject";
 
 export interface SaveSectionsReaderPort {
   getPlayers(): PlayerEntity[];
@@ -13,11 +12,9 @@ export interface SaveSectionsReaderPort {
 
   getTerraformationLevels(): TerraformationLevelEntity[];
 
-  getInventories(): InventoryEntity[];
+  getStatistics(): StatisticsValueObject | undefined;
 
-  getStatistics(): StatisticsValueObject;
+  getSaveConfiguration(): SaveConfigurationValueObject | undefined;
 
-  getSaveConfiguration(): SaveConfigurationValueObject;
-
-  getEnergyLevels(): EnergyLevelsValueObject;
+  getEnergyLevelsRawData(): EnergyLevelsRawDataValueObject;
 }

@@ -9,6 +9,7 @@ import {OptimizerViewModel} from "./viewModels/OptimizerViewModel";
 import {formatNumber} from "./formatters/formatNumber/formatNumber";
 import {FormatNumberStrategies} from "./formatters/formatNumber/FormatNumberStrategies";
 import {EnergyLevelsPresenterPort} from "../application/ports/EnergyLevelsPresenterPort";
+import {worldObjectLabels} from "./worldObjectLabels";
 import {
   energyLevelsSectionAvailableTitle,
   energyLevelsSectionConsumptionTitle,
@@ -19,23 +20,27 @@ import {
 const nbsp = '\u00A0';
 
 export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
-  viewModel: EnergyLevelsViewModel;
+  private _viewModel: EnergyLevelsViewModel;
 
   constructor() {
-    this.viewModel = {
+    this._viewModel = {
       planets: []
     };
   }
 
+  get viewModel(): EnergyLevelsViewModel {
+    return this._viewModel;
+  }
+
   displayEnergyLevels(energyLevels: EnergyLevelsValueObject): void {
-    this.viewModel = {
+    this._viewModel = {
       planets: energyLevels.planets.map((planet): PlanetEnergyLevelsViewModel => this.buildPlanet(planet))
     };
   }
 
   private buildPlanet(planet: PlanetEnergyLevelsValueObject): PlanetEnergyLevelsViewModel {
     return {
-      planetId: planet.planetId,
+      planetId: planet.planetName ?? `Planet ${planet.planetId}`,
       energyLevels: {
         columns: [
           {
@@ -52,37 +57,37 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
           }
         ]
       },
-      productionBreakdown: this.buildBreakdownRows(planet.productionBreakdown, planet.production),
+      productionBreakdown: this.buildBreakdownRows(planet.productionBreakdown),
       consumptionBreakdown: this.buildBreakdownRows(planet.consumptionBreakdown),
-      optimizers: this.buildOptimizers(planet.optimizers, planet.production)
+      optimizers: this.buildOptimizers(planet.optimizers)
     };
   }
 
-  private buildBreakdownRows(breakdown: EnergyBreakdownEntryValueObject[], totalProduction?: number): EnergyBreakdownRowViewModel[] {
+  private buildBreakdownRows(breakdown: EnergyBreakdownEntryValueObject[]): EnergyBreakdownRowViewModel[] {
     return breakdown.map((entry): EnergyBreakdownRowViewModel => ({
-      label: entry.label,
+      label: worldObjectLabels[entry.name],
       quantity: formatNumber(entry.quantity),
       unitLevel: formatNumber(entry.unitLevel) + `${nbsp}kW`,
-      totalLevel: formatNumber(entry.totalLevel) + `${nbsp}kW` + this.buildContributionSuffix(entry.totalLevel, totalProduction)
+      totalLevel: formatNumber(entry.totalLevel) + `${nbsp}kW` + this.buildContributionSuffix(entry.productionRatio)
     }));
   }
 
-  private buildOptimizers(optimizers: OptimizerValueObject[], totalProduction: number): OptimizerViewModel[] {
+  private buildOptimizers(optimizers: OptimizerValueObject[]): OptimizerViewModel[] {
     return optimizers.map((optimizer): OptimizerViewModel => ({
-      label: optimizer.label,
+      label: worldObjectLabels[optimizer.name],
       fuseCount: formatNumber(optimizer.fuseCount),
       boostedMachines: optimizer.boostedMachines
-        .map((machine) => `${formatNumber(machine.quantity)} ${machine.label}`)
+        .map((machine) => `${formatNumber(machine.quantity)} ${worldObjectLabels[machine.name]}`)
         .join(', '),
-      contribution: formatNumber(optimizer.contribution) + `${nbsp}kW` + this.buildContributionSuffix(optimizer.contribution, totalProduction)
+      contribution: formatNumber(optimizer.contribution) + `${nbsp}kW` + this.buildContributionSuffix(optimizer.productionRatio)
     }));
   }
 
-  private buildContributionSuffix(value: number, totalProduction?: number): string {
-    if (!totalProduction) {
+  private buildContributionSuffix(productionRatio?: number): string {
+    if (!productionRatio) {
       return '';
     }
 
-    return ` (${formatNumber(value / totalProduction, FormatNumberStrategies.PERCENTAGE)})`;
+    return ` (${formatNumber(productionRatio, FormatNumberStrategies.PERCENTAGE)})`;
   }
 }

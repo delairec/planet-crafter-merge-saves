@@ -1,4 +1,4 @@
-import {WorldObjectName} from "../worldObjectLabels";
+import {WorldObjectName} from "../worldObjectNames";
 
 export interface WorldObjectEntity {
   id:string;

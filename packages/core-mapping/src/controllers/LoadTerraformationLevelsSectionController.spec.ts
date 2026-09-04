@@ -7,12 +7,12 @@ import {TerraformationLevelsViewModel} from '../presentation/viewModels/Terrafor
 const nbsp = '\u00A0';
 
 describe('LoadTerraformationLevelsSectionController', () => {
-  it('should present terraformation levels from parsed save', () => {
+  it('should present terraformation levels from parsed save', async () => {
     // Arrange
     const {sections} = parseSaveSections(createFakeSaveContent());
 
     // Act
-    const viewModel = LoadTerraformationLevelsSectionController.loadTerraformationLevelsSection(sections);
+    const viewModel = await LoadTerraformationLevelsSectionController.loadTerraformationLevelsSection(sections);
 
     // Assert
     expect(viewModel).toEqual<TerraformationLevelsViewModel>({

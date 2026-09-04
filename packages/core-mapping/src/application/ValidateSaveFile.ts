@@ -1,5 +1,6 @@
 import {SaveValidatorPort} from "./ports/SaveValidatorPort";
 import {SaveFileValidationPresenterPort} from "./ports/SaveFileValidationPresenterPort";
+import {ValidateSaveFileRequest} from "./ValidateSaveFileRequest";
 
 export class ValidateSaveFile {
   constructor(
@@ -8,7 +9,7 @@ export class ValidateSaveFile {
   ) {
   }
 
-  execute(fileName: string, content: string): void {
+  async execute({fileName, content}: ValidateSaveFileRequest): Promise<void> {
     const validation = this.validator.validate(fileName, content);
 
     if (!validation.isValid) {

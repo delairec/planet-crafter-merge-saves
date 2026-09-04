@@ -2,6 +2,8 @@
 // TODO: check for missing consumers and consumption values
 // TODO: better sorting of items in this file
 
+import {WorldObjectName} from "../domain/worldObjectNames";
+
 const powerProducersWorldObjectLabels = {
   EnergyGenerator1: 'Wind turbine',
   WindTurbine1: 'Wind turbine T2',
@@ -817,12 +819,10 @@ const otherWorldObjectLabels = {
   Poster9: 'Poster I',
 } as const;
 
-export const worldObjectLabels = {
+export const worldObjectLabels: Record<WorldObjectName, string> = {
   ...powerProducersWorldObjectLabels,
   ...powerConsumersWorldObjectLabels,
   ...otherWorldObjectLabels,
-} as const;
-
-export type WorldObjectName = keyof typeof worldObjectLabels;
+};
 
 export type WorldObjectLabel = typeof worldObjectLabels[WorldObjectName];
