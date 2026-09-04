@@ -65,8 +65,9 @@ describe('SaveSectionsReaderService', () => {
   describe('When global metadata are missing', () => {
     it('should use fallback values', () => {
       // Arrange
-      const sectionsWithoutGlobalMetadata = [...sections] as ParsedSections;
+      const sectionsWithoutGlobalMetadata = [...sections];
       sectionsWithoutGlobalMetadata[0] = [];
+      // @ts-ignore invalid section on purpose
       const service = new SaveSectionsReaderService(sectionsWithoutGlobalMetadata);
 
       // Act

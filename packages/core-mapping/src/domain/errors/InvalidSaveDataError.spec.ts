@@ -14,10 +14,10 @@ describe('InvalidSaveDataError', () => {
   });
 
   it('should be an instance of Error', () => {
-    // Arrange
+    // Act
     const error = new InvalidSaveDataError('invalid data');
 
-    // Act & Assert
+    // Assert
     expect(error).toBeInstanceOf(Error);
   });
 });
