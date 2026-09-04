@@ -15,6 +15,19 @@ In progress:
 Planned:
 - **Fix corrupted saves**: a tool to attempt to recover data from corrupted save files thanks to analysis.
 
+## Project Structure
+
+This is a Bun workspace monorepo, organized around Clean Architecture package prefixes:
+
+| Package                  | Role                                                                                          |
+|---------------------------|------------------------------------------------------------------------------------------------|
+| `shared-save-processing`  | Save file wire format: types, parsing, serialization and JSON schemas.                         |
+| `shared-platforms`        | Runtime platform adapters (filesystem/process) for Bun and Node.                               |
+| `util-types`              | `RuntimePlatform` contract type, consumed (type-only) by `shared-platforms`.                   |
+| `core-mapping`            | Domain/application/infrastructure/presentation layers: merge and validation engines, use cases, controllers, presenters. |
+| `cli-merge`               | Thin CLI: parses `--input`/`--output` arguments and delegates to `core-mapping`.                |
+| `cli-validate`            | Thin CLI: parses `--file` argument and delegates to `core-mapping`.                             |
+| `ui-save-manager`         | SolidStart UI to visualize save files, consuming `core-mapping` controllers.                    |
 
 ## Merge and Validate tools
 Merges two **Planet Crafter** save files into a single one, preserving as much information as possible.
