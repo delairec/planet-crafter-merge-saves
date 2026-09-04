@@ -646,7 +646,7 @@ describe('SaveSectionsReaderService', () => {
           fuseCount: 1,
           boostedMachines: [{name: 'EnergyGenerator1', quantity: 1}],
           contribution: 0.6,
-          productionRatio: 0.33333333333333337
+          productionRatio: expect.closeTo(1 / 3)
         }]);
       });
 
@@ -694,7 +694,7 @@ describe('SaveSectionsReaderService', () => {
             fuseCount: 1,
             boostedMachines: [{name: 'EnergyGenerator1', quantity: 1}],
             contribution: 1.2,
-            productionRatio: 0.33333333333333337
+            productionRatio: expect.closeTo(1 / 3)
           },
           {
             name: 'Optimizer1',
