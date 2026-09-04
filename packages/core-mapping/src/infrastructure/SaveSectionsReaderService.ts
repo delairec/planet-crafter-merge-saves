@@ -16,15 +16,20 @@ import {
   WorldObject
 } from 'shared-save-processing/gameDefinitions';
 import {SaveSectionsReaderPort} from '../application/ports/SaveSectionsReaderPort';
-import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
-import {PlayerEntity} from "../domain/entities/PlayerEntity";
-import {TerraformationLevelEntity} from '../domain/entities/TerraformationLevelEntity';
-import {InventoryEntity} from "../domain/entities/InventoryEntity";
-import {WorldObjectEntity} from "../domain/entities/WorldObjectEntity";
-import {PlacedWorldObjectEntity} from "../domain/entities/PlacedWorldObjectEntity";
-import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
-import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
-import {EnergyLevelsRawDataValueObject, PlanetWorldObjectsValueObject} from "../domain/valueObjects/EnergyLevelsRawDataValueObject";
+import {GlobalProgressionValueObject, createGlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
+import {PlayerEntity, createPlayerEntity} from "../domain/entities/PlayerEntity";
+import {TerraformationLevelEntity, createTerraformationLevelEntity} from '../domain/entities/TerraformationLevelEntity';
+import {InventoryEntity, createInventoryEntity} from "../domain/entities/InventoryEntity";
+import {WorldObjectEntity, createWorldObjectEntity} from "../domain/entities/WorldObjectEntity";
+import {PlacedWorldObjectEntity, createPlacedWorldObjectEntity} from "../domain/entities/PlacedWorldObjectEntity";
+import {StatisticsValueObject, createStatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
+import {SaveConfigurationValueObject, createSaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
+import {
+  EnergyLevelsRawDataValueObject,
+  PlanetWorldObjectsValueObject,
+  createEnergyLevelsRawDataValueObject,
+  createPlanetWorldObjectsValueObject
+} from "../domain/valueObjects/EnergyLevelsRawDataValueObject";
 import {WorldObjectName} from "../domain/worldObjectNames";
 import {resolvePlanetName} from "../domain/rules/resolvePlanetName";
 
@@ -57,14 +62,14 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
     const metadata = this.globalMetadata[0];
 
     if (!metadata) {
-      return {
+      return createGlobalProgressionValueObject({
         allTimeTerraTokens: 0
-      }
+      });
     }
 
-    return {
+    return createGlobalProgressionValueObject({
       allTimeTerraTokens: metadata.allTimeTerraTokens
-    }
+    });
   }
 
   getPlayers(): PlayerEntity[] {
@@ -78,16 +83,16 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
       const playerEquipmentIds = playerEquipment?.worldObjectIds ?? [];
       const worldObjects = this.findWorldObjectByIds([...playerInventoryIds, ...playerEquipmentIds]);
 
-      return {
+      return createPlayerEntity({
         name: player.name,
         inventory: playerInventoryIds.map((id) => worldObjects.find((wo) => wo.id === id)?.name ?? id),
         equipment: playerEquipmentIds.map((id) => worldObjects.find((wo) => wo.id === id)?.name ?? id)
-      };
+      });
     });
   }
 
   getTerraformationLevels(): TerraformationLevelEntity[] {
-    return this.terraformationLevels.map((level: TerraformationLevel): TerraformationLevelEntity => ({
+    return this.terraformationLevels.map((level: TerraformationLevel): TerraformationLevelEntity => createTerraformationLevelEntity({
       planetId: level.planetId,
       unitOxygenLevel: level.unitOxygenLevel,
       unitHeatLevel: level.unitHeatLevel,
@@ -100,13 +105,13 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
   }
 
   getStatistics(): StatisticsValueObject | undefined {
-    return this.statistics.map((stat) => ({
+    return this.statistics.map((stat) => createStatisticsValueObject({
       totalCraftedObjects: stat.craftedObjects
     }))[0];
   }
 
   getSaveConfiguration(): SaveConfigurationValueObject | undefined {
-    return this.saveConfiguration.map((config) => ({
+    return this.saveConfiguration.map((config) => createSaveConfigurationValueObject({
       title: config.saveDisplayName,
       mode: config.mode,
       modifiers: {
@@ -143,7 +148,7 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
 
     // Energy Fuses live inside an Optimizer's inventory and are never themselves positioned, so
     // the fuse lookup needs every world object in the save, not just positioned/placed ones.
-    const allWorldObjectEntities: WorldObjectEntity[] = allWorldObjects.map((worldObject) => ({
+    const allWorldObjectEntities: WorldObjectEntity[] = allWorldObjects.map((worldObject) => createWorldObjectEntity({
       id: String(worldObject.id),
       name: worldObject.gId as WorldObjectName
     }));
@@ -155,7 +160,7 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
         const rawWorldObjectsOnPlanet = placedWorldObjectsOnPlanet.map(({raw}) => raw);
         const entitiesOnPlanet = placedWorldObjectsOnPlanet.map(({entity}) => entity);
 
-        return {
+        return createPlanetWorldObjectsValueObject({
           planetId,
           planetName: resolvePlanetName(
             planetId,
@@ -163,24 +168,24 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
             knownPlanetNames
           ),
           placedWorldObjects: entitiesOnPlanet
-        };
+        });
       });
 
-    return {allWorldObjects: allWorldObjectEntities, inventories, planets};
+    return createEnergyLevelsRawDataValueObject({allWorldObjects: allWorldObjectEntities, inventories, planets});
   }
 
   private toPlacedWorldObjectEntity(worldObject: WorldObject): PlacedWorldObjectEntity {
-    return {
+    return createPlacedWorldObjectEntity({
       id: String(worldObject.id),
       name: worldObject.gId as WorldObjectName,
       position: parsePosition(worldObject.pos!),
       planetId: worldObject.planet!,
       inventoryId: worldObject.liId
-    };
+    });
   }
 
   private mapInventories(): InventoryEntity[] {
-    return this.inventories.map((inventory: Inventory): InventoryEntity => ({
+    return this.inventories.map((inventory: Inventory): InventoryEntity => createInventoryEntity({
       id: inventory.id,
       worldObjectIds: inventory.woIds.split(',').filter(Boolean),
       size: inventory.size
@@ -191,7 +196,7 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
     const result: WorldObjectEntity[] = [];
     for (const worldObject of this.worldObjectsFactory()) {
       if (ids.includes(String(worldObject.id))) {
-        result.push({id: String(worldObject.id), name: worldObject.gId as WorldObjectName});
+        result.push(createWorldObjectEntity({id: String(worldObject.id), name: worldObject.gId as WorldObjectName}));
       }
     }
     return result;

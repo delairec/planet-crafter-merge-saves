@@ -1,6 +1,6 @@
 import {TerraformationLevelsPresenterPort} from './ports/TerraformationLevelsPresenterPort';
 import {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort";
-import {TerraformationLevelSummaryValueObject} from "../domain/valueObjects/TerraformationLevelSummaryValueObject";
+import {createTerraformationLevelSummaryValueObject} from "../domain/valueObjects/TerraformationLevelSummaryValueObject";
 import {computeTerraformationSummary} from "../domain/rules/computeTerraformationSummary";
 
 export class LoadTerraformationLevelsSection {
@@ -11,7 +11,7 @@ export class LoadTerraformationLevelsSection {
 
   async execute(): Promise<void> {
     const levels = this.saveParser.getTerraformationLevels();
-    const levelsWithSummary: TerraformationLevelSummaryValueObject[] = levels.map((level) => ({
+    const levelsWithSummary = levels.map((level) => createTerraformationLevelSummaryValueObject({
       ...level,
       ...computeTerraformationSummary(level)
     }));

@@ -63,7 +63,7 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
     };
   }
 
-  private buildBreakdownRows(breakdown: EnergyBreakdownEntryValueObject[]): EnergyBreakdownRowViewModel[] {
+  private buildBreakdownRows(breakdown: readonly EnergyBreakdownEntryValueObject[]): EnergyBreakdownRowViewModel[] {
     return breakdown.map((entry): EnergyBreakdownRowViewModel => ({
       label: worldObjectLabels[entry.name],
       quantity: formatNumber(entry.quantity),
@@ -72,7 +72,7 @@ export class EnergyLevelsPresenter implements EnergyLevelsPresenterPort {
     }));
   }
 
-  private buildOptimizers(optimizers: OptimizerValueObject[]): OptimizerViewModel[] {
+  private buildOptimizers(optimizers: readonly OptimizerValueObject[]): OptimizerViewModel[] {
     return optimizers.map((optimizer): OptimizerViewModel => ({
       label: worldObjectLabels[optimizer.name],
       fuseCount: formatNumber(optimizer.fuseCount),

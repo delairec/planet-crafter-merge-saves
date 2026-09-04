@@ -11,9 +11,9 @@ import {computeEnergyFuseCountsByProducerId} from "./computeEnergyFuseCountsByPr
  * has its own independent power grid in-game, so this is always scoped to one planet's objects.
  */
 export function computeEnergyProductionLevel(
-  allWorldObjects: WorldObjectEntity[],
-  positionedWorldObjectsOnPlanet: PlacedWorldObjectEntity[],
-  inventories: InventoryEntity[]
+  allWorldObjects: readonly WorldObjectEntity[],
+  positionedWorldObjectsOnPlanet: readonly PlacedWorldObjectEntity[],
+  inventories: readonly InventoryEntity[]
 ): number {
   const fuseCountByProducerId = computeEnergyFuseCountsByProducerId(allWorldObjects, positionedWorldObjectsOnPlanet, inventories);
 

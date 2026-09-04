@@ -1,29 +1,34 @@
 import {SaveSectionsReaderPort} from "../application/ports/SaveSectionsReaderPort";
-import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
-import {PlayerEntity} from "../domain/entities/PlayerEntity";
-import {TerraformationLevelEntity} from "../domain/entities/TerraformationLevelEntity";
-import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
-import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
-import {EnergyLevelsRawDataValueObject} from "../domain/valueObjects/EnergyLevelsRawDataValueObject";
+import {createGlobalProgressionValueObject, GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
+import {createPlayerEntity, PlayerEntity} from "../domain/entities/PlayerEntity";
+import {createTerraformationLevelEntity, TerraformationLevelEntity} from "../domain/entities/TerraformationLevelEntity";
+import {createStatisticsValueObject, StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
+import {createSaveConfigurationValueObject, SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
+import {
+  createEnergyLevelsRawDataValueObject,
+  createPlanetWorldObjectsValueObject,
+  EnergyLevelsRawDataValueObject
+} from "../domain/valueObjects/EnergyLevelsRawDataValueObject";
+import {createPlacedWorldObjectEntity} from "../domain/entities/PlacedWorldObjectEntity";
 
 export class FakeSaveParserService implements SaveSectionsReaderPort {
   getEnergyLevelsRawData(): EnergyLevelsRawDataValueObject {
-    const producer = {id: '1', name: 'EnergyGenerator6' as const, position: [0, 0, 0] as [number, number, number], planetId: 1};
-    const consumer = {id: '2', name: 'Drill4' as const, position: [10, 0, 0] as [number, number, number], planetId: 1};
+    const producer = createPlacedWorldObjectEntity({id: '1', name: 'EnergyGenerator6' as const, position: [0, 0, 0], planetId: 1});
+    const consumer = createPlacedWorldObjectEntity({id: '2', name: 'Drill4' as const, position: [10, 0, 0], planetId: 1});
 
-    return {
+    return createEnergyLevelsRawDataValueObject({
       allWorldObjects: [producer, consumer],
       inventories: [],
-      planets: [{
+      planets: [createPlanetWorldObjectsValueObject({
         planetId: 1,
         planetName: undefined,
         placedWorldObjects: [producer, consumer]
-      }]
-    }
+      })]
+    });
   }
 
   getSaveConfiguration(): SaveConfigurationValueObject {
-    return {
+    return createSaveConfigurationValueObject({
       mode: 'Standard',
       title: 'Fake Save',
       modifiers: {
@@ -33,33 +38,33 @@ export class FakeSaveParserService implements SaveSectionsReaderPort {
         multiplayerFactor: 0.4,
         powerConsumption: 0.5
       }
-    }
+    });
   }
 
   getStatistics(): StatisticsValueObject {
-    return {
+    return createStatisticsValueObject({
       totalCraftedObjects: 10
-    }
+    });
   }
 
   getGlobalMetadata(): GlobalProgressionValueObject {
-    return {allTimeTerraTokens: 1_234_567};
+    return createGlobalProgressionValueObject({allTimeTerraTokens: 1_234_567});
   }
 
   getPlayers(): PlayerEntity[] {
-    return [{
+    return [createPlayerEntity({
       name: 'Nikowa',
       inventory: [],
       equipment: []
-    }, {
+    }), createPlayerEntity({
       name: 'Chileny',
       inventory: [],
       equipment: []
-    }];
+    })];
   }
 
   getTerraformationLevels(): TerraformationLevelEntity[] {
-    return [{
+    return [createTerraformationLevelEntity({
       planetId: "Toxicity",
       unitOxygenLevel: 100,
       unitHeatLevel: 200,
@@ -68,6 +73,6 @@ export class FakeSaveParserService implements SaveSectionsReaderPort {
       unitInsectsLevel: 500,
       unitAnimalsLevel: 600,
       unitPurificationLevel: 700
-    }];
+    })];
   }
 }

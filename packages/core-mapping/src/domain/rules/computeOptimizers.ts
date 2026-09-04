@@ -2,7 +2,8 @@ import {WorldObjectName} from "../worldObjectNames";
 import {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity";
 import {WorldObjectEntity} from "../entities/WorldObjectEntity";
 import {InventoryEntity} from "../entities/InventoryEntity";
-import {OptimizerValueObject} from "../valueObjects/OptimizerValueObject";
+import {OptimizerValueObject, createOptimizerValueObject} from "../valueObjects/OptimizerValueObject";
+import {createOptimizerBoostedMachineValueObject} from "../valueObjects/OptimizerBoostedMachineValueObject";
 import {energyProductionLevelsByWorldObjectName} from "../energyLevelsByWorldObjectName";
 import {ENERGY_FUSE_MULTIPLIER_PER_FUSE} from "./energyOptimizerConfig";
 import {computeOptimizerBoosts} from "./computeOptimizerBoosts";
@@ -19,9 +20,9 @@ import {computeEnergyFuseCountsByProducerId} from "./computeEnergyFuseCountsByPr
  * fuse applied in isolation.
  */
 export function computeOptimizers(
-  allWorldObjects: WorldObjectEntity[],
-  positionedWorldObjects: PlacedWorldObjectEntity[],
-  inventories: InventoryEntity[]
+  allWorldObjects: readonly WorldObjectEntity[],
+  positionedWorldObjects: readonly PlacedWorldObjectEntity[],
+  inventories: readonly InventoryEntity[]
 ): OptimizerValueObject[] {
   const fuseCountByProducerId = computeEnergyFuseCountsByProducerId(allWorldObjects, positionedWorldObjects, inventories);
 
@@ -34,18 +35,21 @@ export function computeOptimizers(
         quantityByName.set(producer.name, (quantityByName.get(producer.name) ?? 0) + 1);
         const baseLevel = energyProductionLevelsByWorldObjectName[producer.name]!;
         const totalFuseCount = fuseCountByProducerId.get(producer.id) ?? fuseCount;
+        if (totalFuseCount === 0) {
+          continue;
+        }
         const totalBoost = baseLevel * (totalFuseCount * ENERGY_FUSE_MULTIPLIER_PER_FUSE - 1);
         contribution += totalBoost * (fuseCount / totalFuseCount);
       }
 
-      return {
+      return createOptimizerValueObject({
         name: optimizer.name,
         fuseCount,
-        boostedMachines: [...quantityByName.entries()].map(([name, quantity]) => ({
+        boostedMachines: [...quantityByName.entries()].map(([name, quantity]) => createOptimizerBoostedMachineValueObject({
           name,
           quantity
         })),
         contribution
-      };
+      });
     });
 }
