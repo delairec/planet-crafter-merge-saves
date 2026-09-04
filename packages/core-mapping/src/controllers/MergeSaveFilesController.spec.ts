@@ -11,7 +11,12 @@ describe('MergeSaveFilesController', () => {
       const contentB = createFakeSaveContent();
 
       // Act
-      const viewModel = await MergeSaveFilesController.mergeSaveFiles('Standard-1.json', contentA, 'Standard-2.json', contentB);
+      const viewModel = await MergeSaveFilesController.mergeSaveFiles({
+        fileNameA: 'Standard-1.json',
+        contentA,
+        fileNameB: 'Standard-2.json',
+        contentB
+      });
 
       // Assert
       expect(viewModel.status).toBe('success');
@@ -26,7 +31,12 @@ describe('MergeSaveFilesController', () => {
       const contentB = createFakeSaveContent();
 
       // Act
-      const viewModel = await MergeSaveFilesController.mergeSaveFiles('Standard-1.json', contentA, 'Standard-2.json', contentB);
+      const viewModel = await MergeSaveFilesController.mergeSaveFiles({
+        fileNameA: 'Standard-1.json',
+        contentA,
+        fileNameB: 'Standard-2.json',
+        contentB
+      });
 
       // Assert
       expect(viewModel.status).toBe('validationError');

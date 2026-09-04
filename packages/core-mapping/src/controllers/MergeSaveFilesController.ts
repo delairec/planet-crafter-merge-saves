@@ -5,8 +5,7 @@ import {MergeSaveFiles} from "../application/MergeSaveFiles";
 import {MergeSaveFilesRequest} from "../application/MergeSaveFilesRequest";
 
 export class MergeSaveFilesController {
-  static async mergeSaveFiles(fileNameA: string, contentA: string, fileNameB: string, contentB: string, saveDisplayName?: string): Promise<MergeResultViewModel> {
-    const request: MergeSaveFilesRequest = {fileNameA, contentA, fileNameB, contentB, saveDisplayName};
+  static async mergeSaveFiles(request: MergeSaveFilesRequest): Promise<MergeResultViewModel> {
     const validator = createSaveValidator();
     const merger = createSaveFilesMerger();
     const presenter = new MergeResultPresenter();
