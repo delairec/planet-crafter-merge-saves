@@ -641,14 +641,12 @@ describe('SaveSectionsReaderService', () => {
         const energyLevels = loadEnergyLevels(sections);
 
         // Assert: 1 fuse boosting 1 Wind turbine => contribution = 1.2 × (1 × 1.5 − 1) (base already counted in production breakdown)
-        const contribution = 1.2 * (1 * 1.5 - 1);
-        const boostedProduction = 1.2 * 1.5;
         expect(energyLevels.planets[0].optimizers).toEqual([{
           name: 'Optimizer1',
           fuseCount: 1,
           boostedMachines: [{name: 'EnergyGenerator1', quantity: 1}],
-          contribution,
-          productionRatio: contribution / boostedProduction
+          contribution: 0.6,
+          productionRatio: 0.33333333333333337
         }]);
       });
 
@@ -690,22 +688,20 @@ describe('SaveSectionsReaderService', () => {
 
         // Assert: each Optimizer holds 1 fuse; the producer's real combined boost (2 fuses × 1.5 −
         // base) is split evenly between the two Optimizers since they each hold 1 fuse.
-        const contributionPerOptimizer = 1.2 * (2 * 1.5 - 1) / 2;
-        const boostedProduction = 1.2 * 3;
         expect(energyLevels.planets[0].optimizers).toEqual([
           {
             name: 'Optimizer1',
             fuseCount: 1,
             boostedMachines: [{name: 'EnergyGenerator1', quantity: 1}],
-            contribution: contributionPerOptimizer,
-            productionRatio: contributionPerOptimizer / boostedProduction
+            contribution: 1.2,
+            productionRatio: 0.33333333333333337
           },
           {
             name: 'Optimizer1',
             fuseCount: 1,
             boostedMachines: [{name: 'EnergyGenerator1', quantity: 1}],
-            contribution: contributionPerOptimizer,
-            productionRatio: contributionPerOptimizer / boostedProduction
+            contribution: 1.2,
+            productionRatio: 0.33333333333333337
           }
         ]);
       });
