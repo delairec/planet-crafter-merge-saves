@@ -12,7 +12,7 @@ import {createFakeParsedSave} from "shared-save-processing/testing/createFakePar
 describe('Merge saves', () => {
     const saveDisplayName = 'SAVE_NAME';
 
-    it('should handle error in case of wrong save format', () => {
+    it('should throw when the save format is invalid', () => {
         // Act
         const result = () => mergeParsedSaveSections('invalidSaveFormatA' as any, 'invalidSaveFormatB' as any, saveDisplayName);
 
@@ -20,7 +20,7 @@ describe('Merge saves', () => {
         expect(result).toThrow(`ERROR_INVALID_INPUT_FORMAT`);
     });
 
-    describe('Id conflict resolution — save-B world object linked inventory', () => {
+    describe('When resolving a save-B world object linked inventory id conflict', () => {
         it('should point a save-B world object to its own inventory after merge and id conflict resolution', () => {
             // Arrange
             const playerA = {

@@ -1,4 +1,4 @@
-import {beforeEach, describe, expect, it, mock, spyOn} from 'bun:test';
+import {afterEach, beforeEach, describe, expect, it, mock, spyOn} from 'bun:test';
 import {initMergeCli} from './merge-cli.js';
 import {FAKE_SAVE_STRING_A, FAKE_SAVE_STRING_B} from '../testing/fakeSaveStrings.js';
 import {
@@ -45,6 +45,11 @@ describe('Merge CLI', () => {
     exitProcess = mock();
 
     ({main} = initCli());
+  });
+
+  afterEach(() => {
+    consoleLogSpy.mockRestore();
+    consoleErrorSpy.mockRestore();
   });
 
   describe('When no input folders contain two or more JSON files', () => {

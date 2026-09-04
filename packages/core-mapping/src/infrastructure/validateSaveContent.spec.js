@@ -15,7 +15,7 @@ import {
 
 describe('validateSaveContent', () => {
 
-  describe('Return value shape', () => {
+  describe('When validateSaveContent is invoked', () => {
     it('should return a validation result with a validity flag and a list of errors', () => {
       // Arrange
       const save = createFakeSaveContent();
@@ -41,7 +41,7 @@ describe('validateSaveContent', () => {
     });
   });
 
-  describe('Structure validation', () => {
+  describe('When validating the overall save structure', () => {
     it('should reject a save that does not have the expected number of sections', () => {
       // Arrange
       const invalidSave = 'not a valid save';
@@ -76,7 +76,7 @@ describe('validateSaveContent', () => {
     });
   });
 
-  describe('Section 0 — Global metadata schema', () => {
+  describe('When validating the global metadata section', () => {
     it('should reject when terraTokens is not an integer', () => {
       // Arrange
       // @ts-expect-error intentionally invalid type to test validation
@@ -105,7 +105,7 @@ describe('validateSaveContent', () => {
     });
   });
 
-  describe('Section 1 — Terraformation levels schema', () => {
+  describe('When validating the terraformation levels section', () => {
     it('should reject when planetId is missing', () => {
       // Arrange
       const {planetId: _, ...levelWithoutPlanetId} = createTerraformationLevel();
@@ -134,7 +134,7 @@ describe('validateSaveContent', () => {
     });
   });
 
-  describe('Section 2 — Players schema', () => {
+  describe('When validating the players section', () => {
     it('should reject when a required player field is missing', () => {
       // Arrange
       const {host: _, ...playerWithoutHost} = createPlayer();
@@ -185,7 +185,7 @@ describe('validateSaveContent', () => {
     });
   });
 
-  describe('Section 4 — Inventories schema', () => {
+  describe('When validating the inventories section', () => {
     it('should reject when size is missing', () => {
       // Arrange
       const {size: _, ...inventoryWithoutSize} = createInventory();
@@ -212,7 +212,7 @@ describe('validateSaveContent', () => {
     });
   });
 
-  describe('Section 5 — Statistics schema', () => {
+  describe('When validating the statistics section', () => {
     it('should reject when craftedObjects is negative', () => {
       // Arrange
       const save = createFakeSaveContent({statistics: createStatistics({craftedObjects: -5})});
@@ -226,7 +226,7 @@ describe('validateSaveContent', () => {
     });
   });
 
-  describe('Section 8 — Save configuration schema', () => {
+  describe('When validating the save configuration section', () => {
     it('should reject when saveDisplayName is missing', () => {
       // Arrange
       const {saveDisplayName: _, ...configWithoutName} = createSaveConfiguration();
@@ -255,7 +255,7 @@ describe('validateSaveContent', () => {
     });
   });
 
-  describe('Section 9 — World events schema', () => {
+  describe('When validating the world events section', () => {
     it('should reject when pos has an invalid format', () => {
       // Arrange
       const save = createFakeSaveContent({worldEvents: [{planet: 110910045, seed: 42, pos: 'bad-pos'}]});
@@ -269,8 +269,8 @@ describe('validateSaveContent', () => {
     });
   });
 
-  describe('Domain rules', () => {
-    describe('Decimal notation for gauge and level values', () => {
+  describe('When validating cross-section domain rules', () => {
+    describe('When validating decimal notation for gauge and level values', () => {
       it('should reject a save where a gauge value is missing its decimal notation', () => {
         // Arrange
         const saveWithBadFloat = createFakeSaveContent().replace('"playerGaugeOxygen":280.0', '"playerGaugeOxygen":280');
@@ -325,7 +325,7 @@ describe('validateSaveContent', () => {
       });
     });
 
-    describe('Unique host rule', () => {
+    describe('When validating the unique host rule', () => {
       it('should report an error when no player is host', () => {
         // Arrange
         const save = createFakeSaveContent({players: [createPlayer({host: false})]});
@@ -373,7 +373,7 @@ describe('validateSaveContent', () => {
       });
     });
 
-    describe('Consistent planetId rule', () => {
+    describe('When validating the consistent planetId rule', () => {
       it('should accept players with different planetId values', () => {
         // Arrange
         const firstPlayer = createPlayer();

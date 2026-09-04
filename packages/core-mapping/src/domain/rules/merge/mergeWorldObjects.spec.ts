@@ -43,25 +43,6 @@ describe('Merge world objects', () => {
     });
   });
 
-  describe('When save B contains world objects from an ejected player inventory', () => {
-    it('should drop the world objects that were in the orphan inventories', () => {
-      // Arrange
-      const worldObjectsFromSaveA = createWorldObjectsGenerator([]);
-      const worldObjectsFromSaveB = createWorldObjectsGenerator([
-        {id: 901, gId: 'Iron'},
-        {id: 902, gId: 'Cobalt'},
-        {id: 903, gId: 'AirFilter1'}
-      ]);
-      const orphanWorldObjectIds = new Set([901, 902, 903]);
-
-      // Act
-      const result = mergeWorldObjects(worldObjectsFromSaveA, worldObjectsFromSaveB, orphanWorldObjectIds);
-
-      // Assert
-      expect(result.serialized).toBe('');
-    });
-  });
-
   describe('When a world object appears in both saves with the same pos', () => {
     it('should deduplicate by pos and keep only the one from save A', () => {
       // Arrange

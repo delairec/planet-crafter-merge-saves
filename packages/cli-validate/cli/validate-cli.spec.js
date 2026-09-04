@@ -1,4 +1,4 @@
-import {beforeEach, describe, expect, it, mock, spyOn} from 'bun:test';
+import {afterEach, beforeEach, describe, expect, it, mock, spyOn} from 'bun:test';
 import {initValidateCli} from './validate-cli.js';
 import {VALIDATE_SAVE_FILE_PATH} from '../testing/fakePaths.js';
 import {VALID_SAVE_CONTENT} from '../testing/fakeValidSaveContent.js';
@@ -38,6 +38,11 @@ describe('Validate CLI', () => {
     };
 
     ({main} = initValidateCli(fakePlatform));
+  });
+
+  afterEach(() => {
+    consoleLogSpy.mockRestore();
+    consoleErrorSpy.mockRestore();
   });
 
   describe('When no file path is provided', () => {
@@ -147,6 +152,7 @@ describe('Validate CLI', () => {
 
       // Assert
       expect(warnMock).toHaveBeenCalledWith(expect.stringContaining('⚠'));
+      warnMock.mockRestore();
     });
   });
 });

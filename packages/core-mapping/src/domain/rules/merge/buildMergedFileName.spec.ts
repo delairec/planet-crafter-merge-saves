@@ -28,8 +28,14 @@ describe('buildMergedFileName', () => {
   });
 
   it('should remove path separators and unsafe characters from file names', () => {
-    const result = buildMergedFileName('../malicious/<script>', 'safe.JSON');
+    // Arrange
+    const fileNameA = '../malicious/<script>';
+    const fileNameB = 'safe.JSON';
 
+    // Act
+    const result = buildMergedFileName(fileNameA, fileNameB);
+
+    // Assert
     expect(result).toBe('_malicious__script_-safe-merged.json');
   });
 });

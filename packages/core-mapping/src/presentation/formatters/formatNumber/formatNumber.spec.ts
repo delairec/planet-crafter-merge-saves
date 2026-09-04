@@ -19,7 +19,7 @@ describe('formatNumber', () => {
   describe('When formatting strategy is PERCENTAGE', () => {
     it('should format the number as percentage', () => {
       // Act
-        const result = formatNumber(0.1234, FormatNumberStrategies.PERCENTAGE);
+      const result = formatNumber(0.1234, FormatNumberStrategies.PERCENTAGE);
 
       // Assert
       expect(result).toBe('12%');

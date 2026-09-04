@@ -4,7 +4,7 @@ import {parseSaveSections} from 'shared-save-processing/parseSaveSections.js';
 import {createFakeSaveString} from 'shared-save-processing/testing/createFakeSaveString.js';
 import { TERRAFORMATION_LEVELS_SECTION_INDEX, PLAYERS_SECTION_INDEX, WORLD_OBJECTS_SECTION_INDEX, INVENTORIES_SECTION_INDEX } from 'shared-save-processing/sectionIndexes.js';
 
-describe('utils/resolveIdConflicts', () => {
+describe('Resolve id conflicts', () => {
   const SECTION_SEPARATOR = '@';
 
   const defaultPlayerConfiguration = {
@@ -29,7 +29,7 @@ describe('utils/resolveIdConflicts', () => {
   const inventoryOfB = {id: 20, woIds: '', size: 10};
   const equipmentOfB = {id: 21, woIds: '', size: 10};
 
-  describe('Rule: keep all inventories even if not used by a player', () => {
+  describe('When an inventory is not linked to any player', () => {
     it('should keep an inventory referenced by a world object liId', () => {
       // Arrange
       const worldObjectWithInventory = {id: 200, gId: 'Container', liId: 99, pos: '0,1,0', rot: '0,0,0,1', planet: 110910047};
@@ -129,7 +129,7 @@ describe('utils/resolveIdConflicts', () => {
     });
   });
 
-  describe('Player id conflicts', () => {
+  describe('When player ids conflict between saves', () => {
     it('should assign a unique id to a player from save B when they share an id with a player from save A', () => {
       // Arrange
       const playerFromB = {...defaultPlayerFromB, id: 1};
@@ -149,7 +149,7 @@ describe('utils/resolveIdConflicts', () => {
     });
   });
 
-  describe('Inventory id conflicts', () => {
+  describe('When inventory ids conflict between saves', () => {
     it('should keep the player pointing to the correct inventory after a duplicate inventory id is resolved', () => {
       // Arrange
       const playerFromB = {...defaultPlayerFromB, inventoryId: 10, equipmentId: 21};
@@ -219,7 +219,7 @@ describe('utils/resolveIdConflicts', () => {
     });
   });
 
-  describe('World object to inventory links', () => {
+  describe('When world objects are linked to inventories', () => {
     it('should preserve the link between a world object and its inventory when there is no conflict', () => {
       // Arrange
       const worldObject = {id: 100, gId: 'Container1', liId: 10, pos: '0,0,0', rot: '0,0,0,1', planet: 110910047};
@@ -313,7 +313,7 @@ describe('utils/resolveIdConflicts', () => {
     });
   });
 
-  describe('World object sub-inventory links', () => {
+  describe('When world objects are linked to sub-inventories', () => {
     it('should preserve sub-inventory references when there is no inventory id conflict', () => {
       // Arrange
       const subInventoryA = {id: 50, woIds: '', size: 1};
@@ -405,7 +405,7 @@ describe('utils/resolveIdConflicts', () => {
     });
   });
 
-  describe('World object linked world object references', () => {
+  describe('When world objects reference other world objects', () => {
     it('should preserve linkedWo reference when there is no world object id conflict', () => {
       // Arrange
       const lake = {id: 200, gId: 'Lake1', pos: '5,0,5', rot: '0,0,0,1', planet: 110910047};
@@ -447,7 +447,7 @@ describe('utils/resolveIdConflicts', () => {
     });
   });
 
-  describe('World object id conflicts', () => {
+  describe('When world object ids conflict between saves', () => {
     it('should assign a unique id to a world object from save B when it shares an id with a world object from save A', () => {
       // Arrange
       const worldObjectFromA = {id: 100, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 110910047};
@@ -577,7 +577,7 @@ describe('utils/resolveIdConflicts', () => {
     });
   });
 
-  describe('Output format', () => {
+  describe('When formatting the resolved output', () => {
     it('should preserve player gauge float values after conflict resolution', () => {
       // Arrange
       const mergedSave = createFakeSaveString({
