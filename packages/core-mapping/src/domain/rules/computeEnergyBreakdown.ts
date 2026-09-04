@@ -1,6 +1,6 @@
 import {WorldObjectName} from "../worldObjectNames";
 import {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity";
-import {EnergyBreakdownEntryValueObject} from "../valueObjects/EnergyBreakdownEntryValueObject";
+import {EnergyBreakdownEntryValueObject, createEnergyBreakdownEntryValueObject} from "../valueObjects/EnergyBreakdownEntryValueObject";
 
 /**
  * Groups positioned world objects matching the given base energy levels table by name, so the
@@ -8,7 +8,7 @@ import {EnergyBreakdownEntryValueObject} from "../valueObjects/EnergyBreakdownEn
  * total (see the Power section's Production/Consumption breakdowns).
  */
 export function computeEnergyBreakdown(
-  positionedWorldObjects: PlacedWorldObjectEntity[],
+  positionedWorldObjects: readonly PlacedWorldObjectEntity[],
   levelsByWorldObjectName: Partial<Record<WorldObjectName, number>>
 ): EnergyBreakdownEntryValueObject[] {
   const quantityByName = new Map<WorldObjectName, number>();
@@ -23,12 +23,12 @@ export function computeEnergyBreakdown(
   return [...quantityByName.entries()]
     .map(([name, quantity]): EnergyBreakdownEntryValueObject => {
       const unitLevel = levelsByWorldObjectName[name]!;
-      return {
+      return createEnergyBreakdownEntryValueObject({
         name,
         quantity,
         unitLevel,
         totalLevel: unitLevel * quantity
-      };
+      });
     })
     .sort((a, b) => b.totalLevel - a.totalLevel);
 }

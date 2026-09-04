@@ -47,6 +47,6 @@ function mapItemNameToItemLabel(itemName: string): string {
   return worldObjectLabel ?? playersSectionUnknownItemLabel(itemName);
 }
 
-function mapListWithEmptyMessage(list: string[], message: string): string[] {
+function mapListWithEmptyMessage(list: readonly string[], message: string): string[] {
   return list.length === 0 ? [message] : list.map(mapItemNameToItemLabel);
 }

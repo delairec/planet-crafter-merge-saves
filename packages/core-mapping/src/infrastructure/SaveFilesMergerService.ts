@@ -2,7 +2,7 @@ import {mergeParsedSaveSections} from "../domain/rules/merge/mergeParsedSaveSect
 import {resolveIdConflicts} from "../domain/rules/merge/resolveIdConflicts";
 import {buildMergedFileName} from "../domain/rules/merge/buildMergedFileName";
 import {SaveFilesMergerPort} from "../application/ports/SaveFilesMergerPort";
-import {MergedSaveValueObject} from "../domain/valueObjects/MergedSaveValueObject";
+import {createMergedSaveValueObject, MergedSaveValueObject} from "../domain/valueObjects/MergedSaveValueObject";
 import {parseSaveSections} from "shared-save-processing/parseSaveSections.js";
 
 export class SaveFilesMergerService implements SaveFilesMergerPort {
@@ -17,6 +17,6 @@ export class SaveFilesMergerService implements SaveFilesMergerPort {
     const mergedSections = mergeSaves();
     const content = resolveIdConflicts(mergedSections, saveAWorldObjectIds);
 
-    return {fileName, content};
+    return createMergedSaveValueObject({fileName, content});
   }
 }

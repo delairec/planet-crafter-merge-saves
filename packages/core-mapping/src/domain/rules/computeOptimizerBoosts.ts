@@ -11,9 +11,9 @@ import {energyProductionLevelsByWorldObjectName} from "../energyLevelsByWorldObj
  * optimizer's machine capacity) reached by that Optimizer.
  */
 export function computeOptimizerBoosts(
-  allWorldObjects: WorldObjectEntity[],
-  positionedWorldObjects: PlacedWorldObjectEntity[],
-  inventories: InventoryEntity[]
+  allWorldObjects: readonly WorldObjectEntity[],
+  positionedWorldObjects: readonly PlacedWorldObjectEntity[],
+  inventories: readonly InventoryEntity[]
 ): { optimizer: PlacedWorldObjectEntity; fuseCount: number; boostedProducers: PlacedWorldObjectEntity[] }[] {
   const worldObjectById = new Map(allWorldObjects.map((worldObject) => [worldObject.id, worldObject]));
   const producers = positionedWorldObjects.filter(

@@ -22,9 +22,9 @@ import {computeOptimizers} from "./computeOptimizers";
  * single planet being computed, since each planet has its own independent power grid.
  */
 export function computePlanetEnergyLevels(
-  allWorldObjects: WorldObjectEntity[],
-  positionedWorldObjectsOnPlanet: PlacedWorldObjectEntity[],
-  inventories: InventoryEntity[]
+  allWorldObjects: readonly WorldObjectEntity[],
+  positionedWorldObjectsOnPlanet: readonly PlacedWorldObjectEntity[],
+  inventories: readonly InventoryEntity[]
 ): Omit<PlanetEnergyLevelsValueObject, 'planetId'> {
   const production = computeEnergyProductionLevel(allWorldObjects, positionedWorldObjectsOnPlanet, inventories);
   const consumption = computeEnergyConsumptionLevel(positionedWorldObjectsOnPlanet);

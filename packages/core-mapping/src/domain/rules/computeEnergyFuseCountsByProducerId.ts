@@ -8,9 +8,9 @@ import {computeOptimizerBoosts} from "./computeOptimizerBoosts";
  * (summed across every Optimizer that reaches it).
  */
 export function computeEnergyFuseCountsByProducerId(
-  allWorldObjects: WorldObjectEntity[],
-  positionedWorldObjects: PlacedWorldObjectEntity[],
-  inventories: InventoryEntity[]
+  allWorldObjects: readonly WorldObjectEntity[],
+  positionedWorldObjects: readonly PlacedWorldObjectEntity[],
+  inventories: readonly InventoryEntity[]
 ): Map<string, number> {
   const fuseCountByProducerId = new Map<string, number>();
 
