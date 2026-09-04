@@ -1,4 +1,4 @@
-import {formatNumberByThresholds, Threshold} from "./thresholdFormatting";
+import {formatNumberByThresholds, Threshold} from "./threshold.strategy";
 
 const thresholds: Threshold[] = [
   {value: 1_000_000_000, suffix: "Pa"},
