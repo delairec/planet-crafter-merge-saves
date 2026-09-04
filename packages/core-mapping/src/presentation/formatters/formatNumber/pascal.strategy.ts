@@ -1,9 +1,4 @@
-import {formatDecimalNumberWithSuffix} from "./formatDecimalNumberWithSuffix";
-
-interface Threshold {
-  value: number;
-  suffix: string;
-}
+import {formatNumberByThresholds, Threshold} from "./thresholdFormatting";
 
 const thresholds: Threshold[] = [
   {value: 1_000_000_000, suffix: "Pa"},
@@ -12,19 +7,6 @@ const thresholds: Threshold[] = [
   {value: 1, suffix: "nPa"},
 ];
 
-export function formatNumberByPascalThresholds(value: number|bigint) {
-  const num = Number(value);
-
-  for (const threshold of thresholds) {
-    if (isNumberBiggerThanThreshold(num, threshold)) {
-      const result = num / threshold.value;
-      return formatDecimalNumberWithSuffix(result, threshold.suffix);
-    }
-  }
-
-  return formatDecimalNumberWithSuffix(num, thresholds[3].suffix);
-}
-
-function isNumberBiggerThanThreshold(num: number, threshold: Threshold) {
-  return num >= threshold.value;
+export function formatNumberByPascalThresholds(value: number | bigint) {
+  return formatNumberByThresholds(value, thresholds);
 }
