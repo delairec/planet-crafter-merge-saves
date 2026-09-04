@@ -135,8 +135,9 @@ describe('SaveSectionsReaderService', () => {
   describe('When statistics are missing', () => {
     it('should return undefined', () => {
       // Arrange
-      const sectionsWithoutStatistics = [...sections] as ParsedSections;
+      const sectionsWithoutStatistics = [...sections];
       sectionsWithoutStatistics[STATISTICS_SECTION_INDEX] = [];
+      // @ts-ignore invalid section on purpose
       const service = new SaveSectionsReaderService(sectionsWithoutStatistics);
 
       // Act
@@ -171,8 +172,9 @@ describe('SaveSectionsReaderService', () => {
   describe('When save configuration is missing', () => {
     it('should return undefined', () => {
       // Arrange
-      const sectionsWithoutSaveConfiguration = [...sections] as ParsedSections;
+      const sectionsWithoutSaveConfiguration = [...sections];
       sectionsWithoutSaveConfiguration[SAVE_CONFIGURATION_SECTION_INDEX] = [];
+      // @ts-ignore invalid section on purpose
       const service = new SaveSectionsReaderService(sectionsWithoutSaveConfiguration);
 
       // Act
