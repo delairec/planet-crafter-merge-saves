@@ -16,5 +16,7 @@ export interface SaveSectionsReaderPort {
 
   getSaveConfiguration(): SaveConfigurationValueObject | undefined;
 
+  // Unlike the other getters, energy levels require domain computation (see computePlanetEnergyLevels),
+  // so this returns raw entities instead of an already-computed value object.
   getEnergyLevelsRawData(): EnergyLevelsRawDataValueObject;
 }
