@@ -9,8 +9,7 @@ export class ValidateSaveFile {
   ) {
   }
 
-  async execute(request: ValidateSaveFileRequest): Promise<void> {
-    const {fileName, content} = request;
+  async execute({fileName, content}: ValidateSaveFileRequest): Promise<void> {
     const validation = this.validator.validate(fileName, content);
 
     if (!validation.isValid) {
