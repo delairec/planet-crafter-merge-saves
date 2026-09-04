@@ -1,7 +1,7 @@
 import {SaveValidatorPort} from "./ports/SaveValidatorPort";
 import {SaveSectionsParserPort} from "./ports/SaveSectionsParserPort";
 import {LoadAndValidateSaveFilePresenterPort} from "./ports/LoadAndValidateSaveFilePresenterPort";
-import {LoadAndValidateSaveFileRequest} from "./LoadAndValidateSaveFileRequest";
+import {LoadAndValidateSaveFileRequest} from "./requests/LoadAndValidateSaveFileRequest";
 
 export class LoadAndValidateSaveFile {
   constructor(

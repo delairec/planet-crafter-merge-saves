@@ -4,7 +4,6 @@ import {Accessor, createSignal} from 'solid-js';
 import {LoadAndValidateSaveFileController} from "core-mapping/controllers/LoadAndValidateSaveFileController";
 import {MergeResultViewModel} from "core-mapping/presentation/viewModels/MergeResultViewModel";
 import {ParsedSections} from "shared-save-processing/gameDefinitions";
-import {readFileAsText} from "./readFileAsText";
 
 export interface LoadSaveFile {
   file: Accessor<File | null>;
@@ -48,7 +47,7 @@ export function useLoadSaveFile(): LoadSaveFile {
       return;
     }
 
-    const content = await readFileAsText(selectedFile);
+    const content = await selectedFile.text();
     const viewModel = await LoadAndValidateSaveFileController.loadAndValidateSaveFile(selectedFile.name, content);
 
     setSections(viewModel.sections);

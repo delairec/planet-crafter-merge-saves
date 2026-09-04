@@ -18,7 +18,7 @@ export default function MergeResultSection(props: MergeResultSectionProps) {
   let downloadFileUrl: string | null = null;
 
   const isSuccess = () => props.result()?.status === 'success';
-  const isValidationError = () => props.result()?.status === 'validationError';
+  const isInvalid = () => props.result()?.status === 'validationError';
 
   createEffect(() => {
     const result = props.result();
@@ -47,7 +47,7 @@ export default function MergeResultSection(props: MergeResultSectionProps) {
         </p>
       </Show>
 
-      <Show when={isValidationError()}>
+      <Show when={isInvalid()}>
         <div>
           <Show when={props.result()!.saveAErrorMessages.length > 0}>
             <ValidationMessagesList title={mergeResultSectionSaveAInvalidMessage} severity="danger"

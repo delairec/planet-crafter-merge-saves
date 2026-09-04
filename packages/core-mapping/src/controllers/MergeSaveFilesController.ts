@@ -2,7 +2,7 @@ import {MergeResultViewModel} from "../presentation/viewModels/MergeResultViewMo
 import {createSaveFilesMerger, createSaveValidator} from "../composition/compositionRoot";
 import {MergeResultPresenter} from "../presentation/MergeResultPresenter";
 import {MergeSaveFiles} from "../application/MergeSaveFiles";
-import {MergeSaveFilesRequest} from "../application/MergeSaveFilesRequest";
+import {MergeSaveFilesRequest} from "../application/requests/MergeSaveFilesRequest";
 
 export class MergeSaveFilesController {
   static async mergeSaveFiles(request: MergeSaveFilesRequest): Promise<MergeResultViewModel> {

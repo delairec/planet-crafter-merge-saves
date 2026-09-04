@@ -1,7 +1,6 @@
 import {createSignal} from 'solid-js';
 import {MergeSaveFilesController} from 'core-mapping/controllers/MergeSaveFilesController';
 import {MergeResultViewModel} from 'core-mapping/presentation/viewModels/MergeResultViewModel';
-import {readFileAsText} from '~/lib/readFileAsText';
 import {
   mergeButtonLabel,
   mergeSectionSaveALabel,
@@ -24,7 +23,7 @@ export default function MergeSection(props: MergeSectionProps) {
       return;
     }
 
-    const [contentA, contentB] = await Promise.all([readFileAsText(savedFileA), readFileAsText(savedFileB)]);
+    const [contentA, contentB] = await Promise.all([savedFileA.text(), savedFileB.text()]);
     const viewModel = await MergeSaveFilesController.mergeSaveFiles({
       fileNameA: savedFileA.name,
       contentA,

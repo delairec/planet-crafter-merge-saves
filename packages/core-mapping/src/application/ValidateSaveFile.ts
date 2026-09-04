@@ -1,6 +1,6 @@
 import {SaveValidatorPort} from "./ports/SaveValidatorPort";
 import {SaveFileValidationPresenterPort} from "./ports/SaveFileValidationPresenterPort";
-import {ValidateSaveFileRequest} from "./ValidateSaveFileRequest";
+import {ValidateSaveFileRequest} from "./requests/ValidateSaveFileRequest";
 
 export class ValidateSaveFile {
   constructor(
