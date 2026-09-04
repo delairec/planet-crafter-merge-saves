@@ -65,9 +65,8 @@ describe('SaveSectionsReaderService', () => {
   describe('When global metadata are missing', () => {
     it('should use fallback values', () => {
       // Arrange
-      const sectionsWithoutGlobalMetadata = [...sections];
+      const sectionsWithoutGlobalMetadata = [...sections] as ParsedSections;
       sectionsWithoutGlobalMetadata[0] = [];
-      // @ts-ignore invalid section on purpose
       const service = new SaveSectionsReaderService(sectionsWithoutGlobalMetadata);
 
       // Act
@@ -135,9 +134,8 @@ describe('SaveSectionsReaderService', () => {
   describe('When statistics are missing', () => {
     it('should return undefined', () => {
       // Arrange
-      const sectionsWithoutStatistics = [...sections];
+      const sectionsWithoutStatistics = [...sections] as ParsedSections;
       sectionsWithoutStatistics[STATISTICS_SECTION_INDEX] = [];
-      // @ts-ignore invalid section on purpose
       const service = new SaveSectionsReaderService(sectionsWithoutStatistics);
 
       // Act
@@ -172,9 +170,8 @@ describe('SaveSectionsReaderService', () => {
   describe('When save configuration is missing', () => {
     it('should return undefined', () => {
       // Arrange
-      const sectionsWithoutSaveConfiguration = [...sections];
+      const sectionsWithoutSaveConfiguration = [...sections] as ParsedSections;
       sectionsWithoutSaveConfiguration[SAVE_CONFIGURATION_SECTION_INDEX] = [];
-      // @ts-ignore invalid section on purpose
       const service = new SaveSectionsReaderService(sectionsWithoutSaveConfiguration);
 
       // Act
