@@ -1,10 +1,6 @@
-import {Accessor, createEffect, createSignal, For, Show} from "solid-js";
-import {
-  LoadTerraformationLevelsSectionController
-} from "core-mapping/controllers/LoadTerraformationLevelsSectionController";
+import {Accessor, For, Show} from "solid-js";
 import FieldsGroup from "./structure/FieldsGroup";
 import {TerraformationLevelsViewModel} from "core-mapping/presentation/viewModels/TerraformationLevelsViewModel";
-import {ParsedSections} from "shared-save-processing/gameDefinitions";
 import {
   terraformationLevelsSectionBiomassLabel,
   terraformationLevelsSectionIndexLabel,
@@ -12,22 +8,15 @@ import {
 } from "~/messages/terraformationLevelsSectionMessages";
 
 interface TerraformationLevelsProps {
-  sections: Accessor<ParsedSections>;
+  viewModel: Accessor<TerraformationLevelsViewModel | null>;
 }
 
-export default function TerraformationLevelsSection({sections}: TerraformationLevelsProps) {
-  const [planets, setPlanets] = createSignal<TerraformationLevelsViewModel['planets']>([]);
-
-  createEffect(() => {
-    LoadTerraformationLevelsSectionController.loadTerraformationLevelsSection(sections())
-      .then(({planets}) => setPlanets(planets));
-  });
-
+export default function TerraformationLevelsSection({viewModel}: TerraformationLevelsProps) {
   return (<>
     <h3>{terraformationLevelsSectionTitle}</h3>
-    <Show when={sections}>
+    <Show when={viewModel()}>
       <div class="grid-container">
-        <For each={planets()}>
+        <For each={viewModel()!.planets}>
           {(planet) => (
             <div class="grid-item">
               <h4>{planet.name}</h4>
@@ -52,4 +41,3 @@ export default function TerraformationLevelsSection({sections}: TerraformationLe
     </Show>
   </>);
 }
-

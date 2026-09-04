@@ -1,6 +1,7 @@
 import {createSignal} from 'solid-js';
 import {MergeSaveFilesController} from 'core-mapping/controllers/MergeSaveFilesController';
 import {MergeResultViewModel} from 'core-mapping/presentation/viewModels/MergeResultViewModel';
+import {readFileAsText} from '~/lib/readFileAsText';
 import {
   mergeButtonLabel,
   mergeSectionSaveALabel,
@@ -15,15 +16,6 @@ interface MergeSectionProps {
 export default function MergeSection(props: MergeSectionProps) {
   const [fileA, setFileA] = createSignal<File | null>(null);
   const [fileB, setFileB] = createSignal<File | null>(null);
-
-  function readFileAsText(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = () => reject(reader.error);
-      reader.readAsText(file);
-    });
-  }
 
   const handleMerge = async () => {
     const savedFileA = fileA();

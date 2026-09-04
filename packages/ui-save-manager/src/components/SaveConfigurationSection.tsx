@@ -1,35 +1,19 @@
-import {Accessor, createEffect, createSignal} from "solid-js";
-import {LoadSaveConfigurationSectionController} from "core-mapping/controllers/LoadSaveConfigurationSectionController";
+import {Accessor} from "solid-js";
 import FieldsGroup from "./structure/FieldsGroup";
 import {SaveConfigurationViewModel} from "core-mapping/presentation/viewModels/SaveConfigurationViewModel";
-import {ParsedSections} from "shared-save-processing/gameDefinitions";
 import {saveConfigurationSectionTitleLabel} from "~/messages/saveConfigurationSectionMessages";
 
 interface SaveConfigurationProps {
-  sections: Accessor<ParsedSections>;
+  viewModel: Accessor<SaveConfigurationViewModel | null>;
 }
 
-export default function SaveConfigurationSection({sections}: SaveConfigurationProps) {
-  const [modifiersColumns, setModifiersColumns] = createSignal<SaveConfigurationViewModel['modifiers']['columns']>([]);
-  const [title, setTitle] = createSignal<string>('');
-  const [mode, setMode] = createSignal<string>('');
-
-  createEffect(() => {
-    LoadSaveConfigurationSectionController.loadSaveConfigurationSection(sections())
-      .then(({title, modifiers, mode}) => {
-        setModifiersColumns(modifiers.columns);
-        setTitle(title);
-        setMode(mode);
-      });
-  });
-
+export default function SaveConfigurationSection({viewModel}: SaveConfigurationProps) {
   return (
     <div>
-      <h3>{saveConfigurationSectionTitleLabel} {title()} ({mode()})</h3>
+      <h3>{saveConfigurationSectionTitleLabel} {viewModel()?.title} ({viewModel()?.mode})</h3>
       <div class="fields-group-container">
-        <FieldsGroup columns={modifiersColumns}/>
+        <FieldsGroup columns={() => viewModel()?.modifiers.columns ?? []}/>
       </div>
     </div>
-  )
-    ;
+  );
 }
