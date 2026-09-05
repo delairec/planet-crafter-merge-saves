@@ -37,8 +37,6 @@ describe('Merge CLI', () => {
   beforeEach(() => {
     consoleLogSpy = spyOn(console, 'log').mockImplementation(() => {});
     consoleErrorSpy = spyOn(console, 'error').mockImplementation(() => {});
-    consoleLogSpy.mockClear();
-    consoleErrorSpy.mockClear();
     readDirectory = mock();
     readTextFile = mock();
     writeTextFile = mock(() => Promise.resolve());

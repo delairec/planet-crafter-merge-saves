@@ -5,7 +5,7 @@ import {LoadGlobalProgressionSectionController} from './LoadGlobalProgressionSec
 import {GlobalProgressionViewModel} from '../presentation/viewModels/GlobalProgressionViewModel';
 
 describe('LoadGlobalProgressionSectionController', () => {
-  it('should present global progression from parsed save', async () => {
+  it('should present global progression from the parsed save', async () => {
     // Arrange
     const {sections} = parseSaveSections(createFakeSaveContent());
 

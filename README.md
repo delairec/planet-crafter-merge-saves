@@ -55,6 +55,33 @@ bun test:watch
 
 Execute all the unit tests of the project. Use `watch` to enable automatic run on save.
 
+Mocks and spies are restored between tests by a global `afterEach`, so no test has to clean up after itself. It comes
+from `testSetup.ts`, preloaded through the `bunfig.toml` sitting next to it: one at the repository root, one in each
+package. Bun resolves `bunfig.toml` from the working directory only, without looking at parent directories, so the
+preload silently does not apply when tests are run from any other directory — a deeper folder inside a package, or an
+IDE run configuration whose working directory is the folder of the test file.
+
+```
+bun test testIsolation.spec.ts
+```
+
+Checks that the preload actually applies. Run it with the working directory you want to check (the repository root, a
+package folder, an IDE run configuration): it fails when mocks are not restored between tests in that context.
+
+In an IDE, a generated run configuration usually takes the folder of the test file as its working directory, which is
+deeper than any `bunfig.toml`. In IntelliJ, set the environment variable below on the Bun *configuration template*
+(Run > Edit Configurations > Edit configuration templates…), so that every run configuration created afterwards loads
+the setup whatever its working directory:
+
+```
+BUN_OPTIONS=--preload=<absolute path>/testSetup.ts
+```
+
+`BUN_OPTIONS` prepends CLI arguments to every Bun invocation, and a CLI flag wins over `bunfig.toml`. It applies to run
+configurations created after the change only, so delete the temporary ones already generated. It lives in
+`.idea/workspace.xml`, which is git-ignored: it is a per-developer setting, not shared and not used by the CI, where
+`bunfig.toml` remains the source of truth.
+
 ```
 bun run lint:types
 ```
