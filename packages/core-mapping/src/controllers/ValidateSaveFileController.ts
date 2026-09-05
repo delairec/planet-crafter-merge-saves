@@ -2,7 +2,7 @@ import {SaveFileValidationViewModel} from "../presentation/viewModels/SaveFileVa
 import {createSaveValidator} from "../composition/compositionRoot";
 import {SaveFileValidationPresenter} from "../presentation/SaveFileValidationPresenter";
 import {ValidateSaveFile} from "../application/ValidateSaveFile";
-import {ValidateSaveFileRequest} from "../application/ValidateSaveFileRequest";
+import {ValidateSaveFileRequest} from "../application/requests/ValidateSaveFileRequest";
 
 export class ValidateSaveFileController {
   static async validateSaveFile(fileName: string, content: string): Promise<SaveFileValidationViewModel> {

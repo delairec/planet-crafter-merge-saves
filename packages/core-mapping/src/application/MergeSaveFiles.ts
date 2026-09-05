@@ -1,7 +1,7 @@
 import {SaveValidatorPort} from "./ports/SaveValidatorPort";
 import {SaveFilesMergerPort} from "./ports/SaveFilesMergerPort";
 import {MergeResultPresenterPort} from "./ports/MergeResultPresenterPort";
-import {MergeSaveFilesRequest} from "./MergeSaveFilesRequest";
+import {MergeSaveFilesRequest} from "./requests/MergeSaveFilesRequest";
 
 export class MergeSaveFiles {
   constructor(

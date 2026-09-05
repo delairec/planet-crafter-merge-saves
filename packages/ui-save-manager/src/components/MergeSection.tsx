@@ -16,15 +16,6 @@ export default function MergeSection(props: MergeSectionProps) {
   const [fileA, setFileA] = createSignal<File | null>(null);
   const [fileB, setFileB] = createSignal<File | null>(null);
 
-  function readFileAsText(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = () => reject(reader.error);
-      reader.readAsText(file);
-    });
-  }
-
   const handleMerge = async () => {
     const savedFileA = fileA();
     const savedFileB = fileB();
@@ -32,7 +23,7 @@ export default function MergeSection(props: MergeSectionProps) {
       return;
     }
 
-    const [contentA, contentB] = await Promise.all([readFileAsText(savedFileA), readFileAsText(savedFileB)]);
+    const [contentA, contentB] = await Promise.all([savedFileA.text(), savedFileB.text()]);
     const viewModel = await MergeSaveFilesController.mergeSaveFiles({
       fileNameA: savedFileA.name,
       contentA,

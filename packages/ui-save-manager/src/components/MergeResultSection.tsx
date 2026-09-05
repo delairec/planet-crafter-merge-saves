@@ -17,6 +17,9 @@ export default function MergeResultSection(props: MergeResultSectionProps) {
   const [downloadUrl, setDownloadUrl] = createSignal<string | null>(null);
   let downloadFileUrl: string | null = null;
 
+  const isSuccess = () => props.result()?.status === 'success';
+  const isInvalid = () => props.result()?.status === 'validationError';
+
   createEffect(() => {
     const result = props.result();
 
@@ -36,7 +39,7 @@ export default function MergeResultSection(props: MergeResultSectionProps) {
 
   return (
     <Show when={props.result()}>
-      <Show when={props.result()!.status === 'success'}>
+      <Show when={isSuccess()}>
         <p class="text-color-success">{mergeResultSectionSuccessMessage}</p>
         <p>{mergeResultSectionFileCreatedMessage} <code>{props.result()!.fileName}</code> <a class="button-link"
                                                                                              href={downloadUrl() ?? undefined}
@@ -44,7 +47,7 @@ export default function MergeResultSection(props: MergeResultSectionProps) {
         </p>
       </Show>
 
-      <Show when={props.result()!.status === 'validationError'}>
+      <Show when={isInvalid()}>
         <div>
           <Show when={props.result()!.saveAErrorMessages.length > 0}>
             <ValidationMessagesList title={mergeResultSectionSaveAInvalidMessage} severity="danger"

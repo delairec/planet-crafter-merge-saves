@@ -1,6 +1,7 @@
 import {MergeResultPresenterPort} from "../application/ports/MergeResultPresenterPort";
 import {ValidationIssue} from "../application/ports/ValidationIssue";
 import {MergeResultViewModel} from "./viewModels/MergeResultViewModel";
+import {formatValidationIssue} from "./formatValidationIssue";
 
 export class MergeResultPresenter implements MergeResultPresenterPort {
   private _viewModel: MergeResultViewModel;
@@ -38,8 +39,4 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
       saveBErrorMessages: saveBErrors.map(formatValidationIssue)
     };
   }
-}
-
-function formatValidationIssue(issue: ValidationIssue): string {
-  return issue.detail;
 }
