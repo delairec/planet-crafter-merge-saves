@@ -17,6 +17,8 @@
   },
   "type": "module",
   "scripts": {
+    "postinstall": "sh scripts/sync-private-context.sh",
+    "private:sync": "sh scripts/sync-private-context.sh",
     "clean": "rm -rf node_modules",
     "test": "bun test",
     "test:watch": "bun test --watch",
