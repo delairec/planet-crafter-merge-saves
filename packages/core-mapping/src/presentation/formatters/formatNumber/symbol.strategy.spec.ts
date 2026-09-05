@@ -5,12 +5,12 @@ const nbsp = '\u00A0';
 
 describe('formatNumberByUnitThresholds', () => {
   describe('When the value is at or above the kilo threshold', () => {
-    it('should format the value with the matching unit symbol', () => {
+    it('should format the value with the matching unit symbol and keep the decimals', () => {
       // Act
-      const result = formatNumberByUnitThresholds(1_000);
+      const result = formatNumberByUnitThresholds(1_500);
 
       // Assert
-      expect(result).toBe(`1${nbsp}k`);
+      expect(result).toBe(`1.5${nbsp}k`);
     });
   });
 
@@ -54,10 +54,10 @@ describe('formatNumberByUnitThresholds', () => {
     });
   });
 
-  describe('When the value is a bigint too small for the bigint thresholds', () => {
-    it('should convert it to a number and format it with the matching unit symbol', () => {
+  describe('When the value is a bigint below the bigint thresholds', () => {
+    it('should format the value with the matching unit symbol and drop the decimals', () => {
       // Act
-      const result = formatNumberByUnitThresholds(1_000n);
+      const result = formatNumberByUnitThresholds(1_500n);
 
       // Assert
       expect(result).toBe(`1${nbsp}k`);
