@@ -7,7 +7,7 @@ import {LoadEnergyLevelsSectionController} from "./LoadEnergyLevelsSectionContro
 const nbsp = '\u00A0';
 
 describe('LoadEnergyLevelsSectionController', () => {
-  it('should present computed energy levels from parsed save end-to-end with the real dependencies', async () => {
+  it('should present computed energy levels from the parsed save', async () => {
     // Arrange
     const {sections} = parseSaveSections(createFakeSaveContent());
 
