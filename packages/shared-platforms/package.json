@@ -7,7 +7,7 @@
     "./*": "./*"
   },
   "scripts": {
-    "test": "bun test",
+    "test": "bun --cwd ../.. test packages/shared-platforms",
     "lint:types": "tsc --noEmit"
   }
 }

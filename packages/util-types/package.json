@@ -8,7 +8,7 @@
     "./*": "./*"
   },
   "scripts": {
-    "test": "bun test",
+    "test": "bun --cwd ../.. test packages/util-types",
     "lint:types": "tsc --noEmit"
   }
 }

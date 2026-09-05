@@ -9,7 +9,7 @@
     "./*": "./*"
   },
   "scripts": {
-    "test": "bun test",
+    "test": "bun --cwd ../.. test packages/shared-save-processing",
     "lint:types": "tsc --noEmit"
   }
 }

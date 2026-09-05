@@ -5,6 +5,7 @@ entry = [
     "packages/ui-save-manager/src/entry-server.tsx",
     "packages/**/*.spec.js",
     "packages/**/*.spec.ts",
+    "testSetup.ts",
 ]
 
 ignorePatterns = [

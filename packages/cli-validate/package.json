@@ -5,8 +5,8 @@
   "type": "module",
   "main": "cli/validate-cli.js",
   "scripts": {
-    "test": "bun test",
-    "test:watch": "bun test --watch",
+    "test": "bun --cwd ../.. test packages/cli-validate",
+    "test:watch": "bun --cwd ../.. test --watch packages/cli-validate",
     "lint:types": "tsc --noEmit",
     "validate": "bun --cwd ../.. packages/cli-validate/cli/validate-cli.js ",
     "validate:test": "bun test packages/cli-validate",

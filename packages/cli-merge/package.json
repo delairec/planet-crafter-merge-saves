@@ -5,8 +5,8 @@
   "type": "module",
   "main": "cli/merge-cli.js",
   "scripts": {
-    "test": "bun test",
-    "test:watch": "bun test --watch",
+    "test": "bun --cwd ../.. test packages/cli-merge",
+    "test:watch": "bun --cwd ../.. test --watch packages/cli-merge",
     "lint:types": "tsc --noEmit",
     "merge": "bun --cwd ../.. packages/cli-merge/cli/merge-cli.js ",
     "merge:test": "bun test packages/cli-merge",

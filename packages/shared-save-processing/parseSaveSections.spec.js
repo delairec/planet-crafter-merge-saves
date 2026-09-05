@@ -150,8 +150,6 @@ describe('utils/parseSaveSections', () => {
       // Assert
       expect(errors.some(error => error.includes('{not valid json'))).toBe(true);
       expect(consoleLogSpy).not.toHaveBeenCalled();
-
-      consoleLogSpy.mockRestore();
     });
   });
 
