@@ -18,4 +18,3 @@ next-steps.txt
 
 # private agent context (satellite repository .do-not-commit)
 /.do-not-commit/
-/docs/tasks
