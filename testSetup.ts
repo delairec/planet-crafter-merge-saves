@@ -1,7 +1,3 @@
-import {afterEach, mock} from 'bun:test';
+import {enforceTestIsolation} from './testing/testIsolation';
 
-// Test isolation is enforced globally: no spec restores its own spies or clears its own mocks.
-afterEach(() => {
-  mock.restore();
-  mock.clearAllMocks();
-});
+enforceTestIsolation();
