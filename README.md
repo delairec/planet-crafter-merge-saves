@@ -15,19 +15,35 @@ In progress:
 Planned:
 - **Fix corrupted saves**: a tool to attempt to recover data from corrupted save files thanks to analysis.
 
+## Project Structure
+
+This is a Bun workspace monorepo, organized around Clean Architecture package prefixes:
+
+| Package                  | Role                                                                                                                    |
+|--------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| `shared-save-processing` | Save file wire format: types, parsing, serialization and JSON schemas.                                                  |
+| `shared-platforms`       | Runtime platform adapters (filesystem/process) for Bun and Node.                                                        |
+| `util-types`             | `RuntimePlatform` contract type, consumed (type-only) by `shared-platforms`.                                            |
+| `core-mapping`           | Domain/application/infrastructure/presentation layers: merge and validation engines, use cases, controllers, presenters. |
+| `cli-merge`              | Thin CLI: parses `--input`/`--output` arguments and delegates to `core-mapping`.                                        |
+| `cli-validate`           | Thin CLI: parses `--file` argument and delegates to `core-mapping`.                                                     |
+| `ui-save-manager`        | SolidStart UI to visualize save files, consuming `core-mapping` controllers.                                            |
 
 ## Merge and Validate tools
 Merges two **Planet Crafter** save files into a single one, preserving as much information as possible.
 
 ### Prerequisites
 
-Using [Bun](https://bun.sh) `v1.3.10` by default.
+Using [Bun](https://bun.sh) `v1.3.14` by default.
 
 ### Installation
 
 ```
 bun install
 ```
+
+The install hook `scripts/sync-private-context.sh` clones the private agent context repository when the account has
+access to it. Contributors without access get a skip message and an otherwise normal install.
 
 ### Scripts
 
@@ -38,6 +54,12 @@ bun merge
 ```
 
 Generates the merged saves in output directory, by processing all subfolders from input folder.
+
+```
+bun merge -- --input=<directory> --output=<directory>
+```
+
+Overrides the default `input` and `output` directories.
 
 ```
 bun validate -- --file=<filepath>
@@ -95,6 +117,28 @@ bun run audit
 Audits production and development dependencies. The two Picomatch advisories are explicitly allowlisted because
 `micromatch` still requires the affected 2.x dependency transitively; they should be removed as soon as that upstream
 constraint is updated.
+
+```
+bun run audit:quality
+```
+
+Runs the [Fallow](https://github.com/fallow-rs/fallow) audit and health reports (dead files, unused exports,
+unresolved imports) against `master`, as the CI does.
+
+#### Save Manager UI
+
+```
+bun run dev:ui
+```
+
+Starts the Save Manager UI in development mode.
+
+```
+bun run build:ui
+```
+
+Builds the UI for production. `bun run preview:ui` builds then serves the result, and `bun run clean:ui` removes the
+build output.
 
 #### With Node.js
 
