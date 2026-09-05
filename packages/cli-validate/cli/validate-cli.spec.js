@@ -17,6 +17,7 @@ import {
 describe('Validate CLI', () => {
   let consoleLogSpy;
   let consoleErrorSpy;
+  let consoleWarnSpy;
   let readTextFile;
   let exitProcess;
   let main;
@@ -25,6 +26,8 @@ describe('Validate CLI', () => {
     consoleLogSpy = spyOn(console, 'log').mockImplementation(() => {
     });
     consoleErrorSpy = spyOn(console, 'error').mockImplementation(() => {
+    });
+    consoleWarnSpy = spyOn(console, 'warn').mockImplementation(() => {
     });
 
     readTextFile = mock();
@@ -43,6 +46,7 @@ describe('Validate CLI', () => {
   afterEach(() => {
     consoleLogSpy.mockRestore();
     consoleErrorSpy.mockRestore();
+    consoleWarnSpy.mockRestore();
   });
 
   describe('When no file path is provided', () => {
@@ -144,15 +148,12 @@ describe('Validate CLI', () => {
     it('should log each warning', async () => {
       // Arrange
       readTextFile.mockResolvedValue(LEGACY_SAVE_CONTENT);
-      const warnMock = spyOn(console, 'warn').mockImplementation(() => {
-      });
 
       // Act
       await main(VALIDATE_SAVE_FILE_PATH);
 
       // Assert
-      expect(warnMock).toHaveBeenCalledWith(expect.stringContaining('⚠'));
-      warnMock.mockRestore();
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('⚠'));
     });
   });
 });
