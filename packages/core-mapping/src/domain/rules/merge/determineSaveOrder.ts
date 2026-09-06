@@ -1,21 +1,18 @@
-import {ParsedSections} from 'shared-save-processing/gameDefinitions';
+import {ParsedSections, SAVE_CONFIGURATION_SECTION_INDEX} from 'shared-save-processing/gameDefinitions';
+
+const PRIME_PLANET_ID = 'Prime';
 
 /**
- * @see GR-ORDER-1 in docs/business-rules.md
+ * @see GR-ORDER-1 in docs/game-rules.md
  */
 export function determineSaveOrder(parsedSaveA: ParsedSections, parsedSaveB: ParsedSections): [ParsedSections, ParsedSections] {
-  const [, , , , , , , , saveConfigurationsA] = parsedSaveA;
-  const [, , , , , , , , saveConfigurationsB] = parsedSaveB;
-
-  const configA = saveConfigurationsA?.[0];
-  const configB = saveConfigurationsB?.[0];
-
-  const save1IsPrime = configA?.planetId === 'Prime';
-  const save2IsPrime = configB?.planetId === 'Prime';
-
-  if (!save1IsPrime && save2IsPrime) {
+  if (!isPrimePlanetSave(parsedSaveA) && isPrimePlanetSave(parsedSaveB)) {
     return [parsedSaveB, parsedSaveA];
   }
 
   return [parsedSaveA, parsedSaveB];
+}
+
+function isPrimePlanetSave(parsedSave: ParsedSections): boolean {
+  return parsedSave[SAVE_CONFIGURATION_SECTION_INDEX]?.[0]?.planetId === PRIME_PLANET_ID;
 }

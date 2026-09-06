@@ -1,44 +1,33 @@
 import {WorldObject} from 'shared-save-processing/gameDefinitions';
-import {stringifyEntry} from 'shared-save-processing/stringifyEntry.js';
-
-export interface MergeWorldObjectsResult {
-  serialized: string;
-  saveAWorldObjectIds: Set<number>;
-}
+import {EntriesByOrigin} from './EntriesByOrigin';
 
 /**
  * @see GR-WO-1, GR-WO-2, GR-WO-3, GR-WO-4 in docs/game-rules.md
  */
-export function mergeWorldObjects(worldObjectsGeneratorA: Generator<WorldObject>, worldObjectsGeneratorB: Generator<WorldObject>, orphanWorldObjectIds: Set<number> = new Set()): MergeWorldObjectsResult {
-  const saveAWorldObjectIds = new Set<number>();
-  const mergedGenerator = createMergedWorldObjectsGenerator(worldObjectsGeneratorA, worldObjectsGeneratorB, orphanWorldObjectIds, saveAWorldObjectIds);
-  const serialized = serializeWorldObjects(mergedGenerator);
-  return {serialized, saveAWorldObjectIds};
-}
-
-function* createMergedWorldObjectsGenerator(worldObjectsGeneratorA: Generator<WorldObject>, worldObjectsGeneratorB: Generator<WorldObject>, orphanWorldObjectIds: Set<number>, saveAWorldObjectIds: Set<number>): Generator<WorldObject> {
+export function mergeWorldObjects(worldObjectsGeneratorA: Generator<WorldObject>, worldObjectsGeneratorB: Generator<WorldObject>, orphanWorldObjectIds: Set<number>): EntriesByOrigin<WorldObject> {
+  const fromSaveA: WorldObject[] = [];
   const positionKeysFromA = new Set<string>();
   for (const worldObject of worldObjectsGeneratorA) {
-    if (worldObject.pos) positionKeysFromA.add(buildWorldObjectPositionKey(worldObject));
-    saveAWorldObjectIds.add(worldObject.id);
-    yield worldObject;
+    if (worldObject.pos) {
+      positionKeysFromA.add(buildWorldObjectPositionKey(worldObject));
+    }
+    fromSaveA.push(worldObject);
   }
+
+  const fromSaveB: WorldObject[] = [];
   for (const worldObject of worldObjectsGeneratorB) {
-    if (orphanWorldObjectIds.has(worldObject.id)) continue;
+    if (orphanWorldObjectIds.has(worldObject.id)) {
+      continue;
+    }
+
     if (!worldObject.pos || !positionKeysFromA.has(buildWorldObjectPositionKey(worldObject))) {
-      yield worldObject;
+      fromSaveB.push(worldObject);
     }
   }
+
+  return {fromSaveA, fromSaveB};
 }
 
 function buildWorldObjectPositionKey(worldObject: WorldObject): string {
   return `${worldObject.planet ?? ''}:${worldObject.pos}`;
-}
-
-function serializeWorldObjects(worldObjectsGenerator: Generator<WorldObject>): string {
-  const parts: string[] = [];
-  for (const worldObject of worldObjectsGenerator) {
-    parts.push(stringifyEntry(worldObject));
-  }
-  return parts.join('|\n');
 }

@@ -42,11 +42,15 @@ export function validateSaveContent(mergedSave) {
 function parseSections(sections, errors) {
   return sections.map((section, sectionIndex) => {
     const trimmed = section.trim();
-    if (!trimmed) return [];
+    if (!trimmed) {
+      return [];
+    }
     return trimmed.split('|\n').reduce((entries, line, entryIndex) => {
       try {
         const parsed = JSON.parse(line);
-        if (parsed !== null && parsed !== undefined) entries.push(parsed);
+        if (parsed !== null && parsed !== undefined) {
+          entries.push(parsed);
+        }
       } catch {
         errors.push({code: VALIDATION_ISSUE_CODES.INVALID_JSON, detail: `Invalid JSON: ${line.slice(0, 60)}`, section: sectionIndex, entryIndex});
       }

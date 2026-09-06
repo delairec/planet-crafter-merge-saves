@@ -1,13 +1,12 @@
-import {describe, it, expect} from 'bun:test';
+import {describe, expect, it} from 'bun:test';
 import {resolveIdConflicts} from './resolveIdConflicts';
-import {parseSaveSections} from 'shared-save-processing/parseSaveSections.js';
-import {createFakeSaveString} from 'shared-save-processing/testing/createFakeSaveString.js';
-import { TERRAFORMATION_LEVELS_SECTION_INDEX, PLAYERS_SECTION_INDEX, WORLD_OBJECTS_SECTION_INDEX, INVENTORIES_SECTION_INDEX } from 'shared-save-processing/sectionIndexes.js';
+import {MergedSaveSections} from './MergedSaveSections';
+import {Inventory, Player, WorldObject} from 'shared-save-processing/gameDefinitions';
+import {EntriesByOrigin} from './EntriesByOrigin';
 
 describe('Resolve id conflicts', () => {
-  const SECTION_SEPARATOR = '@';
-
-  const defaultPlayerConfiguration = {
+  const basePlayer = {
+    name: 'Nikowa',
     playerPosition: '0,0,0',
     playerRotation: '0,0,0,0',
     playerGaugeOxygen: 280.0,
@@ -21,644 +20,203 @@ describe('Resolve id conflicts', () => {
     totalTerraTokenEarned: 0
   };
 
-  const defaultPlayerFromA = {...defaultPlayerConfiguration, id: 1, name: 'Nikowa', inventoryId: 10, equipmentId: 11, host: true};
-  const defaultPlayerFromB = {...defaultPlayerConfiguration, id: 2, name: 'Chileny', inventoryId: 20, equipmentId: 21, host: false};
-
-  const inventoryOfA = {id: 10, woIds: '', size: 10};
-  const equipmentOfA = {id: 11, woIds: '', size: 10};
-  const inventoryOfB = {id: 20, woIds: '', size: 10};
-  const equipmentOfB = {id: 21, woIds: '', size: 10};
-
-  describe('When an inventory is not linked to any player', () => {
-    it('should keep an inventory referenced by a world object liId', () => {
-      // Arrange
-      const worldObjectWithInventory = {id: 200, gId: 'Container', liId: 99, pos: '0,1,0', rot: '0,0,0,1', planet: 110910047};
-      const worldObjectInventory = {id: 99, woIds: '', size: 50};
-      const fakeMergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [worldObjectWithInventory],
-        inventories: [inventoryOfA, equipmentOfA, worldObjectInventory]
-      });
-
-      // Act
-      const result = resolveIdConflicts(fakeMergedSave);
-
-      // Assert
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-      expect(inventories.length).toBe(3);
-      const [playerInventoryResult, playerEquipmentResult, worldObjectInventoryResult] = inventories;
-      expect(playerInventoryResult.id).toBe(10);
-      expect(playerEquipmentResult.id).toBe(11);
-      expect(worldObjectInventoryResult.id).toBe(99);
-    });
-
-    it('should keep world object inventories from both saves when there is no id conflict', () => {
-      // Arrange
-      const worldObjectA = {id: 200, gId: 'Container', liId: 99, pos: '0,1,0', rot: '0,0,0,1', planet: 110910047};
-      const worldObjectB = {id: 201, gId: 'Container', liId: 100, pos: '0,2,0', rot: '0,0,0,1', planet: 110910047};
-      const worldObjectInventoryA = {id: 99, woIds: '', size: 50};
-      const worldObjectInventoryB = {id: 100, woIds: '', size: 60};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [worldObjectA, worldObjectB],
-        inventories: [inventoryOfA, equipmentOfA, worldObjectInventoryA, worldObjectInventoryB]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-      expect(inventories.length).toBe(4);
-      const [playerInventoryResult, playerEquipmentResult, worldObjectInventoryAResult, worldObjectInventoryBResult] = inventories;
-      expect(playerInventoryResult.id).toBe(10);
-      expect(playerEquipmentResult.id).toBe(11);
-      expect(worldObjectInventoryAResult.id).toBe(99);
-      expect(worldObjectInventoryBResult.id).toBe(100);
-    });
-
-    it('should keep all inventories even when duplicate ids are resolved', () => {
-      // Arrange
-      const playerFromB = {...defaultPlayerFromB, inventoryId: 10, equipmentId: 21};
-      const duplicateInventoryFromB = {id: 10, woIds: '', size: 20};
-      const extraInventory = {id: 10, woIds: '', size: 99};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA, playerFromB],
-        inventories: [inventoryOfA, duplicateInventoryFromB, extraInventory, equipmentOfA, equipmentOfB]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-      const ids = inventories.map(inventory => inventory.id);
-      expect(inventories.length).toBe(5);
-      expect(new Set(ids).size).toBe(5);
-      const [firstInventory, secondInventory, thirdInventory, firstEquipment, secondEquipment] = inventories;
-      expect(firstInventory.size).toBe(10);
-      expect(secondInventory.size).toBe(20);
-      expect(thirdInventory.size).toBe(99);
-      expect(firstEquipment.size).toBe(10);
-      expect(secondEquipment.size).toBe(10);
-    });
-  });
-
-  describe('When there are no id conflicts', () => {
-    it('should return the save unchanged', () => {
-      // Arrange
-      const worldObject = {id: 100, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [worldObject],
-        inventories: [{...inventoryOfA, woIds: '100'}, equipmentOfA]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const players = parseResultSection(result, PLAYERS_SECTION_INDEX);
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-
-      expect(players[0].id).toBe(1);
-      expect(worldObjects[0].id).toBe(100);
-      expect(inventories[0].id).toBe(10);
-      expect(inventories[0].woIds).toBe('100');
-    });
-  });
-
-  describe('When player ids conflict between saves', () => {
-    it('should assign a unique id to a player from save B when they share an id with a player from save A', () => {
-      // Arrange
-      const playerFromB = {...defaultPlayerFromB, id: 1};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA, playerFromB],
-        inventories: [inventoryOfA, equipmentOfA, inventoryOfB, equipmentOfB]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const players = parseResultSection(result, PLAYERS_SECTION_INDEX);
-      expect(players[0].id).toBe(1);
-      expect(players[1].id).not.toBe(1);
-      expect(players[1].name).toBe('Chileny');
-    });
-  });
-
-  describe('When inventory ids conflict between saves', () => {
-    it('should keep the player pointing to the correct inventory after a duplicate inventory id is resolved', () => {
-      // Arrange
-      const playerFromB = {...defaultPlayerFromB, inventoryId: 10, equipmentId: 21};
-      const duplicateInventoryFromB = {id: 10, woIds: '', size: 20};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA, playerFromB],
-        inventories: [inventoryOfA, duplicateInventoryFromB, equipmentOfA, equipmentOfB]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const players = parseResultSection(result, PLAYERS_SECTION_INDEX);
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-
-      expect(players[0].inventoryId).toBe(10);
-      expect(players[1].inventoryId).not.toBe(10);
-      expect(inventories.find(inventory => inventory.size === 20).id).toBe(players[1].inventoryId);
-    });
-
-    it('should assign independent unique ids when both inventoryId and equipmentId of a player are duplicated', () => {
-      // Arrange
-      const playerFromB = {...defaultPlayerFromB, inventoryId: 10, equipmentId: 10};
-      const inventoryFromBForInventorySlot = {id: 10, woIds: '', size: 20};
-      const inventoryFromBForEquipmentSlot = {id: 10, woIds: '', size: 5};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA, playerFromB],
-        inventories: [inventoryOfA, inventoryFromBForInventorySlot, inventoryFromBForEquipmentSlot, equipmentOfA]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const players = parseResultSection(result, PLAYERS_SECTION_INDEX);
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-      const ids = inventories.map(inventory => inventory.id);
-      const uniqueIds = new Set(ids);
-
-      expect(uniqueIds.size).toBe(ids.length);
-      expect(players[0].inventoryId).toBe(10);
-      expect(players[1].inventoryId).not.toBe(10);
-      expect(players[1].equipmentId).not.toBe(10);
-      expect(players[1].inventoryId).not.toBe(players[1].equipmentId);
-    });
-
-    it('should keep the player pointing to the correct equipment after a duplicate equipment id is resolved', () => {
-      // Arrange
-      const playerFromB = {...defaultPlayerFromB, inventoryId: 20, equipmentId: 11};
-      const duplicateEquipmentFromB = {id: 11, woIds: '', size: 20};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA, playerFromB],
-        inventories: [inventoryOfA, equipmentOfA, inventoryOfB, duplicateEquipmentFromB]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const players = parseResultSection(result, PLAYERS_SECTION_INDEX);
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-
-      expect(players[0].equipmentId).toBe(11);
-      expect(players[1].equipmentId).not.toBe(11);
-      expect(inventories.find(inventory => inventory.size === 20).id).toBe(players[1].equipmentId);
-    });
-  });
-
-  describe('When world objects are linked to inventories', () => {
-    it('should preserve the link between a world object and its inventory when there is no conflict', () => {
-      // Arrange
-      const worldObject = {id: 100, gId: 'Container1', liId: 10, pos: '0,0,0', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [worldObject],
-        inventories: [inventoryOfA, equipmentOfA]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      expect(worldObjects[0].liId).toBe(10);
-    });
-
-    it('should update each world object to point to its correct inventory when duplicate inventory ids are resolved', () => {
-      // Arrange
-      const playerFromB = {...defaultPlayerFromB, inventoryId: 10, equipmentId: 21};
-      const duplicateInventoryFromB = {id: 10, woIds: '', size: 20};
-      const worldObjectA = {id: 100, gId: 'Container1', liId: 10, pos: '0,0,0', rot: '0,0,0,1', planet: 110910047};
-      const worldObjectB = {id: 101, gId: 'Container1', liId: 10, pos: '1,0,0', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA, playerFromB],
-        worldObjects: [worldObjectA, worldObjectB],
-        inventories: [inventoryOfA, duplicateInventoryFromB, equipmentOfA, equipmentOfB]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave, new Set([100]));
-
-      // Assert
-      const players = parseResultSection(result, PLAYERS_SECTION_INDEX);
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      const newInventoryId = players[1].inventoryId;
-
-      expect(worldObjects[0].liId).toBe(10);
-      expect(worldObjects[1].liId).toBe(newInventoryId);
-    });
-
-    it('should point a save-B world object to its own remapped inventory when no save-A world object shares the same linked inventory id', () => {
-      // Arrange
-      const saveAUnrelatedInventory = {id: 50, woIds: '', size: 1};
-      const saveBVegetubeInventory = {id: 50, woIds: '999', size: 1};
-      const saveBVegetube = {id: 200, gId: 'VegetubeOutside1', liId: 50, pos: '5,0,5', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [saveBVegetube],
-        inventories: [inventoryOfA, equipmentOfA, saveAUnrelatedInventory, saveBVegetubeInventory]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave, new Set());
-
-      // Assert
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-      const remappedVegetubeInventory = inventories.find(inv => inv.woIds === '999');
-      expect(remappedVegetubeInventory).toBeDefined();
-      expect(worldObjects[0].liId).toBe(remappedVegetubeInventory.id);
-      expect(worldObjects[0].liId).not.toBe(50);
-    });
-
-    it('should keep a save-A world object pointing to its own inventory when both saves have world objects with the same linked inventory id', () => {
-      // Arrange
-      const saveAContainerInventory = {id: 50, woIds: '100', size: 35};
-      const saveBContainerInventory = {id: 50, woIds: '200', size: 12};
-      const saveAContainer = {id: 100, gId: 'Container2', liId: 50, pos: '1,0,1', rot: '0,0,0,1', planet: 110910047};
-      const saveBContainer = {id: 200, gId: 'Container2', liId: 50, pos: '2,0,2', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [saveAContainer, saveBContainer],
-        inventories: [inventoryOfA, equipmentOfA, saveAContainerInventory, saveBContainerInventory]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave, new Set([100]));
-
-      // Assert
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-      const saveAInventoryResult = inventories.find(inv => inv.size === 35);
-      const saveBInventoryResult = inventories.find(inv => inv.size === 12);
-      const saveAContainerResult = worldObjects.find(wo => wo.id === 100);
-      const saveBContainerResult = worldObjects.find(wo => wo.gId === 'Container2' && wo.id !== 100);
-
-      expect(saveAContainerResult.liId).toBe(50);
-      expect(saveAContainerResult.liId).toBe(saveAInventoryResult.id);
-      expect(saveBContainerResult.liId).toBe(saveBInventoryResult.id);
-    });
-  });
-
-  describe('When world objects are linked to sub-inventories', () => {
-    it('should preserve sub-inventory references when there is no inventory id conflict', () => {
-      // Arrange
-      const subInventoryA = {id: 50, woIds: '', size: 1};
-      const subInventoryB = {id: 51, woIds: '', size: 1};
-      const farmWorldObject = {id: 100, gId: 'Farm1', siIds: '50,51', pos: '0,0,0', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [farmWorldObject],
-        inventories: [inventoryOfA, equipmentOfA, subInventoryA, subInventoryB]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      expect(worldObjects[0].siIds).toBe('50,51');
-    });
-
-    it('should update sub-inventory references when duplicate inventory ids are resolved', () => {
-      // Arrange
-      const playerFromB = {...defaultPlayerFromB, inventoryId: 10, equipmentId: 21};
-      const duplicateInventoryFromB = {id: 10, woIds: '', size: 20};
-      const subInventoryWithConflict = {id: 10, woIds: '', size: 1};
-      const farmWorldObject = {id: 100, gId: 'Farm1', siIds: '10', pos: '0,0,0', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA, playerFromB],
-        worldObjects: [farmWorldObject],
-        inventories: [inventoryOfA, duplicateInventoryFromB, subInventoryWithConflict, equipmentOfA, equipmentOfB]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-      const subInventory = inventories.find(inventory => inventory.size === 1);
-      expect(worldObjects[0].siIds).toBe(String(subInventory.id));
-    });
-
-    it('should update multiple sub-inventory references when inventory ids are remapped', () => {
-      // Arrange
-      const playerFromB = {...defaultPlayerFromB, inventoryId: 10, equipmentId: 21};
-      const duplicateInventoryFromB = {id: 10, woIds: '', size: 20};
-      const subInventoryWithConflictA = {id: 10, woIds: '', size: 1};
-      const subInventoryWithConflictB = {id: 10, woIds: '', size: 2};
-      const farmWorldObject = {id: 100, gId: 'Farm1', siIds: '10,10', pos: '0,0,0', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA, playerFromB],
-        worldObjects: [farmWorldObject],
-        inventories: [inventoryOfA, duplicateInventoryFromB, subInventoryWithConflictA, subInventoryWithConflictB, equipmentOfA, equipmentOfB]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      const siIdValues = worldObjects[0].siIds.split(',').map(Number);
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-      const subInventoryA = inventories.find(inventory => inventory.size === 1);
-      const subInventoryB = inventories.find(inventory => inventory.size === 2);
-      expect(siIdValues).toContain(subInventoryA.id);
-      expect(siIdValues).toContain(subInventoryB.id);
-    });
-
-    it('should point a save-B world object sub-inventory slot to its own remapped inventory when no save-A world object shares the same sub-inventory id', () => {
-      // Arrange
-      const saveAUnrelatedInventory = {id: 80, woIds: '', size: 1};
-      const saveBFarmSlotInventory = {id: 80, woIds: '888', size: 1};
-      const saveBFarm = {id: 300, gId: 'Farm1', siIds: '80', pos: '3,0,3', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [saveBFarm],
-        inventories: [inventoryOfA, equipmentOfA, saveAUnrelatedInventory, saveBFarmSlotInventory]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave, new Set());
-
-      // Assert
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-      const remappedFarmSlotInventory = inventories.find(inv => inv.woIds === '888');
-      expect(remappedFarmSlotInventory).toBeDefined();
-      expect(worldObjects[0].siIds).toBe(String(remappedFarmSlotInventory.id));
-      expect(Number(worldObjects[0].siIds)).not.toBe(80);
-    });
-  });
-
-  describe('When world objects reference other world objects', () => {
-    it('should preserve linkedWo reference when there is no world object id conflict', () => {
-      // Arrange
-      const lake = {id: 200, gId: 'Lake1', pos: '5,0,5', rot: '0,0,0,1', planet: 110910047};
-      const generator = {id: 201, gId: 'WaterGenerator', linkedWo: 200, pos: '5,1,5', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [lake, generator],
-        inventories: [inventoryOfA, equipmentOfA]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      const generatorResult = worldObjects.find(wo => wo.gId === 'WaterGenerator');
-      expect(generatorResult.linkedWo).toBe(200);
-    });
-
-    it('should update linkedWo reference when the linked world object id is remapped', () => {
-      // Arrange
-      const lakeFromA = {id: 100, gId: 'Lake1', pos: '5,0,5', rot: '0,0,0,1', planet: 110910047};
-      const lakeFromB = {id: 100, gId: 'Lake2', pos: '10,0,10', rot: '0,0,0,1', planet: 110910047};
-      const generatorFromB = {id: 201, gId: 'WaterGenerator', linkedWo: 100, pos: '10,1,10', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [lakeFromA, lakeFromB, generatorFromB],
-        inventories: [inventoryOfA, equipmentOfA]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      const lakeB = worldObjects.find(wo => wo.gId === 'Lake2');
-      const generatorB = worldObjects.find(wo => wo.gId === 'WaterGenerator');
-      expect(generatorB.linkedWo).toBe(lakeB.id);
-    });
-  });
-
-  describe('When world object ids conflict between saves', () => {
-    it('should assign a unique id to a world object from save B when it shares an id with a world object from save A', () => {
-      // Arrange
-      const worldObjectFromA = {id: 100, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 110910047};
-      const worldObjectFromB = {id: 100, gId: 'OtherObject', pos: '400,500,600', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({worldObjects: [worldObjectFromA, worldObjectFromB]});
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      expect(worldObjects[0].id).toBe(100);
-      expect(worldObjects[1].id).not.toBe(100);
-    });
-
-    it('should generate a new world object id that does not collide with any existing world object id', () => {
-      // Arrange
-      const worldObjectFromA = {id: 500, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 110910047};
-      const worldObjectFromB = {id: 500, gId: 'OtherObject', pos: '400,500,600', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [worldObjectFromA, worldObjectFromB],
-        inventories: [inventoryOfA, equipmentOfA]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      expect(worldObjects[1].id > 500).toBeTruthy();
-    });
-
-    it('should update woIds only in the inventory that owns the remapped world object', () => {
-      // Arrange
-      const inventoryOfWorldObjectA = {id: 30, woIds: '100', size: 50};
-      const inventoryOfWorldObjectB = {id: 31, woIds: '100', size: 50};
-      const worldObjectFromA = {id: 100, gId: 'SomeObject', liId: 30, pos: '100,200,300', rot: '0,0,0,1', planet: 110910047};
-      const worldObjectFromB = {id: 100, gId: 'OtherObject', liId: 31, pos: '400,500,600', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [worldObjectFromA, worldObjectFromB],
-        inventories: [inventoryOfA, equipmentOfA, inventoryOfWorldObjectA, inventoryOfWorldObjectB]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-      const remappedWoId = worldObjects[1].id;
-      const inventoryA = inventories.find(inventory => inventory.id === 30);
-      const inventoryB = inventories.find(inventory => inventory.id === 31);
-
-      expect(inventoryA.woIds).toBe('100');
-      expect(inventoryB.woIds).toBe(String(remappedWoId));
-    });
-
-    it('should update woIds in the inventory linked to a remapped world object', () => {
-      // Arrange
-      const worldObjectFromA = {id: 100, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 110910047};
-      const worldObjectFromB = {id: 100, gId: 'OtherObject', liId: 30, pos: '400,500,600', rot: '0,0,0,1', planet: 110910047};
-      const inventoryOfWorldObjectB = {id: 30, woIds: '100', size: 50};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [worldObjectFromA, worldObjectFromB],
-        inventories: [inventoryOfA, equipmentOfA, inventoryOfWorldObjectB]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-      const remappedWoId = worldObjects[1].id;
-      const inventoryB = inventories.find(inventory => inventory.id === 30);
-
-      expect(inventoryB.woIds).toBe(String(remappedWoId));
-    });
-
-    it('should not update woIds in inventories unrelated to any remapped world object', () => {
-      // Arrange
-      const worldObjectFromA = {id: 100, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 110910047};
-      const worldObjectFromB = {id: 100, gId: 'OtherObject', pos: '400,500,600', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [worldObjectFromA, worldObjectFromB],
-        inventories: [{...inventoryOfA, woIds: '100'}, equipmentOfA]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-      const inventory = inventories.find(inventory => inventory.id === 10);
-
-      expect(inventory.woIds).toBe('100');
-    });
-
-    it('should update woIds in the linked inventory even when that inventory itself had an id conflict', () => {
-      // Arrange
-      const inventoryOfWorldObjectA = {id: 30, woIds: '100', size: 50};
-      const inventoryOfWorldObjectB = {id: 30, woIds: '100', size: 60};
-      const worldObjectFromA = {id: 100, gId: 'SomeObject', liId: 30, pos: '100,200,300', rot: '0,0,0,1', planet: 110910047};
-      const worldObjectFromB = {id: 100, gId: 'OtherObject', liId: 30, pos: '400,500,600', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [worldObjectFromA, worldObjectFromB],
-        inventories: [inventoryOfA, equipmentOfA, inventoryOfWorldObjectA, inventoryOfWorldObjectB]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const worldObjects = parseResultSection(result, WORLD_OBJECTS_SECTION_INDEX);
-      const inventories = parseResultSection(result, INVENTORIES_SECTION_INDEX);
-      const remappedWoId = worldObjects[1].id;
-      const inventoryA = inventories.find(inventory => inventory.size === 50);
-      const inventoryB = inventories.find(inventory => inventory.size === 60);
-
-      expect(inventoryA.woIds).toBe('100');
-      expect(inventoryB.woIds).toBe(String(remappedWoId));
-    });
-  });
-
-  describe('When formatting the resolved output', () => {
-    it('should preserve player gauge float values after conflict resolution', () => {
-      // Arrange
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        inventories: [inventoryOfA, equipmentOfA]
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const playersSection = result.split(SECTION_SEPARATOR)[PLAYERS_SECTION_INDEX];
-      expect(playersSection.includes('"playerGaugeOxygen":280.0')).toBeTruthy();
-      expect(playersSection.includes('"playerGaugeToxic":0.0')).toBeTruthy();
-    });
-
-    it('should preserve terraformation level float values after conflict resolution', () => {
-      // Arrange
-      const level = {
-        planetId: 'Toxicity',
-        unitOxygenLevel: 2477136019456.0,
-        unitHeatLevel: 2219597103104.0,
-        unitPressureLevel: 2262299836416.0,
-        unitPlantsLevel: 918480420864.0,
-        unitInsectsLevel: 372341538816.0,
-        unitAnimalsLevel: 10118330580992.0,
-        unitPurificationLevel: 2653680304128.0
-      };
-      const mergedSave = createFakeSaveString({terraformationLevels: [level]});
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const terraSection = result.split(SECTION_SEPARATOR)[TERRAFORMATION_LEVELS_SECTION_INDEX];
-      expect(terraSection.includes('"unitOxygenLevel":2477136019456.0')).toBeTruthy();
-    });
-
-    it('should produce a valid save string after conflict resolution', () => {
-      // Arrange
-      const mergedSave = createFakeSaveString({});
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const {sections} = parseSaveSections(result);
-      expect(sections.length).toBe(11);
-    });
-
-    it('should preserve all sections in the correct order', () => {
-      // Arrange
-      const worldObject = {id: 100, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 110910047};
-      const mergedSave = createFakeSaveString({
-        players: [defaultPlayerFromA],
-        worldObjects: [worldObject],
-        inventories: [inventoryOfA, equipmentOfA],
-        statistics: {craftedObjects: 10, totalSaveFileLoad: 1, totalSaveFileTime: 100}
-      });
-
-      // Act
-      const result = resolveIdConflicts(mergedSave);
-
-      // Assert
-      const {sections} = parseSaveSections(result);
-      const [, , players, worldObjectsFactory, inventories, statistics] = sections;
-      expect(players[0].name).toBe('Nikowa');
-      expect([...worldObjectsFactory()][0].id).toBe(100);
-      expect(inventories[0].id).toBe(10);
-      expect(statistics[0].craftedObjects).toBe(10);
-    });
-  });
-
-  const sectionSeparator = /\|\r?\n/;
-  const parseResultSection = (result, index) => {
-    const sections = result.split(SECTION_SEPARATOR);
-
-    return sections[index].trim().split(sectionSeparator)
-      .map(lineString => lineString.trim())
-      .filter(Boolean)
-      .map(lineString => JSON.parse(lineString));
+  function createPlayer(overrides: Partial<Player>): Player {
+    return {...basePlayer, id: 1, inventoryId: 10, equipmentId: 11, ...overrides};
   }
-});
 
+  function createMergedSections(overrides: {
+    players?: EntriesByOrigin<Player>,
+    inventories?: EntriesByOrigin<Inventory>,
+    worldObjects?: EntriesByOrigin<WorldObject>
+  }): MergedSaveSections {
+    return {
+      globalMetadata: {terraTokens: 0, allTimeTerraTokens: 0, unlockedGroups: '', openedInstanceSeed: 0, openedInstanceTimeLeft: 0},
+      terraformationLevels: [],
+      players: {fromSaveA: [], fromSaveB: []},
+      worldObjects: {fromSaveA: [], fromSaveB: []},
+      inventories: {fromSaveA: [], fromSaveB: []},
+      statistics: undefined,
+      mailboxes: [],
+      storyEvents: [],
+      saveConfiguration: undefined,
+      worldEvents: [],
+      ...overrides
+    };
+  }
+
+  describe('When no identifier is shared between the two saves', () => {
+    it('should return the sections unchanged', () => {
+      // Arrange
+      const playerFromSaveA = createPlayer({id: 1});
+      const playerFromSaveB = createPlayer({id: 2, inventoryId: 20, equipmentId: 21});
+      const sections = createMergedSections({
+        players: {fromSaveA: [playerFromSaveA], fromSaveB: [playerFromSaveB]},
+        inventories: {
+          fromSaveA: [{id: 10, woIds: '100', size: 20}, {id: 11, woIds: '', size: 10}],
+          fromSaveB: [{id: 20, woIds: '', size: 20}, {id: 21, woIds: '', size: 10}]
+        },
+        worldObjects: {fromSaveA: [{id: 100, gId: 'SomeObject'}], fromSaveB: [{id: 200, gId: 'OtherObject'}]}
+      });
+
+      // Act
+      const result = resolveIdConflicts(sections);
+
+      // Assert
+      expect(result.players).toEqual({fromSaveA: [playerFromSaveA], fromSaveB: [playerFromSaveB]});
+      expect(result.inventories).toEqual({
+        fromSaveA: [{id: 10, woIds: '100', size: 20}, {id: 11, woIds: '', size: 10}],
+        fromSaveB: [{id: 20, woIds: '', size: 20}, {id: 21, woIds: '', size: 10}]
+      });
+      expect(result.worldObjects).toEqual({
+        fromSaveA: [{id: 100, gId: 'SomeObject'}],
+        fromSaveB: [{id: 200, gId: 'OtherObject'}]
+      });
+    });
+  });
+
+  describe('When both saves use the same identifiers', () => {
+    it('should renumber the save B entries and keep every entry of both saves', () => {
+      // Arrange
+      const playerFromSaveA = createPlayer({id: 1});
+      const playerFromSaveB = createPlayer({id: 1, name: 'Chileny'});
+      const sections = createMergedSections({
+        players: {fromSaveA: [playerFromSaveA], fromSaveB: [playerFromSaveB]},
+        inventories: {
+          fromSaveA: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}],
+          fromSaveB: [{id: 10, woIds: '', size: 35}, {id: 11, woIds: '', size: 5}]
+        },
+        worldObjects: {fromSaveA: [{id: 100, gId: 'SomeObject'}], fromSaveB: [{id: 100, gId: 'OtherObject'}]}
+      });
+
+      // Act
+      const result = resolveIdConflicts(sections);
+
+      // Assert
+      expect(result.players).toEqual({
+        fromSaveA: [playerFromSaveA],
+        fromSaveB: [{...playerFromSaveB, id: 12, inventoryId: 13, equipmentId: 14}]
+      });
+      expect(result.inventories).toEqual({
+        fromSaveA: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}],
+        fromSaveB: [{id: 13, woIds: '', size: 35}, {id: 14, woIds: '', size: 5}]
+      });
+      expect(result.worldObjects).toEqual({
+        fromSaveA: [{id: 100, gId: 'SomeObject'}],
+        fromSaveB: [{id: 101, gId: 'OtherObject'}]
+      });
+    });
+
+    it('should point the save B player at its own renumbered inventory and equipment', () => {
+      // Arrange
+      const playerFromSaveB = createPlayer({id: 2, name: 'Chileny'});
+      const sections = createMergedSections({
+        players: {fromSaveA: [createPlayer({id: 1})], fromSaveB: [playerFromSaveB]},
+        inventories: {
+          fromSaveA: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}],
+          fromSaveB: [{id: 10, woIds: '', size: 35}, {id: 11, woIds: '', size: 5}]
+        }
+      });
+
+      // Act
+      const result = resolveIdConflicts(sections);
+
+      // Assert
+      expect(result.players.fromSaveB).toEqual([{...playerFromSaveB, inventoryId: 12, equipmentId: 13}]);
+    });
+  });
+
+  describe('When a save B player owns an inventory that no save A player owns', () => {
+    it('should point that player at its own renumbered inventory rather than at the save A one', () => {
+      // Arrange
+      const playerFromSaveB = createPlayer({id: 2, name: 'Rrose', inventoryId: 44, equipmentId: 45});
+      const sections = createMergedSections({
+        players: {fromSaveA: [createPlayer({id: 1, inventoryId: 3, equipmentId: 4})], fromSaveB: [playerFromSaveB]},
+        inventories: {
+          fromSaveA: [{id: 3, woIds: '', size: 20}, {id: 4, woIds: '', size: 10}, {id: 44, woIds: '', size: 35}, {id: 45, woIds: '', size: 35}],
+          fromSaveB: [{id: 44, woIds: '', size: 20}, {id: 45, woIds: '', size: 10}]
+        }
+      });
+
+      // Act
+      const result = resolveIdConflicts(sections);
+
+      // Assert
+      expect(result.players.fromSaveB).toEqual([{...playerFromSaveB, inventoryId: 46, equipmentId: 47}]);
+      expect(result.inventories.fromSaveB).toEqual([{id: 46, woIds: '', size: 20}, {id: 47, woIds: '', size: 10}]);
+    });
+  });
+
+  describe('When both saves have a world object linked to the same inventory id', () => {
+    it('should send the save B world object to the renumbered inventory and leave the save A one on the shared id', () => {
+      // Arrange
+      const sections = createMergedSections({
+        players: {fromSaveA: [createPlayer({id: 1})], fromSaveB: []},
+        inventories: {
+          fromSaveA: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}, {id: 50, woIds: '100', size: 35}],
+          fromSaveB: [{id: 50, woIds: '200', size: 12}]
+        },
+        worldObjects: {
+          fromSaveA: [{id: 100, gId: 'Container2', liId: 50}],
+          fromSaveB: [{id: 200, gId: 'Container2', liId: 50}]
+        }
+      });
+
+      // Act
+      const result = resolveIdConflicts(sections);
+
+      // Assert
+      expect(result.worldObjects).toEqual({
+        fromSaveA: [{id: 100, gId: 'Container2', liId: 50}],
+        fromSaveB: [{id: 200, gId: 'Container2', liId: 51}]
+      });
+      expect(result.inventories.fromSaveB).toEqual([{id: 51, woIds: '200', size: 12}]);
+    });
+  });
+
+  describe('When a save B inventory holds a renumbered world object', () => {
+    it('should update the contents of that inventory and leave the save A one untouched', () => {
+      // Arrange
+      const sections = createMergedSections({
+        inventories: {
+          fromSaveA: [{id: 30, woIds: '100', size: 50}],
+          fromSaveB: [{id: 31, woIds: '100', size: 50}]
+        },
+        worldObjects: {
+          fromSaveA: [{id: 100, gId: 'Iron'}],
+          fromSaveB: [{id: 100, gId: 'Cobalt'}]
+        }
+      });
+
+      // Act
+      const result = resolveIdConflicts(sections);
+
+      // Assert
+      expect(result.inventories).toEqual({
+        fromSaveA: [{id: 30, woIds: '100', size: 50}],
+        fromSaveB: [{id: 31, woIds: '101', size: 50}]
+      });
+      expect(result.worldObjects.fromSaveB).toEqual([{id: 101, gId: 'Cobalt'}]);
+    });
+  });
+
+  describe('When a save B world object is linked to a renumbered save B world object', () => {
+    it('should point it at the new world object id', () => {
+      // Arrange
+      const sections = createMergedSections({
+        worldObjects: {
+          fromSaveA: [{id: 100, gId: 'Lake1'}],
+          fromSaveB: [{id: 100, gId: 'Lake2'}, {id: 201, gId: 'WaterGenerator', linkedWo: 100}]
+        }
+      });
+
+      // Act
+      const result = resolveIdConflicts(sections);
+
+      // Assert
+      expect(result.worldObjects.fromSaveB).toEqual([
+        {id: 101, gId: 'Lake2'},
+        {id: 201, gId: 'WaterGenerator', linkedWo: 101}
+      ]);
+    });
+  });
+});

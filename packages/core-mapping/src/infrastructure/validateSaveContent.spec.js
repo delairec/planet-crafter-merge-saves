@@ -15,7 +15,7 @@ import {
 
 describe('validateSaveContent', () => {
 
-  describe('When validateSaveContent is invoked', () => {
+  describe('When the save meets every rule', () => {
     it('should return a validation result with a validity flag and a list of errors', () => {
       // Arrange
       const save = createFakeSaveContent();
@@ -28,7 +28,7 @@ describe('validateSaveContent', () => {
       expect('errors' in result).toBeTruthy();
     });
 
-    it('should report a valid save as valid with no errors', () => {
+    it('should report the save as valid with no errors', () => {
       // Arrange
       const save = createFakeSaveContent();
 
@@ -42,359 +42,405 @@ describe('validateSaveContent', () => {
   });
 
   describe('When validating the overall save structure', () => {
-    it('should reject a save that does not have the expected number of sections', () => {
-      // Arrange
-      const invalidSave = 'not a valid save';
+    describe('When the save does not have the expected number of sections', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const invalidSave = 'not a valid save';
 
-      // Act
-      const result = validateSaveContent(invalidSave);
+        // Act
+        const result = validateSaveContent(invalidSave);
 
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.length > 0).toBeTruthy();
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.length > 0).toBeTruthy();
+      });
     });
 
-    it('should locate each error with its section and entry position', () => {
-      // Arrange
-      const save = createFakeSaveString({
-        globalMetadata: {
-          // @ts-expect-error intentionally invalid type to test validation
-          terraTokens: 'not-a-number',
-          allTimeTerraTokens: 200,
-          unlockedGroups: 'BootsSpeed1',
-          openedInstanceSeed: 0,
-          openedInstanceTimeLeft: 0
-        }
+    describe('When an entry breaks a schema rule', () => {
+      it('should locate each error with its section and entry position', () => {
+        // Arrange
+        const save = createFakeSaveString({
+          globalMetadata: {
+            // @ts-expect-error intentionally invalid type to test validation
+            terraTokens: 'not-a-number',
+            allTimeTerraTokens: 200,
+            unlockedGroups: 'BootsSpeed1',
+            openedInstanceSeed: 0,
+            openedInstanceTimeLeft: 0
+          }
+        });
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.some(error => 'section' in error && 'entryIndex' in error)).toBeTruthy();
       });
-
-      // Act
-      const result = validateSaveContent(save);
-
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(error => 'section' in error && 'entryIndex' in error)).toBeTruthy();
     });
   });
 
   describe('When validating the global metadata section', () => {
-    it('should reject when terraTokens is not an integer', () => {
-      // Arrange
-      // @ts-expect-error intentionally invalid type to test validation
-      const save = createFakeSaveString({globalMetadata: {...createGlobalMetadata(), terraTokens: 'abc'}});
+    describe('When terraTokens is not an integer', () => {
+      it('should reject the save', () => {
+        // Arrange
+        // @ts-expect-error intentionally invalid type to test validation
+        const save = createFakeSaveString({globalMetadata: {...createGlobalMetadata(), terraTokens: 'abc'}});
 
-      // Act
-      const result = validateSaveContent(save);
+        // Act
+        const result = validateSaveContent(save);
 
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 0)).toBeTruthy();
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.some(e => e.section === 0)).toBeTruthy();
+      });
     });
 
-    it('should reject when a required field is missing', () => {
-      // Arrange
-      const {openedInstanceTimeLeft: _, ...metadataWithoutTimeLeft} = createGlobalMetadata();
-      // @ts-expect-error intentionally missing required field to test validation
-      const save = createFakeSaveString({globalMetadata: metadataWithoutTimeLeft});
+    describe('When a required field is missing', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const {openedInstanceTimeLeft: _, ...metadataWithoutTimeLeft} = createGlobalMetadata();
+        // @ts-expect-error intentionally missing required field to test validation
+        const save = createFakeSaveString({globalMetadata: metadataWithoutTimeLeft});
 
-      // Act
-      const result = validateSaveContent(save);
+        // Act
+        const result = validateSaveContent(save);
 
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 0)).toBeTruthy();
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.some(e => e.section === 0)).toBeTruthy();
+      });
     });
   });
 
   describe('When validating the terraformation levels section', () => {
-    it('should reject when planetId is missing', () => {
-      // Arrange
-      const {planetId: _, ...levelWithoutPlanetId} = createTerraformationLevel();
-      const save = createFakeSaveContent({terraformationLevels: [levelWithoutPlanetId]});
+    describe('When planetId is missing', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const {planetId: _, ...levelWithoutPlanetId} = createTerraformationLevel();
+        const save = createFakeSaveContent({terraformationLevels: [levelWithoutPlanetId]});
 
-      // Act
-      const result = validateSaveContent(save);
+        // Act
+        const result = validateSaveContent(save);
 
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 1)).toBeTruthy();
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.some(e => e.section === 1)).toBeTruthy();
+      });
     });
 
-    it('should reject when a level field is negative', () => {
-      // Arrange
-      const save = createFakeSaveContent({
-        terraformationLevels: [createTerraformationLevel({unitOxygenLevel: -1})]
+    describe('When a level field is negative', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({
+          terraformationLevels: [createTerraformationLevel({unitOxygenLevel: -1})]
+        });
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.some(e => e.section === 1)).toBeTruthy();
       });
-
-      // Act
-      const result = validateSaveContent(save);
-
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 1)).toBeTruthy();
     });
   });
 
   describe('When validating the players section', () => {
-    it('should reject when a required player field is missing', () => {
-      // Arrange
-      const {host: _, ...playerWithoutHost} = createPlayer();
-      const save = createFakeSaveContent({players: [playerWithoutHost]});
+    describe('When a required player field is missing', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const {host: _, ...playerWithoutHost} = createPlayer();
+        const save = createFakeSaveContent({players: [playerWithoutHost]});
 
-      // Act
-      const result = validateSaveContent(save);
+        // Act
+        const result = validateSaveContent(save);
 
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 2)).toBeTruthy();
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.some(e => e.section === 2)).toBeTruthy();
+      });
     });
 
-    it('should reject when playerPosition has an invalid format', () => {
-      // Arrange
-      const save = createFakeSaveContent({players: [createPlayer({playerPosition: 'bad-format'})]});
+    describe('When playerPosition has an invalid format', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({players: [createPlayer({playerPosition: 'bad-format'})]});
 
-      // Act
-      const result = validateSaveContent(save);
+        // Act
+        const result = validateSaveContent(save);
 
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 2)).toBeTruthy();
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.some(e => e.section === 2)).toBeTruthy();
+      });
     });
 
-    it('should reject when playerGaugeOxygen is negative', () => {
-      // Arrange
-      const save = createFakeSaveContent({players: [createPlayer({playerGaugeOxygen: -1})]});
+    describe('When playerGaugeOxygen is negative', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({players: [createPlayer({playerGaugeOxygen: -1})]});
 
-      // Act
-      const result = validateSaveContent(save);
+        // Act
+        const result = validateSaveContent(save);
 
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 2)).toBeTruthy();
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.some(e => e.section === 2)).toBeTruthy();
+      });
     });
 
-    it('should accept players without cameraView, totalCraftedObjects and totalTerraTokenEarned (backward compatibility)', () => {
-      // Arrange
-      const {cameraView: _cameraView, totalCraftedObjects: _totalCraftedObjects, totalTerraTokenEarned: _totalTerraTokenEarned, ...legacyPlayer} = createPlayer();
-      const save = createFakeSaveContent({players: [legacyPlayer]});
+    describe('When a player comes from an older save without cameraView, totalCraftedObjects and totalTerraTokenEarned', () => {
+      it('should accept the save', () => {
+        // Arrange
+        const {cameraView: _cameraView, totalCraftedObjects: _totalCraftedObjects, totalTerraTokenEarned: _totalTerraTokenEarned, ...legacyPlayer} = createPlayer();
+        const save = createFakeSaveContent({players: [legacyPlayer]});
 
-      // Act
-      const result = validateSaveContent(save);
+        // Act
+        const result = validateSaveContent(save);
 
-      // Assert
-      expect(result.isValid).toBe(true);
+        // Assert
+        expect(result.isValid).toBe(true);
+      });
     });
   });
 
   describe('When validating the inventories section', () => {
-    it('should reject when size is missing', () => {
-      // Arrange
-      const {size: _, ...inventoryWithoutSize} = createInventory();
-      const save = createFakeSaveContent({inventories: [inventoryWithoutSize, createEquipment()]});
+    describe('When size is missing', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const {size: _, ...inventoryWithoutSize} = createInventory();
+        const save = createFakeSaveContent({inventories: [inventoryWithoutSize, createEquipment()]});
 
-      // Act
-      const result = validateSaveContent(save);
+        // Act
+        const result = validateSaveContent(save);
 
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 4)).toBeTruthy();
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.some(e => e.section === 4)).toBeTruthy();
+      });
     });
 
-    it('should reject when size is negative', () => {
-      // Arrange
-      const save = createFakeSaveContent({inventories: [createInventory({size: -1}), createEquipment()]});
+    describe('When size is negative', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({inventories: [createInventory({size: -1}), createEquipment()]});
 
-      // Act
-      const result = validateSaveContent(save);
+        // Act
+        const result = validateSaveContent(save);
 
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 4)).toBeTruthy();
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.some(e => e.section === 4)).toBeTruthy();
+      });
     });
   });
 
   describe('When validating the statistics section', () => {
-    it('should reject when craftedObjects is negative', () => {
-      // Arrange
-      const save = createFakeSaveContent({statistics: createStatistics({craftedObjects: -5})});
+    describe('When craftedObjects is negative', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({statistics: createStatistics({craftedObjects: -5})});
 
-      // Act
-      const result = validateSaveContent(save);
+        // Act
+        const result = validateSaveContent(save);
 
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 5)).toBeTruthy();
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.some(e => e.section === 5)).toBeTruthy();
+      });
     });
   });
 
   describe('When validating the save configuration section', () => {
-    it('should reject when saveDisplayName is missing', () => {
-      // Arrange
-      const {saveDisplayName: _, ...configWithoutName} = createSaveConfiguration();
-      const save = createFakeSaveContent({saveConfiguration: configWithoutName});
+    describe('When saveDisplayName is missing', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const {saveDisplayName: _, ...configWithoutName} = createSaveConfiguration();
+        const save = createFakeSaveContent({saveConfiguration: configWithoutName});
 
-      // Act
-      const result = validateSaveContent(save);
+        // Act
+        const result = validateSaveContent(save);
 
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 8)).toBeTruthy();
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.some(e => e.section === 8)).toBeTruthy();
+      });
     });
 
-    it('should reject when modifierTerraformationPace is negative', () => {
-      // Arrange
-      const save = createFakeSaveContent({
-        saveConfiguration: createSaveConfiguration({modifierTerraformationPace: -1})
+    describe('When modifierTerraformationPace is negative', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({
+          saveConfiguration: createSaveConfiguration({modifierTerraformationPace: -1})
+        });
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.some(e => e.section === 8)).toBeTruthy();
       });
-
-      // Act
-      const result = validateSaveContent(save);
-
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 8)).toBeTruthy();
     });
   });
 
   describe('When validating the world events section', () => {
-    it('should reject when pos has an invalid format', () => {
-      // Arrange
-      const save = createFakeSaveContent({worldEvents: [{planet: 110910045, seed: 42, pos: 'bad-pos'}]});
+    describe('When pos has an invalid format', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({worldEvents: [{planet: 110910045, seed: 42, pos: 'bad-pos'}]});
 
-      // Act
-      const result = validateSaveContent(save);
+        // Act
+        const result = validateSaveContent(save);
 
-      // Assert
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.section === 9)).toBeTruthy();
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors.some(e => e.section === 9)).toBeTruthy();
+      });
     });
   });
 
   describe('When validating cross-section domain rules', () => {
     describe('When validating decimal notation for gauge and level values', () => {
-      it('should reject a save where a gauge value is missing its decimal notation', () => {
-        // Arrange
-        const saveWithBadFloat = createFakeSaveContent().replace('"playerGaugeOxygen":280.0', '"playerGaugeOxygen":280');
+      describe('When a gauge value is missing its decimal notation', () => {
+        it('should reject the save', () => {
+          // Arrange
+          const saveWithBadFloat = createFakeSaveContent().replace('"playerGaugeOxygen":280.0', '"playerGaugeOxygen":280');
 
-        // Act
-        const result = validateSaveContent(saveWithBadFloat);
+          // Act
+          const result = validateSaveContent(saveWithBadFloat);
 
-        // Assert
-        expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION)).toBeTruthy();
-      });
-
-      it('should accept a save where gauge values have proper decimal notation', () => {
-        // Arrange
-        const save = createFakeSaveContent();
-
-        // Act
-        const result = validateSaveContent(save);
-
-        // Assert
-        expect(result.isValid).toBe(true);
-        expect(!result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION)).toBeTruthy();
-      });
-
-      it('should reject a save where all gauge values are missing their decimal notation', () => {
-        // Arrange
-        const playerWithAllIntegerGauges = createPlayer({
-          playerGaugeOxygen: 280,
-          playerGaugeThirst: 100,
-          playerGaugeHealth: 72,
-          playerGaugeToxic: 0
+          // Assert
+          expect(result.isValid).toBe(false);
+          expect(result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION)).toBeTruthy();
         });
-        const saveWithBadFloats = createFakeSaveString({
-          globalMetadata: createGlobalMetadata(),
-          terraformationLevels: [createTerraformationLevel()],
-          players: [playerWithAllIntegerGauges],
-          inventories: [createInventory(), createEquipment()],
-          statistics: createStatistics(),
-          saveConfiguration: createSaveConfiguration()
-        }).replace(/"playerGaugeOxygen":280\.0/g, '"playerGaugeOxygen":280')
-          .replace(/"playerGaugeThirst":100\.0/g, '"playerGaugeThirst":100')
-          .replace(/"playerGaugeHealth":72\.0/g, '"playerGaugeHealth":72')
-          .replace(/"playerGaugeToxic":0\.0/g, '"playerGaugeToxic":0');
+      });
 
-        // Act
-        const result = validateSaveContent(saveWithBadFloats);
+      describe('When every gauge value carries its decimal notation', () => {
+        it('should accept the save', () => {
+          // Arrange
+          const save = createFakeSaveContent();
 
-        // Assert
-        expect(result.isValid).toBe(false);
-        const floatErrors = result.errors.filter(e => e.code === VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION);
-        expect(floatErrors.length >= 4).toBeTruthy();
+          // Act
+          const result = validateSaveContent(save);
+
+          // Assert
+          expect(result.isValid).toBe(true);
+          expect(!result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION)).toBeTruthy();
+        });
+      });
+
+      describe('When every gauge value is missing its decimal notation', () => {
+        it('should reject the save reporting one error per gauge', () => {
+          // Arrange
+          const playerWithAllIntegerGauges = createPlayer({
+            playerGaugeOxygen: 280,
+            playerGaugeThirst: 100,
+            playerGaugeHealth: 72,
+            playerGaugeToxic: 0
+          });
+          const saveWithBadFloats = createFakeSaveString({
+            globalMetadata: createGlobalMetadata(),
+            terraformationLevels: [createTerraformationLevel()],
+            players: [playerWithAllIntegerGauges],
+            inventories: [createInventory(), createEquipment()],
+            statistics: createStatistics(),
+            saveConfiguration: createSaveConfiguration()
+          }).replace(/"playerGaugeOxygen":280\.0/g, '"playerGaugeOxygen":280')
+            .replace(/"playerGaugeThirst":100\.0/g, '"playerGaugeThirst":100')
+            .replace(/"playerGaugeHealth":72\.0/g, '"playerGaugeHealth":72')
+            .replace(/"playerGaugeToxic":0\.0/g, '"playerGaugeToxic":0');
+
+          // Act
+          const result = validateSaveContent(saveWithBadFloats);
+
+          // Assert
+          expect(result.isValid).toBe(false);
+          const floatErrors = result.errors.filter(e => e.code === VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION);
+          expect(floatErrors.length >= 4).toBeTruthy();
+        });
       });
     });
 
     describe('When validating the unique host rule', () => {
-      it('should report an error when no player is host', () => {
-        // Arrange
-        const save = createFakeSaveContent({players: [createPlayer({host: false})]});
+      describe('When no player is host', () => {
+        it('should report an error', () => {
+          // Arrange
+          const save = createFakeSaveContent({players: [createPlayer({host: false})]});
 
-        // Act
-        const result = validateSaveContent(save);
+          // Act
+          const result = validateSaveContent(save);
 
-        // Assert
-        expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.UNIQUE_HOST)).toBeTruthy();
+          // Assert
+          expect(result.isValid).toBe(false);
+          expect(result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.UNIQUE_HOST)).toBeTruthy();
+        });
       });
 
-      it('should report an error when more than one player is host', () => {
-        // Arrange
-        const firstPlayer = createPlayer();
-        const secondPlayer = createPlayer({
-          id: 76561198055446664,
-          name: 'Chileny',
-          inventoryId: 3,
-          equipmentId: 4,
-          host: true
-        });
-        const save = createFakeSaveContent({
-          players: [firstPlayer, secondPlayer],
-          inventories: [createInventory(), createEquipment(), {id: 3, woIds: '', size: 20}, {id: 4, woIds: '', size: 10}]
-        });
+      describe('When more than one player is host', () => {
+        it('should report an error', () => {
+          // Arrange
+          const firstPlayer = createPlayer();
+          const secondPlayer = createPlayer({
+            id: 76561198055446664,
+            name: 'Chileny',
+            inventoryId: 3,
+            equipmentId: 4,
+            host: true
+          });
+          const save = createFakeSaveContent({
+            players: [firstPlayer, secondPlayer],
+            inventories: [createInventory(), createEquipment(), {id: 3, woIds: '', size: 20}, {id: 4, woIds: '', size: 10}]
+          });
 
-        // Act
-        const result = validateSaveContent(save);
+          // Act
+          const result = validateSaveContent(save);
 
-        // Assert
-        expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.UNIQUE_HOST)).toBeTruthy();
+          // Assert
+          expect(result.isValid).toBe(false);
+          expect(result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.UNIQUE_HOST)).toBeTruthy();
+        });
       });
 
-      it('should not report a host error for a valid save with one host', () => {
-        // Arrange
-        const save = createFakeSaveContent();
+      describe('When exactly one player is host', () => {
+        it('should not report a host error', () => {
+          // Arrange
+          const save = createFakeSaveContent();
 
-        // Act
-        const result = validateSaveContent(save);
+          // Act
+          const result = validateSaveContent(save);
 
-        // Assert
-        expect(!result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.UNIQUE_HOST)).toBeTruthy();
+          // Assert
+          expect(!result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.UNIQUE_HOST)).toBeTruthy();
+        });
       });
     });
 
     describe('When validating the consistent planetId rule', () => {
-      it('should accept players with different planetId values', () => {
-        // Arrange
-        const firstPlayer = createPlayer();
-        const playerOnOtherPlanet = createPlayer({
-          id: 76561198055446664,
-          name: 'Chileny',
-          inventoryId: 3,
-          equipmentId: 4,
-          host: false,
-          planetId: 'Prime'
-        });
-        const save = createFakeSaveContent({
-          players: [firstPlayer, playerOnOtherPlanet],
-          inventories: [createInventory(), createEquipment(), {id: 3, woIds: '', size: 20}, {id: 4, woIds: '', size: 10}]
-        });
+      describe('When two players are on different planets', () => {
+        it('should accept the save', () => {
+          // Arrange
+          const firstPlayer = createPlayer();
+          const playerOnOtherPlanet = createPlayer({
+            id: 76561198055446664,
+            name: 'Chileny',
+            inventoryId: 3,
+            equipmentId: 4,
+            host: false,
+            planetId: 'Prime'
+          });
+          const save = createFakeSaveContent({
+            players: [firstPlayer, playerOnOtherPlanet],
+            inventories: [createInventory(), createEquipment(), {id: 3, woIds: '', size: 20}, {id: 4, woIds: '', size: 10}]
+          });
 
-        // Act
-        const result = validateSaveContent(save);
+          // Act
+          const result = validateSaveContent(save);
 
-        // Assert
-        expect(result.isValid).toBe(true);
+          // Assert
+          expect(result.isValid).toBe(true);
+        });
       });
     });
   });

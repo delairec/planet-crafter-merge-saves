@@ -8,29 +8,24 @@ describe('Merge world events', () => {
 
   describe('When world events are unique', () => {
     it('should concat world events from both saves', () => {
-      // Arrange
-      const worldEventsFromSaveA = [worldEventA];
-      const worldEventsFromSaveB = [worldEventB];
-
       // Act
-      const result = mergeWorldEvents(worldEventsFromSaveA, worldEventsFromSaveB);
+      const result = mergeWorldEvents([worldEventA], [worldEventB]);
 
       // Assert
-      expect(result).toBe(`${JSON.stringify(worldEventA)}|\n${JSON.stringify(worldEventB)}`);
+      expect(result).toEqual([
+        {planet: 110910045, seed: 12345, pos: '100,200,300'},
+        {planet: 110910046, seed: 67890, pos: '400,500,600'}
+      ]);
     });
   });
 
   describe('When a world event appears in both saves', () => {
     it('should deduplicate world events and take save A', () => {
-      // Arrange
-      const worldEventsFromSaveA = [worldEventShared];
-      const worldEventsFromSaveB = [worldEventShared];
-
       // Act
-      const result = mergeWorldEvents(worldEventsFromSaveA, worldEventsFromSaveB);
+      const result = mergeWorldEvents([worldEventShared], [worldEventShared]);
 
       // Assert
-      expect(result).toBe(JSON.stringify(worldEventShared));
+      expect(result).toEqual([{planet: 110910047, seed: 11111, pos: '700,800,900'}]);
     });
   });
 
@@ -42,13 +37,17 @@ describe('Merge world events', () => {
         pos: '1250.623,-51.60085,-215.7026', rot: '-0.001,-0.353,-0.010,-0.935',
         wrecksWOGenerated: true, woIdsGenerated: '201234,205678', woIdsDropped: '201234', version: 13
       };
+      const noWorldEventsFromSaveA: never[] = [];
 
       // Act
-      const result = mergeWorldEvents([], [wreckEvent]);
+      const result = mergeWorldEvents(noWorldEventsFromSaveA, [wreckEvent]);
 
       // Assert
-      expect(result).toBe(JSON.stringify(wreckEvent));
+      expect(result).toEqual([{
+        owner: 0, planet: -1140328421, index: 1, seed: 577338550,
+        pos: '1250.623,-51.60085,-215.7026', rot: '-0.001,-0.353,-0.010,-0.935',
+        wrecksWOGenerated: true, woIdsGenerated: '201234,205678', woIdsDropped: '201234', version: 13
+      }]);
     });
   });
 });
-

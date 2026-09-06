@@ -52,35 +52,35 @@ describe('Merge save configurations', () => {
       const result = mergeSaveConfigurations(saveConfigurationsA, saveConfigurationsB, saveDisplayName);
 
       // Assert
-      expect(result).toBe(JSON.stringify({...saveConfigA, saveDisplayName}));
+      expect(result).toEqual({...saveConfigA, saveDisplayName: 'SAVE_NAME'});
     });
   });
 
   describe('When save A has no configuration', () => {
     it('should fall back to save B configuration', () => {
       // Arrange
-      const saveConfigurationsA = [];
+      const saveConfigurationsA: never[] = [];
       const saveConfigurationsB = [saveConfigB];
 
       // Act
       const result = mergeSaveConfigurations(saveConfigurationsA, saveConfigurationsB, saveDisplayName);
 
       // Assert
-      expect(result).toBe(JSON.stringify({...saveConfigB, saveDisplayName}));
+      expect(result).toEqual({...saveConfigB, saveDisplayName: 'SAVE_NAME'});
     });
   });
 
   describe('When both saves have no configuration', () => {
-    it('should produce an empty configuration', () => {
+    it('should report no configuration at all', () => {
       // Arrange
-      const saveConfigurationsA = [];
-      const saveConfigurationsB = [];
+      const saveConfigurationsA: never[] = [];
+      const saveConfigurationsB: never[] = [];
 
       // Act
       const result = mergeSaveConfigurations(saveConfigurationsA, saveConfigurationsB, saveDisplayName);
 
       // Assert
-      expect(result).toBe('');
+      expect(result).toBeUndefined();
     });
   });
 });

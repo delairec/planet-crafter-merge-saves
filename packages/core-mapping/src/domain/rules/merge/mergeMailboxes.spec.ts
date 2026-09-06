@@ -9,80 +9,68 @@ describe('Merge mailboxes', () => {
 
   describe('When mailboxes are unique', () => {
     it('should combine mailboxes from both saves', () => {
-      // Arrange
-      const mailboxesFromSaveA = [uniqueMailboxFromSaveA];
-      const mailboxesFromSaveB = [uniqueMailboxFromSaveB];
-
       // Act
-      const result = mergeMailboxes(mailboxesFromSaveA, mailboxesFromSaveB);
+      const result = mergeMailboxes([uniqueMailboxFromSaveA], [uniqueMailboxFromSaveB]);
 
       // Assert
-      expect(result).toBe(`${JSON.stringify(uniqueMailboxFromSaveA)}|\n${JSON.stringify(uniqueMailboxFromSaveB)}`);
+      expect(result).toEqual([
+        {stringId: 'Message_YouAreAConvict', isRead: true},
+        {stringId: 'Message_toxicity_InfosGoo', isRead: false}
+      ]);
     });
   });
 
   describe('When a mailbox appears in both saves', () => {
     it('should deduplicate identical mailboxes', () => {
-      // Arrange
-      const mailboxesFromSaveA = [readSharedMailbox];
-      const mailboxesFromSaveB = [{...readSharedMailbox}];
-
       // Act
-      const result = mergeMailboxes(mailboxesFromSaveA, mailboxesFromSaveB);
+      const result = mergeMailboxes([readSharedMailbox], [{...readSharedMailbox}]);
 
       // Assert
-      expect(result).toBe(JSON.stringify(readSharedMailbox));
+      expect(result).toEqual([{stringId: 'Message_Shared', isRead: true}]);
     });
+  });
 
-    it('should mark a mailbox as read when save A has it read', () => {
-      // Arrange
-      const mailboxesFromSaveA = [readSharedMailbox];
-      const mailboxesFromSaveB = [unreadSharedMailbox];
-
+  describe('When only save A has that mailbox read', () => {
+    it('should mark the mailbox as read', () => {
       // Act
-      const result = mergeMailboxes(mailboxesFromSaveA, mailboxesFromSaveB);
+      const result = mergeMailboxes([readSharedMailbox], [unreadSharedMailbox]);
 
       // Assert
-      expect(result).toBe(JSON.stringify(readSharedMailbox));
+      expect(result).toEqual([{stringId: 'Message_Shared', isRead: true}]);
     });
+  });
 
-    it('should mark a mailbox as read when save B has it read', () => {
-      // Arrange
-      const mailboxesFromSaveA = [unreadSharedMailbox];
-      const mailboxesFromSaveB = [readSharedMailbox];
-
+  describe('When only save B has that mailbox read', () => {
+    it('should mark the mailbox as read', () => {
       // Act
-      const result = mergeMailboxes(mailboxesFromSaveA, mailboxesFromSaveB);
+      const result = mergeMailboxes([unreadSharedMailbox], [readSharedMailbox]);
 
       // Assert
-      expect(result).toBe(JSON.stringify(readSharedMailbox));
+      expect(result).toEqual([{stringId: 'Message_Shared', isRead: true}]);
     });
+  });
 
-    it('should keep a mailbox as unread when both saves have it unread', () => {
-      // Arrange
-      const mailboxesFromSaveA = [unreadSharedMailbox];
-      const mailboxesFromSaveB = [{...unreadSharedMailbox}];
-
+  describe('When both saves have that mailbox unread', () => {
+    it('should keep the mailbox as unread', () => {
       // Act
-      const result = mergeMailboxes(mailboxesFromSaveA, mailboxesFromSaveB);
+      const result = mergeMailboxes([unreadSharedMailbox], [{...unreadSharedMailbox}]);
 
       // Assert
-      expect(result).toBe(JSON.stringify(unreadSharedMailbox));
+      expect(result).toEqual([{stringId: 'Message_Shared', isRead: false}]);
     });
   });
 
   describe('When both saves have no mailboxes', () => {
-    it('should return an empty mailbox section', () => {
+    it('should return no mailbox', () => {
       // Arrange
-      const mailboxesFromSaveA = [];
-      const mailboxesFromSaveB = [];
+      const noMailboxesFromSaveA: never[] = [];
+      const noMailboxesFromSaveB: never[] = [];
 
       // Act
-      const result = mergeMailboxes(mailboxesFromSaveA, mailboxesFromSaveB);
+      const result = mergeMailboxes(noMailboxesFromSaveA, noMailboxesFromSaveB);
 
       // Assert
-      expect(result).toBe('');
+      expect(result).toEqual([]);
     });
   });
 });
-

@@ -8,30 +8,24 @@ describe('Merge story events', () => {
 
   describe('When story events are unique', () => {
     it('should concat story events from both saves', () => {
-      // Arrange
-      const storyEventsFromSaveA = [storyEventA];
-      const storyEventsFromSaveB = [storyEventB];
-
       // Act
-      const result = mergeStoryEvents(storyEventsFromSaveA, storyEventsFromSaveB);
+      const result = mergeStoryEvents([storyEventA], [storyEventB]);
 
       // Assert
-      expect(result).toBe(`${JSON.stringify(storyEventA)}|\n${JSON.stringify(storyEventB)}`);
+      expect(result).toEqual([
+        {stringId: 'StoryEvent-FirstMessageClick'},
+        {stringId: 'StoryEvent-Toxicity-InfosGoo'}
+      ]);
     });
   });
 
   describe('When a story event appears in both saves', () => {
     it('should deduplicate story events', () => {
-      // Arrange
-      const storyEventsFromSaveA = [storyEventShared];
-      const storyEventsFromSaveB = [storyEventShared];
-
       // Act
-      const result = mergeStoryEvents(storyEventsFromSaveA, storyEventsFromSaveB);
+      const result = mergeStoryEvents([storyEventShared], [storyEventShared]);
 
       // Assert
-      expect(result).toBe(JSON.stringify(storyEventShared));
+      expect(result).toEqual([{stringId: 'StoryEvent-Shared'}]);
     });
   });
 });
-

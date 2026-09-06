@@ -1,24 +1,19 @@
 import {TerraformationLevel} from 'shared-save-processing/gameDefinitions';
-import {stringifyEntry} from 'shared-save-processing/stringifyEntry.js';
 
 const PURIFICATION_SENTINEL = -1;
 
 /**
  * @see GR-TERRA-1, GR-TERRA-2, GR-TERRA-3 in docs/game-rules.md
  */
-export function mergeTerraformationLevels(terraformationLevelsA: TerraformationLevel[], terraformationLevelsB: TerraformationLevel[]): string {
-  const validatedLevelsA = terraformationLevelsA ?? [];
-  const validatedLevelsB = terraformationLevelsB ?? [];
+export function mergeTerraformationLevels(terraformationLevelsA: TerraformationLevel[], terraformationLevelsB: TerraformationLevel[]): TerraformationLevel[] {
+  const planetIds = new Set([...terraformationLevelsA, ...terraformationLevelsB].map(level => level.planetId));
 
-  const fullList = [...validatedLevelsA, ...validatedLevelsB];
-  const deduplicatedPlanetIds = new Set(fullList.map(level => level.planetId));
-
-  const mergedLevels = Array.from(deduplicatedPlanetIds).map(planetId => {
-    const levelA = validatedLevelsA.find(level => level.planetId === planetId);
-    const levelB = validatedLevelsB.find(level => level.planetId === planetId);
+  return Array.from(planetIds).map(planetId => {
+    const levelA = terraformationLevelsA.find(level => level.planetId === planetId);
+    const levelB = terraformationLevelsB.find(level => level.planetId === planetId);
 
     if (levelA && levelB) {
-      return stringifyEntry({
+      return {
         planetId,
         unitOxygenLevel: Math.max(levelA.unitOxygenLevel, levelB.unitOxygenLevel),
         unitHeatLevel: Math.max(levelA.unitHeatLevel, levelB.unitHeatLevel),
@@ -27,18 +22,23 @@ export function mergeTerraformationLevels(terraformationLevelsA: TerraformationL
         unitInsectsLevel: Math.max(levelA.unitInsectsLevel, levelB.unitInsectsLevel),
         unitAnimalsLevel: Math.max(levelA.unitAnimalsLevel, levelB.unitAnimalsLevel),
         unitPurificationLevel: mergePurificationLevel(levelA.unitPurificationLevel, levelB.unitPurificationLevel),
-      });
+      };
     }
 
-    return stringifyEntry((levelA || levelB) as TerraformationLevel);
+    return (levelA ?? levelB) as TerraformationLevel;
   });
-
-  return mergedLevels.join('|\n');
 }
 
 function mergePurificationLevel(levelA: number, levelB: number): number {
-  if (levelA === PURIFICATION_SENTINEL && levelB === PURIFICATION_SENTINEL) return PURIFICATION_SENTINEL;
-  if (levelA === PURIFICATION_SENTINEL) return levelB;
-  if (levelB === PURIFICATION_SENTINEL) return levelA;
+  if (levelA === PURIFICATION_SENTINEL && levelB === PURIFICATION_SENTINEL) {
+    return PURIFICATION_SENTINEL;
+  }
+  if (levelA === PURIFICATION_SENTINEL) {
+    return levelB;
+  }
+  if (levelB === PURIFICATION_SENTINEL) {
+    return levelA;
+  }
+
   return Math.max(levelA, levelB);
 }
