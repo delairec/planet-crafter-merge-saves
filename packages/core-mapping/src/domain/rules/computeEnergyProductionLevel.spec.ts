@@ -82,19 +82,18 @@ describe('computeEnergyProductionLevel', () => {
     expect(productionLevel).toBe(threeTimesTheProducerBaseLevel);
   });
 
-  it('should recognize every world object name of the production levels table (Rule EN-BASE-2)', () => {
+  const producerNames = Object.keys(energyProductionLevelsByWorldObjectName) as WorldObjectName[];
+
+  it.each(producerNames)('should recognize %s as a producer (Rule EN-BASE-2)', (name) => {
     // Arrange
-    const producerNames = Object.keys(energyProductionLevelsByWorldObjectName) as WorldObjectName[];
+    const producer: PlacedWorldObjectEntity = {id: name, name, position: [0, 0, 0], planetId: 1};
     const noInventories: InventoryEntity[] = [];
 
     // Act
-    const unrecognizedNames = producerNames.filter((name) => {
-      const producer: PlacedWorldObjectEntity = {id: name, name, position: [0, 0, 0], planetId: 1};
-      return computeEnergyProductionLevel([producer], [producer], noInventories) === 0;
-    });
+    const productionLevel = computeEnergyProductionLevel([producer], [producer], noInventories);
 
     // Assert
-    expect(unrecognizedNames).toEqual([]);
+    expect(productionLevel).toBeGreaterThan(0);
   });
 
   it('should return zero for an empty list of positioned world objects', () => {

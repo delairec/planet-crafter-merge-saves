@@ -33,18 +33,17 @@ describe('computeEnergyConsumptionLevel', () => {
     expect(result).toBe(0.5);
   });
 
-  it('should recognize every world object name of the consumption levels table (Rule EN-BASE-2)', () => {
+  const consumerNames = Object.keys(energyConsumptionLevelsByWorldObjectName) as WorldObjectName[];
+
+  it.each(consumerNames)('should recognize %s as a consumer (Rule EN-BASE-2)', (name) => {
     // Arrange
-    const consumerNames = Object.keys(energyConsumptionLevelsByWorldObjectName) as WorldObjectName[];
+    const consumer: PlacedWorldObjectEntity = {id: name, name, position: [0, 0, 0], planetId: 1};
 
     // Act
-    const unrecognizedNames = consumerNames.filter((name) => {
-      const consumer: PlacedWorldObjectEntity = {id: name, name, position: [0, 0, 0], planetId: 1};
-      return computeEnergyConsumptionLevel([consumer]) === 0;
-    });
+    const consumptionLevel = computeEnergyConsumptionLevel([consumer]);
 
     // Assert
-    expect(unrecognizedNames).toEqual([]);
+    expect(consumptionLevel).toBeGreaterThan(0);
   });
 
   it('should return zero for an empty list of world objects', () => {
