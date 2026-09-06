@@ -2,6 +2,7 @@ import {describe, expect, it} from 'bun:test';
 import {computeEnergyConsumptionLevel} from './computeEnergyConsumptionLevel';
 import {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity';
 import {WorldObjectName} from '../worldObjectNames';
+import {energyConsumptionLevelsByWorldObjectName} from '../energyLevelsByWorldObjectName';
 
 describe('computeEnergyConsumptionLevel', () => {
   it('should sum the consumption of positioned world objects with known consumption levels', () => {
@@ -30,6 +31,19 @@ describe('computeEnergyConsumptionLevel', () => {
 
     // Assert
     expect(result).toBe(0.5);
+  });
+
+  const consumerNames = Object.keys(energyConsumptionLevelsByWorldObjectName) as WorldObjectName[];
+
+  it.each(consumerNames)('should recognize %s as a consumer (Rule EN-BASE-2)', (name) => {
+    // Arrange
+    const consumer: PlacedWorldObjectEntity = {id: name, name, position: [0, 0, 0], planetId: 1};
+
+    // Act
+    const consumptionLevel = computeEnergyConsumptionLevel([consumer]);
+
+    // Assert
+    expect(consumptionLevel).toBeGreaterThan(0);
   });
 
   it('should return zero for an empty list of world objects', () => {

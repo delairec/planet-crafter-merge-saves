@@ -5,14 +5,14 @@ import {PlayersPresenterPort} from "./ports/PlayersPresenterPort";
 import {LoadPlayersSection} from './LoadPlayersSection';
 
 describe('LoadPlayersSection', () => {
-  it('should present all players from the parsed save', () => {
+  it('should present all players from the parsed save', async () => {
     // Arrange
     const saveParser: SaveSectionsReaderPort = new FakeSaveParserService();
     const presenter: PlayersPresenterPort = {displayPlayers: mock()};
     const useCase = new LoadPlayersSection(saveParser, presenter);
 
     // Act
-    useCase.execute();
+    await useCase.execute();
 
     // Assert
     expect(presenter.displayPlayers).toHaveBeenCalledTimes(1);

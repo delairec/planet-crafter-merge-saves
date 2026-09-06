@@ -5,14 +5,14 @@ import {SaveConfigurationPresenterPort} from "./ports/SaveConfigurationPresenter
 import {LoadSaveConfigurationSection} from "./LoadSaveConfigurationSection";
 
 describe('LoadSaveConfigurationSection', () => {
-  it('should present save configuration from the parsed save', () => {
+  it('should present save configuration from the parsed save', async () => {
     // Arrange
     const saveParser: SaveSectionsReaderPort = new FakeSaveParserService();
     const presenter: SaveConfigurationPresenterPort = {displaySaveConfiguration: mock()}
     const useCase = new LoadSaveConfigurationSection(saveParser, presenter);
 
     // Act
-    useCase.execute();
+    await useCase.execute();
 
     // Assert
     expect(presenter.displaySaveConfiguration).toHaveBeenCalledTimes(1);
