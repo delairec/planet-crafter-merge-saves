@@ -3,16 +3,7 @@ import {initValidateCli} from './validate-cli.js';
 import {VALIDATE_SAVE_FILE_PATH} from '../testing/fakePaths.js';
 import {VALID_SAVE_CONTENT} from '../testing/fakeValidSaveContent.js';
 import {INVALID_SAVE_CONTENT} from '../testing/fakeInvalidSaveContent.js';
-import {createLegacyFakeSaveString} from 'shared-save-processing/testing/createFakeSaveString.js';
-import {
-  createGlobalMetadata,
-  createInventory,
-  createEquipment,
-  createPlayer,
-  createSaveConfiguration,
-  createStatistics,
-  createTerraformationLevel
-} from 'shared-save-processing/testing/createFakeSaveContent.js';
+import {createLegacyFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
 
 describe('Validate CLI', () => {
   let consoleLogSpy;
@@ -128,26 +119,27 @@ describe('Validate CLI', () => {
     });
   });
 
-  describe('When validation reports warnings', () => {
-    const LEGACY_SAVE_CONTENT = createLegacyFakeSaveString({
-      globalMetadata: createGlobalMetadata(),
-      terraformationLevels: [createTerraformationLevel()],
-      players: [createPlayer()],
-      inventories: [createInventory(), createEquipment()],
-      statistics: createStatistics(),
-      saveConfiguration: createSaveConfiguration(),
-      terrainLayers: [{layerId: 'PC-Toxicity-Layer2', planet: 110910045, colorBase: '0.5-0.5-0.5-1'}]
-    });
-
-    it('should log each warning', async () => {
+  describe('When the save file is in the legacy format', () => {
+    it('should warn with a user message instead of the warning code', async () => {
       // Arrange
-      readTextFile.mockResolvedValue(LEGACY_SAVE_CONTENT);
+      readTextFile.mockResolvedValue(createLegacyFakeSaveContent());
 
       // Act
       await main(VALIDATE_SAVE_FILE_PATH);
 
       // Assert
-      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('⚠'));
+      expect(consoleWarnSpy).toHaveBeenCalledWith('⚠ This save was created by an older version of the game and has been adapted to the current format. The obsolete Terrain Layers section was ignored.');
+    });
+
+    it('should still report the save as valid', async () => {
+      // Arrange
+      readTextFile.mockResolvedValue(createLegacyFakeSaveContent());
+
+      // Act
+      await main(VALIDATE_SAVE_FILE_PATH);
+
+      // Assert
+      expect(exitProcess).toHaveBeenCalledWith(0);
     });
   });
 });
