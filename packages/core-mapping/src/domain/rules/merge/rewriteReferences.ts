@@ -18,35 +18,14 @@ export interface IdRemappings {
  * @see GR-ID-3, GR-ID-5 in docs/game-rules.md
  */
 export function rewritePlayerReferences(players: EntriesByOrigin<Player>, remappings: IdRemappings): EntriesByOrigin<Player> {
-  const slotsTaken = new Map<number, number>();
-  const rewrite = (player: Player): Player => ({
-    ...player,
-    inventoryId: takeInventorySlot(player.inventoryId, remappings.inventoryIds, slotsTaken),
-    equipmentId: takeInventorySlot(player.equipmentId, remappings.inventoryIds, slotsTaken)
-  });
-
   return {
-    fromSaveA: players.fromSaveA.map(rewrite),
-    fromSaveB: players.fromSaveB.map(rewrite)
+    fromSaveA: players.fromSaveA,
+    fromSaveB: players.fromSaveB.map(player => ({
+      ...player,
+      inventoryId: remapId(player.inventoryId, remappings.inventoryIds),
+      equipmentId: remapId(player.equipmentId, remappings.inventoryIds)
+    }))
   };
-}
-
-/**
- * The first player referencing a renumbered inventory keeps the identifier it used to carry, the
- * next ones get the new one. Save A players are walked first, so they keep theirs.
- *
- * This is narrower than GR-ID-5 reads: a save B player referencing an inventory identifier that no
- * save A player uses also keeps it, and so ends up pointing at the save A inventory that took it.
- * Preserved as is here so the merged output stays unchanged; see the open question on the T11 pull
- * request.
- */
-function takeInventorySlot(inventoryId: number, remapping: ReadonlyMap<number, number>, slotsTaken: Map<number, number>): number {
-  const newId = remapping.get(inventoryId);
-  if (newId === undefined) return inventoryId;
-
-  const alreadyTaken = slotsTaken.get(inventoryId) ?? 0;
-  slotsTaken.set(inventoryId, alreadyTaken + 1);
-  return alreadyTaken === 0 ? inventoryId : newId;
 }
 
 /** @see GR-ID-3, GR-ID-5 in docs/game-rules.md */

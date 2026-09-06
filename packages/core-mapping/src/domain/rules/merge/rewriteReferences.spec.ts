@@ -56,7 +56,7 @@ describe('Rewrite references', () => {
   });
 
   describe('When no save A player uses the renumbered inventory id', () => {
-    it('should leave the save B player on that id, as the pre-T11 implementation did', () => {
+    it('should still point the save B player at its own renumbered inventory', () => {
       // Arrange
       const players = {fromSaveA: [aPlayer(1, 30, 31)], fromSaveB: [aPlayer(2, 10, 11)]};
 
@@ -64,7 +64,7 @@ describe('Rewrite references', () => {
       const result = rewritePlayerReferences(players, inventory10BecameInventory51);
 
       // Assert
-      expect(result.fromSaveB.map(player => player.inventoryId)).toEqual([10]);
+      expect(result.fromSaveB.map(player => player.inventoryId)).toEqual([51]);
     });
   });
 

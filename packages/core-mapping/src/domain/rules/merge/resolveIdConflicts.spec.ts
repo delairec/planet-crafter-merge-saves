@@ -120,6 +120,31 @@ describe('Resolve id conflicts', () => {
     });
   });
 
+  describe('When a save B player owns an inventory that no save A player owns', () => {
+    it('should point that player at its own renumbered inventory rather than at the save A one', () => {
+      // Arrange
+      const sections = mergedSections({
+        players: {fromSaveA: [aPlayer({id: 1, inventoryId: 3, equipmentId: 4})], fromSaveB: [aPlayer({id: 2, name: 'Rrose', inventoryId: 44, equipmentId: 45})]},
+        inventories: {
+          fromSaveA: [{id: 3, woIds: '', size: 20}, {id: 4, woIds: '', size: 10}, {id: 44, woIds: '', size: 35}, {id: 45, woIds: '', size: 35}],
+          fromSaveB: [{id: 44, woIds: '', size: 20}, {id: 45, woIds: '', size: 10}]
+        }
+      });
+
+      // Act
+      const result = resolveIdConflicts(sections);
+
+      // Assert
+      expect({
+        player: result.players.fromSaveB.map(player => ({inventoryId: player.inventoryId, equipmentId: player.equipmentId})),
+        saveBInventoryIds: result.inventories.fromSaveB.map(inventory => inventory.id)
+      }).toEqual({
+        player: [{inventoryId: 46, equipmentId: 47}],
+        saveBInventoryIds: [46, 47]
+      });
+    });
+  });
+
   describe('When both saves have a world object linked to the same inventory id', () => {
     it('should send the save B world object to the renumbered inventory and leave the save A one on the shared id', () => {
       // Arrange
