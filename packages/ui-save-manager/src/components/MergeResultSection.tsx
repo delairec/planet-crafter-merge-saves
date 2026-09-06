@@ -4,7 +4,9 @@ import {
   mergeResultSectionDownloadLinkLabel,
   mergeResultSectionFileCreatedMessage,
   mergeResultSectionSaveAInvalidMessage,
+  mergeResultSectionSaveAWarningsTitle,
   mergeResultSectionSaveBInvalidMessage,
+  mergeResultSectionSaveBWarningsTitle,
   mergeResultSectionSuccessMessage
 } from '~/messages/mergeResultSectionMessages';
 import ValidationMessagesList from "~/components/validation/ValidationMessagesList";
@@ -51,13 +53,22 @@ export default function MergeResultSection(props: MergeResultSectionProps) {
         <div>
           <Show when={props.result()!.saveAErrorMessages.length > 0}>
             <ValidationMessagesList title={mergeResultSectionSaveAInvalidMessage} severity="danger"
-                                    messages={props.result()!.saveAErrorMessages}/>
+                                    messages={props.result()!.saveAErrorMessages} foldable monospaced/>
           </Show>
           <Show when={props.result()!.saveBErrorMessages.length > 0}>
             <ValidationMessagesList title={mergeResultSectionSaveBInvalidMessage} severity="danger"
-                                    messages={props.result()!.saveBErrorMessages}/>
+                                    messages={props.result()!.saveBErrorMessages} foldable monospaced/>
           </Show>
         </div>
+      </Show>
+
+      <Show when={props.result()!.saveAWarningMessages.length > 0}>
+        <ValidationMessagesList title={mergeResultSectionSaveAWarningsTitle} severity="warning"
+                                messages={props.result()!.saveAWarningMessages}/>
+      </Show>
+      <Show when={props.result()!.saveBWarningMessages.length > 0}>
+        <ValidationMessagesList title={mergeResultSectionSaveBWarningsTitle} severity="warning"
+                                messages={props.result()!.saveBWarningMessages}/>
       </Show>
     </Show>
   );

@@ -72,7 +72,8 @@ export default function Home() {
 
         <Show when={errors().length}>
           <code>{file()?.name}</code>
-          <ValidationMessagesList title={displayRouteErrorsTitle} severity="danger" messages={errors()}/>
+          <ValidationMessagesList title={displayRouteErrorsTitle} severity="danger" messages={errors()} foldable
+                                 monospaced/>
         </Show>
 
         <Show when={warnings().length}>

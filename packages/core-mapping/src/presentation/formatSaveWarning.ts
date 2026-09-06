@@ -1,4 +1,4 @@
-import {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
+import {SAVE_WARNING_CODES, SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
 import {legacySaveFormatWarningMessage, unknownSaveWarningMessage} from "./messages/saveWarningMessages.js";
 
 /**
@@ -6,7 +6,7 @@ import {legacySaveFormatWarningMessage, unknownSaveWarningMessage} from "./messa
  * error, and `formatSaveWarning.spec.ts` covers the same ground at runtime.
  */
 const messagesByWarningCode: Record<SaveWarningCode, string> = {
-  'legacy-save-format': legacySaveFormatWarningMessage
+  [SAVE_WARNING_CODES.LEGACY_SAVE_FORMAT]: legacySaveFormatWarningMessage
 };
 
 /**
