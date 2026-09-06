@@ -1,10 +1,10 @@
-import {Accessor, For, Show} from "solid-js";
+import {For, Resource, Show} from "solid-js";
 import FieldsGroup from "~/components/structure/FieldsGroup";
 import {PlayersViewModel} from "core-mapping/presentation/viewModels/PlayersViewModel";
 import {playersSectionTitle} from "~/messages/playersSectionMessages";
 
 interface PlayersProps {
-  viewModel: Accessor<PlayersViewModel | null>;
+  viewModel: Resource<PlayersViewModel>;
 }
 
 export default function PlayersSection({viewModel}: PlayersProps) {

@@ -1,10 +1,10 @@
-import {Accessor} from "solid-js";
+import {Resource} from "solid-js";
 import FieldsGroup from "./structure/FieldsGroup";
 import {SaveConfigurationViewModel} from "core-mapping/presentation/viewModels/SaveConfigurationViewModel";
 import {saveConfigurationSectionTitleLabel} from "~/messages/saveConfigurationSectionMessages";
 
 interface SaveConfigurationProps {
-  viewModel: Accessor<SaveConfigurationViewModel | null>;
+  viewModel: Resource<SaveConfigurationViewModel>;
 }
 
 export default function SaveConfigurationSection({viewModel}: SaveConfigurationProps) {

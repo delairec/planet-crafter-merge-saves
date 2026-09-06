@@ -1,4 +1,4 @@
-import {Accessor, For, Show} from "solid-js";
+import {For, Resource, Show} from "solid-js";
 import FieldsGroup from "./structure/FieldsGroup";
 import FieldsGroupGrid from "./structure/FieldsGroupGrid";
 import {EnergyLevelsViewModel} from "core-mapping/presentation/viewModels/EnergyLevelsViewModel";
@@ -17,7 +17,7 @@ import {
 } from "~/messages/energyLevelsSectionMessages";
 
 interface EnergyLevelsProps {
-  viewModel: Accessor<EnergyLevelsViewModel | null>;
+  viewModel: Resource<EnergyLevelsViewModel>;
 }
 
 export default function EnergyLevelsSection({viewModel}: EnergyLevelsProps) {

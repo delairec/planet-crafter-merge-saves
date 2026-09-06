@@ -1,10 +1,10 @@
-import {Accessor} from "solid-js";
+import {Resource} from "solid-js";
 import FieldsGroup from "./structure/FieldsGroup";
 import {GlobalProgressionViewModel} from "core-mapping/presentation/viewModels/GlobalProgressionViewModel";
 import {globalProgressionSectionTitle} from "~/messages/globalProgressionSectionMessages";
 
 interface GlobalProgressionProps {
-  viewModel: Accessor<GlobalProgressionViewModel | null>;
+  viewModel: Resource<GlobalProgressionViewModel>;
 }
 
 export default function GlobalProgressionSection({viewModel}: GlobalProgressionProps) {

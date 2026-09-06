@@ -1,4 +1,4 @@
-import {Accessor, For, Show} from "solid-js";
+import {For, Resource, Show} from "solid-js";
 import FieldsGroup from "./structure/FieldsGroup";
 import {TerraformationLevelsViewModel} from "core-mapping/presentation/viewModels/TerraformationLevelsViewModel";
 import {
@@ -8,7 +8,7 @@ import {
 } from "~/messages/terraformationLevelsSectionMessages";
 
 interface TerraformationLevelsProps {
-  viewModel: Accessor<TerraformationLevelsViewModel | null>;
+  viewModel: Resource<TerraformationLevelsViewModel>;
 }
 
 export default function TerraformationLevelsSection({viewModel}: TerraformationLevelsProps) {
