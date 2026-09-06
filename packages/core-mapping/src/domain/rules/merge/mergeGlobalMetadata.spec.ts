@@ -24,7 +24,7 @@ describe('Merge global metadata', () => {
             const mergeResult = mergeGlobalMetadata([metadataFromSaveA], [metadataFromSaveB]);
 
             // Assert
-            expect(JSON.parse(mergeResult).terraTokens).toBe(133207);
+            expect(mergeResult.terraTokens).toBe(133207);
         });
 
         it('should sum all-time terra tokens', () => {
@@ -32,7 +32,7 @@ describe('Merge global metadata', () => {
             const mergeResult = mergeGlobalMetadata([metadataFromSaveA], [metadataFromSaveB]);
 
             // Assert
-            expect(JSON.parse(mergeResult).allTimeTerraTokens).toBe(233610);
+            expect(mergeResult.allTimeTerraTokens).toBe(233610);
         });
 
         it('should merge unlocked groups without duplicates', () => {
@@ -40,13 +40,7 @@ describe('Merge global metadata', () => {
             const mergeResult = mergeGlobalMetadata([metadataFromSaveA], [metadataFromSaveB]);
 
             // Assert
-            expect(JSON.parse(mergeResult).unlockedGroups.split(',').sort()).toEqual([
-                'BedDoubleColored',
-                'BootsSpeed1',
-                'BootsSpeed2',
-                'MultiToolMineSpeed1',
-                'SofaColored'
-            ].sort());
+            expect(mergeResult.unlockedGroups).toBe('MultiToolMineSpeed1,BootsSpeed1,BootsSpeed2,SofaColored,BedDoubleColored');
         });
 
         it('should keep the instance seed from save A', () => {
@@ -54,7 +48,7 @@ describe('Merge global metadata', () => {
             const mergeResult = mergeGlobalMetadata([metadataFromSaveA], [metadataFromSaveB]);
 
             // Assert
-            expect(JSON.parse(mergeResult).openedInstanceSeed).toBe(0);
+            expect(mergeResult.openedInstanceSeed).toBe(0);
         });
 
         it('should keep the remaining instance time from save A', () => {
@@ -62,47 +56,45 @@ describe('Merge global metadata', () => {
             const mergeResult = mergeGlobalMetadata([metadataFromSaveA], [metadataFromSaveB]);
 
             // Assert
-            expect(JSON.parse(mergeResult).openedInstanceTimeLeft).toBe(2);
+            expect(mergeResult.openedInstanceTimeLeft).toBe(2);
         });
     });
 
     describe('When save A has no global metadata', () => {
         it('should fall back to save B global metadata', () => {
             // Arrange
-            const noMetadataFromSaveA = [];
+            const noMetadataFromSaveA: never[] = [];
 
             // Act
             const mergeResult = mergeGlobalMetadata(noMetadataFromSaveA, [metadataFromSaveB]);
 
             // Assert
-            expect(JSON.parse(mergeResult)).toEqual(metadataFromSaveB);
+            expect(mergeResult).toEqual({
+                terraTokens: 10928,
+                allTimeTerraTokens: 11456,
+                unlockedGroups: 'MultiToolMineSpeed1,BootsSpeed1,BedDoubleColored',
+                openedInstanceSeed: 1,
+                openedInstanceTimeLeft: 5
+            });
         });
     });
 
     describe('When save B has no global metadata', () => {
         it('should fall back to save A global metadata', () => {
             // Arrange
-            const noMetadataFromSaveB = [];
+            const noMetadataFromSaveB: never[] = [];
 
             // Act
             const mergeResult = mergeGlobalMetadata([metadataFromSaveA], noMetadataFromSaveB);
 
             // Assert
-            expect(JSON.parse(mergeResult)).toEqual(metadataFromSaveA);
-        });
-    });
-
-    describe('When unlocked groups contain JSON special characters', () => {
-        it('should produce parseable JSON', () => {
-            // Arrange
-            const escapedGroup = 'Group"With\\Slash';
-            const metadataWithEscapedGroup = {...metadataFromSaveA, unlockedGroups: escapedGroup};
-
-            // Act
-            const mergeResult = mergeGlobalMetadata([metadataWithEscapedGroup], []);
-
-            // Assert
-            expect(JSON.parse(mergeResult).unlockedGroups).toBe(escapedGroup);
+            expect(mergeResult).toEqual({
+                terraTokens: 122279,
+                allTimeTerraTokens: 222154,
+                unlockedGroups: 'MultiToolMineSpeed1,BootsSpeed1,BootsSpeed2,SofaColored',
+                openedInstanceSeed: 0,
+                openedInstanceTimeLeft: 2
+            });
         });
     });
 
@@ -116,7 +108,7 @@ describe('Merge global metadata', () => {
             const mergeResult = mergeGlobalMetadata([metadataFromSaveAWithoutGroups], [metadataFromSaveBWithoutGroups]);
 
             // Assert
-            expect(JSON.parse(mergeResult).unlockedGroups).toBe('');
+            expect(mergeResult.unlockedGroups).toBe('');
         });
 
         it('should ignore an empty unlocked groups list from save A', () => {
@@ -128,7 +120,7 @@ describe('Merge global metadata', () => {
             const mergeResult = mergeGlobalMetadata([metadataFromSaveAWithoutGroups], [metadataFromSaveBWithGroups]);
 
             // Assert
-            expect(JSON.parse(mergeResult).unlockedGroups).toBe('GroupB');
+            expect(mergeResult.unlockedGroups).toBe('GroupB');
         });
 
         it('should ignore an empty unlocked groups list from save B', () => {
@@ -140,8 +132,7 @@ describe('Merge global metadata', () => {
             const mergeResult = mergeGlobalMetadata([metadataFromSaveAWithGroups], [metadataFromSaveBWithoutGroups]);
 
             // Assert
-            expect(JSON.parse(mergeResult).unlockedGroups).toBe('GroupA');
+            expect(mergeResult.unlockedGroups).toBe('GroupA');
         });
     });
 });
-

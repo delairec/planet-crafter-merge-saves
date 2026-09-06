@@ -13,79 +13,63 @@ describe('Merge terraformation levels', () => {
     unitPurificationLevel: 700.0
   };
 
-  const saveA_terraformationLevels = [{
-    planetId: 'Toxicity',
-    unitOxygenLevel: 100.0,
-    unitHeatLevel: 200.0,
-    unitPressureLevel: 300.0,
-    unitPlantsLevel: 400.0,
-    unitInsectsLevel: 500.0,
-    unitAnimalsLevel: 600.0,
-    unitPurificationLevel: 700.0
-  }];
+  const toxicityLevelFromSaveA = {...baseTerraformationLevel};
 
-  const saveB_terraformationLevels = [
-    {
-      planetId: 'Prime',
-      unitOxygenLevel: 10.0,
-      unitHeatLevel: 20.0,
-      unitPressureLevel: 30.0,
-      unitPlantsLevel: 40.0,
-      unitInsectsLevel: 50.0,
-      unitAnimalsLevel: 60.0,
-      unitPurificationLevel: -1.0
-    },
-    {
-      planetId: 'Aqualis',
-      unitOxygenLevel: 1.0,
-      unitHeatLevel: 2.0,
-      unitPressureLevel: 3.0,
-      unitPlantsLevel: 4.0,
-      unitInsectsLevel: 5.0,
-      unitAnimalsLevel: 6.0,
-      unitPurificationLevel: -1.0
-    }
-  ];
+  const primeLevelFromSaveB = {
+    planetId: 'Prime',
+    unitOxygenLevel: 10.0,
+    unitHeatLevel: 20.0,
+    unitPressureLevel: 30.0,
+    unitPlantsLevel: 40.0,
+    unitInsectsLevel: 50.0,
+    unitAnimalsLevel: 60.0,
+    unitPurificationLevel: -1.0
+  };
+
+  const aqualisLevelFromSaveB = {
+    planetId: 'Aqualis',
+    unitOxygenLevel: 1.0,
+    unitHeatLevel: 2.0,
+    unitPressureLevel: 3.0,
+    unitPlantsLevel: 4.0,
+    unitInsectsLevel: 5.0,
+    unitAnimalsLevel: 6.0,
+    unitPurificationLevel: -1.0
+  };
 
   describe('When terraformation levels are unique', () => {
     it('should simply concat terraformation levels', () => {
       // Act
-      const result = mergeTerraformationLevels(saveA_terraformationLevels, saveB_terraformationLevels);
+      const result = mergeTerraformationLevels([toxicityLevelFromSaveA], [primeLevelFromSaveB, aqualisLevelFromSaveB]);
 
       // Assert
-      expect(result.split('|\n').map(level => JSON.parse(level))).toEqual([
-        ...saveA_terraformationLevels,
-        ...saveB_terraformationLevels
-      ]);
+      expect(result).toEqual([toxicityLevelFromSaveA, primeLevelFromSaveB, aqualisLevelFromSaveB]);
     });
   });
 
   describe('When terraformation levels are duplicated', () => {
     it('should merge terraformation levels by taking max values', () => {
       // Arrange
-      const levelsFromSaveA = [
-        ...saveA_terraformationLevels,
-        {
-          planetId: 'Prime',
-          unitOxygenLevel: 101.0, unitHeatLevel: 201.0, unitPressureLevel: 301.0,
-          unitPlantsLevel: 401.0, unitInsectsLevel: 501.0, unitAnimalsLevel: 601.0,
-          unitPurificationLevel: -1.0
-        }
-      ];
+      const primeLevelFromSaveA = {
+        planetId: 'Prime',
+        unitOxygenLevel: 101.0, unitHeatLevel: 201.0, unitPressureLevel: 301.0,
+        unitPlantsLevel: 401.0, unitInsectsLevel: 501.0, unitAnimalsLevel: 601.0,
+        unitPurificationLevel: -1.0
+      };
 
       // Act
-      const result = mergeTerraformationLevels(levelsFromSaveA, saveB_terraformationLevels);
+      const result = mergeTerraformationLevels([toxicityLevelFromSaveA, primeLevelFromSaveA], [primeLevelFromSaveB, aqualisLevelFromSaveB]);
 
       // Assert
-      expect(result.split('|\n').map(level => JSON.parse(level))).toEqual([
-        {...saveA_terraformationLevels[0]},
+      expect(result).toEqual([
+        toxicityLevelFromSaveA,
         {
           planetId: 'Prime',
           unitOxygenLevel: 101.0, unitHeatLevel: 201.0, unitPressureLevel: 301.0,
           unitPlantsLevel: 401.0, unitInsectsLevel: 501.0, unitAnimalsLevel: 601.0,
           unitPurificationLevel: -1.0
         },
-        {...saveB_terraformationLevels[1]}
+        aqualisLevelFromSaveB
       ]);
     });
   });
@@ -100,46 +84,19 @@ describe('Merge terraformation levels', () => {
       const result = mergeTerraformationLevels(levelsFromSaveA, levelsFromSaveB);
 
       // Assert
-      expect(JSON.parse(result)).toEqual({
-        ...baseTerraformationLevel,
-        planetId: 'Prime',
-        unitPurificationLevel: -1.0
-      });
+      expect(result).toEqual([{...baseTerraformationLevel, planetId: 'Prime', unitPurificationLevel: -1.0}]);
     });
 
     it('should take the non-negative value when one save has -1 and the other has a real value', () => {
       // Arrange
-      const levelsFromSaveA = [{...baseTerraformationLevel, planetId: 'Toxicity', unitPurificationLevel: -1.0}];
-      const levelsFromSaveB = [{...baseTerraformationLevel, planetId: 'Toxicity', unitPurificationLevel: 500.0}];
+      const levelsFromSaveA = [{...baseTerraformationLevel, unitPurificationLevel: -1.0}];
+      const levelsFromSaveB = [{...baseTerraformationLevel, unitPurificationLevel: 500.0}];
 
       // Act
       const result = mergeTerraformationLevels(levelsFromSaveA, levelsFromSaveB);
 
       // Assert
-      expect(JSON.parse(result)).toEqual({
-        ...baseTerraformationLevel,
-        planetId: 'Toxicity',
-        unitPurificationLevel: 500.0
-      });
-    });
-  });
-
-  describe('When terraformation level values are integers', () => {
-    it('should preserve decimal notation for whole number terraformation level values', () => {
-      // Arrange
-      const level = {
-        planetId: 'Toxicity',
-        unitOxygenLevel: 2477136019456.0, unitHeatLevel: 2219597103104.0, unitPressureLevel: 2262299836416.0,
-        unitPlantsLevel: 918480420864.0, unitInsectsLevel: 372341538816.0, unitAnimalsLevel: 10118330580992.0,
-        unitPurificationLevel: 2653680304128.0
-      };
-
-      // Act
-      const result = mergeTerraformationLevels([level], []);
-
-      // Assert
-      expect(result).toInclude('"unitOxygenLevel":2477136019456.0');
-      expect(JSON.parse(result)).toEqual(level);
+      expect(result).toEqual([{...baseTerraformationLevel, unitPurificationLevel: 500.0}]);
     });
   });
 });

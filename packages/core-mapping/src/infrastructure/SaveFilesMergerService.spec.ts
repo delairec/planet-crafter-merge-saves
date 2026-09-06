@@ -1,6 +1,8 @@
 import {describe, expect, it} from 'bun:test';
 import {SaveFilesMergerService} from './SaveFilesMergerService';
 import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
+import {createFakeSaveString} from 'shared-save-processing/testing/createFakeSaveString.js';
+import {parseSaveSections} from 'shared-save-processing/parseSaveSections.js';
 
 describe('SaveFilesMergerService', () => {
 
@@ -30,6 +32,42 @@ describe('SaveFilesMergerService', () => {
       // Assert
       const globalMetadataSection = JSON.parse(result.content.split('@')[0].trim());
       expect(globalMetadataSection.allTimeTerraTokens).toBe(400_690);
+    });
+  });
+
+  describe('When a save-B world object is linked to an inventory whose id is already taken by save A', () => {
+    it('should point that world object to the renumbered inventory and leave the save-A one untouched', () => {
+      // Arrange
+      const service = new SaveFilesMergerService();
+      const player = {id: 1, name: 'PlayerA', inventoryId: 10, equipmentId: 11, host: true};
+      const contentA = createFakeSaveString({
+        players: [player as never],
+        inventories: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}, {id: 50, woIds: '100', size: 35}],
+        worldObjects: [{id: 100, gId: 'Container2', liId: 50, pos: '1,0,1'}]
+      });
+      const contentB = createFakeSaveString({
+        players: [player as never],
+        inventories: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}, {id: 50, woIds: '999', size: 1}],
+        worldObjects: [{id: 200, gId: 'VegetubeOutside1', liId: 50, pos: '5,0,5'}]
+      });
+
+      // Act
+      const result = service.merge('Standard-1.json', contentA, 'Standard-2.json', contentB);
+
+      // Assert
+      const {sections} = parseSaveSections(result.content);
+      const worldObjects = [...sections[3]()];
+      const inventories = sections[4];
+      const vegetubeInventory = inventories.find(inventory => inventory.woIds === '999');
+      expect({
+        saveAContainerLinkedInventoryId: worldObjects.find(worldObject => worldObject.id === 100)?.liId,
+        vegetubeLinkedInventoryId: worldObjects.find(worldObject => worldObject.gId === 'VegetubeOutside1')?.liId,
+        renumberedVegetubeInventoryId: vegetubeInventory?.id
+      }).toEqual({
+        saveAContainerLinkedInventoryId: 50,
+        vegetubeLinkedInventoryId: 51,
+        renumberedVegetubeInventoryId: 51
+      });
     });
   });
 });

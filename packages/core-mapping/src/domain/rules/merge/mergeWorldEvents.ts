@@ -3,19 +3,14 @@ import {WorldEvent} from 'shared-save-processing/gameDefinitions';
 /**
  * @see GR-EVT-1, GR-EVT-2 in docs/game-rules.md
  */
-export function mergeWorldEvents(worldEventsA: WorldEvent[], worldEventsB: WorldEvent[]): string {
-  const validatedWorldEventsA = worldEventsA ?? [];
-  const validatedWorldEventsB = worldEventsB ?? [];
-
-  const worldEventsFromBNotInA = validatedWorldEventsB.filter(eventB =>
-    !validatedWorldEventsA.some(eventA =>
+export function mergeWorldEvents(worldEventsA: WorldEvent[], worldEventsB: WorldEvent[]): WorldEvent[] {
+  const worldEventsFromBNotInA = worldEventsB.filter(eventB =>
+    !worldEventsA.some(eventA =>
       eventA.planet === eventB.planet &&
       eventA.seed === eventB.seed &&
       eventA.pos === eventB.pos
     )
   );
 
-  return [...validatedWorldEventsA, ...worldEventsFromBNotInA]
-    .map(worldEvent => JSON.stringify(worldEvent))
-    .join('|\n');
+  return [...worldEventsA, ...worldEventsFromBNotInA];
 }
