@@ -74,8 +74,8 @@ describe('Merge terraformation levels', () => {
     });
   });
 
-  describe('When unitPurificationLevel is -1 (sentinel for "not yet unlocked")', () => {
-    it('should keep -1 when both saves have -1', () => {
+  describe('When both saves have unitPurificationLevel at -1 (sentinel for "not yet unlocked")', () => {
+    it('should keep -1', () => {
       // Arrange
       const levelsFromSaveA = [{...baseTerraformationLevel, planetId: 'Prime', unitPurificationLevel: -1.0}];
       const levelsFromSaveB = [{...baseTerraformationLevel, planetId: 'Prime', unitPurificationLevel: -1.0}];
@@ -86,8 +86,10 @@ describe('Merge terraformation levels', () => {
       // Assert
       expect(result).toEqual([{...baseTerraformationLevel, planetId: 'Prime', unitPurificationLevel: -1.0}]);
     });
+  });
 
-    it('should take the non-negative value when one save has -1 and the other has a real value', () => {
+  describe('When only one save has unitPurificationLevel at -1', () => {
+    it('should take the non-negative value of the other save', () => {
       // Arrange
       const levelsFromSaveA = [{...baseTerraformationLevel, unitPurificationLevel: -1.0}];
       const levelsFromSaveB = [{...baseTerraformationLevel, unitPurificationLevel: 500.0}];

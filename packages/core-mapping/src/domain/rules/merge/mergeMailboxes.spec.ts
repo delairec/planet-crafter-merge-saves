@@ -28,24 +28,30 @@ describe('Merge mailboxes', () => {
       // Assert
       expect(result).toEqual([{stringId: 'Message_Shared', isRead: true}]);
     });
+  });
 
-    it('should mark a mailbox as read when save A has it read', () => {
+  describe('When only save A has that mailbox read', () => {
+    it('should mark the mailbox as read', () => {
       // Act
       const result = mergeMailboxes([readSharedMailbox], [unreadSharedMailbox]);
 
       // Assert
       expect(result).toEqual([{stringId: 'Message_Shared', isRead: true}]);
     });
+  });
 
-    it('should mark a mailbox as read when save B has it read', () => {
+  describe('When only save B has that mailbox read', () => {
+    it('should mark the mailbox as read', () => {
       // Act
       const result = mergeMailboxes([unreadSharedMailbox], [readSharedMailbox]);
 
       // Assert
       expect(result).toEqual([{stringId: 'Message_Shared', isRead: true}]);
     });
+  });
 
-    it('should keep a mailbox as unread when both saves have it unread', () => {
+  describe('When both saves have that mailbox unread', () => {
+    it('should keep the mailbox as unread', () => {
       // Act
       const result = mergeMailboxes([unreadSharedMailbox], [{...unreadSharedMailbox}]);
 

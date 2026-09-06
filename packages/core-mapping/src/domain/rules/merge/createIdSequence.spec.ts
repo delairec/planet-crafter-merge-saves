@@ -40,7 +40,7 @@ describe('Create id sequence', () => {
     });
   });
 
-  describe('When an id already in use is reserved', () => {
+  describe('When an id already in use above the sequence is reserved', () => {
     it('should move the sequence above it', () => {
       // Arrange
       const idSequence = createIdSequence([{id: 10, woIds: '', size: 20}]);
@@ -51,8 +51,10 @@ describe('Create id sequence', () => {
       // Assert
       expect(idSequence.next()).toBe(501);
     });
+  });
 
-    it('should leave the sequence untouched when that id is below it', () => {
+  describe('When an id already in use below the sequence is reserved', () => {
+    it('should leave the sequence untouched', () => {
       // Arrange
       const idSequence = createIdSequence([{id: 10, woIds: '', size: 20}]);
 

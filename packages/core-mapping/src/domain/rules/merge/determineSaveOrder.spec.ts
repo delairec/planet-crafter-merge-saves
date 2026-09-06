@@ -10,8 +10,8 @@ describe('Merge saves — #determineSaveOrder', () => {
     const toxicityConfig = {...FAKE_SAVE_CONFIGURATION, saveDisplayName: 'SaveToxicity', planetId: 'Toxicity'};
     const aqualisConfig = {...FAKE_SAVE_CONFIGURATION, saveDisplayName: 'SaveAqualis', planetId: 'Aqualis'};
 
-    describe('When one save has Prime as planetId and the other does not', () => {
-        it('should return the Prime save as save A when it is passed second', () => {
+    describe('When only the second save has Prime as planetId', () => {
+        it('should return the Prime save as save A', () => {
             // Arrange
             const saveA = createFakeParsedSave({saveConfigurations: [toxicityConfig]});
             const saveB = createFakeParsedSave({saveConfigurations: [primeConfig]});
@@ -22,8 +22,10 @@ describe('Merge saves — #determineSaveOrder', () => {
             // Assert
             expect(result.saveConfiguration).toEqual({...primeConfig, saveDisplayName: 'SAVE_NAME'});
         });
+    });
 
-        it('should keep the Prime save as save A when it is already passed first', () => {
+    describe('When only the first save has Prime as planetId', () => {
+        it('should keep the Prime save as save A', () => {
             // Arrange
             const saveA = createFakeParsedSave({saveConfigurations: [primeConfig]});
             const saveB = createFakeParsedSave({saveConfigurations: [toxicityConfig]});
