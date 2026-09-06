@@ -4,6 +4,7 @@ import {ParsedSections} from "shared-save-processing/gameDefinitions";
 import {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
 import {LoadSaveFileViewModel} from "./viewModels/LoadSaveFileViewModel";
 import {formatValidationIssue} from "./formatValidationIssue";
+import {formatSaveWarning} from "./formatSaveWarning";
 
 export class LoadSaveFilePresenter implements LoadAndValidateSaveFilePresenterPort {
   private _viewModel: LoadSaveFileViewModel;
@@ -21,6 +22,6 @@ export class LoadSaveFilePresenter implements LoadAndValidateSaveFilePresenterPo
   }
 
   presentLoadedSaveFile(sections: ParsedSections, errors: string[], warnings: SaveWarningCode[]): void {
-    this._viewModel = {status: 'valid', sections, errorMessages: errors, warnings};
+    this._viewModel = {status: 'valid', sections, errorMessages: errors, warnings: warnings.map(formatSaveWarning)};
   }
 }
