@@ -32,7 +32,8 @@ describe('computePlanetEnergyLevels', () => {
     // Act
     const result = computePlanetEnergyLevels(worldObjects, worldObjects, []);
 
-    // Assert: 19.5 kW and 6.5 kW out of a 26 kW total
+    // Assert
+    expect(result.production).toBe(26);
     expect(result.productionBreakdown).toEqual([
       {name: 'EnergyGenerator3', quantity: 1, unitLevel: 19.5, totalLevel: 19.5, productionRatio: 0.75},
       {name: 'EnergyGenerator2', quantity: 1, unitLevel: 6.5, totalLevel: 6.5, productionRatio: 0.25}
@@ -54,7 +55,8 @@ describe('computePlanetEnergyLevels', () => {
     // Act
     const result = computePlanetEnergyLevels(allWorldObjects, [optimizer, producer], inventories);
 
-    // Assert: the boost adds 3.25 kW to a 9.75 kW total production
+    // Assert
+    expect(result.production).toBe(9.75);
     expect(result.optimizers).toEqual([{
       name: 'Optimizer1',
       fuseCount: 1,
