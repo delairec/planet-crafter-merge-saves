@@ -1,10 +1,10 @@
-import {LoadAndValidateSaveFilePresenterPort} from "../application/ports/LoadAndValidateSaveFilePresenterPort";
-import {ValidationIssue} from "../application/ports/ValidationIssue";
-import {ParsedSections} from "shared-save-processing/gameDefinitions";
-import {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
-import {LoadSaveFileViewModel} from "./viewModels/LoadSaveFileViewModel";
-import {formatValidationIssue} from "./formatValidationIssue";
-import {formatSaveWarning} from "./formatSaveWarning";
+import type {LoadAndValidateSaveFilePresenterPort} from "../application/ports/LoadAndValidateSaveFilePresenterPort.ts";
+import type {ValidationIssue} from "../application/ports/ValidationIssue.ts";
+import type {ParsedSections} from "shared-save-processing/gameDefinitions";
+import type {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
+import type {LoadSaveFileViewModel} from "./viewModels/LoadSaveFileViewModel.ts";
+import {formatValidationIssue} from "./formatValidationIssue.ts";
+import {formatSaveWarning} from "./formatSaveWarning.ts";
 
 export class LoadSaveFilePresenter implements LoadAndValidateSaveFilePresenterPort {
   private _viewModel: LoadSaveFileViewModel;

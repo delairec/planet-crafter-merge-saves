@@ -1,8 +1,8 @@
 import {describe, expect, it, mock} from 'bun:test';
-import {FakeSaveParserService} from "../testing/FakeSaveParserService";
-import {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort";
-import {LoadGlobalProgressionSection} from "./LoadGlobalProgressionSection";
-import {GlobalProgressionPresenterPort} from "./ports/GlobalProgressionPresenterPort";
+import {FakeSaveParserService} from "../testing/FakeSaveParserService.ts";
+import type {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort.ts";
+import {LoadGlobalProgressionSection} from "./LoadGlobalProgressionSection.ts";
+import type {GlobalProgressionPresenterPort} from "./ports/GlobalProgressionPresenterPort.ts";
 
 describe('LoadGlobalProgressionSection', () => {
   it('should present global progression and statistics from the parsed save', async () => {

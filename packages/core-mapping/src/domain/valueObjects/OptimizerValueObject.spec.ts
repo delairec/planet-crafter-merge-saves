@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {createOptimizerValueObject} from './OptimizerValueObject';
-import {InvalidSaveDataError} from '../errors/InvalidSaveDataError';
+import {createOptimizerValueObject} from './OptimizerValueObject.ts';
+import {InvalidSaveDataError} from '../errors/InvalidSaveDataError.ts';
 
 describe('OptimizerValueObject', () => {
   it('should build an optimizer value object from valid data', () => {

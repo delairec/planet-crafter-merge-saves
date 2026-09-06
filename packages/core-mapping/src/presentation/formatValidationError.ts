@@ -1,6 +1,6 @@
-import {ValidationIssue} from "../application/ports/ValidationIssue";
-import {SaveValidationErrorViewModel} from "./viewModels/SaveFileValidationViewModel";
-import {formatValidationIssue} from "./formatValidationIssue";
+import type {ValidationIssue} from "../application/ports/ValidationIssue.ts";
+import type {SaveValidationErrorViewModel} from "./viewModels/SaveFileValidationViewModel.ts";
+import {formatValidationIssue} from "./formatValidationIssue.ts";
 
 /**
  * Turns a validation issue into the error shown to the user, keeping where in the save it was

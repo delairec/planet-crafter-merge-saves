@@ -1,8 +1,8 @@
-import {SaveFileValidationViewModel} from "../presentation/viewModels/SaveFileValidationViewModel";
-import {createSaveValidator} from "../composition/compositionRoot";
-import {SaveFileValidationPresenter} from "../presentation/SaveFileValidationPresenter";
-import {ValidateSaveFile} from "../application/ValidateSaveFile";
-import {ValidateSaveFileRequest} from "../application/requests/ValidateSaveFileRequest";
+import type {SaveFileValidationViewModel} from "../presentation/viewModels/SaveFileValidationViewModel.ts";
+import {createSaveValidator} from "../composition/compositionRoot.ts";
+import {SaveFileValidationPresenter} from "../presentation/SaveFileValidationPresenter.ts";
+import {ValidateSaveFile} from "../application/ValidateSaveFile.ts";
+import type {ValidateSaveFileRequest} from "../application/requests/ValidateSaveFileRequest.ts";
 
 export class ValidateSaveFileController {
   static async validateSaveFile(fileName: string, content: string): Promise<SaveFileValidationViewModel> {

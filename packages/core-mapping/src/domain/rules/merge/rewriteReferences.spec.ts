@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {rewriteInventoryReferences, rewritePlayerReferences, rewriteWorldObjectReferences} from './rewriteReferences';
-import {Player} from 'shared-save-processing/gameDefinitions';
+import {rewriteInventoryReferences, rewritePlayerReferences, rewriteWorldObjectReferences} from './rewriteReferences.ts';
+import type {Player} from 'shared-save-processing/gameDefinitions';
 
 describe('Rewrite references', () => {
   const noRemapping = {inventoryIds: new Map<number, number>(), worldObjectIds: new Map<number, number>()};

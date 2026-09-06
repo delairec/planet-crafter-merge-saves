@@ -1,4 +1,4 @@
-import {Inventory} from 'shared-save-processing/gameDefinitions';
+import type {Inventory} from 'shared-save-processing/gameDefinitions';
 
 /**
  * Source of the identifiers handed to the entries renumbered during conflict resolution.

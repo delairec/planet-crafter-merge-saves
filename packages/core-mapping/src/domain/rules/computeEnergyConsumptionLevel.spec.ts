@@ -1,8 +1,8 @@
 import {describe, expect, it} from 'bun:test';
-import {computeEnergyConsumptionLevel} from './computeEnergyConsumptionLevel';
-import {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity';
-import {WorldObjectName} from '../worldObjectNames';
-import {energyConsumptionLevelsByWorldObjectName} from '../energyLevelsByWorldObjectName';
+import {computeEnergyConsumptionLevel} from './computeEnergyConsumptionLevel.ts';
+import type {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity.ts';
+import type {WorldObjectName} from '../worldObjectNames.ts';
+import {energyConsumptionLevelsByWorldObjectName} from '../energyLevelsByWorldObjectName.ts';
 
 describe('computeEnergyConsumptionLevel', () => {
   it('should sum the consumption of positioned world objects with known consumption levels', () => {

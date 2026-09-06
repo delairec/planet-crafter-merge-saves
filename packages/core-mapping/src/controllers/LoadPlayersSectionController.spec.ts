@@ -1,8 +1,8 @@
 import {describe, expect, it} from 'bun:test';
 import {parseSaveSections} from 'shared-save-processing/parseSaveSections.js';
 import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
-import {LoadPlayersSectionController} from './LoadPlayersSectionController';
-import {PlayersViewModel} from '../presentation/viewModels/PlayersViewModel';
+import {LoadPlayersSectionController} from './LoadPlayersSectionController.ts';
+import type {PlayersViewModel} from '../presentation/viewModels/PlayersViewModel.ts';
 
 describe('LoadPlayersSectionController', () => {
   it('should present players from the parsed save', async () => {

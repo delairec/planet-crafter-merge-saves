@@ -1,4 +1,4 @@
-import {assertArray, assertFiniteNumber, assertNonEmptyString} from "../errors/assertions";
+import {assertArray, assertFiniteNumber, assertNonEmptyString} from "../errors/assertions.ts";
 
 export interface InventoryEntity {
   readonly id: number;

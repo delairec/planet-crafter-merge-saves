@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {InvalidSaveDataError} from './InvalidSaveDataError';
+import {InvalidSaveDataError} from './InvalidSaveDataError.ts';
 
 describe('InvalidSaveDataError', () => {
   it('should carry the given message', () => {

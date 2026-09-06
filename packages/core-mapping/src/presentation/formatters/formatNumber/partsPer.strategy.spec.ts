@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {formatNumberByPartsPerThresholds} from './partsPer.strategy';
+import {formatNumberByPartsPerThresholds} from './partsPer.strategy.ts';
 
 const nbsp = '\u00A0';
 

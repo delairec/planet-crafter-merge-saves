@@ -1,4 +1,4 @@
-import {formatDecimalNumberWithSuffix} from "./formatDecimalNumberWithSuffix";
+import {formatDecimalNumberWithSuffix} from "./formatDecimalNumberWithSuffix.ts";
 
 interface Threshold {
   value: number | bigint;

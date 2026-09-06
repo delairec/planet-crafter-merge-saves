@@ -1,4 +1,4 @@
-import {FormatNumberStrategies, FormatNumberStrategy} from "./FormatNumberStrategies";
+import {FormatNumberStrategies, type FormatNumberStrategy} from "./FormatNumberStrategies.ts";
 
 export function formatNumber(numberOrBigint: number|bigint, strategy?:FormatNumberStrategy) {
   if(strategy){

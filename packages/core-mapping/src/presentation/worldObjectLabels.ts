@@ -2,7 +2,7 @@
 // TODO: check for missing consumers and consumption values
 // TODO: better sorting of items in this file
 
-import {WorldObjectName} from "../domain/worldObjectNames";
+import type {WorldObjectName} from "../domain/worldObjectNames.ts";
 
 const powerProducersWorldObjectLabels = {
   EnergyGenerator1: 'Wind turbine',

@@ -1,5 +1,5 @@
-import {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort";
-import {SaveConfigurationPresenterPort} from "./ports/SaveConfigurationPresenterPort";
+import type {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort.ts";
+import type {SaveConfigurationPresenterPort} from "./ports/SaveConfigurationPresenterPort.ts";
 
 
 export class LoadSaveConfigurationSection {

@@ -1,6 +1,6 @@
-import {EnergyBreakdownEntryValueObject} from "./EnergyBreakdownEntryValueObject";
-import {OptimizerValueObject} from "./OptimizerValueObject";
-import {assertArray, assertFiniteNumber, assertOptionalString} from "../errors/assertions";
+import type {EnergyBreakdownEntryValueObject} from "./EnergyBreakdownEntryValueObject.ts";
+import type {OptimizerValueObject} from "./OptimizerValueObject.ts";
+import {assertArray, assertFiniteNumber, assertOptionalString} from "../errors/assertions.ts";
 
 export interface PlanetEnergyLevelsValueObject {
   readonly planetId: number;

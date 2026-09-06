@@ -1,5 +1,5 @@
-import {SaveSectionsReaderPort} from './ports/SaveSectionsReaderPort';
-import {GlobalProgressionPresenterPort} from "./ports/GlobalProgressionPresenterPort";
+import type {SaveSectionsReaderPort} from './ports/SaveSectionsReaderPort.ts';
+import type {GlobalProgressionPresenterPort} from "./ports/GlobalProgressionPresenterPort.ts";
 
 export class LoadGlobalProgressionSection {
   constructor(

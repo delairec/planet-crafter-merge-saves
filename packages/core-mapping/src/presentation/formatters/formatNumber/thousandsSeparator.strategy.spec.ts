@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {formatDecimalNumber} from './thousandsSeparator.strategy';
+import {formatDecimalNumber} from './thousandsSeparator.strategy.ts';
 
 describe('formatDecimalNumber', () => {
   it('should format the number with a thousands separator', () => {

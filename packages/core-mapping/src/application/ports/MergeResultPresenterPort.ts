@@ -1,5 +1,5 @@
-import {ValidationIssue} from "./ValidationIssue";
-import {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
+import type {ValidationIssue} from "./ValidationIssue.ts";
+import type {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
 
 export interface MergeResultPresenterPort {
   presentMergeSucceeded(fileName: string, content: string, saveAWarnings: SaveWarningCode[], saveBWarnings: SaveWarningCode[]): void;

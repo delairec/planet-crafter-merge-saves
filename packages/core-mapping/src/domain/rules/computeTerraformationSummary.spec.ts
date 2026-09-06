@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {computeTerraformationSummary} from './computeTerraformationSummary';
-import {TerraformationLevelEntity} from '../entities/TerraformationLevelEntity';
+import {computeTerraformationSummary} from './computeTerraformationSummary.ts';
+import type {TerraformationLevelEntity} from '../entities/TerraformationLevelEntity.ts';
 
 describe('computeTerraformationSummary', () => {
   it('should sum plant, insect and animal levels into the biomass', () => {

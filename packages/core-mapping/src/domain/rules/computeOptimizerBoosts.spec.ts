@@ -1,9 +1,9 @@
 import {describe, expect, it} from 'bun:test';
-import {computeOptimizerBoosts} from './computeOptimizerBoosts';
-import {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity';
-import {WorldObjectEntity} from '../entities/WorldObjectEntity';
-import {InventoryEntity} from '../entities/InventoryEntity';
-import {WorldObjectName} from '../worldObjectNames';
+import {computeOptimizerBoosts} from './computeOptimizerBoosts.ts';
+import type {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity.ts';
+import type {WorldObjectEntity} from '../entities/WorldObjectEntity.ts';
+import type {InventoryEntity} from '../entities/InventoryEntity.ts';
+import type {WorldObjectName} from '../worldObjectNames.ts';
 
 describe('computeOptimizerBoosts', () => {
   const optimizer: PlacedWorldObjectEntity = {

@@ -1,10 +1,10 @@
 import {describe, expect, it} from 'bun:test';
-import {computeEnergyProductionLevel} from './computeEnergyProductionLevel';
-import {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity';
-import {WorldObjectEntity} from '../entities/WorldObjectEntity';
-import {InventoryEntity} from '../entities/InventoryEntity';
-import {WorldObjectName} from '../worldObjectNames';
-import {energyProductionLevelsByWorldObjectName} from '../energyLevelsByWorldObjectName';
+import {computeEnergyProductionLevel} from './computeEnergyProductionLevel.ts';
+import type {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity.ts';
+import type {WorldObjectEntity} from '../entities/WorldObjectEntity.ts';
+import type {InventoryEntity} from '../entities/InventoryEntity.ts';
+import type {WorldObjectName} from '../worldObjectNames.ts';
+import {energyProductionLevelsByWorldObjectName} from '../energyLevelsByWorldObjectName.ts';
 
 describe('computeEnergyProductionLevel', () => {
   it('should sum the base production of positioned world objects with known production levels', () => {

@@ -1,9 +1,9 @@
 import {describe, expect, it} from 'bun:test';
-import {computeOptimizers} from './computeOptimizers';
-import {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity';
-import {WorldObjectEntity} from '../entities/WorldObjectEntity';
-import {InventoryEntity} from '../entities/InventoryEntity';
-import {WorldObjectName} from '../worldObjectNames';
+import {computeOptimizers} from './computeOptimizers.ts';
+import type {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity.ts';
+import type {WorldObjectEntity} from '../entities/WorldObjectEntity.ts';
+import type {InventoryEntity} from '../entities/InventoryEntity.ts';
+import type {WorldObjectName} from '../worldObjectNames.ts';
 
 describe('computeOptimizers', () => {
   describe('When an optimizer holds one fuse and boosts one producer', () => {

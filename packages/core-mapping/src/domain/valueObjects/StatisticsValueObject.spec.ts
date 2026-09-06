@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {createStatisticsValueObject} from './StatisticsValueObject';
-import {InvalidSaveDataError} from '../errors/InvalidSaveDataError';
+import {createStatisticsValueObject} from './StatisticsValueObject.ts';
+import {InvalidSaveDataError} from '../errors/InvalidSaveDataError.ts';
 
 describe('StatisticsValueObject', () => {
   it('should build a statistics value object from valid data', () => {

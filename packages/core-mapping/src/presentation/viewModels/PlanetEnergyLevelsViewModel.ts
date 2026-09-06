@@ -1,6 +1,6 @@
-import {TableViewModel} from "./TableViewModel";
-import {EnergyBreakdownRowViewModel} from "./EnergyBreakdownRowViewModel";
-import {OptimizerViewModel} from "./OptimizerViewModel";
+import type {TableViewModel} from "./TableViewModel.ts";
+import type {EnergyBreakdownRowViewModel} from "./EnergyBreakdownRowViewModel.ts";
+import type {OptimizerViewModel} from "./OptimizerViewModel.ts";
 
 export interface PlanetEnergyLevelsViewModel {
   planetId: string;

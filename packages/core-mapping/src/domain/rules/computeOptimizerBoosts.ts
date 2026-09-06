@@ -1,9 +1,9 @@
-import {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity";
-import {WorldObjectEntity} from "../entities/WorldObjectEntity";
-import {InventoryEntity} from "../entities/InventoryEntity";
-import {distanceBetween} from "./distanceBetween";
-import {ENERGY_FUSE_NAME, OPTIMIZER_CONFIG_BY_NAME} from "./energyOptimizerConfig";
-import {energyProductionLevelsByWorldObjectName} from "../energyLevelsByWorldObjectName";
+import type {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity.ts";
+import type {WorldObjectEntity} from "../entities/WorldObjectEntity.ts";
+import type {InventoryEntity} from "../entities/InventoryEntity.ts";
+import {distanceBetween} from "./distanceBetween.ts";
+import {ENERGY_FUSE_NAME, OPTIMIZER_CONFIG_BY_NAME} from "./energyOptimizerConfig.ts";
+import {energyProductionLevelsByWorldObjectName} from "../energyLevelsByWorldObjectName.ts";
 
 /**
  * Implements rules EN-OPT-1..3 and EN-FUSE-1..4: for each Optimizer holding at least one Energy

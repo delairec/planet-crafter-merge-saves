@@ -1,15 +1,15 @@
-import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
-import {PlanetEnergyLevelsValueObject} from "../domain/valueObjects/PlanetEnergyLevelsValueObject";
-import {EnergyBreakdownEntryValueObject} from "../domain/valueObjects/EnergyBreakdownEntryValueObject";
-import {OptimizerValueObject} from "../domain/valueObjects/OptimizerValueObject";
-import {EnergyLevelsViewModel} from "./viewModels/EnergyLevelsViewModel";
-import {PlanetEnergyLevelsViewModel} from "./viewModels/PlanetEnergyLevelsViewModel";
-import {EnergyBreakdownRowViewModel} from "./viewModels/EnergyBreakdownRowViewModel";
-import {OptimizerViewModel} from "./viewModels/OptimizerViewModel";
-import {formatNumber} from "./formatters/formatNumber/formatNumber";
-import {FormatNumberStrategies} from "./formatters/formatNumber/FormatNumberStrategies";
-import {EnergyLevelsPresenterPort} from "../application/ports/EnergyLevelsPresenterPort";
-import {worldObjectLabels} from "./worldObjectLabels";
+import type {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject.ts";
+import type {PlanetEnergyLevelsValueObject} from "../domain/valueObjects/PlanetEnergyLevelsValueObject.ts";
+import type {EnergyBreakdownEntryValueObject} from "../domain/valueObjects/EnergyBreakdownEntryValueObject.ts";
+import type {OptimizerValueObject} from "../domain/valueObjects/OptimizerValueObject.ts";
+import type {EnergyLevelsViewModel} from "./viewModels/EnergyLevelsViewModel.ts";
+import type {PlanetEnergyLevelsViewModel} from "./viewModels/PlanetEnergyLevelsViewModel.ts";
+import type {EnergyBreakdownRowViewModel} from "./viewModels/EnergyBreakdownRowViewModel.ts";
+import type {OptimizerViewModel} from "./viewModels/OptimizerViewModel.ts";
+import {formatNumber} from "./formatters/formatNumber/formatNumber.ts";
+import {FormatNumberStrategies} from "./formatters/formatNumber/FormatNumberStrategies.ts";
+import type {EnergyLevelsPresenterPort} from "../application/ports/EnergyLevelsPresenterPort.ts";
+import {worldObjectLabels} from "./worldObjectLabels.ts";
 import {
   energyLevelsSectionAvailableTitle,
   energyLevelsSectionConsumptionTitle,

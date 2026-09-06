@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {createIdSequence} from './createIdSequence';
+import {createIdSequence} from './createIdSequence.ts';
 
 describe('Create id sequence', () => {
 

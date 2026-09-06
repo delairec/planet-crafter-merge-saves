@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {formatPercentageNumber} from './percentage.strategy';
+import {formatPercentageNumber} from './percentage.strategy.ts';
 
 describe('formatPercentageNumber', () => {
   it('should format a ratio as a rounded percentage', () => {

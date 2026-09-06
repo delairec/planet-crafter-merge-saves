@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {buildMergedFileName} from './buildMergedFileName';
+import {buildMergedFileName} from './buildMergedFileName.ts';
 
 describe('buildMergedFileName', () => {
 

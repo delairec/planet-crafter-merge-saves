@@ -1,13 +1,13 @@
-import {WorldObjectName} from "../worldObjectNames";
-import {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity";
-import {WorldObjectEntity} from "../entities/WorldObjectEntity";
-import {InventoryEntity} from "../entities/InventoryEntity";
-import {OptimizerValueObject, createOptimizerValueObject} from "../valueObjects/OptimizerValueObject";
-import {createOptimizerBoostedMachineValueObject} from "../valueObjects/OptimizerBoostedMachineValueObject";
-import {energyProductionLevelsByWorldObjectName} from "../energyLevelsByWorldObjectName";
-import {ENERGY_FUSE_MULTIPLIER_PER_FUSE} from "./energyOptimizerConfig";
-import {computeOptimizerBoosts} from "./computeOptimizerBoosts";
-import {computeEnergyFuseCountsByProducerId} from "./computeEnergyFuseCountsByProducerId";
+import type {WorldObjectName} from "../worldObjectNames.ts";
+import type {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity.ts";
+import type {WorldObjectEntity} from "../entities/WorldObjectEntity.ts";
+import type {InventoryEntity} from "../entities/InventoryEntity.ts";
+import {type OptimizerValueObject, createOptimizerValueObject} from "../valueObjects/OptimizerValueObject.ts";
+import {createOptimizerBoostedMachineValueObject} from "../valueObjects/OptimizerBoostedMachineValueObject.ts";
+import {energyProductionLevelsByWorldObjectName} from "../energyLevelsByWorldObjectName.ts";
+import {ENERGY_FUSE_MULTIPLIER_PER_FUSE} from "./energyOptimizerConfig.ts";
+import {computeOptimizerBoosts} from "./computeOptimizerBoosts.ts";
+import {computeEnergyFuseCountsByProducerId} from "./computeEnergyFuseCountsByProducerId.ts";
 
 /**
  * Builds one entry per Optimizer holding at least one Energy Fuse, describing which machines it

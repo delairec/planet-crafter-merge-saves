@@ -1,4 +1,4 @@
-import {formatNumberByThresholds, Threshold} from "./threshold.strategy";
+import {formatNumberByThresholds, type Threshold} from "./threshold.strategy.ts";
 
 const thresholds: Threshold[] = [
   {value: 1_000_000_000_000, suffix: "ppk"},

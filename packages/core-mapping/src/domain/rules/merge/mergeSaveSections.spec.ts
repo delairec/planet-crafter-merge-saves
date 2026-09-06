@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'bun:test';
-import {mergeSaveSections} from './mergeSaveSections';
+import {mergeSaveSections} from './mergeSaveSections.ts';
 import {createFakeParsedSave} from 'shared-save-processing/testing/createFakeParsedSave.js';
-import {ParsedSections} from 'shared-save-processing/gameDefinitions';
+import type {ParsedSections} from 'shared-save-processing/gameDefinitions';
 
 describe('Merge saves', () => {
     const saveDisplayName = 'SAVE_NAME';

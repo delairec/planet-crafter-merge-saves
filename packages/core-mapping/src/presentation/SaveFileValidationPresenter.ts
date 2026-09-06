@@ -1,10 +1,10 @@
-import {SaveFileValidationPresenterPort} from "../application/ports/SaveFileValidationPresenterPort";
-import {ValidationIssue} from "../application/ports/ValidationIssue";
-import {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
-import {SaveFileValidationViewModel} from "./viewModels/SaveFileValidationViewModel";
-import {formatValidationIssue} from "./formatValidationIssue";
-import {formatValidationError} from "./formatValidationError";
-import {formatSaveWarning} from "./formatSaveWarning";
+import type {SaveFileValidationPresenterPort} from "../application/ports/SaveFileValidationPresenterPort.ts";
+import type {ValidationIssue} from "../application/ports/ValidationIssue.ts";
+import type {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
+import type {SaveFileValidationViewModel} from "./viewModels/SaveFileValidationViewModel.ts";
+import {formatValidationIssue} from "./formatValidationIssue.ts";
+import {formatValidationError} from "./formatValidationError.ts";
+import {formatSaveWarning} from "./formatSaveWarning.ts";
 
 export class SaveFileValidationPresenter implements SaveFileValidationPresenterPort {
   private _viewModel: SaveFileValidationViewModel;

@@ -1,9 +1,9 @@
-import {MergedSaveSections} from './MergedSaveSections';
-import {createIdSequence} from './createIdSequence';
-import {resolvePlayerIdConflicts} from './resolvePlayerIdConflicts';
-import {resolveInventoryIdConflicts} from './resolveInventoryIdConflicts';
-import {resolveWorldObjectIdConflicts} from './resolveWorldObjectIdConflicts';
-import {rewriteInventoryReferences, rewritePlayerReferences, rewriteWorldObjectReferences} from './rewriteReferences';
+import type {MergedSaveSections} from './MergedSaveSections.ts';
+import {createIdSequence} from './createIdSequence.ts';
+import {resolvePlayerIdConflicts} from './resolvePlayerIdConflicts.ts';
+import {resolveInventoryIdConflicts} from './resolveInventoryIdConflicts.ts';
+import {resolveWorldObjectIdConflicts} from './resolveWorldObjectIdConflicts.ts';
+import {rewriteInventoryReferences, rewritePlayerReferences, rewriteWorldObjectReferences} from './rewriteReferences.ts';
 
 /**
  * Renumbers the save B entries whose identifier is already used in save A, then points every save B

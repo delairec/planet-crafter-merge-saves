@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'bun:test';
-import {mergeWorldObjects} from './mergeWorldObjects';
-import {WorldObject} from 'shared-save-processing/gameDefinitions';
+import {mergeWorldObjects} from './mergeWorldObjects.ts';
+import type {WorldObject} from 'shared-save-processing/gameDefinitions';
 
 describe('Merge world objects', () => {
   function* createWorldObjectsGenerator(worldObjects: WorldObject[]): Generator<WorldObject> {

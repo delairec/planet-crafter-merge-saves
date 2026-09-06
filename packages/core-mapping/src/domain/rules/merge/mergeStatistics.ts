@@ -1,4 +1,4 @@
-import {Statistics} from 'shared-save-processing/gameDefinitions';
+import type {Statistics} from 'shared-save-processing/gameDefinitions';
 
 const DEFAULT_STATISTICS: Statistics = {craftedObjects: 0, totalSaveFileLoad: 0, totalSaveFileTime: 0};
 

@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'bun:test';
-import {LoadSaveFilePresenter} from './LoadSaveFilePresenter';
-import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue';
-import {ParsedSections, WORLD_OBJECTS_SECTION_INDEX} from 'shared-save-processing/gameDefinitions';
+import {LoadSaveFilePresenter} from './LoadSaveFilePresenter.ts';
+import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue.ts';
+import {type ParsedSections, WORLD_OBJECTS_SECTION_INDEX} from 'shared-save-processing/gameDefinitions';
 
 const parsedSectionCount: ParsedSections['length'] = 11;
 

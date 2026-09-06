@@ -1,9 +1,9 @@
-import {SaveValidatorService} from "../infrastructure/SaveValidatorService";
-import {SaveFilesMergerService} from "../infrastructure/SaveFilesMergerService";
-import {SaveSectionsParserService} from "../infrastructure/SaveSectionsParserService";
-import {SaveValidatorPort} from "../application/ports/SaveValidatorPort";
-import {SaveFilesMergerPort} from "../application/ports/SaveFilesMergerPort";
-import {SaveSectionsParserPort} from "../application/ports/SaveSectionsParserPort";
+import {SaveValidatorService} from "../infrastructure/SaveValidatorService.ts";
+import {SaveFilesMergerService} from "../infrastructure/SaveFilesMergerService.ts";
+import {SaveSectionsParserService} from "../infrastructure/SaveSectionsParserService.ts";
+import type {SaveValidatorPort} from "../application/ports/SaveValidatorPort.ts";
+import type {SaveFilesMergerPort} from "../application/ports/SaveFilesMergerPort.ts";
+import type {SaveSectionsParserPort} from "../application/ports/SaveSectionsParserPort.ts";
 
 export function createSaveValidator(): SaveValidatorPort {
   return new SaveValidatorService();

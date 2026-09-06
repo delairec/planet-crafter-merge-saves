@@ -1,8 +1,8 @@
 import {describe, expect, it} from 'bun:test';
-import {resolveIdConflicts} from './resolveIdConflicts';
-import {MergedSaveSections} from './MergedSaveSections';
-import {Inventory, Player, WorldObject} from 'shared-save-processing/gameDefinitions';
-import {EntriesByOrigin} from './EntriesByOrigin';
+import {resolveIdConflicts} from './resolveIdConflicts.ts';
+import type {MergedSaveSections} from './MergedSaveSections.ts';
+import type {Inventory, Player, WorldObject} from 'shared-save-processing/gameDefinitions';
+import type {EntriesByOrigin} from './EntriesByOrigin.ts';
 
 describe('Resolve id conflicts', () => {
   const basePlayer = {

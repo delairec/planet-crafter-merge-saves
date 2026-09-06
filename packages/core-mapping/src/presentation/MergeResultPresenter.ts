@@ -1,9 +1,9 @@
-import {MergeResultPresenterPort} from "../application/ports/MergeResultPresenterPort";
-import {ValidationIssue} from "../application/ports/ValidationIssue";
-import {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
-import {MergeResultViewModel} from "./viewModels/MergeResultViewModel";
-import {formatValidationIssue} from "./formatValidationIssue";
-import {formatSaveWarning} from "./formatSaveWarning";
+import type {MergeResultPresenterPort} from "../application/ports/MergeResultPresenterPort.ts";
+import type {ValidationIssue} from "../application/ports/ValidationIssue.ts";
+import type {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
+import type {MergeResultViewModel} from "./viewModels/MergeResultViewModel.ts";
+import {formatValidationIssue} from "./formatValidationIssue.ts";
+import {formatSaveWarning} from "./formatSaveWarning.ts";
 
 export class MergeResultPresenter implements MergeResultPresenterPort {
   private _viewModel: MergeResultViewModel;

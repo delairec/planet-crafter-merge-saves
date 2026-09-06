@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {formatNumberByWeightThresholds} from './weight.strategy';
+import {formatNumberByWeightThresholds} from './weight.strategy.ts';
 
 const nbsp = '\u00A0';
 

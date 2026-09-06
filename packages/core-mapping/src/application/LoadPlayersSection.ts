@@ -1,5 +1,5 @@
-import {PlayersPresenterPort} from './ports/PlayersPresenterPort';
-import {SaveSectionsReaderPort} from './ports/SaveSectionsReaderPort';
+import type {PlayersPresenterPort} from './ports/PlayersPresenterPort.ts';
+import type {SaveSectionsReaderPort} from './ports/SaveSectionsReaderPort.ts';
 
 export class LoadPlayersSection {
   constructor(

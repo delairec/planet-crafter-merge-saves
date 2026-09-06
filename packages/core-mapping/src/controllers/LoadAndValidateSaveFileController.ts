@@ -1,8 +1,8 @@
-import {LoadSaveFileViewModel} from "../presentation/viewModels/LoadSaveFileViewModel";
-import {createSaveSectionsParser, createSaveValidator} from "../composition/compositionRoot";
-import {LoadSaveFilePresenter} from "../presentation/LoadSaveFilePresenter";
-import {LoadAndValidateSaveFile} from "../application/LoadAndValidateSaveFile";
-import {LoadAndValidateSaveFileRequest} from "../application/requests/LoadAndValidateSaveFileRequest";
+import type {LoadSaveFileViewModel} from "../presentation/viewModels/LoadSaveFileViewModel.ts";
+import {createSaveSectionsParser, createSaveValidator} from "../composition/compositionRoot.ts";
+import {LoadSaveFilePresenter} from "../presentation/LoadSaveFilePresenter.ts";
+import {LoadAndValidateSaveFile} from "../application/LoadAndValidateSaveFile.ts";
+import type {LoadAndValidateSaveFileRequest} from "../application/requests/LoadAndValidateSaveFileRequest.ts";
 
 export class LoadAndValidateSaveFileController {
   static async loadAndValidateSaveFile(fileName: string, content: string): Promise<LoadSaveFileViewModel> {

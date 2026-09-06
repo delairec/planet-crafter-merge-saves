@@ -1,37 +1,37 @@
 import {
   GLOBAL_METADATA_SECTION_INDEX,
-  GlobalMetadata,
+  type GlobalMetadata,
   INVENTORIES_SECTION_INDEX,
-  Inventory,
-  ParsedSections,
-  Player,
+  type Inventory,
+  type ParsedSections,
+  type Player,
   PLAYERS_SECTION_INDEX,
   SAVE_CONFIGURATION_SECTION_INDEX,
-  SaveConfiguration,
-  Statistics,
+  type SaveConfiguration,
+  type Statistics,
   STATISTICS_SECTION_INDEX,
   TERRAFORMATION_LEVELS_SECTION_INDEX,
-  TerraformationLevel,
+  type TerraformationLevel,
   WORLD_OBJECTS_SECTION_INDEX,
-  WorldObject
+  type WorldObject
 } from 'shared-save-processing/gameDefinitions';
-import {SaveSectionsReaderPort} from '../application/ports/SaveSectionsReaderPort';
-import {GlobalProgressionValueObject, createGlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
-import {PlayerEntity, createPlayerEntity} from "../domain/entities/PlayerEntity";
-import {TerraformationLevelEntity, createTerraformationLevelEntity} from '../domain/entities/TerraformationLevelEntity';
-import {InventoryEntity, createInventoryEntity} from "../domain/entities/InventoryEntity";
-import {WorldObjectEntity, createWorldObjectEntity} from "../domain/entities/WorldObjectEntity";
-import {PlacedWorldObjectEntity, createPlacedWorldObjectEntity} from "../domain/entities/PlacedWorldObjectEntity";
-import {StatisticsValueObject, createStatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
-import {SaveConfigurationValueObject, createSaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
+import type {SaveSectionsReaderPort} from '../application/ports/SaveSectionsReaderPort.ts';
+import {type GlobalProgressionValueObject, createGlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject.ts";
+import {type PlayerEntity, createPlayerEntity} from "../domain/entities/PlayerEntity.ts";
+import {type TerraformationLevelEntity, createTerraformationLevelEntity} from '../domain/entities/TerraformationLevelEntity.ts';
+import {type InventoryEntity, createInventoryEntity} from "../domain/entities/InventoryEntity.ts";
+import {type WorldObjectEntity, createWorldObjectEntity} from "../domain/entities/WorldObjectEntity.ts";
+import {type PlacedWorldObjectEntity, createPlacedWorldObjectEntity} from "../domain/entities/PlacedWorldObjectEntity.ts";
+import {type StatisticsValueObject, createStatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject.ts";
+import {type SaveConfigurationValueObject, createSaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject.ts";
 import {
-  EnergyLevelsRawDataValueObject,
-  PlanetWorldObjectsValueObject,
+  type EnergyLevelsRawDataValueObject,
+  type PlanetWorldObjectsValueObject,
   createEnergyLevelsRawDataValueObject,
   createPlanetWorldObjectsValueObject
-} from "../domain/valueObjects/EnergyLevelsRawDataValueObject";
-import {WorldObjectName} from "../domain/worldObjectNames";
-import {resolvePlanetName} from "../domain/rules/resolvePlanetName";
+} from "../domain/valueObjects/EnergyLevelsRawDataValueObject.ts";
+import type {WorldObjectName} from "../domain/worldObjectNames.ts";
+import {resolvePlanetName} from "../domain/rules/resolvePlanetName.ts";
 
 function parsePosition(pos: string): [number, number, number] {
   const [x, y, z] = pos.split(',').map(Number);
@@ -48,7 +48,7 @@ export class SaveSectionsReaderService implements SaveSectionsReaderPort {
   private readonly statistics: Statistics[];
   private readonly saveConfiguration: SaveConfiguration[];
 
-  constructor(private readonly sections: ParsedSections) {
+  constructor(sections: ParsedSections) {
     this.globalMetadata = sections[GLOBAL_METADATA_SECTION_INDEX] ?? [];
     this.terraformationLevels = sections[TERRAFORMATION_LEVELS_SECTION_INDEX] ?? [];
     this.players = sections[PLAYERS_SECTION_INDEX] ?? [];

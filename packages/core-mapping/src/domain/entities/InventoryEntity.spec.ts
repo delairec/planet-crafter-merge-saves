@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {createInventoryEntity} from './InventoryEntity';
-import {InvalidSaveDataError} from '../errors/InvalidSaveDataError';
+import {createInventoryEntity} from './InventoryEntity.ts';
+import {InvalidSaveDataError} from '../errors/InvalidSaveDataError.ts';
 
 describe('InventoryEntity', () => {
   it('should build an inventory entity from valid data', () => {

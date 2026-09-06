@@ -1,4 +1,4 @@
-import {assertArray, assertNonEmptyString} from "../errors/assertions";
+import {assertArray, assertNonEmptyString} from "../errors/assertions.ts";
 
 export interface PlayerEntity {
   readonly name: string;

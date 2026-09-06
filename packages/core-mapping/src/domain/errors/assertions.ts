@@ -1,4 +1,4 @@
-import {InvalidSaveDataError} from "./InvalidSaveDataError";
+import {InvalidSaveDataError} from "./InvalidSaveDataError.ts";
 
 export function assertFiniteNumber(value: unknown, field: string): number {
   if (typeof value !== 'number' || !Number.isFinite(value)) {

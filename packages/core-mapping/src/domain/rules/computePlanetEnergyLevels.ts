@@ -1,15 +1,15 @@
-import {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity";
-import {WorldObjectEntity} from "../entities/WorldObjectEntity";
-import {InventoryEntity} from "../entities/InventoryEntity";
+import type {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity.ts";
+import type {WorldObjectEntity} from "../entities/WorldObjectEntity.ts";
+import type {InventoryEntity} from "../entities/InventoryEntity.ts";
 import {
   energyConsumptionLevelsByWorldObjectName,
   energyProductionLevelsByWorldObjectName
-} from "../energyLevelsByWorldObjectName";
-import {PlanetEnergyLevelsValueObject} from "../valueObjects/PlanetEnergyLevelsValueObject";
-import {computeEnergyProductionLevel} from "./computeEnergyProductionLevel";
-import {computeEnergyConsumptionLevel} from "./computeEnergyConsumptionLevel";
-import {computeEnergyBreakdown} from "./computeEnergyBreakdown";
-import {computeOptimizers} from "./computeOptimizers";
+} from "../energyLevelsByWorldObjectName.ts";
+import type {PlanetEnergyLevelsValueObject} from "../valueObjects/PlanetEnergyLevelsValueObject.ts";
+import {computeEnergyProductionLevel} from "./computeEnergyProductionLevel.ts";
+import {computeEnergyConsumptionLevel} from "./computeEnergyConsumptionLevel.ts";
+import {computeEnergyBreakdown} from "./computeEnergyBreakdown.ts";
+import {computeOptimizers} from "./computeOptimizers.ts";
 
 /**
  * Computes a single planet's energy levels (production, consumption, breakdowns, optimizer

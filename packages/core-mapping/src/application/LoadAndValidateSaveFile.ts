@@ -1,7 +1,7 @@
-import {SaveValidatorPort} from "./ports/SaveValidatorPort";
-import {SaveSectionsParserPort} from "./ports/SaveSectionsParserPort";
-import {LoadAndValidateSaveFilePresenterPort} from "./ports/LoadAndValidateSaveFilePresenterPort";
-import {LoadAndValidateSaveFileRequest} from "./requests/LoadAndValidateSaveFileRequest";
+import type {SaveValidatorPort} from "./ports/SaveValidatorPort.ts";
+import type {SaveSectionsParserPort} from "./ports/SaveSectionsParserPort.ts";
+import type {LoadAndValidateSaveFilePresenterPort} from "./ports/LoadAndValidateSaveFilePresenterPort.ts";
+import type {LoadAndValidateSaveFileRequest} from "./requests/LoadAndValidateSaveFileRequest.ts";
 
 export class LoadAndValidateSaveFile {
   constructor(

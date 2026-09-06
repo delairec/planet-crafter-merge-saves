@@ -1,4 +1,4 @@
-import {formatDecimalNumberWithSuffix} from "./formatDecimalNumberWithSuffix";
+import {formatDecimalNumberWithSuffix} from "./formatDecimalNumberWithSuffix.ts";
 
 export interface Threshold {
   value: number;

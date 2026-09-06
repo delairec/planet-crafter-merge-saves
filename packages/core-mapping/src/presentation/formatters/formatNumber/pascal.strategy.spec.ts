@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {formatNumberByPascalThresholds} from './pascal.strategy';
+import {formatNumberByPascalThresholds} from './pascal.strategy.ts';
 
 const nbsp = '\u00A0';
 

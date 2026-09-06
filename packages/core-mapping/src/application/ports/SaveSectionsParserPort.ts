@@ -1,4 +1,4 @@
-import {ParsedSections} from "shared-save-processing/gameDefinitions";
+import type {ParsedSections} from "shared-save-processing/gameDefinitions";
 
 /**
  * Parsing reports the errors it hits while reading the sections. Format adaptations are not

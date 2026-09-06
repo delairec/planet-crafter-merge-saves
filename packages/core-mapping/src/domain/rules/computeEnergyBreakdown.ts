@@ -1,6 +1,6 @@
-import {WorldObjectName} from "../worldObjectNames";
-import {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity";
-import {EnergyBreakdownEntryValueObject, createEnergyBreakdownEntryValueObject} from "../valueObjects/EnergyBreakdownEntryValueObject";
+import type {WorldObjectName} from "../worldObjectNames.ts";
+import type {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity.ts";
+import {type EnergyBreakdownEntryValueObject, createEnergyBreakdownEntryValueObject} from "../valueObjects/EnergyBreakdownEntryValueObject.ts";
 
 /**
  * Groups positioned world objects matching the given base energy levels table by name, so the

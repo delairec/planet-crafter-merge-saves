@@ -1,5 +1,5 @@
-import {WorldObjectName} from "../worldObjectNames";
-import {assertFiniteNumber, assertNonEmptyString, assertOptionalFiniteNumber} from "../errors/assertions";
+import type {WorldObjectName} from "../worldObjectNames.ts";
+import {assertFiniteNumber, assertNonEmptyString, assertOptionalFiniteNumber} from "../errors/assertions.ts";
 
 export interface EnergyBreakdownEntryValueObject {
   readonly name: WorldObjectName;

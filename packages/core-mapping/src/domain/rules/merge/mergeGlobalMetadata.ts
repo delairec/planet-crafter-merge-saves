@@ -1,4 +1,4 @@
-import {GlobalMetadata} from 'shared-save-processing/gameDefinitions';
+import type {GlobalMetadata} from 'shared-save-processing/gameDefinitions';
 
 const DEFAULT_METADATA: GlobalMetadata = {
     terraTokens: 0,

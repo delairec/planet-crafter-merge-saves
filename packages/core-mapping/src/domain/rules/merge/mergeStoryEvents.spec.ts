@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'bun:test';
-import {mergeStoryEvents} from './mergeStoryEvents';
+import {mergeStoryEvents} from './mergeStoryEvents.ts';
 
 describe('Merge story events', () => {
   const storyEventA = {stringId: 'StoryEvent-FirstMessageClick'};

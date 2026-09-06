@@ -1,9 +1,9 @@
-import {mergeSaveSections} from "../domain/rules/merge/mergeSaveSections";
-import {MergedSaveSections} from "../domain/rules/merge/MergedSaveSections";
-import {resolveIdConflicts} from "../domain/rules/merge/resolveIdConflicts";
-import {buildMergedFileName} from "./buildMergedFileName";
-import {SaveFilesMergerPort} from "../application/ports/SaveFilesMergerPort";
-import {createMergedSaveValueObject, MergedSaveValueObject} from "../domain/valueObjects/MergedSaveValueObject";
+import {mergeSaveSections} from "../domain/rules/merge/mergeSaveSections.ts";
+import type {MergedSaveSections} from "../domain/rules/merge/MergedSaveSections.ts";
+import {resolveIdConflicts} from "../domain/rules/merge/resolveIdConflicts.ts";
+import {buildMergedFileName} from "./buildMergedFileName.ts";
+import type {SaveFilesMergerPort} from "../application/ports/SaveFilesMergerPort.ts";
+import {createMergedSaveValueObject, type MergedSaveValueObject} from "../domain/valueObjects/MergedSaveValueObject.ts";
 import {parseSaveSections} from "shared-save-processing/parseSaveSections.js";
 import {serializeSave} from "shared-save-processing/serializeSave.js";
 

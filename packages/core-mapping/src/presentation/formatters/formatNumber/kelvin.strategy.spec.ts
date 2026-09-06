@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {formatNumberByKelvinThresholds} from './kelvin.strategy';
+import {formatNumberByKelvinThresholds} from './kelvin.strategy.ts';
 
 const nbsp = '\u00A0';
 

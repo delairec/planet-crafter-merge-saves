@@ -1,8 +1,8 @@
-import {ParsedSections} from "shared-save-processing/gameDefinitions";
-import {SaveConfigurationViewModel} from "../presentation/viewModels/SaveConfigurationViewModel";
-import {SaveSectionsReaderService} from "../infrastructure/SaveSectionsReaderService";
-import {SaveConfigurationPresenter} from "../presentation/SaveConfigurationPresenter";
-import {LoadSaveConfigurationSection} from "../application/LoadSaveConfigurationSection";
+import type {ParsedSections} from "shared-save-processing/gameDefinitions";
+import type {SaveConfigurationViewModel} from "../presentation/viewModels/SaveConfigurationViewModel.ts";
+import {SaveSectionsReaderService} from "../infrastructure/SaveSectionsReaderService.ts";
+import {SaveConfigurationPresenter} from "../presentation/SaveConfigurationPresenter.ts";
+import {LoadSaveConfigurationSection} from "../application/LoadSaveConfigurationSection.ts";
 
 export class LoadSaveConfigurationSectionController {
   static async loadSaveConfigurationSection(sections: ParsedSections): Promise<SaveConfigurationViewModel> {

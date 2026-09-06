@@ -1,15 +1,15 @@
-import {SaveSectionsReaderPort} from "../application/ports/SaveSectionsReaderPort";
-import {createGlobalProgressionValueObject, GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
-import {createPlayerEntity, PlayerEntity} from "../domain/entities/PlayerEntity";
-import {createTerraformationLevelEntity, TerraformationLevelEntity} from "../domain/entities/TerraformationLevelEntity";
-import {createStatisticsValueObject, StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
-import {createSaveConfigurationValueObject, SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
+import type {SaveSectionsReaderPort} from "../application/ports/SaveSectionsReaderPort.ts";
+import {createGlobalProgressionValueObject, type GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject.ts";
+import {createPlayerEntity, type PlayerEntity} from "../domain/entities/PlayerEntity.ts";
+import {createTerraformationLevelEntity, type TerraformationLevelEntity} from "../domain/entities/TerraformationLevelEntity.ts";
+import {createStatisticsValueObject, type StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject.ts";
+import {createSaveConfigurationValueObject, type SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject.ts";
 import {
   createEnergyLevelsRawDataValueObject,
   createPlanetWorldObjectsValueObject,
-  EnergyLevelsRawDataValueObject
-} from "../domain/valueObjects/EnergyLevelsRawDataValueObject";
-import {createPlacedWorldObjectEntity} from "../domain/entities/PlacedWorldObjectEntity";
+  type EnergyLevelsRawDataValueObject
+} from "../domain/valueObjects/EnergyLevelsRawDataValueObject.ts";
+import {createPlacedWorldObjectEntity} from "../domain/entities/PlacedWorldObjectEntity.ts";
 
 export class FakeSaveParserService implements SaveSectionsReaderPort {
   getEnergyLevelsRawData(): EnergyLevelsRawDataValueObject {

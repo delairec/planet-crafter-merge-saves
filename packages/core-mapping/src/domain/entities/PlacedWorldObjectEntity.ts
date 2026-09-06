@@ -1,5 +1,5 @@
-import {WorldObjectName} from "../worldObjectNames";
-import {assertFiniteNumber, assertNonEmptyString, assertOptionalFiniteNumber} from "../errors/assertions";
+import type {WorldObjectName} from "../worldObjectNames.ts";
+import {assertFiniteNumber, assertNonEmptyString, assertOptionalFiniteNumber} from "../errors/assertions.ts";
 
 // Represents a world object placed in the game world (has a position and belongs to a planet),
 // as opposed to `WorldObjectEntity`, which only carries identity/name and is used for

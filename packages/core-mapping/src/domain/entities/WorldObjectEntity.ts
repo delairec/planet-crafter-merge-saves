@@ -1,5 +1,5 @@
-import {WorldObjectName} from "../worldObjectNames";
-import {assertNonEmptyString} from "../errors/assertions";
+import type {WorldObjectName} from "../worldObjectNames.ts";
+import {assertNonEmptyString} from "../errors/assertions.ts";
 
 export interface WorldObjectEntity {
   readonly id: string;

@@ -1,8 +1,8 @@
 import {describe, expect, it, mock} from "bun:test";
-import {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort";
-import {FakeSaveParserService} from "../testing/FakeSaveParserService";
-import {SaveConfigurationPresenterPort} from "./ports/SaveConfigurationPresenterPort";
-import {LoadSaveConfigurationSection} from "./LoadSaveConfigurationSection";
+import type {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort.ts";
+import {FakeSaveParserService} from "../testing/FakeSaveParserService.ts";
+import type {SaveConfigurationPresenterPort} from "./ports/SaveConfigurationPresenterPort.ts";
+import {LoadSaveConfigurationSection} from "./LoadSaveConfigurationSection.ts";
 
 describe('LoadSaveConfigurationSection', () => {
   it('should present save configuration from the parsed save', async () => {

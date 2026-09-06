@@ -1,8 +1,8 @@
 import {describe, expect, it, mock} from 'bun:test';
-import {FakeSaveParserService} from "../testing/FakeSaveParserService";
-import {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort";
-import {PlayersPresenterPort} from "./ports/PlayersPresenterPort";
-import {LoadPlayersSection} from './LoadPlayersSection';
+import {FakeSaveParserService} from "../testing/FakeSaveParserService.ts";
+import type {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort.ts";
+import type {PlayersPresenterPort} from "./ports/PlayersPresenterPort.ts";
+import {LoadPlayersSection} from './LoadPlayersSection.ts';
 
 describe('LoadPlayersSection', () => {
   it('should present all players from the parsed save', async () => {

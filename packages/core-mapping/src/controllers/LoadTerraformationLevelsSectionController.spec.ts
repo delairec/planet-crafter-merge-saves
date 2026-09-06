@@ -1,8 +1,8 @@
 import {describe, expect, it} from 'bun:test';
 import {parseSaveSections} from 'shared-save-processing/parseSaveSections.js';
 import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
-import {LoadTerraformationLevelsSectionController} from './LoadTerraformationLevelsSectionController';
-import {TerraformationLevelsViewModel} from '../presentation/viewModels/TerraformationLevelsViewModel';
+import {LoadTerraformationLevelsSectionController} from './LoadTerraformationLevelsSectionController.ts';
+import type {TerraformationLevelsViewModel} from '../presentation/viewModels/TerraformationLevelsViewModel.ts';
 
 const nbsp = '\u00A0';
 

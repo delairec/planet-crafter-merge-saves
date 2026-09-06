@@ -1,4 +1,4 @@
-import {TerraformationLevelEntity} from "../entities/TerraformationLevelEntity";
+import type {TerraformationLevelEntity} from "../entities/TerraformationLevelEntity.ts";
 
 export interface TerraformationSummary {
   terraformationIndex: number;

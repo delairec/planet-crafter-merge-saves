@@ -1,5 +1,5 @@
-import {Player} from 'shared-save-processing/gameDefinitions';
-import {EntriesByOrigin} from './EntriesByOrigin';
+import type {Player} from 'shared-save-processing/gameDefinitions';
+import type {EntriesByOrigin} from './EntriesByOrigin.ts';
 
 type LegacyCompatiblePlayer = Omit<Player, 'cameraView' | 'totalCraftedObjects' | 'totalTerraTokenEarned'>
   & Partial<Pick<Player, 'cameraView' | 'totalCraftedObjects' | 'totalTerraTokenEarned'>>;

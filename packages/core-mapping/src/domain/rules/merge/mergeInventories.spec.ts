@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'bun:test';
-import {mergeInventories} from './mergeInventories';
+import {mergeInventories} from './mergeInventories.ts';
 
 describe('Merge Inventories', () => {
   const noOrphanInventoryIds = new Set<number>();

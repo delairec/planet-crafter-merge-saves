@@ -1,4 +1,4 @@
-import {StoryEvent} from 'shared-save-processing/gameDefinitions';
+import type {StoryEvent} from 'shared-save-processing/gameDefinitions';
 
 /**
  * @see GR-STORY-1, GR-STORY-2 in docs/game-rules.md

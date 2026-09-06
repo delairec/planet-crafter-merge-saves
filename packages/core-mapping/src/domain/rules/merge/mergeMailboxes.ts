@@ -1,4 +1,4 @@
-import {MailboxMessage} from 'shared-save-processing/gameDefinitions';
+import type {MailboxMessage} from 'shared-save-processing/gameDefinitions';
 
 /**
  * @see GR-MSG-1, GR-MSG-2, GR-MSG-3 in docs/game-rules.md

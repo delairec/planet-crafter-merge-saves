@@ -1,7 +1,7 @@
 import {describe, expect, it, mock} from 'bun:test';
-import {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort";
-import {FakeSaveParserService} from "../testing/FakeSaveParserService";
-import {LoadEnergyLevelsSection} from "./LoadEnergyLevelsSection";
+import type {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort.ts";
+import {FakeSaveParserService} from "../testing/FakeSaveParserService.ts";
+import {LoadEnergyLevelsSection} from "./LoadEnergyLevelsSection.ts";
 
 describe('LoadEnergyLevelsSection', () => {
   it('should present computed energy levels from parsed save', async () => {

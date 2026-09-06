@@ -1,5 +1,5 @@
-import {Inventory, Player, WorldObject} from 'shared-save-processing/gameDefinitions';
-import {EntriesByOrigin} from './EntriesByOrigin';
+import type {Inventory, Player, WorldObject} from 'shared-save-processing/gameDefinitions';
+import type {EntriesByOrigin} from './EntriesByOrigin.ts';
 
 const ID_LIST_SEPARATOR = ',';
 

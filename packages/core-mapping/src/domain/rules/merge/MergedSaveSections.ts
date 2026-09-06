@@ -1,4 +1,4 @@
-import {
+import type {
   GlobalMetadata,
   Inventory,
   MailboxMessage,
@@ -10,7 +10,7 @@ import {
   WorldEvent,
   WorldObject
 } from 'shared-save-processing/gameDefinitions';
-import {EntriesByOrigin} from './EntriesByOrigin';
+import type {EntriesByOrigin} from './EntriesByOrigin.ts';
 
 /**
  * The ten sections of a save once merged, still structured: serialization happens in

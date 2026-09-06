@@ -1,4 +1,4 @@
-import {formatDecimalNumber} from "./thousandsSeparator.strategy";
+import {formatDecimalNumber} from "./thousandsSeparator.strategy.ts";
 
 const nbsp = ' ';
 

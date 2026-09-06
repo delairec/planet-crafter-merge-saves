@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {LoadAndValidateSaveFileController} from './LoadAndValidateSaveFileController';
+import {LoadAndValidateSaveFileController} from './LoadAndValidateSaveFileController.ts';
 import {createFakeSaveContent, createLegacyFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
 
 describe('LoadAndValidateSaveFileController', () => {

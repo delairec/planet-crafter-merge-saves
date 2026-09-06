@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {MergeSaveFilesController} from './MergeSaveFilesController';
+import {MergeSaveFilesController} from './MergeSaveFilesController.ts';
 import {createFakeSaveContent, createLegacyFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
 
 describe('MergeSaveFilesController', () => {

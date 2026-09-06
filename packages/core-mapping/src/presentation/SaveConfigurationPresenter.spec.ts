@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'bun:test';
-import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
-import {SaveConfigurationViewModel} from "./viewModels/SaveConfigurationViewModel";
-import {SaveConfigurationPresenter} from "./SaveConfigurationPresenter";
+import type {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject.ts";
+import type {SaveConfigurationViewModel} from "./viewModels/SaveConfigurationViewModel.ts";
+import {SaveConfigurationPresenter} from "./SaveConfigurationPresenter.ts";
 
 describe('SaveConfigurationPresenter', () => {
   it('should initialize with default view model', () => {

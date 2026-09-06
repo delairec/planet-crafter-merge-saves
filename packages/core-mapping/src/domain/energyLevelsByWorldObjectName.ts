@@ -1,4 +1,4 @@
-import {WorldObjectName} from './worldObjectNames';
+import type {WorldObjectName} from './worldObjectNames.ts';
 
 export const energyProductionLevelsByWorldObjectName: Partial<Record<WorldObjectName, number>> = {
   EnergyGenerator1: 1.2,

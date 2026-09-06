@@ -1,5 +1,5 @@
-import {WorldObjectName} from "../worldObjectNames";
-import {assertFiniteNumber, assertNonEmptyString} from "../errors/assertions";
+import type {WorldObjectName} from "../worldObjectNames.ts";
+import {assertFiniteNumber, assertNonEmptyString} from "../errors/assertions.ts";
 
 export interface OptimizerBoostedMachineValueObject {
   readonly name: WorldObjectName;

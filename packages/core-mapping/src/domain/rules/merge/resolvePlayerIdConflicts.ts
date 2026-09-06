@@ -1,7 +1,7 @@
-import {Player} from 'shared-save-processing/gameDefinitions';
-import {EntriesByOrigin} from './EntriesByOrigin';
-import {IdSequence} from './createIdSequence';
-import {ResolvedEntries} from './ResolvedEntries';
+import type {Player} from 'shared-save-processing/gameDefinitions';
+import type {EntriesByOrigin} from './EntriesByOrigin.ts';
+import type {IdSequence} from './createIdSequence.ts';
+import type {ResolvedEntries} from './ResolvedEntries.ts';
 
 /**
  * Gives a new identifier to every save B player whose identifier is already used in save A.

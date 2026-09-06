@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {TerraformationLevelsPresenter} from './TerraformationLevelsPresenter';
-import {TerraformationLevelsViewModel} from './viewModels/TerraformationLevelsViewModel';
+import {TerraformationLevelsPresenter} from './TerraformationLevelsPresenter.ts';
+import type {TerraformationLevelsViewModel} from './viewModels/TerraformationLevelsViewModel.ts';
 
 const nbsp = '\u00A0';
 

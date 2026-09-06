@@ -1,8 +1,8 @@
-import {GlobalProgressionViewModel} from '../presentation/viewModels/GlobalProgressionViewModel';
-import {GlobalProgressionPresenter} from '../presentation/GlobalProgressionPresenter';
-import {LoadGlobalProgressionSection} from '../application/LoadGlobalProgressionSection';
-import {SaveSectionsReaderService} from '../infrastructure/SaveSectionsReaderService';
-import {ParsedSections} from "shared-save-processing/gameDefinitions";
+import type {GlobalProgressionViewModel} from '../presentation/viewModels/GlobalProgressionViewModel.ts';
+import {GlobalProgressionPresenter} from '../presentation/GlobalProgressionPresenter.ts';
+import {LoadGlobalProgressionSection} from '../application/LoadGlobalProgressionSection.ts';
+import {SaveSectionsReaderService} from '../infrastructure/SaveSectionsReaderService.ts';
+import type {ParsedSections} from "shared-save-processing/gameDefinitions";
 
 export class LoadGlobalProgressionSectionController {
 

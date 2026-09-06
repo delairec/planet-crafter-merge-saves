@@ -1,9 +1,9 @@
 import {describe, expect, it, mock} from 'bun:test';
-import {MergeSaveFiles} from './MergeSaveFiles';
-import {SaveValidatorPort} from './ports/SaveValidatorPort';
-import {SaveFilesMergerPort} from './ports/SaveFilesMergerPort';
-import {MergeResultPresenterPort} from './ports/MergeResultPresenterPort';
-import {VALIDATION_ISSUE_CODES} from './ports/ValidationIssue';
+import {MergeSaveFiles} from './MergeSaveFiles.ts';
+import type {SaveValidatorPort} from './ports/SaveValidatorPort.ts';
+import type {SaveFilesMergerPort} from './ports/SaveFilesMergerPort.ts';
+import type {MergeResultPresenterPort} from './ports/MergeResultPresenterPort.ts';
+import {VALIDATION_ISSUE_CODES} from './ports/ValidationIssue.ts';
 
 describe('MergeSaveFiles', () => {
 

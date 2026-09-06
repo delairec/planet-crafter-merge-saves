@@ -1,5 +1,5 @@
-import {PlanetEnergyLevelsValueObject} from "./PlanetEnergyLevelsValueObject";
-import {assertArray} from "../errors/assertions";
+import type {PlanetEnergyLevelsValueObject} from "./PlanetEnergyLevelsValueObject.ts";
+import {assertArray} from "../errors/assertions.ts";
 
 export interface EnergyLevelsValueObject {
   readonly planets: readonly PlanetEnergyLevelsValueObject[];

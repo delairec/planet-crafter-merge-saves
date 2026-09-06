@@ -1,14 +1,18 @@
-import {SaveValidatorPort} from "./ports/SaveValidatorPort";
-import {SaveFilesMergerPort} from "./ports/SaveFilesMergerPort";
-import {MergeResultPresenterPort} from "./ports/MergeResultPresenterPort";
-import {MergeSaveFilesRequest} from "./requests/MergeSaveFilesRequest";
+import type {SaveValidatorPort} from "./ports/SaveValidatorPort.ts";
+import type {SaveFilesMergerPort} from "./ports/SaveFilesMergerPort.ts";
+import type {MergeResultPresenterPort} from "./ports/MergeResultPresenterPort.ts";
+import type {MergeSaveFilesRequest} from "./requests/MergeSaveFilesRequest.ts";
 
 export class MergeSaveFiles {
-  constructor(
-    private readonly validator: SaveValidatorPort,
-    private readonly merger: SaveFilesMergerPort,
-    private readonly presenter: MergeResultPresenterPort
-  ) {}
+  private readonly validator: SaveValidatorPort;
+  private readonly merger: SaveFilesMergerPort;
+  private readonly presenter: MergeResultPresenterPort;
+
+  constructor(validator: SaveValidatorPort, merger: SaveFilesMergerPort, presenter: MergeResultPresenterPort) {
+    this.validator = validator;
+    this.merger = merger;
+    this.presenter = presenter;
+  }
 
   async execute({fileNameA, contentA, fileNameB, contentB, saveDisplayName}: MergeSaveFilesRequest): Promise<void> {
     const validationA = this.validator.validate(fileNameA, contentA);

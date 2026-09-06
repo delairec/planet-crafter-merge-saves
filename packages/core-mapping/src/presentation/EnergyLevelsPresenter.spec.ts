@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {EnergyLevelsPresenter} from "./EnergyLevelsPresenter";
-import {EnergyLevelsViewModel} from "./viewModels/EnergyLevelsViewModel";
+import {EnergyLevelsPresenter} from "./EnergyLevelsPresenter.ts";
+import type {EnergyLevelsViewModel} from "./viewModels/EnergyLevelsViewModel.ts";
 
 const nbsp = '\u00A0';
 

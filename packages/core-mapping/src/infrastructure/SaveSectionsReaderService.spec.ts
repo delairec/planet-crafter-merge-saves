@@ -9,14 +9,14 @@ import {
   createStatistics,
   createTerraformationLevel
 } from 'shared-save-processing/testing/createSaveRecords.js';
-import {ParsedSections, WorldObject} from 'shared-save-processing/gameDefinitions';
-import {SaveSectionsReaderService} from './SaveSectionsReaderService';
-import {PlayerEntity} from '../domain/entities/PlayerEntity';
-import {GlobalProgressionValueObject} from '../domain/valueObjects/GlobalProgressionValueObject';
-import {TerraformationLevelEntity} from '../domain/entities/TerraformationLevelEntity';
-import {StatisticsValueObject} from '../domain/valueObjects/StatisticsValueObject';
-import {SaveConfigurationValueObject} from '../domain/valueObjects/SaveConfigurationValueObject';
-import {EnergyLevelsRawDataValueObject} from '../domain/valueObjects/EnergyLevelsRawDataValueObject';
+import type {ParsedSections, WorldObject} from 'shared-save-processing/gameDefinitions';
+import {SaveSectionsReaderService} from './SaveSectionsReaderService.ts';
+import type {PlayerEntity} from '../domain/entities/PlayerEntity.ts';
+import type {GlobalProgressionValueObject} from '../domain/valueObjects/GlobalProgressionValueObject.ts';
+import type {TerraformationLevelEntity} from '../domain/entities/TerraformationLevelEntity.ts';
+import type {StatisticsValueObject} from '../domain/valueObjects/StatisticsValueObject.ts';
+import type {SaveConfigurationValueObject} from '../domain/valueObjects/SaveConfigurationValueObject.ts';
+import type {EnergyLevelsRawDataValueObject} from '../domain/valueObjects/EnergyLevelsRawDataValueObject.ts';
 
 const PRIME_PLANET_NUMERIC_ID = -1140328421;
 const UNKNOWN_PLANET_NUMERIC_ID = 1;

@@ -1,8 +1,8 @@
-import {PlayersViewModel} from '../presentation/viewModels/PlayersViewModel';
-import {PlayersPresenter} from '../presentation/PlayersPresenter';
-import {LoadPlayersSection} from '../application/LoadPlayersSection';
-import {SaveSectionsReaderService} from '../infrastructure/SaveSectionsReaderService';
-import {ParsedSections} from "shared-save-processing/gameDefinitions";
+import type {PlayersViewModel} from '../presentation/viewModels/PlayersViewModel.ts';
+import {PlayersPresenter} from '../presentation/PlayersPresenter.ts';
+import {LoadPlayersSection} from '../application/LoadPlayersSection.ts';
+import {SaveSectionsReaderService} from '../infrastructure/SaveSectionsReaderService.ts';
+import type {ParsedSections} from "shared-save-processing/gameDefinitions";
 
 export class LoadPlayersSectionController {
 

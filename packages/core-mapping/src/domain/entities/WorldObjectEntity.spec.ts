@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {createWorldObjectEntity} from './WorldObjectEntity';
-import {InvalidSaveDataError} from '../errors/InvalidSaveDataError';
+import {createWorldObjectEntity} from './WorldObjectEntity.ts';
+import {InvalidSaveDataError} from '../errors/InvalidSaveDataError.ts';
 
 describe('WorldObjectEntity', () => {
   it('should build a world object entity from valid data', () => {

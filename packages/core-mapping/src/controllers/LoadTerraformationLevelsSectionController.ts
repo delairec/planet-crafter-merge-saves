@@ -1,8 +1,8 @@
-import {TerraformationLevelsViewModel} from '../presentation/viewModels/TerraformationLevelsViewModel';
-import {TerraformationLevelsPresenter} from '../presentation/TerraformationLevelsPresenter';
-import {LoadTerraformationLevelsSection} from '../application/LoadTerraformationLevelsSection';
-import {SaveSectionsReaderService} from '../infrastructure/SaveSectionsReaderService';
-import {ParsedSections} from "shared-save-processing/gameDefinitions";
+import type {TerraformationLevelsViewModel} from '../presentation/viewModels/TerraformationLevelsViewModel.ts';
+import {TerraformationLevelsPresenter} from '../presentation/TerraformationLevelsPresenter.ts';
+import {LoadTerraformationLevelsSection} from '../application/LoadTerraformationLevelsSection.ts';
+import {SaveSectionsReaderService} from '../infrastructure/SaveSectionsReaderService.ts';
+import type {ParsedSections} from "shared-save-processing/gameDefinitions";
 
 export class LoadTerraformationLevelsSectionController {
   static async loadTerraformationLevelsSection(sections: ParsedSections): Promise<TerraformationLevelsViewModel> {

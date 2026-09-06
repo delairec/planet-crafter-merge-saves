@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {GlobalProgressionPresenter} from './GlobalProgressionPresenter';
-import {GlobalProgressionViewModel} from './viewModels/GlobalProgressionViewModel';
+import {GlobalProgressionPresenter} from './GlobalProgressionPresenter.ts';
+import type {GlobalProgressionViewModel} from './viewModels/GlobalProgressionViewModel.ts';
 
 describe('GlobalProgressionPresenter', () => {
   it('should initialize with default view model', () => {

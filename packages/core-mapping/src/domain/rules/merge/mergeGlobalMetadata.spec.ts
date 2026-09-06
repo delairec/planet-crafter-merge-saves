@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {mergeGlobalMetadata} from './mergeGlobalMetadata';
+import {mergeGlobalMetadata} from './mergeGlobalMetadata.ts';
 
 describe('Merge global metadata', () => {
     const metadataFromSaveA = {

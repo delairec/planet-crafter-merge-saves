@@ -1,4 +1,4 @@
-import {WorldObjectName} from "../worldObjectNames";
+import type {WorldObjectName} from "../worldObjectNames.ts";
 
 // Rule EN-OPT-1: Optimizer capacity (max boosted machines) and radius (in meters).
 export const OPTIMIZER_CONFIG_BY_NAME: Partial<Record<WorldObjectName, { radius: number; maxMachines: number }>> = {

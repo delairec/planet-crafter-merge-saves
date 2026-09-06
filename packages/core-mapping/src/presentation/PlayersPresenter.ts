@@ -1,7 +1,7 @@
-import {PlayersViewModel} from './viewModels/PlayersViewModel';
-import {PlayersPresenterPort} from '../application/ports/PlayersPresenterPort';
-import {PlayerEntity} from "../domain/entities/PlayerEntity";
-import {WorldObjectLabel, worldObjectLabels} from "./worldObjectLabels";
+import type {PlayersViewModel} from './viewModels/PlayersViewModel.ts';
+import type {PlayersPresenterPort} from '../application/ports/PlayersPresenterPort.ts';
+import type {PlayerEntity} from "../domain/entities/PlayerEntity.ts";
+import {type WorldObjectLabel, worldObjectLabels} from "./worldObjectLabels.ts";
 import {
   playersSectionEquipmentLabel,
   playersSectionInventoryLabel,

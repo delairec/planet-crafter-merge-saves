@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {createEnergyBreakdownEntryValueObject} from './EnergyBreakdownEntryValueObject';
-import {InvalidSaveDataError} from '../errors/InvalidSaveDataError';
+import {createEnergyBreakdownEntryValueObject} from './EnergyBreakdownEntryValueObject.ts';
+import {InvalidSaveDataError} from '../errors/InvalidSaveDataError.ts';
 
 describe('EnergyBreakdownEntryValueObject', () => {
   it('should build an energy breakdown entry from valid data', () => {

@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {MergeResultPresenter} from './MergeResultPresenter';
-import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue';
+import {MergeResultPresenter} from './MergeResultPresenter.ts';
+import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue.ts';
 
 describe('MergeResultPresenter', () => {
 

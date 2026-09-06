@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {createPlayerEntity} from './PlayerEntity';
-import {InvalidSaveDataError} from '../errors/InvalidSaveDataError';
+import {createPlayerEntity} from './PlayerEntity.ts';
+import {InvalidSaveDataError} from '../errors/InvalidSaveDataError.ts';
 
 describe('PlayerEntity', () => {
   it('should build a player entity from valid data', () => {

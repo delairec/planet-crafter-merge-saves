@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {createSaveConfigurationValueObject} from './SaveConfigurationValueObject';
-import {InvalidSaveDataError} from '../errors/InvalidSaveDataError';
+import {createSaveConfigurationValueObject} from './SaveConfigurationValueObject.ts';
+import {InvalidSaveDataError} from '../errors/InvalidSaveDataError.ts';
 
 describe('SaveConfigurationValueObject', () => {
   it('should build a save configuration value object from valid data', () => {

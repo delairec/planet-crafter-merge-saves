@@ -1,4 +1,4 @@
-import {ParsedSections, SAVE_CONFIGURATION_SECTION_INDEX} from 'shared-save-processing/gameDefinitions';
+import {type ParsedSections, SAVE_CONFIGURATION_SECTION_INDEX} from 'shared-save-processing/gameDefinitions';
 
 const PRIME_PLANET_ID = 'Prime';
 

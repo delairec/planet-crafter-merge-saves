@@ -1,7 +1,7 @@
-import {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity";
-import {WorldObjectEntity} from "../entities/WorldObjectEntity";
-import {InventoryEntity} from "../entities/InventoryEntity";
-import {computeOptimizerBoosts} from "./computeOptimizerBoosts";
+import type {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity.ts";
+import type {WorldObjectEntity} from "../entities/WorldObjectEntity.ts";
+import type {InventoryEntity} from "../entities/InventoryEntity.ts";
+import {computeOptimizerBoosts} from "./computeOptimizerBoosts.ts";
 
 /**
  * Implements Rule EN-OPT-3: accumulates the total number of Energy Fuses reaching each producer

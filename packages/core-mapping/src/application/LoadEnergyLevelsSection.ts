@@ -1,8 +1,8 @@
-import {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort";
-import {EnergyLevelsPresenterPort} from "./ports/EnergyLevelsPresenterPort";
-import {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject";
-import {PlanetEnergyLevelsValueObject} from "../domain/valueObjects/PlanetEnergyLevelsValueObject";
-import {computePlanetEnergyLevels} from "../domain/rules/computePlanetEnergyLevels";
+import type {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort.ts";
+import type {EnergyLevelsPresenterPort} from "./ports/EnergyLevelsPresenterPort.ts";
+import type {EnergyLevelsValueObject} from "../domain/valueObjects/EnergyLevelsValueObject.ts";
+import type {PlanetEnergyLevelsValueObject} from "../domain/valueObjects/PlanetEnergyLevelsValueObject.ts";
+import {computePlanetEnergyLevels} from "../domain/rules/computePlanetEnergyLevels.ts";
 
 export class LoadEnergyLevelsSection {
   constructor(

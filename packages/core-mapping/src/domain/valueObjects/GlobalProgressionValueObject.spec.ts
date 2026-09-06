@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {createGlobalProgressionValueObject} from './GlobalProgressionValueObject';
-import {InvalidSaveDataError} from '../errors/InvalidSaveDataError';
+import {createGlobalProgressionValueObject} from './GlobalProgressionValueObject.ts';
+import {InvalidSaveDataError} from '../errors/InvalidSaveDataError.ts';
 
 describe('GlobalProgressionValueObject', () => {
   it('should build a global progression value object from valid data', () => {

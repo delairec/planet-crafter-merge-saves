@@ -1,14 +1,14 @@
-import {GlobalMetadata} from "./GlobalMetadata";
-import {TerraformationLevel} from "./TerraformationLevel";
-import {Player} from "./Player";
-import {WorldObject} from "./WorldObject";
-import {Inventory} from "./Inventory";
-import {Statistics} from "./Statistics";
-import {MailboxMessage} from "./MailboxMessage";
-import {StoryEvent} from "./StoryEvent";
-import {SaveConfiguration} from "./SaveConfiguration";
-import {WorldEvent} from "./WorldEvent";
-import {SaveWarningCode} from "../normalizeRawSections.js";
+import type {GlobalMetadata} from "./GlobalMetadata.ts";
+import type {TerraformationLevel} from "./TerraformationLevel.ts";
+import type {Player} from "./Player.ts";
+import type {WorldObject} from "./WorldObject.ts";
+import type {Inventory} from "./Inventory.ts";
+import type {Statistics} from "./Statistics.ts";
+import type {MailboxMessage} from "./MailboxMessage.ts";
+import type {StoryEvent} from "./StoryEvent.ts";
+import type {SaveConfiguration} from "./SaveConfiguration.ts";
+import type {WorldEvent} from "./WorldEvent.ts";
+import type {SaveWarningCode} from "../normalizeRawSections.js";
 
 export type ParsedSections = [
   GlobalMetadata[],

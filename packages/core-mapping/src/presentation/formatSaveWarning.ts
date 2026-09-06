@@ -1,4 +1,4 @@
-import {SAVE_WARNING_CODES, SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
+import {SAVE_WARNING_CODES, type SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
 import {legacySaveFormatWarningMessage, unknownSaveWarningMessage} from "./messages/saveWarningMessages.js";
 
 /**

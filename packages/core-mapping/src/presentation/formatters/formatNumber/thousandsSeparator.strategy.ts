@@ -1,4 +1,4 @@
-import {formatDecimalNumberOptions} from "./formatNumberOptions";
+import {formatDecimalNumberOptions} from "./formatNumberOptions.ts";
 
 export function formatDecimalNumber(value: number | bigint) {
   const locales = undefined;

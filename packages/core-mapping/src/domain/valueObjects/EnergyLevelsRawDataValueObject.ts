@@ -1,7 +1,7 @@
-import {WorldObjectEntity} from "../entities/WorldObjectEntity";
-import {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity";
-import {InventoryEntity} from "../entities/InventoryEntity";
-import {assertArray, assertFiniteNumber, assertOptionalString} from "../errors/assertions";
+import type {WorldObjectEntity} from "../entities/WorldObjectEntity.ts";
+import type {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity.ts";
+import type {InventoryEntity} from "../entities/InventoryEntity.ts";
+import {assertArray, assertFiniteNumber, assertOptionalString} from "../errors/assertions.ts";
 
 export interface PlanetWorldObjectsValueObject {
   readonly planetId: number;

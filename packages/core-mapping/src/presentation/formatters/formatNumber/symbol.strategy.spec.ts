@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {formatNumberByUnitThresholds} from './symbol.strategy';
+import {formatNumberByUnitThresholds} from './symbol.strategy.ts';
 
 const nbsp = '\u00A0';
 

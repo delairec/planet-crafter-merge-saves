@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'bun:test';
-import {mergeStatistics} from './mergeStatistics';
+import {mergeStatistics} from './mergeStatistics.ts';
 
 describe('Merge statistics', () => {
   const statisticsFromSaveA = {craftedObjects: 3952, totalSaveFileLoad: 10, totalSaveFileTime: 500};

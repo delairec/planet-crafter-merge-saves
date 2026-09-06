@@ -1,4 +1,4 @@
-import {TableViewModel} from "./TableViewModel";
+import type {TableViewModel} from "./TableViewModel.ts";
 
 export interface PlayersViewModel {
   players: PlayerViewModel[];

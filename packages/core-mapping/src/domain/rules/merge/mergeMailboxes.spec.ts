@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'bun:test';
-import {mergeMailboxes} from './mergeMailboxes';
+import {mergeMailboxes} from './mergeMailboxes.ts';
 
 describe('Merge mailboxes', () => {
   const uniqueMailboxFromSaveA = {stringId: 'Message_YouAreAConvict', isRead: true};

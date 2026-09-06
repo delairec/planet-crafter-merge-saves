@@ -1,12 +1,14 @@
-import {SaveValidatorPort} from "./ports/SaveValidatorPort";
-import {SaveFileValidationPresenterPort} from "./ports/SaveFileValidationPresenterPort";
-import {ValidateSaveFileRequest} from "./requests/ValidateSaveFileRequest";
+import type {SaveValidatorPort} from "./ports/SaveValidatorPort.ts";
+import type {SaveFileValidationPresenterPort} from "./ports/SaveFileValidationPresenterPort.ts";
+import type {ValidateSaveFileRequest} from "./requests/ValidateSaveFileRequest.ts";
 
 export class ValidateSaveFile {
-  constructor(
-    private readonly validator: SaveValidatorPort,
-    private readonly presenter: SaveFileValidationPresenterPort
-  ) {
+  private readonly validator: SaveValidatorPort;
+  private readonly presenter: SaveFileValidationPresenterPort;
+
+  constructor(validator: SaveValidatorPort, presenter: SaveFileValidationPresenterPort) {
+    this.validator = validator;
+    this.presenter = presenter;
   }
 
   async execute({fileName, content}: ValidateSaveFileRequest): Promise<void> {

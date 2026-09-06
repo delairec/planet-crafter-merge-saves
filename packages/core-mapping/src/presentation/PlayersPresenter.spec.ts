@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'bun:test';
-import {PlayersPresenter} from './PlayersPresenter';
-import {PlayersViewModel} from './viewModels/PlayersViewModel';
-import {PlayerEntity} from "../domain/entities/PlayerEntity";
+import {PlayersPresenter} from './PlayersPresenter.ts';
+import type {PlayersViewModel} from './viewModels/PlayersViewModel.ts';
+import type {PlayerEntity} from "../domain/entities/PlayerEntity.ts";
 
 describe('PlayersPresenter', () => {
   it('should initialize with default view model', () => {

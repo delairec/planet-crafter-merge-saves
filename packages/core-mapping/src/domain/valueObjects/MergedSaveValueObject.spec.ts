@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {createMergedSaveValueObject} from './MergedSaveValueObject';
-import {InvalidSaveDataError} from '../errors/InvalidSaveDataError';
+import {createMergedSaveValueObject} from './MergedSaveValueObject.ts';
+import {InvalidSaveDataError} from '../errors/InvalidSaveDataError.ts';
 
 describe('MergedSaveValueObject', () => {
   it('should build a merged save value object from valid data', () => {

@@ -1,9 +1,9 @@
 import {describe, expect, it} from 'bun:test';
-import {computePlanetEnergyLevels} from './computePlanetEnergyLevels';
-import {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity';
-import {WorldObjectEntity} from '../entities/WorldObjectEntity';
-import {InventoryEntity} from '../entities/InventoryEntity';
-import {WorldObjectName} from '../worldObjectNames';
+import {computePlanetEnergyLevels} from './computePlanetEnergyLevels.ts';
+import type {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity.ts';
+import type {WorldObjectEntity} from '../entities/WorldObjectEntity.ts';
+import type {InventoryEntity} from '../entities/InventoryEntity.ts';
+import type {WorldObjectName} from '../worldObjectNames.ts';
 
 describe('computePlanetEnergyLevels', () => {
   it('should report available energy as production minus consumption', () => {

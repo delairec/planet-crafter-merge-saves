@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {createTerraformationLevelEntity} from './TerraformationLevelEntity';
-import {InvalidSaveDataError} from '../errors/InvalidSaveDataError';
+import {createTerraformationLevelEntity} from './TerraformationLevelEntity.ts';
+import {InvalidSaveDataError} from '../errors/InvalidSaveDataError.ts';
 
 describe('TerraformationLevelEntity', () => {
   it('should build a terraformation level entity from valid data', () => {

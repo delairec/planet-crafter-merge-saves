@@ -1,5 +1,5 @@
-import {createTerraformationLevelEntity, TerraformationLevelEntity} from "../entities/TerraformationLevelEntity";
-import {assertFiniteNumber} from "../errors/assertions";
+import {createTerraformationLevelEntity, type TerraformationLevelEntity} from "../entities/TerraformationLevelEntity.ts";
+import {assertFiniteNumber} from "../errors/assertions.ts";
 
 export interface TerraformationLevelSummaryValueObject extends TerraformationLevelEntity {
   readonly terraformationIndex: number;

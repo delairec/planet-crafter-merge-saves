@@ -1,1 +1,1 @@
-export * from './RuntimePlatform';
+export * from './RuntimePlatform.ts';

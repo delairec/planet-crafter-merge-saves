@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {mergeSaveSections} from './mergeSaveSections';
+import {mergeSaveSections} from './mergeSaveSections.ts';
 import {FAKE_SAVE_CONFIGURATION} from 'shared-save-processing/testing/createFakeSaveString.js';
 import {createFakeParsedSave} from "shared-save-processing/testing/createFakeParsedSave.js";
 

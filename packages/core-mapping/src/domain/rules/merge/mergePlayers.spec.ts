@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {mergePlayers} from './mergePlayers';
+import {mergePlayers} from './mergePlayers.ts';
 
 describe('Merge players', () => {
   const basePlayer = {

@@ -1,7 +1,7 @@
-import {TerraformationLevelsPresenterPort} from './ports/TerraformationLevelsPresenterPort';
-import {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort";
-import {createTerraformationLevelSummaryValueObject} from "../domain/valueObjects/TerraformationLevelSummaryValueObject";
-import {computeTerraformationSummary} from "../domain/rules/computeTerraformationSummary";
+import type {TerraformationLevelsPresenterPort} from './ports/TerraformationLevelsPresenterPort.ts';
+import type {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort.ts";
+import {createTerraformationLevelSummaryValueObject} from "../domain/valueObjects/TerraformationLevelSummaryValueObject.ts";
+import {computeTerraformationSummary} from "../domain/rules/computeTerraformationSummary.ts";
 
 export class LoadTerraformationLevelsSection {
   constructor(

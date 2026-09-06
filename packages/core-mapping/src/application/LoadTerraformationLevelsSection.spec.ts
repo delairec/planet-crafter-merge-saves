@@ -1,7 +1,7 @@
 import {describe, expect, it, mock} from 'bun:test';
-import {FakeSaveParserService} from "../testing/FakeSaveParserService";
-import {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort";
-import {LoadTerraformationLevelsSection} from './LoadTerraformationLevelsSection';
+import {FakeSaveParserService} from "../testing/FakeSaveParserService.ts";
+import type {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort.ts";
+import {LoadTerraformationLevelsSection} from './LoadTerraformationLevelsSection.ts';
 
 describe('LoadTerraformationLevelsSection', () => {
   it('should present all terraformation levels from the parsed save', async () => {

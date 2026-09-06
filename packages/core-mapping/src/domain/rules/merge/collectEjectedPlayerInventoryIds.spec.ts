@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {Player, Inventory} from 'shared-save-processing/gameDefinitions';
-import {collectEjectedPlayerInventoryIds} from './collectEjectedPlayerInventoryIds';
+import type {Player, Inventory} from 'shared-save-processing/gameDefinitions';
+import {collectEjectedPlayerInventoryIds} from './collectEjectedPlayerInventoryIds.ts';
 
 describe('collectEjectedPlayerInventoryIds', () => {
   const basePlayer: Player = {

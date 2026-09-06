@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'bun:test';
-import {validateUniqueHost} from './validateUniqueHost';
-import {Player} from 'shared-save-processing/gameDefinitions';
-import {VALIDATION_ISSUE_CODES} from '../../application/ports/ValidationIssue';
+import {validateUniqueHost} from './validateUniqueHost.ts';
+import type {Player} from 'shared-save-processing/gameDefinitions';
+import {VALIDATION_ISSUE_CODES} from '../../application/ports/ValidationIssue.ts';
 
 function createPlayer(overrides: Partial<Player> = {}): Player {
   return {

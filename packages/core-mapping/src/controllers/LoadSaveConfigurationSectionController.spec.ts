@@ -1,8 +1,8 @@
 import {describe, expect, it} from 'bun:test';
 import {parseSaveSections} from 'shared-save-processing/parseSaveSections.js';
 import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
-import {LoadSaveConfigurationSectionController} from "./LoadSaveConfigurationSectionController";
-import {SaveConfigurationViewModel} from "../presentation/viewModels/SaveConfigurationViewModel";
+import {LoadSaveConfigurationSectionController} from "./LoadSaveConfigurationSectionController.ts";
+import type {SaveConfigurationViewModel} from "../presentation/viewModels/SaveConfigurationViewModel.ts";
 
 describe('LoadSaveConfigurationSectionController', () => {
   it('should present save configuration from the parsed save', async () => {

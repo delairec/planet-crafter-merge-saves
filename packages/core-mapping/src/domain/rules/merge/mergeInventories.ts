@@ -1,5 +1,5 @@
-import {Inventory} from 'shared-save-processing/gameDefinitions';
-import {EntriesByOrigin} from './EntriesByOrigin';
+import type {Inventory} from 'shared-save-processing/gameDefinitions';
+import type {EntriesByOrigin} from './EntriesByOrigin.ts';
 
 /**
  * @see GR-INV-1, GR-INV-2, GR-INV-3 in docs/game-rules.md

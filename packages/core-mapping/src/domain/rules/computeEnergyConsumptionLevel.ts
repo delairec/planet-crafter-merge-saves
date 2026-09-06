@@ -1,5 +1,5 @@
-import {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity";
-import {energyConsumptionLevelsByWorldObjectName} from "../energyLevelsByWorldObjectName";
+import type {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity.ts";
+import {energyConsumptionLevelsByWorldObjectName} from "../energyLevelsByWorldObjectName.ts";
 
 /** Computes total consumption for a single planet's positioned world objects. */
 export function computeEnergyConsumptionLevel(positionedWorldObjectsOnPlanet: readonly PlacedWorldObjectEntity[]): number {

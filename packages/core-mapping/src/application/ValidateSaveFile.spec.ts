@@ -1,8 +1,8 @@
 import {describe, expect, it, mock} from 'bun:test';
-import {ValidateSaveFile} from './ValidateSaveFile';
-import {SaveValidatorPort} from './ports/SaveValidatorPort';
-import {SaveFileValidationPresenterPort} from './ports/SaveFileValidationPresenterPort';
-import {VALIDATION_ISSUE_CODES} from './ports/ValidationIssue';
+import {ValidateSaveFile} from './ValidateSaveFile.ts';
+import type {SaveValidatorPort} from './ports/SaveValidatorPort.ts';
+import type {SaveFileValidationPresenterPort} from './ports/SaveFileValidationPresenterPort.ts';
+import {VALIDATION_ISSUE_CODES} from './ports/ValidationIssue.ts';
 
 describe('ValidateSaveFile', () => {
 

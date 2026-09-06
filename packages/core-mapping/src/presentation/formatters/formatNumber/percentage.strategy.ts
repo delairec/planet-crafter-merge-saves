@@ -1,4 +1,4 @@
-import {formatPercentageNumberOptions} from "./formatNumberOptions";
+import {formatPercentageNumberOptions} from "./formatNumberOptions.ts";
 
 export function formatPercentageNumber(value: number | bigint) {
   const locales = undefined;

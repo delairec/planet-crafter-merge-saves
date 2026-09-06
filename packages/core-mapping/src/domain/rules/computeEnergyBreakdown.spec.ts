@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'bun:test';
-import {computeEnergyBreakdown} from './computeEnergyBreakdown';
-import {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity';
-import {WorldObjectName} from '../worldObjectNames';
+import {computeEnergyBreakdown} from './computeEnergyBreakdown.ts';
+import type {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity.ts';
+import type {WorldObjectName} from '../worldObjectNames.ts';
 
 describe('computeEnergyBreakdown', () => {
   it('should group positioned world objects by name and compute their quantity and total level', () => {

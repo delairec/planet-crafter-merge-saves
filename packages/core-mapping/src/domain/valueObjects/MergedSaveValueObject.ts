@@ -1,4 +1,4 @@
-import {assertNonEmptyString} from "../errors/assertions";
+import {assertNonEmptyString} from "../errors/assertions.ts";
 
 export interface MergedSaveValueObject {
   readonly fileName: string;

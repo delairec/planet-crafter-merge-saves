@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'bun:test';
-import {mergeSaveConfigurations} from './mergeSaveConfigurations';
-import {SaveConfiguration} from 'shared-save-processing/gameDefinitions';
+import {mergeSaveConfigurations} from './mergeSaveConfigurations.ts';
+import type {SaveConfiguration} from 'shared-save-processing/gameDefinitions';
 
 describe('Merge save configurations', () => {
   const saveDisplayName = 'SAVE_NAME';

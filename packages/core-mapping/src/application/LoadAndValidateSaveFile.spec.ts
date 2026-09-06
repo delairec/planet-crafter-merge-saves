@@ -1,11 +1,11 @@
 import {describe, expect, it, mock} from 'bun:test';
-import {LoadAndValidateSaveFile} from './LoadAndValidateSaveFile';
-import {SaveValidatorPort} from './ports/SaveValidatorPort';
-import {ParsedSaveSections, SaveSectionsParserPort} from './ports/SaveSectionsParserPort';
-import {LoadAndValidateSaveFilePresenterPort} from './ports/LoadAndValidateSaveFilePresenterPort';
-import {ValidationIssue, VALIDATION_ISSUE_CODES} from './ports/ValidationIssue';
-import {SaveWarningCode} from 'shared-save-processing/normalizeRawSections.js';
-import {ParsedSections} from 'shared-save-processing/gameDefinitions';
+import {LoadAndValidateSaveFile} from './LoadAndValidateSaveFile.ts';
+import type {SaveValidatorPort} from './ports/SaveValidatorPort.ts';
+import type {ParsedSaveSections, SaveSectionsParserPort} from './ports/SaveSectionsParserPort.ts';
+import type {LoadAndValidateSaveFilePresenterPort} from './ports/LoadAndValidateSaveFilePresenterPort.ts';
+import {type ValidationIssue, VALIDATION_ISSUE_CODES} from './ports/ValidationIssue.ts';
+import type {SaveWarningCode} from 'shared-save-processing/normalizeRawSections.js';
+import type {ParsedSections} from 'shared-save-processing/gameDefinitions';
 
 const emptySections: ParsedSections = [[], [], [], function* () {}, [], [], [], [], [], [], []];
 

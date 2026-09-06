@@ -1,4 +1,4 @@
-import {WorldEvent} from 'shared-save-processing/gameDefinitions';
+import type {WorldEvent} from 'shared-save-processing/gameDefinitions';
 
 /**
  * @see GR-EVT-1, GR-EVT-2 in docs/game-rules.md

@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'bun:test';
-import {resolvePlayerIdConflicts} from './resolvePlayerIdConflicts';
-import {createIdSequence} from './createIdSequence';
-import {Player} from 'shared-save-processing/gameDefinitions';
+import {resolvePlayerIdConflicts} from './resolvePlayerIdConflicts.ts';
+import {createIdSequence} from './createIdSequence.ts';
+import type {Player} from 'shared-save-processing/gameDefinitions';
 
 describe('Resolve player id conflicts', () => {
   const basePlayer = {

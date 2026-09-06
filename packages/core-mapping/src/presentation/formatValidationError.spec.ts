@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {formatValidationError} from './formatValidationError';
-import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue';
+import {formatValidationError} from './formatValidationError.ts';
+import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue.ts';
 
 describe('formatValidationError', () => {
 

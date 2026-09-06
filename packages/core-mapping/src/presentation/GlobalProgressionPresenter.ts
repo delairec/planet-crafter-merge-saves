@@ -1,8 +1,8 @@
-import {GlobalProgressionViewModel} from './viewModels/GlobalProgressionViewModel';
-import {GlobalProgressionPresenterPort} from '../application/ports/GlobalProgressionPresenterPort';
-import {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject";
-import {formatNumber} from "./formatters/formatNumber/formatNumber";
-import {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject";
+import type {GlobalProgressionViewModel} from './viewModels/GlobalProgressionViewModel.ts';
+import type {GlobalProgressionPresenterPort} from '../application/ports/GlobalProgressionPresenterPort.ts';
+import type {GlobalProgressionValueObject} from "../domain/valueObjects/GlobalProgressionValueObject.ts";
+import {formatNumber} from "./formatters/formatNumber/formatNumber.ts";
+import type {StatisticsValueObject} from "../domain/valueObjects/StatisticsValueObject.ts";
 import {
   globalProgressionSectionAllTimeTerraTokensLabel,
   globalProgressionSectionTotalCraftedObjectsLabel

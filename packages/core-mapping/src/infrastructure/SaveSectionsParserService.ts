@@ -1,5 +1,5 @@
 import {parseSaveSections} from "shared-save-processing/parseSaveSections.js";
-import {ParsedSaveSections, SaveSectionsParserPort} from "../application/ports/SaveSectionsParserPort";
+import type {ParsedSaveSections, SaveSectionsParserPort} from "../application/ports/SaveSectionsParserPort.ts";
 
 export class SaveSectionsParserService implements SaveSectionsParserPort {
   parse(content: string): ParsedSaveSections {

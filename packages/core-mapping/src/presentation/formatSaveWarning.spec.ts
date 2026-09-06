@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {formatSaveWarning} from './formatSaveWarning';
-import {SAVE_WARNING_CODES, SaveWarningCode} from 'shared-save-processing/normalizeRawSections.js';
+import {formatSaveWarning} from './formatSaveWarning.ts';
+import {SAVE_WARNING_CODES, type SaveWarningCode} from 'shared-save-processing/normalizeRawSections.js';
 import {unknownSaveWarningMessage} from './messages/saveWarningMessages.js';
 
 describe('formatSaveWarning', () => {

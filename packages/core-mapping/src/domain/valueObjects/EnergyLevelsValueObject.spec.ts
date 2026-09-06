@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {createEnergyLevelsValueObject} from './EnergyLevelsValueObject';
-import {InvalidSaveDataError} from '../errors/InvalidSaveDataError';
+import {createEnergyLevelsValueObject} from './EnergyLevelsValueObject.ts';
+import {InvalidSaveDataError} from '../errors/InvalidSaveDataError.ts';
 
 describe('EnergyLevelsValueObject', () => {
   it('should build an energy levels value object from valid data', () => {

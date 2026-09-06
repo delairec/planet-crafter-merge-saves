@@ -1,8 +1,8 @@
-import {TerraformationLevelsViewModel} from "./viewModels/TerraformationLevelsViewModel";
-import {TerraformationLevelSummaryValueObject} from "../domain/valueObjects/TerraformationLevelSummaryValueObject";
-import {TerraformationLevelsPresenterPort} from "../application/ports/TerraformationLevelsPresenterPort";
-import {formatNumber} from "./formatters/formatNumber/formatNumber";
-import {FormatNumberStrategies} from "./formatters/formatNumber/FormatNumberStrategies";
+import type {TerraformationLevelsViewModel} from "./viewModels/TerraformationLevelsViewModel.ts";
+import type {TerraformationLevelSummaryValueObject} from "../domain/valueObjects/TerraformationLevelSummaryValueObject.ts";
+import type {TerraformationLevelsPresenterPort} from "../application/ports/TerraformationLevelsPresenterPort.ts";
+import {formatNumber} from "./formatters/formatNumber/formatNumber.ts";
+import {FormatNumberStrategies} from "./formatters/formatNumber/FormatNumberStrategies.ts";
 import {
   terraformationLevelsSectionAnimalsLabel,
   terraformationLevelsSectionDefaultPlanetName,

@@ -1,8 +1,8 @@
-import {ParsedSections} from "shared-save-processing/gameDefinitions";
-import {EnergyLevelsViewModel} from "../presentation/viewModels/EnergyLevelsViewModel";
-import {SaveSectionsReaderService} from "../infrastructure/SaveSectionsReaderService";
-import {EnergyLevelsPresenter} from "../presentation/EnergyLevelsPresenter";
-import {LoadEnergyLevelsSection} from "../application/LoadEnergyLevelsSection";
+import type {ParsedSections} from "shared-save-processing/gameDefinitions";
+import type {EnergyLevelsViewModel} from "../presentation/viewModels/EnergyLevelsViewModel.ts";
+import {SaveSectionsReaderService} from "../infrastructure/SaveSectionsReaderService.ts";
+import {EnergyLevelsPresenter} from "../presentation/EnergyLevelsPresenter.ts";
+import {LoadEnergyLevelsSection} from "../application/LoadEnergyLevelsSection.ts";
 
 export class LoadEnergyLevelsSectionController {
 

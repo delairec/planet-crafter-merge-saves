@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {resolvePlanetName} from './resolvePlanetName';
+import {resolvePlanetName} from './resolvePlanetName.ts';
 
 const PRIME_PLANET_NUMERIC_ID = -1140328421;
 const UNKNOWN_PLANET_NUMERIC_ID = 1;

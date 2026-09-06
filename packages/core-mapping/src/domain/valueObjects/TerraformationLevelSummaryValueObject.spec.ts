@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {createTerraformationLevelSummaryValueObject} from './TerraformationLevelSummaryValueObject';
-import {InvalidSaveDataError} from '../errors/InvalidSaveDataError';
+import {createTerraformationLevelSummaryValueObject} from './TerraformationLevelSummaryValueObject.ts';
+import {InvalidSaveDataError} from '../errors/InvalidSaveDataError.ts';
 
 describe('TerraformationLevelSummaryValueObject', () => {
   it('should build a terraformation level summary value object from valid data', () => {

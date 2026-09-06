@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {SaveFileValidationPresenter} from './SaveFileValidationPresenter';
-import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue';
+import {SaveFileValidationPresenter} from './SaveFileValidationPresenter.ts';
+import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue.ts';
 
 describe('SaveFileValidationPresenter', () => {
 

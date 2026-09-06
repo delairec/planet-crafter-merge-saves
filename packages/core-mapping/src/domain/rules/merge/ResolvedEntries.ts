@@ -1,4 +1,4 @@
-import {EntriesByOrigin} from './EntriesByOrigin';
+import type {EntriesByOrigin} from './EntriesByOrigin.ts';
 
 /**
  * Entries of one section once their identifier conflicts are resolved, together with the

@@ -1,4 +1,4 @@
-import {ParsedSections} from "shared-save-processing/gameDefinitions";
+import type {ParsedSections} from "shared-save-processing/gameDefinitions";
 
 export interface LoadSaveFileViewModel {
   status: 'idle' | 'invalid' | 'valid';

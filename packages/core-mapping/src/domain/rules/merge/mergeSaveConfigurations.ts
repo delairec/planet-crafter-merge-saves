@@ -1,4 +1,4 @@
-import {SaveConfiguration} from 'shared-save-processing/gameDefinitions';
+import type {SaveConfiguration} from 'shared-save-processing/gameDefinitions';
 
 /**
  * @see GR-CFG-1, GR-CFG-2, GR-CFG-3 in docs/game-rules.md

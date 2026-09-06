@@ -1,4 +1,4 @@
-import {assertFiniteNumber, assertNonEmptyString} from "../errors/assertions";
+import {assertFiniteNumber, assertNonEmptyString} from "../errors/assertions.ts";
 
 export interface TerraformationLevelEntity {
   readonly planetId: string;

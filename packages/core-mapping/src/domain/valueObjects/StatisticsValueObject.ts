@@ -1,4 +1,4 @@
-import {assertFiniteNumber} from "../errors/assertions";
+import {assertFiniteNumber} from "../errors/assertions.ts";
 
 export interface StatisticsValueObject {
   readonly totalCraftedObjects: number;

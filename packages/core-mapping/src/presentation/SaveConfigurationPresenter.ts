@@ -1,8 +1,8 @@
-import {SaveConfigurationPresenterPort} from "../application/ports/SaveConfigurationPresenterPort";
-import {SaveConfigurationViewModel} from "./viewModels/SaveConfigurationViewModel";
-import {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject";
-import {formatNumber} from "./formatters/formatNumber/formatNumber";
-import {FormatNumberStrategies} from "./formatters/formatNumber/FormatNumberStrategies";
+import type {SaveConfigurationPresenterPort} from "../application/ports/SaveConfigurationPresenterPort.ts";
+import type {SaveConfigurationViewModel} from "./viewModels/SaveConfigurationViewModel.ts";
+import type {SaveConfigurationValueObject} from "../domain/valueObjects/SaveConfigurationValueObject.ts";
+import {formatNumber} from "./formatters/formatNumber/formatNumber.ts";
+import {FormatNumberStrategies} from "./formatters/formatNumber/FormatNumberStrategies.ts";
 import {
   saveConfigurationSectionGaugeDrainLabel,
   saveConfigurationSectionMeteoOccurrenceLabel,

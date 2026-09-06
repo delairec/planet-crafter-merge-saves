@@ -1,9 +1,9 @@
-import {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity";
-import {WorldObjectEntity} from "../entities/WorldObjectEntity";
-import {InventoryEntity} from "../entities/InventoryEntity";
-import {energyProductionLevelsByWorldObjectName} from "../energyLevelsByWorldObjectName";
-import {ENERGY_FUSE_MULTIPLIER_PER_FUSE} from "./energyOptimizerConfig";
-import {computeEnergyFuseCountsByProducerId} from "./computeEnergyFuseCountsByProducerId";
+import type {PlacedWorldObjectEntity} from "../entities/PlacedWorldObjectEntity.ts";
+import type {WorldObjectEntity} from "../entities/WorldObjectEntity.ts";
+import type {InventoryEntity} from "../entities/InventoryEntity.ts";
+import {energyProductionLevelsByWorldObjectName} from "../energyLevelsByWorldObjectName.ts";
+import {ENERGY_FUSE_MULTIPLIER_PER_FUSE} from "./energyOptimizerConfig.ts";
+import {computeEnergyFuseCountsByProducerId} from "./computeEnergyFuseCountsByProducerId.ts";
 
 /**
  * Computes total production for a single planet's positioned world objects (Rule GR-WO-1 /

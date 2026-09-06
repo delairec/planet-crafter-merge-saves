@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {formatNumber} from "./formatNumber";
-import {FormatNumberStrategies} from "./FormatNumberStrategies";
+import {formatNumber} from "./formatNumber.ts";
+import {FormatNumberStrategies} from "./FormatNumberStrategies.ts";
 
 const nbsp = '\u00A0';
 

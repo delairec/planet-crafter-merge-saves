@@ -1,4 +1,4 @@
-import {planetNamesByNumericId} from "../planetNamesByNumericId";
+import {planetNamesByNumericId} from "../planetNamesByNumericId.ts";
 
 /**
  * Resolves a planet's textual name (`TerraformationLevel.planetId`) from a `WorldObject`'s

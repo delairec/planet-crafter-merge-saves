@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
-import {SaveValidatorService} from './SaveValidatorService';
-import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue';
+import {SaveValidatorService} from './SaveValidatorService.ts';
+import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue.ts';
 import {createFakeSaveContent, createLegacyFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
 
 describe('SaveValidatorService', () => {
