@@ -41,7 +41,7 @@ describe('computeEnergyProductionLevel', () => {
       id: 'opt-1', name: 'Optimizer1' as WorldObjectName, position: [0, 0, 0], planetId: 1, inventoryId: 99
     };
     const producer: PlacedWorldObjectEntity = {
-      id: 'prod-1', name: 'EnergyGenerator1' as WorldObjectName, position: [1, 0, 0], planetId: 1
+      id: 'prod-1', name: 'EnergyGenerator2' as WorldObjectName, position: [1, 0, 0], planetId: 1
     };
     const fuse: WorldObjectEntity = {id: 'fuse-1', name: 'FuseEnergy1' as WorldObjectName};
     const allWorldObjects: WorldObjectEntity[] = [optimizer, producer, fuse];
@@ -51,7 +51,8 @@ describe('computeEnergyProductionLevel', () => {
     const result = computeEnergyProductionLevel(allWorldObjects, [optimizer, producer], inventories);
 
     // Assert
-    expect(result).toBe(1.2 * 1.5);
+    const oneAndAHalfTimesTheProducerBaseLevel = 9.75;
+    expect(result).toBe(oneAndAHalfTimesTheProducerBaseLevel);
   });
 
   it('should stack several energy fuses held by the same optimizer (Rule EN-FUSE-3)', () => {
