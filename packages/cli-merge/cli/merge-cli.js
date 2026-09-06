@@ -8,6 +8,7 @@ import {
   renderFoldersFound,
   renderMergeFailed,
   renderMergeSucceeded,
+  renderMergeWarnings,
   renderNoValidFolders,
   renderProcessingFolder,
   renderUnexpectedError
@@ -60,6 +61,8 @@ export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirec
         contentB: nextContent,
         saveDisplayName: folder
       });
+
+      renderMergeWarnings(folder, viewModel.saveAWarningMessages, viewModel.saveBWarningMessages);
 
       if (viewModel.status !== 'success') {
         renderMergeFailed(folder, viewModel.saveAErrorMessages, viewModel.saveBErrorMessages);

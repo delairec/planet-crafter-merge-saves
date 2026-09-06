@@ -28,6 +28,18 @@ export function renderMergeFailed(folder, saveAErrorMessages, saveBErrorMessages
   for (const message of saveBErrorMessages) console.error(`  [save B] ${message}`);
 }
 
+/**
+ * Reports the adaptations a save needed to match the current format. Not an error: the exit code is
+ * unaffected and the merge goes on.
+ * @param {string} folder
+ * @param {string[]} saveAWarningMessages
+ * @param {string[]} saveBWarningMessages
+ */
+export function renderMergeWarnings(folder, saveAWarningMessages, saveBWarningMessages) {
+  for (const message of saveAWarningMessages) console.error(`⚠ Folder "${folder}" [save A] ${message}`);
+  for (const message of saveBWarningMessages) console.error(`⚠ Folder "${folder}" [save B] ${message}`);
+}
+
 /** @param {string} inputDir */
 export function renderNoValidFolders(inputDir) {
   console.error(`No folder in "${inputDir}" contains at least two JSON save files to merge.`);
