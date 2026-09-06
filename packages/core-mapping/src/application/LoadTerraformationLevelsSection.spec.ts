@@ -25,8 +25,8 @@ describe('LoadTerraformationLevelsSection', () => {
         unitInsectsLevel: 500,
         unitAnimalsLevel: 600,
         unitPurificationLevel: 700,
-        terraformationIndex: 100 + 200 + 300 + 700 + 400 + 500 + 600,
-        biomass: 400 + 500 + 600
+        terraformationIndex: 2_800,
+        biomass: 1_500
       }
     ]);
   });
