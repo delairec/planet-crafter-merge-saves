@@ -4,14 +4,14 @@ import {FakeSaveParserService} from "../testing/FakeSaveParserService";
 import {LoadEnergyLevelsSection} from "./LoadEnergyLevelsSection";
 
 describe('LoadEnergyLevelsSection', () => {
-  it('should present computed energy levels from parsed save', () => {
+  it('should present computed energy levels from parsed save', async () => {
     // Arrange
     const saveParser: SaveSectionsReaderPort = new FakeSaveParserService();
     const presenter = {displayEnergyLevels: mock()};
     const useCase = new LoadEnergyLevelsSection(saveParser, presenter);
 
     // Act
-    useCase.execute();
+    await useCase.execute();
 
     // Assert
     expect(presenter.displayEnergyLevels).toHaveBeenCalledTimes(1);

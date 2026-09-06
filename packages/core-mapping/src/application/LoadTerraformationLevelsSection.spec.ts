@@ -4,14 +4,14 @@ import {SaveSectionsReaderPort} from "./ports/SaveSectionsReaderPort";
 import {LoadTerraformationLevelsSection} from './LoadTerraformationLevelsSection';
 
 describe('LoadTerraformationLevelsSection', () => {
-  it('should present all terraformation levels from the parsed save', () => {
+  it('should present all terraformation levels from the parsed save', async () => {
     // Arrange
     const saveParser: SaveSectionsReaderPort = new FakeSaveParserService();
     const presenter = {displayTerraformationLevels: mock()};
     const useCase = new LoadTerraformationLevelsSection(saveParser, presenter);
 
     // Act
-    useCase.execute();
+    await useCase.execute();
 
     // Assert
     expect(presenter.displayTerraformationLevels).toHaveBeenCalledTimes(1);

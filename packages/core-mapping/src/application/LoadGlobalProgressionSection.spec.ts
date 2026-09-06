@@ -5,14 +5,14 @@ import {LoadGlobalProgressionSection} from "./LoadGlobalProgressionSection";
 import {GlobalProgressionPresenterPort} from "./ports/GlobalProgressionPresenterPort";
 
 describe('LoadGlobalProgressionSection', () => {
-  it('should present global progression and statistics from the parsed save', () => {
+  it('should present global progression and statistics from the parsed save', async () => {
     // Arrange
     const saveParser: SaveSectionsReaderPort = new FakeSaveParserService();
     const presenter: GlobalProgressionPresenterPort = {displayGlobalProgression: mock()};
     const useCase = new LoadGlobalProgressionSection(saveParser, presenter);
 
     // Act
-    useCase.execute();
+    await useCase.execute();
 
     // Assert
     expect(presenter.displayGlobalProgression).toHaveBeenCalledTimes(1);
