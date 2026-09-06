@@ -29,8 +29,10 @@ describe('computePlanetEnergyLevels', () => {
       {id: '2', name: 'EnergyGenerator3' as WorldObjectName, position: [0, 10, 0], planetId: 1}
     ];
 
+    const noInventories: InventoryEntity[] = [];
+
     // Act
-    const result = computePlanetEnergyLevels(worldObjects, worldObjects, []);
+    const result = computePlanetEnergyLevels(worldObjects, worldObjects, noInventories);
 
     // Assert
     expect(result.production).toBe(26);
@@ -103,9 +105,10 @@ describe('computePlanetEnergyLevels', () => {
     const allWorldObjects: WorldObjectEntity[] = [
       producerOnThisPlanet, producerOnAnotherPlanet, consumerOnAnotherPlanet
     ];
+    const noInventories: InventoryEntity[] = [];
 
     // Act
-    const result = computePlanetEnergyLevels(allWorldObjects, [producerOnThisPlanet], []);
+    const result = computePlanetEnergyLevels(allWorldObjects, [producerOnThisPlanet], noInventories);
 
     // Assert
     expect(result.production).toBe(1.2);

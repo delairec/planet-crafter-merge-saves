@@ -85,11 +85,12 @@ describe('computeEnergyProductionLevel', () => {
   it('should recognize every world object name of the production levels table (Rule EN-BASE-2)', () => {
     // Arrange
     const producerNames = Object.keys(energyProductionLevelsByWorldObjectName) as WorldObjectName[];
+    const noInventories: InventoryEntity[] = [];
 
     // Act
     const unrecognizedNames = producerNames.filter((name) => {
       const producer: PlacedWorldObjectEntity = {id: name, name, position: [0, 0, 0], planetId: 1};
-      return computeEnergyProductionLevel([producer], [producer], []) === 0;
+      return computeEnergyProductionLevel([producer], [producer], noInventories) === 0;
     });
 
     // Assert

@@ -18,6 +18,9 @@ import {StatisticsValueObject} from '../domain/valueObjects/StatisticsValueObjec
 import {SaveConfigurationValueObject} from '../domain/valueObjects/SaveConfigurationValueObject';
 import {EnergyLevelsRawDataValueObject} from '../domain/valueObjects/EnergyLevelsRawDataValueObject';
 
+const PRIME_PLANET_NUMERIC_ID = -1140328421;
+const UNKNOWN_PLANET_NUMERIC_ID = 1;
+
 const CARRIED_WORLD_OBJECTS: WorldObject[] = [
   {id: 79111656, gId: 'Phytoplankton3'},
   {id: 58524136, gId: 'MagnetarQuartz'},
@@ -257,8 +260,8 @@ describe('SaveSectionsReaderService', () => {
       // Arrange
       const sections = createFakeParsedSave({
         worldObjects: worldObjectsOf([
-          {id: 1, gId: 'EnergyGenerator1', pos: '0,0,0', planet: -1140328421},
-          {id: 2, gId: 'EnergyGenerator1', pos: '0,0,0', planet: 1}
+          {id: 1, gId: 'EnergyGenerator1', pos: '0,0,0', planet: PRIME_PLANET_NUMERIC_ID},
+          {id: 2, gId: 'EnergyGenerator1', pos: '0,0,0', planet: UNKNOWN_PLANET_NUMERIC_ID}
         ] as WorldObject[])
       }).sections;
       const service = new SaveSectionsReaderService(sections);
