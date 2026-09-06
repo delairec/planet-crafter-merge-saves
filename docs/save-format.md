@@ -20,7 +20,10 @@ The file ends with `@`.
 > shifting World Events to index 10), which a game update removed. Legacy saves in that older format are only
 > supported at the user-input boundary (loading a save file): they are automatically adapted to the current
 > 11-section format described below, discarding the Terrain Layers data, and a warning is reported to the user.
-> See `packages/shared-save-processing/normalizeRawSections.js`.
+> Validation detects the adaptation and is the single source of that warning, on every outcome and in every flow
+> (displaying a save, merging saves, `bun validate`, `bun merge`). The warning travels as the code defined in
+> `packages/shared-save-processing/normalizeRawSections.js` and is turned into the sentence shown to the user by
+> `packages/core-mapping/src/presentation/formatSaveWarning.ts`.
 
 ```
 entry1|
@@ -332,6 +335,6 @@ was at index 11.
 | `colorBaseLerp`   | `int`    | Base color intensity (≥ 0)                    |
 | `colorCustomLerp` | `int`    | Custom color intensity (≥ 0)                  |
 
-This section no longer exists in the current save format. When a legacy save is loaded, its Terrain Layers data is
-discarded and the user is warned that their save was adapted from an old format.
+This section no longer exists in the current save format. When a legacy save is loaded or merged, its Terrain Layers
+data is discarded and the user is warned that their save was adapted from an old format.
 
