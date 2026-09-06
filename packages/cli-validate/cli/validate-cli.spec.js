@@ -1,6 +1,6 @@
 import {beforeEach, describe, expect, it, mock, spyOn} from 'bun:test';
 import {initValidateCli} from './validate-cli.js';
-import {VALIDATE_SAVE_FILE_PATH} from '../testing/fakePaths.js';
+import {NON_JSON_SAVE_FILE_PATH, VALIDATE_SAVE_FILE_PATH} from '../testing/fakePaths.js';
 import {VALID_SAVE_CONTENT} from '../testing/fakeValidSaveContent.js';
 import {INVALID_SAVE_CONTENT} from '../testing/fakeInvalidSaveContent.js';
 import {SAVE_CONTENT_WITH_INVALID_ENTRY} from '../testing/fakeSaveContentWithInvalidEntry.js';
@@ -139,6 +139,30 @@ describe('Validate CLI', () => {
 
       // Assert
       expect(consoleErrorSpy).toHaveBeenCalledWith('  Expected 11 sections but found 1');
+    });
+  });
+
+  describe('When the file is not a JSON file', () => {
+    it('should reject it whatever its content', async () => {
+      // Arrange
+      readTextFile.mockResolvedValue(VALID_SAVE_CONTENT);
+
+      // Act
+      await main(NON_JSON_SAVE_FILE_PATH);
+
+      // Assert
+      expect(consoleErrorSpy).toHaveBeenCalledWith('  Invalid file extension: expected a .json file.');
+    });
+
+    it('should exit with code 1', async () => {
+      // Arrange
+      readTextFile.mockResolvedValue(VALID_SAVE_CONTENT);
+
+      // Act
+      await main(NON_JSON_SAVE_FILE_PATH);
+
+      // Assert
+      expect(exitProcess).toHaveBeenCalledWith(1);
     });
   });
 
