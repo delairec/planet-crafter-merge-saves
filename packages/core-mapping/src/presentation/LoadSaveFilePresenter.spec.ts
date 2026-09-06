@@ -3,7 +3,11 @@ import {LoadSaveFilePresenter} from './LoadSaveFilePresenter';
 import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue';
 import {ParsedSections} from 'shared-save-processing/gameDefinitions';
 
-const emptySections: ParsedSections = [[], [], [], function* () {}, [], [], [], [], [], [], []];
+const saveSectionCount = 11;
+const worldObjectsSectionIndex = 3;
+
+const emptySections = Array(saveSectionCount).fill([]) as ParsedSections;
+emptySections[worldObjectsSectionIndex] = function* () {};
 
 describe('LoadSaveFilePresenter', () => {
 
