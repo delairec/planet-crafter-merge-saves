@@ -43,7 +43,7 @@ describe('LoadAndValidateSaveFile', () => {
     it('should parse the content and present the loaded save file', async () => {
       // Arrange
       const {useCase, parser, presenter} = setupUseCase({
-        parsedSaveSections: {sections: emptySections, errors: ['parse error'], warnings: ['parse warning']}
+        parsedSaveSections: {sections: emptySections, errors: ['parse error'], warnings: ['legacy-save-format']}
       });
 
       // Act
@@ -51,7 +51,7 @@ describe('LoadAndValidateSaveFile', () => {
 
       // Assert
       expect(parser.parse).toHaveBeenCalledWith('content');
-      expect(presenter.presentLoadedSaveFile).toHaveBeenCalledWith(emptySections, ['parse error'], ['parse warning']);
+      expect(presenter.presentLoadedSaveFile).toHaveBeenCalledWith(emptySections, ['parse error'], ['legacy-save-format']);
       expect(presenter.presentInvalidSaveFile).not.toHaveBeenCalled();
     });
   });
