@@ -39,14 +39,30 @@ describe('SaveFilesMergerService', () => {
     it('should point that world object to the renumbered inventory and leave the save-A one untouched', () => {
       // Arrange
       const service = new SaveFilesMergerService();
-      const player = {id: 1, name: 'PlayerA', inventoryId: 10, equipmentId: 11, host: true};
+      const player = {
+        id: 1,
+        name: 'PlayerA',
+        inventoryId: 10,
+        equipmentId: 11,
+        playerPosition: '0,0,0',
+        playerRotation: '0,0,0,0',
+        playerGaugeOxygen: 280.0,
+        playerGaugeThirst: 96.0,
+        playerGaugeHealth: 72.0,
+        playerGaugeToxic: 0.0,
+        host: true,
+        planetId: 'Toxicity',
+        cameraView: 0,
+        totalCraftedObjects: 0,
+        totalTerraTokenEarned: 0
+      };
       const contentA = createFakeSaveString({
-        players: [player as never],
+        players: [player],
         inventories: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}, {id: 50, woIds: '100', size: 35}],
         worldObjects: [{id: 100, gId: 'Container2', liId: 50, pos: '1,0,1'}]
       });
       const contentB = createFakeSaveString({
-        players: [player as never],
+        players: [player],
         inventories: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}, {id: 50, woIds: '999', size: 1}],
         worldObjects: [{id: 200, gId: 'VegetubeOutside1', liId: 50, pos: '5,0,5'}]
       });
