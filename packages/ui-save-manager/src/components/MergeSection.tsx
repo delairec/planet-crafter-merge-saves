@@ -1,6 +1,8 @@
-import {createSignal} from 'solid-js';
+import {createSignal, Show} from 'solid-js';
 import {MergeSaveFilesController} from 'core-mapping/controllers/MergeSaveFilesController';
 import {MergeResultViewModel} from 'core-mapping/presentation/viewModels/MergeResultViewModel';
+import Spinner from '~/components/structure/Spinner';
+import {yieldToPaint} from '~/lib/yieldToPaint';
 import {
   mergeButtonLabel,
   mergeSectionSaveALabel,
@@ -15,6 +17,7 @@ interface MergeSectionProps {
 export default function MergeSection(props: MergeSectionProps) {
   const [fileA, setFileA] = createSignal<File | null>(null);
   const [fileB, setFileB] = createSignal<File | null>(null);
+  const [isMerging, setIsMerging] = createSignal<boolean>(false);
 
   const handleMerge = async () => {
     const savedFileA = fileA();
@@ -23,15 +26,22 @@ export default function MergeSection(props: MergeSectionProps) {
       return;
     }
 
-    const [contentA, contentB] = await Promise.all([savedFileA.text(), savedFileB.text()]);
-    const viewModel = await MergeSaveFilesController.mergeSaveFiles({
-      fileNameA: savedFileA.name,
-      contentA,
-      fileNameB: savedFileB.name,
-      contentB
-    });
+    setIsMerging(true);
+    try {
+      await yieldToPaint();
 
-    props.onMergeResult(viewModel);
+      const [contentA, contentB] = await Promise.all([savedFileA.text(), savedFileB.text()]);
+      const viewModel = await MergeSaveFilesController.mergeSaveFiles({
+        fileNameA: savedFileA.name,
+        contentA,
+        fileNameB: savedFileB.name,
+        contentB
+      });
+
+      props.onMergeResult(viewModel);
+    } finally {
+      setIsMerging(false);
+    }
   };
 
   return (
@@ -45,7 +55,10 @@ export default function MergeSection(props: MergeSectionProps) {
                                                  onChange={(event) => setFileB(event.currentTarget.files?.[0] ?? null)}/></label>
         </p>
       </div>
-      <button onClick={handleMerge} disabled={!fileA() || !fileB()}>{mergeButtonLabel}</button>
+      <button onClick={handleMerge} disabled={!fileA() || !fileB() || isMerging()}>{mergeButtonLabel}</button>
+      <Show when={isMerging()}>
+        <Spinner/>
+      </Show>
     </div>
   );
 }

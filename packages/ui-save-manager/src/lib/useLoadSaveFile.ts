@@ -4,6 +4,7 @@ import {Accessor, createSignal} from 'solid-js';
 import {LoadAndValidateSaveFileController} from "core-mapping/controllers/LoadAndValidateSaveFileController";
 import {MergeResultViewModel} from "core-mapping/presentation/viewModels/MergeResultViewModel";
 import {ParsedSections} from "shared-save-processing/gameDefinitions";
+import {yieldToPaint} from "./yieldToPaint";
 
 export interface LoadSaveFile {
   file: Accessor<File | null>;
@@ -11,6 +12,7 @@ export interface LoadSaveFile {
   errors: Accessor<string[]>;
   warnings: Accessor<string[]>;
   mergeResult: Accessor<MergeResultViewModel | null>;
+  isLoading: Accessor<boolean>;
   handleFileChange: (event: Event) => void;
   handleSubmit: () => Promise<void>;
   handleSubmitMerge: (result: MergeResultViewModel) => void;
@@ -22,6 +24,7 @@ export function useLoadSaveFile(): LoadSaveFile {
   const [errors, setErrors] = createSignal<string[]>([]);
   const [warnings, setWarnings] = createSignal<string[]>([]);
   const [mergeResult, setMergeResult] = createSignal<MergeResultViewModel | null>(null);
+  const [isLoading, setIsLoading] = createSignal<boolean>(false);
 
   const resetDisplayFields = () => {
     setErrors([]);
@@ -47,12 +50,19 @@ export function useLoadSaveFile(): LoadSaveFile {
       return;
     }
 
-    const content = await selectedFile.text();
-    const viewModel = await LoadAndValidateSaveFileController.loadAndValidateSaveFile(selectedFile.name, content);
+    setIsLoading(true);
+    try {
+      await yieldToPaint();
 
-    setSections(viewModel.sections);
-    setErrors(viewModel.errorMessages);
-    setWarnings(viewModel.warnings);
+      const content = await selectedFile.text();
+      const viewModel = await LoadAndValidateSaveFileController.loadAndValidateSaveFile(selectedFile.name, content);
+
+      setSections(viewModel.sections);
+      setErrors(viewModel.errorMessages);
+      setWarnings(viewModel.warnings);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSubmitMerge = (result: MergeResultViewModel) => {
@@ -60,5 +70,15 @@ export function useLoadSaveFile(): LoadSaveFile {
     setMergeResult(result);
   };
 
-  return {file, sections, errors, warnings, mergeResult, handleFileChange, handleSubmit, handleSubmitMerge};
+  return {
+    file,
+    sections,
+    errors,
+    warnings,
+    mergeResult,
+    isLoading,
+    handleFileChange,
+    handleSubmit,
+    handleSubmitMerge
+  };
 }

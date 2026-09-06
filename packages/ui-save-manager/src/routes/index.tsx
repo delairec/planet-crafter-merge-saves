@@ -16,6 +16,7 @@ import {
   displayRouteWarningsTitle
 } from "~/messages/displayRouteMessages";
 import ValidationMessagesList from "~/components/validation/ValidationMessagesList";
+import Spinner from "~/components/structure/Spinner";
 import HomeDisclaimer from "~/components/HomeDisclaimer";
 import {useLoadSaveFile} from "~/lib/useLoadSaveFile";
 import {useSectionViewModels} from "~/lib/useSectionViewModels";
@@ -26,7 +27,17 @@ export default function Home() {
   const [isReady, setIsReady] = createSignal<boolean>(false);
   onMount(() => setIsReady(true));
 
-  const {file, sections, errors, warnings, mergeResult, handleFileChange, handleSubmit, handleSubmitMerge} = useLoadSaveFile();
+  const {
+    file,
+    sections,
+    errors,
+    warnings,
+    mergeResult,
+    isLoading,
+    handleFileChange,
+    handleSubmit,
+    handleSubmitMerge
+  } = useLoadSaveFile();
   const viewModels = useSectionViewModels(sections);
 
   const handleMergeResult: typeof handleSubmitMerge = (result) => {
@@ -44,7 +55,10 @@ export default function Home() {
 
         <h2>{displayRouteDisplayTitle}</h2>
         <input ref={fileInputElement} type="file" accept="application/json" onChange={handleFileChange}/>
-        <button onClick={handleSubmit} disabled={!file()}>{displayRouteSubmitButtonLabel}</button>
+        <button onClick={handleSubmit} disabled={!file() || isLoading()}>{displayRouteSubmitButtonLabel}</button>
+        <Show when={isLoading()}>
+          <Spinner/>
+        </Show>
 
         <MergeSection onMergeResult={handleMergeResult}/>
 
