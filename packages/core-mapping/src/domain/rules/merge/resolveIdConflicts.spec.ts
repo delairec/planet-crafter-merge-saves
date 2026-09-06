@@ -176,8 +176,8 @@ describe('Resolve id conflicts', () => {
     });
   });
 
-  describe('When a renumbered save B world object is held in a save B inventory', () => {
-    it('should update the contained world object ids of that inventory only', () => {
+  describe('When a save B inventory holds a renumbered world object', () => {
+    it('should update the contents of that inventory and leave the save A one untouched', () => {
       // Arrange
       const sections = mergedSections({
         inventories: {
@@ -185,8 +185,8 @@ describe('Resolve id conflicts', () => {
           fromSaveB: [{id: 31, woIds: '100', size: 50}]
         },
         worldObjects: {
-          fromSaveA: [{id: 100, gId: 'SomeObject', liId: 30}],
-          fromSaveB: [{id: 100, gId: 'OtherObject', liId: 31}]
+          fromSaveA: [{id: 100, gId: 'Iron'}],
+          fromSaveB: [{id: 100, gId: 'Cobalt'}]
         }
       });
 

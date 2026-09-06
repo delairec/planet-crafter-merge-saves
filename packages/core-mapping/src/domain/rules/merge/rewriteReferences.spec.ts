@@ -1,10 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {
-  collectInventoryIdsOwnedByRenumberedWorldObjects,
-  rewriteInventoryReferences,
-  rewritePlayerReferences,
-  rewriteWorldObjectReferences
-} from './rewriteReferences';
+import {rewriteInventoryReferences, rewritePlayerReferences, rewriteWorldObjectReferences} from './rewriteReferences';
 import {Player} from 'shared-save-processing/gameDefinitions';
 
 describe('Rewrite references', () => {
@@ -127,53 +122,27 @@ describe('Rewrite references', () => {
     });
   });
 
-  describe('When a renumbered world object owns an inventory', () => {
-    const renumberedContainer = {fromSaveA: [], fromSaveB: [{id: 100, gId: 'Container2', liId: 30}]};
-
-    it('should report that inventory as one whose contents must be rewritten', () => {
-      // Act
-      const result = collectInventoryIdsOwnedByRenumberedWorldObjects(renumberedContainer, worldObject100BecameWorldObject501);
-
-      // Assert
-      expect([...result]).toEqual([30]);
-    });
-
-    it('should report it under the id the inventory itself was renumbered to', () => {
-      // Arrange
-      const remappings = {inventoryIds: new Map([[30, 51]]), worldObjectIds: new Map([[100, 501]])};
-
-      // Act
-      const result = collectInventoryIdsOwnedByRenumberedWorldObjects(renumberedContainer, remappings);
-
-      // Assert
-      expect([...result]).toEqual([51]);
-    });
-
-    it('should rewrite the contents of that inventory only', () => {
+  describe('When a save B inventory holds a renumbered world object', () => {
+    it('should point its contents at the new world object id', () => {
       // Arrange
       const inventories = {fromSaveA: [{id: 40, woIds: '100', size: 20}], fromSaveB: [{id: 30, woIds: '100,200', size: 20}]};
 
       // Act
-      const result = rewriteInventoryReferences(inventories, worldObject100BecameWorldObject501, new Set([30]));
+      const result = rewriteInventoryReferences(inventories, worldObject100BecameWorldObject501);
 
       // Assert
-      expect({
-        fromSaveA: result.fromSaveA.map(inventory => inventory.woIds),
-        fromSaveB: result.fromSaveB.map(inventory => inventory.woIds)
-      }).toEqual({fromSaveA: ['100'], fromSaveB: ['501,200']});
+      expect(result.fromSaveB.map(inventory => inventory.woIds)).toEqual(['501,200']);
     });
-  });
 
-  describe('When a world object owns no inventory', () => {
-    it('should report no inventory to rewrite', () => {
+    it('should leave the save A inventory untouched', () => {
       // Arrange
-      const worldObjects = {fromSaveA: [], fromSaveB: [{id: 100, gId: 'Iron'}]};
+      const inventories = {fromSaveA: [{id: 40, woIds: '100', size: 20}], fromSaveB: []};
 
       // Act
-      const result = collectInventoryIdsOwnedByRenumberedWorldObjects(worldObjects, worldObject100BecameWorldObject501);
+      const result = rewriteInventoryReferences(inventories, worldObject100BecameWorldObject501);
 
       // Assert
-      expect([...result]).toEqual([]);
+      expect(result.fromSaveA.map(inventory => inventory.woIds)).toEqual(['100']);
     });
   });
 
@@ -194,7 +163,7 @@ describe('Rewrite references', () => {
       const inventories = {fromSaveA: [], fromSaveB: [{id: 2, woIds: '', size: 20}]};
 
       // Act
-      const result = rewriteInventoryReferences(inventories, worldObject100BecameWorldObject501, new Set([2]));
+      const result = rewriteInventoryReferences(inventories, worldObject100BecameWorldObject501);
 
       // Assert
       expect(result.fromSaveB).toEqual([{id: 2, woIds: '', size: 20}]);

@@ -197,9 +197,10 @@
 - `WorldObject.siIds` (CSV) → remapped inventory ids.
 - `WorldObject.linkedWo` → remapped world object ids.
 - `WorldObject.woIds` (CSV) → remapped world object ids.
-- `Inventory.woIds` (CSV) → remapped world object ids, for the inventory owned by a remapped world
-  object. An inventory that merely holds a remapped world object is left untouched: a known
-  narrower-than-documented behaviour, kept until it is fixed as a behaviour change.
+- `Inventory.woIds` (CSV) → remapped world object ids.
+
+Only save B entries carry rewritten references. A save A entry keeps the ids it always used: they
+are authoritative, so they still designate the same entry after the merge.
 
 **Rule GR-ID-4:** Id conflict resolution runs on the merged sections, as structured entries, and returns merged sections. It is the last step before the sections are serialized and written.
 

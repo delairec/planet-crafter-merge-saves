@@ -44,43 +44,22 @@ export function rewriteWorldObjectReferences(worldObjects: EntriesByOrigin<World
 }
 
 /**
- * Rewrites the contents of the inventories owned by a renumbered world object.
+ * Rewrites the contents of every save B inventory, so an inventory keeps holding the world objects
+ * it held whatever identifiers they were given.
  *
- * Only those inventories are rewritten, which is narrower than GR-ID-3 reads: an inventory holding
- * a renumbered world object it does not own keeps a stale identifier. Preserved as is here so the
- * merged output stays unchanged; see the open question on the T11 pull request.
+ * A save A inventory only ever lists save A world objects, whose identifiers are authoritative and
+ * never change, so it is left alone.
  *
  * @see GR-ID-3, GR-ID-5 in docs/game-rules.md
  */
-export function rewriteInventoryReferences(inventories: EntriesByOrigin<Inventory>, remappings: IdRemappings, inventoryIdsOwnedByRenumberedWorldObjects: ReadonlySet<number>): EntriesByOrigin<Inventory> {
-  const rewriteContents = (inventory: Inventory): Inventory => {
-    if (!inventoryIdsOwnedByRenumberedWorldObjects.has(inventory.id)) return inventory;
-    return {...inventory, woIds: remapIdList(inventory.woIds, remappings.worldObjectIds)};
-  };
-
+export function rewriteInventoryReferences(inventories: EntriesByOrigin<Inventory>, remappings: IdRemappings): EntriesByOrigin<Inventory> {
   return {
-    fromSaveA: inventories.fromSaveA.map(rewriteContents),
-    fromSaveB: inventories.fromSaveB.map(rewriteContents)
+    fromSaveA: inventories.fromSaveA,
+    fromSaveB: inventories.fromSaveB.map(inventory => ({
+      ...inventory,
+      woIds: remapIdList(inventory.woIds, remappings.worldObjectIds)
+    }))
   };
-}
-
-/**
- * Identifiers of the inventories owned by a save B world object that was renumbered, as they read
- * after the inventories themselves were renumbered.
- *
- * Takes the world objects as they were before resolution, so a renumbered one is still recognised
- * by the identifier it used to carry.
- */
-export function collectInventoryIdsOwnedByRenumberedWorldObjects(worldObjectsBeforeResolution: EntriesByOrigin<WorldObject>, remappings: IdRemappings): ReadonlySet<number> {
-  const inventoryIds = new Set<number>();
-
-  for (const worldObject of worldObjectsBeforeResolution.fromSaveB) {
-    if (worldObject.liId === undefined) continue;
-    if (!remappings.worldObjectIds.has(worldObject.id)) continue;
-    inventoryIds.add(remapId(worldObject.liId, remappings.inventoryIds));
-  }
-
-  return inventoryIds;
 }
 
 function remapId(id: number, remapping: ReadonlyMap<number, number>): number {

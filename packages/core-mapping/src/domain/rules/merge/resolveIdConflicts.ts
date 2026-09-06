@@ -3,12 +3,7 @@ import {createIdSequence} from './createIdSequence';
 import {resolvePlayerIdConflicts} from './resolvePlayerIdConflicts';
 import {resolveInventoryIdConflicts} from './resolveInventoryIdConflicts';
 import {resolveWorldObjectIdConflicts} from './resolveWorldObjectIdConflicts';
-import {
-  collectInventoryIdsOwnedByRenumberedWorldObjects,
-  rewriteInventoryReferences,
-  rewritePlayerReferences,
-  rewriteWorldObjectReferences
-} from './rewriteReferences';
+import {rewriteInventoryReferences, rewritePlayerReferences, rewriteWorldObjectReferences} from './rewriteReferences';
 
 /**
  * Renumbers the save B entries whose identifier is already used in save A, then points every save B
@@ -26,12 +21,10 @@ export function resolveIdConflicts(mergedSections: MergedSaveSections): MergedSa
   const worldObjects = resolveWorldObjectIdConflicts(mergedSections.worldObjects, idSequence);
 
   const remappings = {inventoryIds: inventories.saveBIdRemapping, worldObjectIds: worldObjects.saveBIdRemapping};
-  const inventoryIdsOwnedByRenumberedWorldObjects = collectInventoryIdsOwnedByRenumberedWorldObjects(mergedSections.worldObjects, remappings);
-
   return {
     ...mergedSections,
     players: rewritePlayerReferences(players.entries, remappings),
-    inventories: rewriteInventoryReferences(inventories.entries, remappings, inventoryIdsOwnedByRenumberedWorldObjects),
+    inventories: rewriteInventoryReferences(inventories.entries, remappings),
     worldObjects: rewriteWorldObjectReferences(worldObjects.entries, remappings)
   };
 }
