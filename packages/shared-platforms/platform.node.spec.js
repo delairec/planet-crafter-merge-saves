@@ -1,7 +1,39 @@
-import {describe, expect, it} from 'bun:test';
-import {isEntryPoint} from './platform.node.js';
+import {afterEach, describe, expect, it} from 'bun:test';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import {isEntryPoint, readTextFile, writeTextFile} from './platform.node.js';
 
 describe('Node platform', () => {
+
+  describe('writeTextFile', () => {
+    /** @type {string[]} */
+    const temporaryDirectories = [];
+
+    afterEach(async () => {
+      await Promise.all(temporaryDirectories.splice(0).map(directory => fs.rm(directory, {recursive: true, force: true})));
+    });
+
+    async function createTemporaryDirectory() {
+      const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'platform-node-'));
+      temporaryDirectories.push(directory);
+      return directory;
+    }
+
+    describe('When the destination folder does not exist yet', () => {
+      it('should create it and write the file', async () => {
+        // Arrange
+        const directory = await createTemporaryDirectory();
+        const filePath = path.join(directory, 'merged', 'save.json');
+
+        // Act
+        await writeTextFile(filePath, 'merged content');
+
+        // Assert
+        expect(await readTextFile(filePath)).toBe('merged content');
+      });
+    });
+  });
 
   describe('isEntryPoint', () => {
     describe('When the running script path matches the module URL', () => {
