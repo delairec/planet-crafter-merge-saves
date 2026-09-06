@@ -22,10 +22,14 @@ const FIRST_ID = 1;
 export function createIdSequence(inventories: readonly Inventory[]): IdSequence {
   let nextId = FIRST_ID;
   const reserve = (id: number) => {
-    if (id >= nextId) nextId = id + 1;
+    if (id >= nextId) {
+      nextId = id + 1;
+    }
   };
 
-  for (const inventory of inventories) reserve(inventory.id);
+  for (const inventory of inventories) {
+    reserve(inventory.id);
+  }
 
   return {
     next: () => nextId++,

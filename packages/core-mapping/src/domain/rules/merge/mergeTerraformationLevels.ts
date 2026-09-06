@@ -30,8 +30,15 @@ export function mergeTerraformationLevels(terraformationLevelsA: TerraformationL
 }
 
 function mergePurificationLevel(levelA: number, levelB: number): number {
-  if (levelA === PURIFICATION_SENTINEL && levelB === PURIFICATION_SENTINEL) return PURIFICATION_SENTINEL;
-  if (levelA === PURIFICATION_SENTINEL) return levelB;
-  if (levelB === PURIFICATION_SENTINEL) return levelA;
+  if (levelA === PURIFICATION_SENTINEL && levelB === PURIFICATION_SENTINEL) {
+    return PURIFICATION_SENTINEL;
+  }
+  if (levelA === PURIFICATION_SENTINEL) {
+    return levelB;
+  }
+  if (levelB === PURIFICATION_SENTINEL) {
+    return levelA;
+  }
+
   return Math.max(levelA, levelB);
 }

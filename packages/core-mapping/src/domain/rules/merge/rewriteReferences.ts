@@ -34,10 +34,18 @@ export function rewriteWorldObjectReferences(worldObjects: EntriesByOrigin<World
     fromSaveA: worldObjects.fromSaveA,
     fromSaveB: worldObjects.fromSaveB.map(worldObject => {
       const rewritten: WorldObject = {...worldObject};
-      if (rewritten.liId !== undefined) rewritten.liId = remapId(rewritten.liId, remappings.inventoryIds);
-      if (rewritten.siIds !== undefined) rewritten.siIds = remapIdList(rewritten.siIds, remappings.inventoryIds);
-      if (rewritten.linkedWo !== undefined) rewritten.linkedWo = remapId(rewritten.linkedWo, remappings.worldObjectIds);
-      if (rewritten.woIds !== undefined) rewritten.woIds = remapIdList(rewritten.woIds, remappings.worldObjectIds);
+      if (rewritten.liId !== undefined) {
+        rewritten.liId = remapId(rewritten.liId, remappings.inventoryIds);
+      }
+      if (rewritten.siIds !== undefined) {
+        rewritten.siIds = remapIdList(rewritten.siIds, remappings.inventoryIds);
+      }
+      if (rewritten.linkedWo !== undefined) {
+        rewritten.linkedWo = remapId(rewritten.linkedWo, remappings.worldObjectIds);
+      }
+      if (rewritten.woIds !== undefined) {
+        rewritten.woIds = remapIdList(rewritten.woIds, remappings.worldObjectIds);
+      }
       return rewritten;
     })
   };
@@ -67,7 +75,9 @@ function remapId(id: number, remapping: ReadonlyMap<number, number>): number {
 }
 
 function remapIdList(idList: string, remapping: ReadonlyMap<number, number>): string {
-  if (!idList) return idList;
+  if (!idList) {
+    return idList;
+  }
 
   return idList
     .split(ID_LIST_SEPARATOR)

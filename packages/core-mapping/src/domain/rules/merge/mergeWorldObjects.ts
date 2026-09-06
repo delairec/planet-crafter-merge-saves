@@ -8,13 +8,18 @@ export function mergeWorldObjects(worldObjectsGeneratorA: Generator<WorldObject>
   const fromSaveA: WorldObject[] = [];
   const positionKeysFromA = new Set<string>();
   for (const worldObject of worldObjectsGeneratorA) {
-    if (worldObject.pos) positionKeysFromA.add(buildWorldObjectPositionKey(worldObject));
+    if (worldObject.pos) {
+      positionKeysFromA.add(buildWorldObjectPositionKey(worldObject));
+    }
     fromSaveA.push(worldObject);
   }
 
   const fromSaveB: WorldObject[] = [];
   for (const worldObject of worldObjectsGeneratorB) {
-    if (orphanWorldObjectIds.has(worldObject.id)) continue;
+    if (orphanWorldObjectIds.has(worldObject.id)) {
+      continue;
+    }
+
     if (!worldObject.pos || !positionKeysFromA.has(buildWorldObjectPositionKey(worldObject))) {
       fromSaveB.push(worldObject);
     }

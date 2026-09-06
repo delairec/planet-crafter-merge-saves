@@ -10,7 +10,10 @@ export function mergeMailboxes(mailboxA: MailboxMessage[], mailboxB: MailboxMess
 
   const deduplicatedMessages = mailboxA.map(messageA => {
     const messageB = mailboxB.find(message => message.stringId === messageA.stringId);
-    if (messageB) return {...messageA, isRead: messageA.isRead || messageB.isRead};
+    if (messageB) {
+      return {...messageA, isRead: messageA.isRead || messageB.isRead};
+    }
+
     return messageA;
   });
 
