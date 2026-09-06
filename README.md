@@ -156,9 +156,8 @@ npm run node:validate -- --file=<filepath>
 
 Node.js counterpart of `bun validate`.
 
-> ⚠️ Both commands currently fail: they reach the TypeScript controllers of `core-mapping`, which Node.js cannot
-> execute as they stand (relative imports without an explicit extension, constructor parameter properties, and
-> type-only imports not marked `import type`). Use the Bun commands until this is addressed.
+Both commands run the TypeScript sources directly: Node.js strips the types itself, so no build step and no flag is
+needed. This requires the Node.js version stated in `engines`.
 
 
 ### Preparing data
