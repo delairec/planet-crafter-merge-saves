@@ -1,4 +1,4 @@
-/** @import { GlobalMetadata, TerraformationLevel, Player, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, WorldEvent } from './gameDefinitions' */
+/** @import { GlobalMetadata, TerraformationLevel, Player, WorldObject, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, WorldEvent } from './gameDefinitions' */
 
 import {stringifyEntry} from './stringifyEntry.js';
 
@@ -7,7 +7,7 @@ import {stringifyEntry} from './stringifyEntry.js';
  * @property {GlobalMetadata[]} metadata
  * @property {TerraformationLevel[]} terraformationLevels
  * @property {Player[]} players
- * @property {string} serializedWorldObjects
+ * @property {WorldObject[]} worldObjects
  * @property {Inventory[]} inventories
  * @property {Statistics[]} statistics
  * @property {MailboxMessage[]} mailboxes
@@ -25,7 +25,7 @@ const SAVE_TERMINATOR = '\n@';
  * @param {SerializeSaveParams} params
  * @returns {string}
  */
-export function serializeSave({metadata, terraformationLevels, players, serializedWorldObjects, inventories, statistics, mailboxes, storyEvents, saveConfigurations, worldEvents}) {
+export function serializeSave({metadata, terraformationLevels, players, worldObjects, inventories, statistics, mailboxes, storyEvents, saveConfigurations, worldEvents}) {
   const serialize = (entries) => entries.map(e => JSON.stringify(e)).join(ENTRY_SEPARATOR);
   const serializeWithFloats = (entries) => entries.map(e => stringifyEntry(e)).join(ENTRY_SEPARATOR);
   const serializeSingle = (entry) => entry ? JSON.stringify(entry) : '';
@@ -34,7 +34,7 @@ export function serializeSave({metadata, terraformationLevels, players, serializ
     serialize(metadata),
     serializeWithFloats(terraformationLevels),
     serializeWithFloats(players),
-    serializedWorldObjects,
+    serializeWithFloats(worldObjects),
     serialize(inventories),
     serializeSingle(statistics[0]),
     serialize(mailboxes),

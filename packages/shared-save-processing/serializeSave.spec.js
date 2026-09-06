@@ -6,7 +6,7 @@ describe('serializeSave', () => {
     metadata: [],
     terraformationLevels: [],
     players: [],
-    serializedWorldObjects: '',
+    worldObjects: [],
     inventories: [],
     statistics: [],
     mailboxes: [],
@@ -23,15 +23,26 @@ describe('serializeSave', () => {
     expect(result).toBe('\n@\n'.repeat(9) + '\n@');
   });
 
-  it('should pass serializedWorldObjects through unchanged', () => {
+  it('should serialize world objects as entries separated by the entry separator', () => {
     // Arrange
-    const params = {...emptyParams, serializedWorldObjects: 'raw-world-objects'};
+    const params = /** @type {any} */ ({...emptyParams, worldObjects: [{id: 1, gId: 'Iron'}, {id: 2, gId: 'Cobalt'}]});
 
     // Act
     const sections = serializeSave(params).split('\n@\n');
 
     // Assert
-    expect(sections[3]).toBe('raw-world-objects');
+    expect(sections[3]).toBe('{"id":1,"gId":"Iron"}|\n{"id":2,"gId":"Cobalt"}');
+  });
+
+  it('should preserve decimal notation for known float fields in world objects', () => {
+    // Arrange
+    const params = /** @type {any} */ ({...emptyParams, worldObjects: [{id: 1, gId: 'Tree', hunger: 50}]});
+
+    // Act
+    const sections = serializeSave(params).split('\n@\n');
+
+    // Assert
+    expect(sections[3]).toBe('{"id":1,"gId":"Tree","hunger":50.0}');
   });
 
   describe('When statistics is empty', () => {

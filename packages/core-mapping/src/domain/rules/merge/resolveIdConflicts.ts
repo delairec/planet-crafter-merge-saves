@@ -1,6 +1,5 @@
 import {Inventory, Player, WorldObject} from 'shared-save-processing/gameDefinitions';
 import {parseSaveSections} from 'shared-save-processing/parseSaveSections.js';
-import {stringifyEntry} from 'shared-save-processing/stringifyEntry.js';
 import {serializeSave} from 'shared-save-processing/serializeSave.js';
 
 type IdGenerator = (() => number) & { bumpTo: (id: number) => void };
@@ -36,7 +35,7 @@ export function resolveIdConflicts(mergedSave: string, saveAWorldObjectIds: Set<
   const worldObjectIdRemapping = new Map<number, number>();
   const saveBLinkedInventoryIds = new Set<number>();
   const resolvedWorldObjectsGenerator = createResolveWorldObjectsGenerator(worldObjectsFactory(), nextIdGenerator, worldObjectIdRemapping, saveBLinkedInventoryIds);
-  const serializedWorldObjects = serializeWorldObjectsAndBuildRemapping(resolvedWorldObjectsGenerator, oldIdToNewIds, saveBInventoryOriginalIds, saveAWorldObjectIds, worldObjectIdRemapping, bInventorySlotsTakenByPlayers);
+  const resolvedWorldObjects = resolveWorldObjectReferences(resolvedWorldObjectsGenerator, oldIdToNewIds, saveBInventoryOriginalIds, saveAWorldObjectIds, worldObjectIdRemapping, bInventorySlotsTakenByPlayers);
 
   const resolvedSaveBLinkedInventoryIds = remapLinkedInventoryIds(saveBLinkedInventoryIds, oldIdToNewIds);
   const inventoriesWithUpdatedWoIds = updateInventoryWoIdsReferences(resolvedInventories, worldObjectIdRemapping, resolvedSaveBLinkedInventoryIds);
@@ -45,7 +44,7 @@ export function resolveIdConflicts(mergedSave: string, saveAWorldObjectIds: Set<
     metadata,
     terraformationLevels,
     players: playersWithUpdatedRefs,
-    serializedWorldObjects,
+    worldObjects: resolvedWorldObjects,
     inventories: inventoriesWithUpdatedWoIds,
     statistics,
     mailboxes,
@@ -184,17 +183,17 @@ function remapBWorldObjectInventoryRef(isSaveAWorldObject: boolean, inventoryId:
   return newId;
 }
 
-function serializeWorldObjectsAndBuildRemapping(
+function resolveWorldObjectReferences(
   worldObjectsGenerator: Generator<WorldObject>,
   oldIdToNewIds: Map<number, number[]> = new Map(),
   saveBInventoryOriginalIds: Set<number> = new Set(),
   saveAWorldObjectIds: Set<number> = new Set(),
   worldObjectIdRemapping: Map<number, number> = new Map(),
   bInventorySlotsTakenByPlayers: Map<number, number> = new Map()
-): string {
+): WorldObject[] {
   const liIdConsumedCount = new Map(bInventorySlotsTakenByPlayers);
   const siIdsConsumedCount = new Map(bInventorySlotsTakenByPlayers);
-  const parts: string[] = [];
+  const resolvedWorldObjects: WorldObject[] = [];
   for (let worldObject of worldObjectsGenerator) {
     const isSaveAWorldObject = saveAWorldObjectIds.has(worldObject.id);
     if (worldObject.liId !== undefined && saveBInventoryOriginalIds.has(worldObject.liId)) {
@@ -206,9 +205,9 @@ function serializeWorldObjectsAndBuildRemapping(
     if (worldObject.linkedWo !== undefined && worldObjectIdRemapping.has(worldObject.linkedWo)) {
       worldObject = {...worldObject, linkedWo: worldObjectIdRemapping.get(worldObject.linkedWo)};
     }
-    parts.push(stringifyEntry(worldObject));
+    resolvedWorldObjects.push(worldObject);
   }
-  return parts.join('|\n');
+  return resolvedWorldObjects;
 }
 
 function remapSiIds(worldObject: WorldObject & {siIds: string}, isSaveAWorldObject: boolean, oldIdToNewIds: Map<number, number[]>, saveBInventoryOriginalIds: Set<number>, consumedCount: Map<number, number>): WorldObject {
