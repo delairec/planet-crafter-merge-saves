@@ -276,20 +276,35 @@ describe('Merge CLI', () => {
       });
     });
 
-    it('should warn about the format adaptation before writing the merged file', async () => {
+    it('should warn about the format adaptation of the affected save', async () => {
       // Act
       await main();
 
       // Assert
-      expect(consoleErrorSpy).toHaveBeenCalledWith(`⚠ Folder "${INPUT_SUBFOLDER_ALPHA}" [save A] This save was created by an older version of the game and has been adapted to the current format. The obsolete Terrain Layers section was ignored.`);
+      expect(consoleErrorSpy).toHaveBeenCalledWith('  [save A] This save was created by an older version of the game and has been adapted to the current format. The obsolete Terrain Layers section was ignored.');
     });
 
-    it('should still write the merged file and exit successfully', async () => {
+    it('should name the folder the adapted save comes from', async () => {
+      // Act
+      await main();
+
+      // Assert
+      expect(consoleErrorSpy).toHaveBeenCalledWith(`⚠ Folder "${INPUT_SUBFOLDER_ALPHA}" contains a save adapted from an older format:`);
+    });
+
+    it('should still write the merged file', async () => {
       // Act
       await main();
 
       // Assert
       expect(writeTextFile.mock.calls[0][0]).toBe(MERGED_SAVE_OUTPUT_PATH);
+    });
+
+    it('should still exit successfully', async () => {
+      // Act
+      await main();
+
+      // Assert
       expect(exitProcess).toHaveBeenCalledWith(0);
     });
   });

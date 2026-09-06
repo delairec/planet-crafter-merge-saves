@@ -2,7 +2,6 @@ import {describe, expect, it} from 'bun:test';
 import {SaveFileValidationPresenter} from './SaveFileValidationPresenter';
 import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue';
 
-
 describe('SaveFileValidationPresenter', () => {
 
   describe('When presenting a valid save file', () => {

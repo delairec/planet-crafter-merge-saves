@@ -36,8 +36,13 @@ export function renderMergeFailed(folder, saveAErrorMessages, saveBErrorMessages
  * @param {string[]} saveBWarningMessages
  */
 export function renderMergeWarnings(folder, saveAWarningMessages, saveBWarningMessages) {
-  for (const message of saveAWarningMessages) console.error(`⚠ Folder "${folder}" [save A] ${message}`);
-  for (const message of saveBWarningMessages) console.error(`⚠ Folder "${folder}" [save B] ${message}`);
+  if (saveAWarningMessages.length === 0 && saveBWarningMessages.length === 0) {
+    return;
+  }
+
+  console.error(`⚠ Folder "${folder}" contains a save adapted from an older format:`);
+  for (const message of saveAWarningMessages) console.error(`  [save A] ${message}`);
+  for (const message of saveBWarningMessages) console.error(`  [save B] ${message}`);
 }
 
 /** @param {string} inputDir */
