@@ -26,7 +26,7 @@ describe('Resolve inventory id conflicts', () => {
       const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA]));
 
       // Assert
-      expect([...result.saveBIdRemapping]).toEqual([[10, 11]]);
+      expect(result.saveBIdRemapping).toEqual(new Map([[10, 11]]));
     });
 
     it('should leave the save A inventories untouched', () => {
@@ -53,7 +53,7 @@ describe('Resolve inventory id conflicts', () => {
       const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA, equipmentOfSaveA]));
 
       // Assert
-      expect(result.entries.fromSaveB.map(inventory => inventory.id)).toEqual([12, 13]);
+      expect(result.entries.fromSaveB).toEqual([{id: 12, woIds: '', size: 35}, {id: 13, woIds: '', size: 5}]);
     });
   });
 
@@ -66,10 +66,8 @@ describe('Resolve inventory id conflicts', () => {
       const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA]));
 
       // Assert
-      expect({
-        saveBIds: result.entries.fromSaveB.map(inventory => inventory.id),
-        remapping: [...result.saveBIdRemapping]
-      }).toEqual({saveBIds: [99], remapping: []});
+      expect(result.entries.fromSaveB).toEqual([{id: 99, woIds: '', size: 50}]);
+      expect(result.saveBIdRemapping).toEqual(new Map());
     });
   });
 });

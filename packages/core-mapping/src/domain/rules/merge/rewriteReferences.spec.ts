@@ -28,38 +28,40 @@ describe('Rewrite references', () => {
   describe('When both saves have a player on a renumbered inventory', () => {
     it('should point the save B player at the new inventory id', () => {
       // Arrange
-      const players = {fromSaveA: [createPlayer(1, 10, 11)], fromSaveB: [createPlayer(2, 10, 11)]};
+      const playerFromSaveB = createPlayer(2, 10, 11);
+      const players = {fromSaveA: [createPlayer(1, 10, 11)], fromSaveB: [playerFromSaveB]};
 
       // Act
       const result = rewritePlayerReferences(players, inventory10BecameInventory51);
 
       // Assert
-      expect(result.fromSaveB.map(player => ({inventoryId: player.inventoryId, equipmentId: player.equipmentId})))
-        .toEqual([{inventoryId: 51, equipmentId: 11}]);
+      expect(result.fromSaveB).toEqual([{...playerFromSaveB, inventoryId: 51, equipmentId: 11}]);
     });
 
     it('should leave the save A player pointing at the id it always used', () => {
       // Arrange
-      const players = {fromSaveA: [createPlayer(1, 10, 11)], fromSaveB: [createPlayer(2, 10, 11)]};
+      const playerFromSaveA = createPlayer(1, 10, 11);
+      const players = {fromSaveA: [playerFromSaveA], fromSaveB: [createPlayer(2, 10, 11)]};
 
       // Act
       const result = rewritePlayerReferences(players, inventory10BecameInventory51);
 
       // Assert
-      expect(result.fromSaveA.map(player => player.inventoryId)).toEqual([10]);
+      expect(result.fromSaveA).toEqual([playerFromSaveA]);
     });
   });
 
   describe('When no save A player uses the renumbered inventory id', () => {
     it('should still point the save B player at its own renumbered inventory', () => {
       // Arrange
-      const players = {fromSaveA: [createPlayer(1, 30, 31)], fromSaveB: [createPlayer(2, 10, 11)]};
+      const playerFromSaveB = createPlayer(2, 10, 11);
+      const players = {fromSaveA: [createPlayer(1, 30, 31)], fromSaveB: [playerFromSaveB]};
 
       // Act
       const result = rewritePlayerReferences(players, inventory10BecameInventory51);
 
       // Assert
-      expect(result.fromSaveB.map(player => player.inventoryId)).toEqual([51]);
+      expect(result.fromSaveB).toEqual([{...playerFromSaveB, inventoryId: 51, equipmentId: 11}]);
     });
   });
 
@@ -72,7 +74,7 @@ describe('Rewrite references', () => {
       const result = rewriteWorldObjectReferences(worldObjects, inventory10BecameInventory51);
 
       // Assert
-      expect(result.fromSaveB.map(worldObject => worldObject.liId)).toEqual([51]);
+      expect(result.fromSaveB).toEqual([{id: 2, gId: 'Container2', liId: 51}]);
     });
 
     it('should point every save B sub-inventory slot at its new id', () => {
@@ -83,7 +85,7 @@ describe('Rewrite references', () => {
       const result = rewriteWorldObjectReferences(worldObjects, inventory10BecameInventory51);
 
       // Assert
-      expect(result.fromSaveB.map(worldObject => worldObject.siIds)).toEqual(['51,20,51']);
+      expect(result.fromSaveB).toEqual([{id: 2, gId: 'Farm1', siIds: '51,20,51'}]);
     });
 
     it('should leave the save A world object untouched', () => {
@@ -107,7 +109,7 @@ describe('Rewrite references', () => {
       const result = rewriteWorldObjectReferences(worldObjects, worldObject100BecameWorldObject501);
 
       // Assert
-      expect(result.fromSaveB.map(worldObject => worldObject.linkedWo)).toEqual([501]);
+      expect(result.fromSaveB).toEqual([{id: 2, gId: 'WaterGenerator', linkedWo: 501}]);
     });
 
     it('should point the contained world object ids of a save B world object at the new id', () => {
@@ -118,7 +120,7 @@ describe('Rewrite references', () => {
       const result = rewriteWorldObjectReferences(worldObjects, worldObject100BecameWorldObject501);
 
       // Assert
-      expect(result.fromSaveB.map(worldObject => worldObject.woIds)).toEqual(['501,200']);
+      expect(result.fromSaveB).toEqual([{id: 2, gId: 'Container2', woIds: '501,200'}]);
     });
   });
 
@@ -131,7 +133,7 @@ describe('Rewrite references', () => {
       const result = rewriteInventoryReferences(inventories, worldObject100BecameWorldObject501);
 
       // Assert
-      expect(result.fromSaveB.map(inventory => inventory.woIds)).toEqual(['501,200']);
+      expect(result.fromSaveB).toEqual([{id: 30, woIds: '501,200', size: 20}]);
     });
 
     it('should leave the save A inventory untouched', () => {
@@ -142,7 +144,7 @@ describe('Rewrite references', () => {
       const result = rewriteInventoryReferences(inventories, worldObject100BecameWorldObject501);
 
       // Assert
-      expect(result.fromSaveA.map(inventory => inventory.woIds)).toEqual(['100']);
+      expect(result.fromSaveA).toEqual([{id: 40, woIds: '100', size: 20}]);
     });
   });
 

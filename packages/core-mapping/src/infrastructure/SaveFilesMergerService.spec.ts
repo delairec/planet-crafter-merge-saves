@@ -56,18 +56,16 @@ describe('SaveFilesMergerService', () => {
 
       // Assert
       const {sections} = parseSaveSections(result.content);
-      const worldObjects = [...sections[3]()];
-      const inventories = sections[4];
-      const vegetubeInventory = inventories.find(inventory => inventory.woIds === '999');
-      expect({
-        saveAContainerLinkedInventoryId: worldObjects.find(worldObject => worldObject.id === 100)?.liId,
-        vegetubeLinkedInventoryId: worldObjects.find(worldObject => worldObject.gId === 'VegetubeOutside1')?.liId,
-        renumberedVegetubeInventoryId: vegetubeInventory?.id
-      }).toEqual({
-        saveAContainerLinkedInventoryId: 50,
-        vegetubeLinkedInventoryId: 51,
-        renumberedVegetubeInventoryId: 51
-      });
+      expect([...sections[3]()]).toEqual([
+        {id: 100, gId: 'Container2', liId: 50, pos: '1,0,1'},
+        {id: 200, gId: 'VegetubeOutside1', liId: 51, pos: '5,0,5'}
+      ]);
+      expect(sections[4]).toEqual([
+        {id: 10, woIds: '', size: 20},
+        {id: 11, woIds: '', size: 10},
+        {id: 50, woIds: '100', size: 35},
+        {id: 51, woIds: '999', size: 1}
+      ]);
     });
   });
 });

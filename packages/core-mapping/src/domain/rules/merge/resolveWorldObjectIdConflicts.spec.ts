@@ -31,7 +31,7 @@ describe('Resolve world object id conflicts', () => {
       const result = resolveWorldObjectIdConflicts(worldObjects, createIdSequence([anInventory]));
 
       // Assert
-      expect([...result.saveBIdRemapping]).toEqual([[100, 101]]);
+      expect(result.saveBIdRemapping).toEqual(new Map([[100, 101]]));
     });
 
     it('should leave the save A world objects untouched', () => {
@@ -61,7 +61,7 @@ describe('Resolve world object id conflicts', () => {
       const result = resolveWorldObjectIdConflicts(worldObjects, createIdSequence([anInventory]));
 
       // Assert
-      expect(result.entries.fromSaveB.map(worldObject => worldObject.id)).toEqual([501]);
+      expect(result.entries.fromSaveB).toEqual([{id: 501, gId: 'OtherObject'}]);
     });
   });
 
@@ -77,10 +77,8 @@ describe('Resolve world object id conflicts', () => {
       const result = resolveWorldObjectIdConflicts(worldObjects, createIdSequence([anInventory]));
 
       // Assert
-      expect({
-        saveBIds: result.entries.fromSaveB.map(worldObject => worldObject.id),
-        remapping: [...result.saveBIdRemapping]
-      }).toEqual({saveBIds: [200], remapping: []});
+      expect(result.entries.fromSaveB).toEqual([{id: 200, gId: 'OtherObject'}]);
+      expect(result.saveBIdRemapping).toEqual(new Map());
     });
   });
 });

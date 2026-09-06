@@ -30,14 +30,14 @@ describe('Resolve player id conflicts', () => {
   describe('When a save B player uses an id already taken in save A', () => {
     it('should give that player a new id', () => {
       // Arrange
-      const players = {fromSaveA: [createPlayer(1, 'Nikowa')], fromSaveB: [createPlayer(1, 'Chileny')]};
+      const playerFromSaveB = createPlayer(1, 'Chileny');
+      const players = {fromSaveA: [createPlayer(1, 'Nikowa')], fromSaveB: [playerFromSaveB]};
 
       // Act
       const result = resolvePlayerIdConflicts(players, createIdSequenceStartingAt51());
 
       // Assert
-      expect(result.entries.fromSaveB.map(player => ({id: player.id, name: player.name})))
-        .toEqual([{id: 51, name: 'Chileny'}]);
+      expect(result.entries.fromSaveB).toEqual([{...playerFromSaveB, id: 51}]);
     });
 
     it('should report the new id under the id it replaces', () => {
@@ -48,34 +48,34 @@ describe('Resolve player id conflicts', () => {
       const result = resolvePlayerIdConflicts(players, createIdSequenceStartingAt51());
 
       // Assert
-      expect([...result.saveBIdRemapping]).toEqual([[1, 51]]);
+      expect(result.saveBIdRemapping).toEqual(new Map([[1, 51]]));
     });
 
     it('should leave the save A player untouched', () => {
       // Arrange
-      const players = {fromSaveA: [createPlayer(1, 'Nikowa')], fromSaveB: [createPlayer(1, 'Chileny')]};
+      const playerFromSaveA = createPlayer(1, 'Nikowa');
+      const players = {fromSaveA: [playerFromSaveA], fromSaveB: [createPlayer(1, 'Chileny')]};
 
       // Act
       const result = resolvePlayerIdConflicts(players, createIdSequenceStartingAt51());
 
       // Assert
-      expect(result.entries.fromSaveA.map(player => player.id)).toEqual([1]);
+      expect(result.entries.fromSaveA).toEqual([playerFromSaveA]);
     });
   });
 
   describe('When save B players use ids that are free', () => {
     it('should keep their ids and report no remapping', () => {
       // Arrange
-      const players = {fromSaveA: [createPlayer(1, 'Nikowa')], fromSaveB: [createPlayer(2, 'Chileny')]};
+      const playerFromSaveB = createPlayer(2, 'Chileny');
+      const players = {fromSaveA: [createPlayer(1, 'Nikowa')], fromSaveB: [playerFromSaveB]};
 
       // Act
       const result = resolvePlayerIdConflicts(players, createIdSequenceStartingAt51());
 
       // Assert
-      expect({
-        savedBIds: result.entries.fromSaveB.map(player => player.id),
-        remapping: [...result.saveBIdRemapping]
-      }).toEqual({savedBIds: [2], remapping: []});
+      expect(result.entries.fromSaveB).toEqual([playerFromSaveB]);
+      expect(result.saveBIdRemapping).toEqual(new Map());
     });
   });
 });
