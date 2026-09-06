@@ -6,7 +6,7 @@ import {InventoryEntity} from '../entities/InventoryEntity';
 import {WorldObjectName} from '../worldObjectNames';
 
 describe('computePlanetEnergyLevels', () => {
-  it('should sum production and consumption of positioned world objects', () => {
+  it('should report available energy as production minus consumption', () => {
     // Arrange
     const worldObjects: PlacedWorldObjectEntity[] = [
       {id: '1', name: 'EnergyGenerator1' as WorldObjectName, position: [0, 0, 0], planetId: 1},
@@ -22,13 +22,30 @@ describe('computePlanetEnergyLevels', () => {
     expect(result.available).toBe(0.7);
   });
 
-  it('should apply the Energy Fuse multiplier to producers boosted by an Optimizer', () => {
+  it('should express each production breakdown entry as a share of the total production', () => {
+    // Arrange
+    const worldObjects: PlacedWorldObjectEntity[] = [
+      {id: '1', name: 'EnergyGenerator2' as WorldObjectName, position: [0, 0, 0], planetId: 1},
+      {id: '2', name: 'EnergyGenerator3' as WorldObjectName, position: [0, 10, 0], planetId: 1}
+    ];
+
+    // Act
+    const result = computePlanetEnergyLevels(worldObjects, worldObjects, []);
+
+    // Assert: 19.5 kW and 6.5 kW out of a 26 kW total
+    expect(result.productionBreakdown).toEqual([
+      {name: 'EnergyGenerator3', quantity: 1, unitLevel: 19.5, totalLevel: 19.5, productionRatio: 0.75},
+      {name: 'EnergyGenerator2', quantity: 1, unitLevel: 6.5, totalLevel: 6.5, productionRatio: 0.25}
+    ]);
+  });
+
+  it('should express each optimizer contribution as a share of the total production', () => {
     // Arrange
     const optimizer: PlacedWorldObjectEntity = {
       id: 'opt-1', name: 'Optimizer1' as WorldObjectName, position: [0, 0, 0], planetId: 1, inventoryId: 99
     };
     const producer: PlacedWorldObjectEntity = {
-      id: 'prod-1', name: 'EnergyGenerator1' as WorldObjectName, position: [1, 0, 0], planetId: 1
+      id: 'prod-1', name: 'EnergyGenerator2' as WorldObjectName, position: [10, 0, 0], planetId: 1
     };
     const fuse: WorldObjectEntity = {id: 'fuse-1', name: 'FuseEnergy1' as WorldObjectName};
     const allWorldObjects: WorldObjectEntity[] = [optimizer, producer, fuse];
@@ -37,38 +54,60 @@ describe('computePlanetEnergyLevels', () => {
     // Act
     const result = computePlanetEnergyLevels(allWorldObjects, [optimizer, producer], inventories);
 
-    // Assert
-    expect(result.production).toBe(1.2 * 1.5);
+    // Assert: the boost adds 3.25 kW to a 9.75 kW total production
     expect(result.optimizers).toEqual([{
-      name: expect.any(String),
+      name: 'Optimizer1',
       fuseCount: 1,
-      boostedMachines: [{name: expect.any(String), quantity: 1}],
-      contribution: 1.2 * (1.5 - 1),
-      productionRatio: expect.any(Number)
+      boostedMachines: [{name: 'EnergyGenerator2', quantity: 1}],
+      contribution: 3.25,
+      productionRatio: 0.3333333333333333
     }]);
   });
 
-  it('should not boost producers on a different planet than the Optimizer', () => {
+  it('should leave production shares undefined when the planet produces no energy', () => {
     // Arrange
     const optimizer: PlacedWorldObjectEntity = {
       id: 'opt-1', name: 'Optimizer1' as WorldObjectName, position: [0, 0, 0], planetId: 1, inventoryId: 99
     };
-    const producerOnOtherPlanet: PlacedWorldObjectEntity = {
-      id: 'prod-1', name: 'EnergyGenerator1' as WorldObjectName, position: [1, 0, 0], planetId: 2
-    };
     const fuse: WorldObjectEntity = {id: 'fuse-1', name: 'FuseEnergy1' as WorldObjectName};
-    const allWorldObjects: WorldObjectEntity[] = [optimizer, producerOnOtherPlanet, fuse];
+    const allWorldObjects: WorldObjectEntity[] = [optimizer, fuse];
     const inventories: InventoryEntity[] = [{id: 99, worldObjectIds: ['fuse-1'], size: 1}];
 
     // Act
     const result = computePlanetEnergyLevels(allWorldObjects, [optimizer], inventories);
 
-    // Assert: the Optimizer still appears (it holds a fuse) but boosts nothing on this planet
+    // Assert
+    expect(result.production).toBe(0);
     expect(result.optimizers).toEqual([{
-      name: expect.any(String),
+      name: 'Optimizer1',
       fuseCount: 1,
       boostedMachines: [],
-      contribution: 0
+      contribution: 0,
+      productionRatio: undefined
     }]);
+  });
+
+  it('should ignore world objects placed on another planet, each planet having its own power grid', () => {
+    // Arrange
+    const producerOnThisPlanet: PlacedWorldObjectEntity = {
+      id: '1', name: 'EnergyGenerator1' as WorldObjectName, position: [0, 0, 0], planetId: 1
+    };
+    const producerOnAnotherPlanet: PlacedWorldObjectEntity = {
+      id: '2', name: 'EnergyGenerator6' as WorldObjectName, position: [0, 0, 0], planetId: 2
+    };
+    const consumerOnAnotherPlanet: PlacedWorldObjectEntity = {
+      id: '3', name: 'Drill4' as WorldObjectName, position: [10, 0, 0], planetId: 2
+    };
+    const allWorldObjects: WorldObjectEntity[] = [
+      producerOnThisPlanet, producerOnAnotherPlanet, consumerOnAnotherPlanet
+    ];
+
+    // Act
+    const result = computePlanetEnergyLevels(allWorldObjects, [producerOnThisPlanet], []);
+
+    // Assert
+    expect(result.production).toBe(1.2);
+    expect(result.consumption).toBe(0);
+    expect(result.available).toBe(1.2);
   });
 });
