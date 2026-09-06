@@ -62,11 +62,11 @@ export default function MergeResultSection(props: MergeResultSectionProps) {
         <div>
           <Show when={props.result()!.saveAErrorMessages.length > 0}>
             <ValidationMessagesList title={mergeResultSectionSaveAInvalidMessage} severity="danger"
-                                    messages={props.result()!.saveAErrorMessages} foldable monospaced/>
+                                    messages={props.result()!.saveAErrorMessages}/>
           </Show>
           <Show when={props.result()!.saveBErrorMessages.length > 0}>
             <ValidationMessagesList title={mergeResultSectionSaveBInvalidMessage} severity="danger"
-                                    messages={props.result()!.saveBErrorMessages} foldable monospaced/>
+                                    messages={props.result()!.saveBErrorMessages}/>
           </Show>
         </div>
       </Show>
