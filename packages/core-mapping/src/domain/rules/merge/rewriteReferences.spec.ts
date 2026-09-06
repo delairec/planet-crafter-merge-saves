@@ -7,7 +7,7 @@ describe('Rewrite references', () => {
   const inventory10BecameInventory51 = {inventoryIds: new Map([[10, 51]]), worldObjectIds: new Map<number, number>()};
   const worldObject100BecameWorldObject501 = {inventoryIds: new Map<number, number>(), worldObjectIds: new Map([[100, 501]])};
 
-  function aPlayer(id: number, inventoryId: number, equipmentId: number): Player {
+  function createPlayer(id: number, inventoryId: number, equipmentId: number): Player {
     return {
       id, inventoryId, equipmentId,
       name: 'Nikowa',
@@ -28,7 +28,7 @@ describe('Rewrite references', () => {
   describe('When both saves have a player on a renumbered inventory', () => {
     it('should point the save B player at the new inventory id', () => {
       // Arrange
-      const players = {fromSaveA: [aPlayer(1, 10, 11)], fromSaveB: [aPlayer(2, 10, 11)]};
+      const players = {fromSaveA: [createPlayer(1, 10, 11)], fromSaveB: [createPlayer(2, 10, 11)]};
 
       // Act
       const result = rewritePlayerReferences(players, inventory10BecameInventory51);
@@ -40,7 +40,7 @@ describe('Rewrite references', () => {
 
     it('should leave the save A player pointing at the id it always used', () => {
       // Arrange
-      const players = {fromSaveA: [aPlayer(1, 10, 11)], fromSaveB: [aPlayer(2, 10, 11)]};
+      const players = {fromSaveA: [createPlayer(1, 10, 11)], fromSaveB: [createPlayer(2, 10, 11)]};
 
       // Act
       const result = rewritePlayerReferences(players, inventory10BecameInventory51);
@@ -53,7 +53,7 @@ describe('Rewrite references', () => {
   describe('When no save A player uses the renumbered inventory id', () => {
     it('should still point the save B player at its own renumbered inventory', () => {
       // Arrange
-      const players = {fromSaveA: [aPlayer(1, 30, 31)], fromSaveB: [aPlayer(2, 10, 11)]};
+      const players = {fromSaveA: [createPlayer(1, 30, 31)], fromSaveB: [createPlayer(2, 10, 11)]};
 
       // Act
       const result = rewritePlayerReferences(players, inventory10BecameInventory51);

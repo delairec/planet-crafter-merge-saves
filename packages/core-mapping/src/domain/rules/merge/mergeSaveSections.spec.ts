@@ -6,7 +6,7 @@ import {ParsedSections} from 'shared-save-processing/gameDefinitions';
 describe('Merge saves', () => {
     const saveDisplayName = 'SAVE_NAME';
 
-    function sectionsOf(options: Parameters<typeof createFakeParsedSave>[0]): ParsedSections {
+    function createSections(options: Parameters<typeof createFakeParsedSave>[0]): ParsedSections {
         return createFakeParsedSave(options).sections;
     }
 
@@ -20,14 +20,14 @@ describe('Merge saves', () => {
             const worldObjectFromSaveA = {id: 100, gId: 'Container2', pos: '1,0,1'};
             const worldObjectFromSaveB = {id: 200, gId: 'VegetubeOutside1', pos: '5,0,5'};
 
-            const sectionsA = sectionsOf({
+            const sectionsA = createSections({
                 players: [playerFromSaveA as never],
                 inventories: [inventoryFromSaveA],
                 worldObjects: function* () {
                     yield worldObjectFromSaveA;
                 }
             });
-            const sectionsB = sectionsOf({
+            const sectionsB = createSections({
                 players: [playerFromSaveB as never],
                 inventories: [inventoryFromSaveB],
                 worldObjects: function* () {

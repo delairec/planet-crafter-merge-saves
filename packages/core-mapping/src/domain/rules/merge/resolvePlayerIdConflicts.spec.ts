@@ -21,19 +21,19 @@ describe('Resolve player id conflicts', () => {
     totalTerraTokenEarned: 0
   };
 
-  function aPlayer(id: number, name: string): Player {
+  function createPlayer(id: number, name: string): Player {
     return {...basePlayer, id, name};
   }
 
-  const idSequenceStartingAt51 = () => createIdSequence([{id: 50, woIds: '', size: 20}]);
+  const createIdSequenceStartingAt51 = () => createIdSequence([{id: 50, woIds: '', size: 20}]);
 
   describe('When a save B player uses an id already taken in save A', () => {
     it('should give that player a new id', () => {
       // Arrange
-      const players = {fromSaveA: [aPlayer(1, 'Nikowa')], fromSaveB: [aPlayer(1, 'Chileny')]};
+      const players = {fromSaveA: [createPlayer(1, 'Nikowa')], fromSaveB: [createPlayer(1, 'Chileny')]};
 
       // Act
-      const result = resolvePlayerIdConflicts(players, idSequenceStartingAt51());
+      const result = resolvePlayerIdConflicts(players, createIdSequenceStartingAt51());
 
       // Assert
       expect(result.entries.fromSaveB.map(player => ({id: player.id, name: player.name})))
@@ -42,10 +42,10 @@ describe('Resolve player id conflicts', () => {
 
     it('should report the new id under the id it replaces', () => {
       // Arrange
-      const players = {fromSaveA: [aPlayer(1, 'Nikowa')], fromSaveB: [aPlayer(1, 'Chileny')]};
+      const players = {fromSaveA: [createPlayer(1, 'Nikowa')], fromSaveB: [createPlayer(1, 'Chileny')]};
 
       // Act
-      const result = resolvePlayerIdConflicts(players, idSequenceStartingAt51());
+      const result = resolvePlayerIdConflicts(players, createIdSequenceStartingAt51());
 
       // Assert
       expect([...result.saveBIdRemapping]).toEqual([[1, 51]]);
@@ -53,10 +53,10 @@ describe('Resolve player id conflicts', () => {
 
     it('should leave the save A player untouched', () => {
       // Arrange
-      const players = {fromSaveA: [aPlayer(1, 'Nikowa')], fromSaveB: [aPlayer(1, 'Chileny')]};
+      const players = {fromSaveA: [createPlayer(1, 'Nikowa')], fromSaveB: [createPlayer(1, 'Chileny')]};
 
       // Act
-      const result = resolvePlayerIdConflicts(players, idSequenceStartingAt51());
+      const result = resolvePlayerIdConflicts(players, createIdSequenceStartingAt51());
 
       // Assert
       expect(result.entries.fromSaveA.map(player => player.id)).toEqual([1]);
@@ -66,10 +66,10 @@ describe('Resolve player id conflicts', () => {
   describe('When save B players use ids that are free', () => {
     it('should keep their ids and report no remapping', () => {
       // Arrange
-      const players = {fromSaveA: [aPlayer(1, 'Nikowa')], fromSaveB: [aPlayer(2, 'Chileny')]};
+      const players = {fromSaveA: [createPlayer(1, 'Nikowa')], fromSaveB: [createPlayer(2, 'Chileny')]};
 
       // Act
-      const result = resolvePlayerIdConflicts(players, idSequenceStartingAt51());
+      const result = resolvePlayerIdConflicts(players, createIdSequenceStartingAt51());
 
       // Assert
       expect({
