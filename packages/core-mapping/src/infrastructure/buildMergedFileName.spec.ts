@@ -3,39 +3,45 @@ import {buildMergedFileName} from './buildMergedFileName';
 
 describe('buildMergedFileName', () => {
 
-  it('should combine both file names, stripping their .json extension', () => {
-    // Arrange
-    const fileNameA = 'Standard-1.json';
-    const fileNameB = 'Standard-2.json';
+  describe('When both file names carry a .json extension', () => {
+    it('should combine both file names, stripping their extension', () => {
+      // Arrange
+      const fileNameA = 'Standard-1.json';
+      const fileNameB = 'Standard-2.json';
 
-    // Act
-    const result = buildMergedFileName(fileNameA, fileNameB);
+      // Act
+      const result = buildMergedFileName(fileNameA, fileNameB);
 
-    // Assert
-    expect(result).toBe('Standard-1-Standard-2-merged.json');
+      // Assert
+      expect(result).toBe('Standard-1-Standard-2-merged.json');
+    });
   });
 
-  it('should combine both file names as-is when they have no .json extension', () => {
-    // Arrange
-    const fileNameA = 'Standard-1';
-    const fileNameB = 'Standard-2';
+  describe('When the file names have no .json extension', () => {
+    it('should combine both file names as they are', () => {
+      // Arrange
+      const fileNameA = 'Standard-1';
+      const fileNameB = 'Standard-2';
 
-    // Act
-    const result = buildMergedFileName(fileNameA, fileNameB);
+      // Act
+      const result = buildMergedFileName(fileNameA, fileNameB);
 
-    // Assert
-    expect(result).toBe('Standard-1-Standard-2-merged.json');
+      // Assert
+      expect(result).toBe('Standard-1-Standard-2-merged.json');
+    });
   });
 
-  it('should remove path separators and unsafe characters from file names', () => {
-    // Arrange
-    const fileNameA = '../malicious/<script>';
-    const fileNameB = 'safe.JSON';
+  describe('When a file name holds path separators or unsafe characters', () => {
+    it('should remove them from the merged file name', () => {
+      // Arrange
+      const fileNameA = '../malicious/<script>';
+      const fileNameB = 'safe.JSON';
 
-    // Act
-    const result = buildMergedFileName(fileNameA, fileNameB);
+      // Act
+      const result = buildMergedFileName(fileNameA, fileNameB);
 
-    // Assert
-    expect(result).toBe('_malicious__script_-safe-merged.json');
+      // Assert
+      expect(result).toBe('_malicious__script_-safe-merged.json');
+    });
   });
 });
