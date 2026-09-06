@@ -10,14 +10,6 @@ describe('Merge saves', () => {
         return createFakeParsedSave(options).sections;
     }
 
-    it('should throw when the save format is invalid', () => {
-        // Act
-        const result = () => mergeSaveSections('invalidSaveFormatA' as never, 'invalidSaveFormatB' as never, saveDisplayName);
-
-        // Assert
-        expect(result).toThrow('ERROR_INVALID_INPUT_FORMAT');
-    });
-
     describe('When both saves carry entries in the sections holding identifiers', () => {
         it('should keep the origin of players, inventories and world objects', () => {
             // Arrange

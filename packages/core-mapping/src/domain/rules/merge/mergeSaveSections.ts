@@ -25,10 +25,6 @@ function* EMPTY_GENERATOR(): Generator<never> {
  * @see GR-ORDER-1 in docs/game-rules.md
  */
 export function mergeSaveSections(sectionsA: ParsedSections, sectionsB: ParsedSections, saveDisplayName: string): MergedSaveSections {
-  if (!Array.isArray(sectionsA) && !Array.isArray(sectionsB)) {
-    throw Error('ERROR_INVALID_INPUT_FORMAT');
-  }
-
   const [mainSave, secondarySave] = determineSaveOrder(sectionsA, sectionsB);
 
   const [metadataA = [], terraformationLevelsA = [], playersA = [], worldObjectsFactoryA = () => EMPTY_GENERATOR(), inventoriesA = [], statisticsA = [], mailboxA = [], storyEventsA = [], saveConfigurationsA = [], worldEventsA = []] = mainSave;
