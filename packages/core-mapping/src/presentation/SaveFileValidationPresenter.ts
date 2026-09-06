@@ -1,23 +1,10 @@
 import {SaveFileValidationPresenterPort} from "../application/ports/SaveFileValidationPresenterPort";
 import {ValidationIssue} from "../application/ports/ValidationIssue";
 import {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
-import {SaveFileValidationViewModel, SaveValidationErrorViewModel} from "./viewModels/SaveFileValidationViewModel";
+import {SaveFileValidationViewModel} from "./viewModels/SaveFileValidationViewModel";
 import {formatValidationIssue} from "./formatValidationIssue";
+import {formatValidationError} from "./formatValidationError";
 import {formatSaveWarning} from "./formatSaveWarning";
-
-function toValidationError(issue: ValidationIssue): SaveValidationErrorViewModel {
-  const error: SaveValidationErrorViewModel = {message: formatValidationIssue(issue)};
-
-  if (issue.section !== undefined) {
-    error.section = issue.section;
-  }
-
-  if (issue.entryIndex !== undefined) {
-    error.entryIndex = issue.entryIndex;
-  }
-
-  return error;
-}
 
 export class SaveFileValidationPresenter implements SaveFileValidationPresenterPort {
   private _viewModel: SaveFileValidationViewModel;
@@ -38,7 +25,7 @@ export class SaveFileValidationPresenter implements SaveFileValidationPresenterP
     this._viewModel = {
       status: 'invalid',
       errorMessages: errors.map(formatValidationIssue),
-      errors: errors.map(toValidationError),
+      errors: errors.map(formatValidationError),
       warnings: warnings.map(formatSaveWarning)
     };
   }

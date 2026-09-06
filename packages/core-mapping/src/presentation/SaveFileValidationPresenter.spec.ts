@@ -56,17 +56,6 @@ describe('SaveFileValidationPresenter', () => {
       expect(presenter.viewModel.errors).toEqual([{message: 'Invalid JSON: {', section: 0, entryIndex: 3}]);
     });
 
-    it('should report no location for an error concerning the whole file', () => {
-      // Arrange
-      const presenter = new SaveFileValidationPresenter();
-
-      // Act
-      presenter.presentInvalidSaveFile([{code: VALIDATION_ISSUE_CODES.INVALID_EXTENSION, detail: 'Invalid file extension: expected a .json file.'}], []);
-
-      // Assert
-      expect(presenter.viewModel.errors).toEqual([{message: 'Invalid file extension: expected a .json file.'}]);
-    });
-
     it('should keep the warning messages alongside the errors', () => {
       // Arrange
       const presenter = new SaveFileValidationPresenter();
