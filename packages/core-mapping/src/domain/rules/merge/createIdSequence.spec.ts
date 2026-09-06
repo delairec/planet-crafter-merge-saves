@@ -30,7 +30,8 @@ describe('Create id sequence', () => {
   describe('When the merged save has no inventory', () => {
     it('should start at the first id', () => {
       // Arrange
-      const idSequence = createIdSequence([]);
+      const noInventories: never[] = [];
+      const idSequence = createIdSequence(noInventories);
 
       // Act
       const generatedId = idSequence.next();

@@ -37,9 +37,10 @@ describe('Merge world events', () => {
         pos: '1250.623,-51.60085,-215.7026', rot: '-0.001,-0.353,-0.010,-0.935',
         wrecksWOGenerated: true, woIdsGenerated: '201234,205678', woIdsDropped: '201234', version: 13
       };
+      const noWorldEventsFromSaveA: never[] = [];
 
       // Act
-      const result = mergeWorldEvents([], [wreckEvent]);
+      const result = mergeWorldEvents(noWorldEventsFromSaveA, [wreckEvent]);
 
       // Assert
       expect(result).toEqual([{

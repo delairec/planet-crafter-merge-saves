@@ -100,9 +100,10 @@ describe('Merge players', () => {
     it('should default the missing fields to 0', () => {
       // Arrange
       const {cameraView: _cameraView, totalCraftedObjects: _totalCraftedObjects, totalTerraTokenEarned: _totalTerraTokenEarned, ...legacyPlayer} = playerFromSaveA;
+      const noPlayersFromSaveB: never[] = [];
 
       // Act
-      const result = mergePlayers([legacyPlayer], []);
+      const result = mergePlayers([legacyPlayer], noPlayersFromSaveB);
 
       // Assert
       expect(result.fromSaveA).toEqual([{...legacyPlayer, cameraView: 0, totalCraftedObjects: 0, totalTerraTokenEarned: 0, host: true}]);

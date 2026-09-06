@@ -31,15 +31,19 @@ describe('Merge world objects', () => {
 
   describe('When save B contains world objects from an ejected player inventory', () => {
     it('should drop the world objects that were in the orphan inventories', () => {
+      // Arrange
+      const noWorldObjectsFromSaveA: never[] = [];
+      const orphanWorldObjectIds = new Set([901, 902, 903]);
+
       // Act
       const result = mergeWorldObjects(
-        createWorldObjectsGenerator([]),
+        createWorldObjectsGenerator(noWorldObjectsFromSaveA),
         createWorldObjectsGenerator([
           {id: 901, gId: 'Iron'},
           {id: 902, gId: 'Cobalt'},
           {id: 903, gId: 'AirFilter1'}
         ]),
-        new Set([901, 902, 903])
+        orphanWorldObjectIds
       );
 
       // Assert

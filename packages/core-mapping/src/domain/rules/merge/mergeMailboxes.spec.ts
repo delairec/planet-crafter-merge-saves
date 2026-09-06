@@ -62,8 +62,12 @@ describe('Merge mailboxes', () => {
 
   describe('When both saves have no mailboxes', () => {
     it('should return no mailbox', () => {
+      // Arrange
+      const noMailboxesFromSaveA: never[] = [];
+      const noMailboxesFromSaveB: never[] = [];
+
       // Act
-      const result = mergeMailboxes([], []);
+      const result = mergeMailboxes(noMailboxesFromSaveA, noMailboxesFromSaveB);
 
       // Assert
       expect(result).toEqual([]);

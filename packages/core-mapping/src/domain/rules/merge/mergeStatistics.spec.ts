@@ -17,8 +17,12 @@ describe('Merge statistics', () => {
 
   describe('When neither save has statistics', () => {
     it('should report no statistics at all', () => {
+      // Arrange
+      const noStatisticsFromSaveA: never[] = [];
+      const noStatisticsFromSaveB: never[] = [];
+
       // Act
-      const result = mergeStatistics([], []);
+      const result = mergeStatistics(noStatisticsFromSaveA, noStatisticsFromSaveB);
 
       // Assert
       expect(result).toBeUndefined();
