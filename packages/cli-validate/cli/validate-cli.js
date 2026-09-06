@@ -38,7 +38,7 @@ export function initValidateCli({readTextFile, exitProcess, isEntryPoint, getCli
     }
 
     const save = await readTextFile(filePath);
-    const {status, errorMessages, warnings} = await ValidateSaveFileController.validateSaveFile(filePath, save);
+    const {status, errors, warnings} = await ValidateSaveFileController.validateSaveFile(filePath, save);
 
     for (const warning of warnings) {
       console.warn(`⚠ ${warning}`);
@@ -48,13 +48,20 @@ export function initValidateCli({readTextFile, exitProcess, isEntryPoint, getCli
       console.log(`✓ ${filePath} is valid`);
       exitProcess(0);
     } else {
-      console.error(`✖ ${filePath} has ${errorMessages.length} error(s):\n`);
-      for (const message of errorMessages) {
-        console.error(`  ${message}`);
+      console.error(`✖ ${filePath} has ${errors.length} error(s):\n`);
+      for (const error of errors) {
+        console.error(`  ${formatErrorLine(error)}`);
       }
       exitProcess(1);
     }
   }
 
   return {isEntryPoint, main, exitProcess, getCliArguments};
+}
+
+function formatErrorLine(error) {
+  if (error.section === undefined) {
+    return error.message;
+  }
+  return `[section ${error.section}, entry ${error.entryIndex}] ${error.message}`;
 }

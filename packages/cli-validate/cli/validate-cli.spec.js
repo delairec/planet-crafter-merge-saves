@@ -3,6 +3,7 @@ import {initValidateCli} from './validate-cli.js';
 import {VALIDATE_SAVE_FILE_PATH} from '../testing/fakePaths.js';
 import {VALID_SAVE_CONTENT} from '../testing/fakeValidSaveContent.js';
 import {INVALID_SAVE_CONTENT} from '../testing/fakeInvalidSaveContent.js';
+import {SAVE_CONTENT_WITH_INVALID_ENTRY} from '../testing/fakeSaveContentWithInvalidEntry.js';
 import {createLegacyFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
 
 describe('Validate CLI', () => {
@@ -116,6 +117,28 @@ describe('Validate CLI', () => {
 
       // Assert
       expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('error'));
+    });
+
+    it('should tell where in the save file each error was found', async () => {
+      // Arrange
+      readTextFile.mockResolvedValue(SAVE_CONTENT_WITH_INVALID_ENTRY);
+
+      // Act
+      await main(VALIDATE_SAVE_FILE_PATH);
+
+      // Assert
+      expect(consoleErrorSpy).toHaveBeenCalledWith('  [section 2, entry 1] Invalid JSON: { broken entry');
+    });
+
+    it('should report an error concerning the whole file without any location', async () => {
+      // Arrange
+      readTextFile.mockResolvedValue(INVALID_SAVE_CONTENT);
+
+      // Act
+      await main(VALIDATE_SAVE_FILE_PATH);
+
+      // Assert
+      expect(consoleErrorSpy).toHaveBeenCalledWith('  Expected 11 sections but found 1');
     });
   });
 
