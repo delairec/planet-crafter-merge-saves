@@ -42,7 +42,7 @@ describe('LoadSaveFilePresenter', () => {
       const presenter = new LoadSaveFilePresenter();
 
       // Act
-      presenter.presentInvalidSaveFile([{code: VALIDATION_ISSUE_CODES.INVALID_EXTENSION, detail: 'Invalid file extension: expected a .json file.'}]);
+      presenter.presentInvalidSaveFile([{code: VALIDATION_ISSUE_CODES.INVALID_EXTENSION, detail: 'Invalid file extension: expected a .json file.'}], []);
 
       // Assert
       expect(presenter.viewModel).toEqual({
@@ -51,6 +51,17 @@ describe('LoadSaveFilePresenter', () => {
         errorMessages: ['Invalid file extension: expected a .json file.'],
         warnings: []
       });
+    });
+
+    it('should keep the warning messages alongside the errors', () => {
+      // Arrange
+      const presenter = new LoadSaveFilePresenter();
+
+      // Act
+      presenter.presentInvalidSaveFile([{code: VALIDATION_ISSUE_CODES.INVALID_JSON, detail: 'Invalid JSON: {'}], ['legacy-save-format']);
+
+      // Assert
+      expect(presenter.viewModel.warnings).toEqual(['This save was created by an older version of the game and has been adapted to the current format. The obsolete Terrain Layers section was ignored.']);
     });
   });
 });

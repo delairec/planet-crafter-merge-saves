@@ -15,11 +15,11 @@ export class MergeSaveFiles {
     const validationB = this.validator.validate(fileNameB, contentB);
 
     if (!validationA.isValid || !validationB.isValid) {
-      this.presenter.presentSaveFilesInvalid(validationA.errors, validationB.errors);
+      this.presenter.presentSaveFilesInvalid(validationA.errors, validationB.errors, validationA.warnings, validationB.warnings);
       return;
     }
 
     const {fileName, content} = this.merger.merge(fileNameA, contentA, fileNameB, contentB, saveDisplayName);
-    this.presenter.presentMergeSucceeded(fileName, content);
+    this.presenter.presentMergeSucceeded(fileName, content, validationA.warnings, validationB.warnings);
   }
 }

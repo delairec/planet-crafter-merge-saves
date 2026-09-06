@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 import {MergeSaveFilesController} from './MergeSaveFilesController';
-import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
+import {createFakeSaveContent, createLegacyFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
 
 describe('MergeSaveFilesController', () => {
   it('should merge two valid saves', async () => {
@@ -38,5 +38,24 @@ describe('MergeSaveFilesController', () => {
     expect(viewModel.status).toBe('validationError');
     expect(viewModel.saveAErrorMessages).toEqual(['Expected 11 sections but found 1']);
     expect(viewModel.saveBErrorMessages).toEqual([]);
+  });
+
+  it('should report a user message about the format adaptation when a merged save is in the legacy format', async () => {
+    // Arrange
+    const contentA = createLegacyFakeSaveContent();
+    const contentB = createFakeSaveContent();
+
+    // Act
+    const viewModel = await MergeSaveFilesController.mergeSaveFiles({
+      fileNameA: 'Standard-1.json',
+      contentA,
+      fileNameB: 'Standard-2.json',
+      contentB
+    });
+
+    // Assert
+    expect(viewModel.status).toBe('success');
+    expect(viewModel.saveAWarningMessages).toEqual(['This save was created by an older version of the game and has been adapted to the current format. The obsolete Terrain Layers section was ignored.']);
+    expect(viewModel.saveBWarningMessages).toEqual([]);
   });
 });

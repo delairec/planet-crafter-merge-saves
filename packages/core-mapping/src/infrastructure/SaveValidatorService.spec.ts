@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'bun:test';
 import {SaveValidatorService} from './SaveValidatorService';
 import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue';
-import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
+import {createFakeSaveContent, createLegacyFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
 
 describe('SaveValidatorService', () => {
 
@@ -17,7 +17,8 @@ describe('SaveValidatorService', () => {
       // Assert
       expect(result).toEqual({
         isValid: false,
-        errors: [{code: VALIDATION_ISSUE_CODES.INVALID_EXTENSION, detail: 'Invalid file extension: expected a .json file.'}]
+        errors: [{code: VALIDATION_ISSUE_CODES.INVALID_EXTENSION, detail: 'Invalid file extension: expected a .json file.'}],
+        warnings: []
       });
     });
   });
@@ -32,7 +33,7 @@ describe('SaveValidatorService', () => {
       const result = service.validate('Save-A.json', content);
 
       // Assert
-      expect(result).toEqual({isValid: true, errors: []});
+      expect(result).toEqual({isValid: true, errors: [], warnings: []});
     });
   });
 
@@ -48,8 +49,23 @@ describe('SaveValidatorService', () => {
       // Assert
       expect(result).toEqual({
         isValid: false,
-        errors: [{code: VALIDATION_ISSUE_CODES.INVALID_STRUCTURE, detail: 'Expected 11 sections but found 1'}]
+        errors: [{code: VALIDATION_ISSUE_CODES.INVALID_STRUCTURE, detail: 'Expected 11 sections but found 1'}],
+        warnings: []
       });
+    });
+  });
+
+  describe('When the save content is in the legacy format', () => {
+    it('should return a valid result reporting the legacy save format warning', () => {
+      // Arrange
+      const service = new SaveValidatorService();
+      const content = createLegacyFakeSaveContent();
+
+      // Act
+      const result = service.validate('Save-A.json', content);
+
+      // Assert
+      expect(result).toEqual({isValid: true, errors: [], warnings: ['legacy-save-format']});
     });
   });
 });

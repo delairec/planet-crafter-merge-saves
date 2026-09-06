@@ -1,7 +1,9 @@
 import {MergeResultPresenterPort} from "../application/ports/MergeResultPresenterPort";
 import {ValidationIssue} from "../application/ports/ValidationIssue";
+import {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
 import {MergeResultViewModel} from "./viewModels/MergeResultViewModel";
 import {formatValidationIssue} from "./formatValidationIssue";
+import {formatSaveWarning} from "./formatSaveWarning";
 
 export class MergeResultPresenter implements MergeResultPresenterPort {
   private _viewModel: MergeResultViewModel;
@@ -12,7 +14,9 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
       fileName: '',
       content: '',
       saveAErrorMessages: [],
-      saveBErrorMessages: []
+      saveBErrorMessages: [],
+      saveAWarningMessages: [],
+      saveBWarningMessages: []
     };
   }
 
@@ -20,23 +24,27 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
     return this._viewModel;
   }
 
-  presentMergeSucceeded(fileName: string, content: string): void {
+  presentMergeSucceeded(fileName: string, content: string, saveAWarnings: SaveWarningCode[], saveBWarnings: SaveWarningCode[]): void {
     this._viewModel = {
       status: 'success',
       fileName,
       content,
       saveAErrorMessages: [],
-      saveBErrorMessages: []
+      saveBErrorMessages: [],
+      saveAWarningMessages: saveAWarnings.map(formatSaveWarning),
+      saveBWarningMessages: saveBWarnings.map(formatSaveWarning)
     };
   }
 
-  presentSaveFilesInvalid(saveAErrors: ValidationIssue[], saveBErrors: ValidationIssue[]): void {
+  presentSaveFilesInvalid(saveAErrors: ValidationIssue[], saveBErrors: ValidationIssue[], saveAWarnings: SaveWarningCode[], saveBWarnings: SaveWarningCode[]): void {
     this._viewModel = {
       status: 'validationError',
       fileName: '',
       content: '',
       saveAErrorMessages: saveAErrors.map(formatValidationIssue),
-      saveBErrorMessages: saveBErrors.map(formatValidationIssue)
+      saveBErrorMessages: saveBErrors.map(formatValidationIssue),
+      saveAWarningMessages: saveAWarnings.map(formatSaveWarning),
+      saveBWarningMessages: saveBWarnings.map(formatSaveWarning)
     };
   }
 }

@@ -17,8 +17,8 @@ export class LoadSaveFilePresenter implements LoadAndValidateSaveFilePresenterPo
     return this._viewModel;
   }
 
-  presentInvalidSaveFile(errors: ValidationIssue[]): void {
-    this._viewModel = {status: 'invalid', sections: null, errorMessages: errors.map(formatValidationIssue), warnings: []};
+  presentInvalidSaveFile(errors: ValidationIssue[], warnings: SaveWarningCode[]): void {
+    this._viewModel = {status: 'invalid', sections: null, errorMessages: errors.map(formatValidationIssue), warnings: warnings.map(formatSaveWarning)};
   }
 
   presentLoadedSaveFile(sections: ParsedSections, errors: string[], warnings: SaveWarningCode[]): void {

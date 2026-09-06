@@ -4,4 +4,7 @@ export interface MergeResultViewModel {
   content: string;
   saveAErrorMessages: string[];
   saveBErrorMessages: string[];
+  /** Ready-to-display sentences, already translated from the save warning codes. */
+  saveAWarningMessages: string[];
+  saveBWarningMessages: string[];
 }
