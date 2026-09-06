@@ -32,22 +32,13 @@ export function rewritePlayerReferences(players: EntriesByOrigin<Player>, remapp
 export function rewriteWorldObjectReferences(worldObjects: EntriesByOrigin<WorldObject>, remappings: IdRemappings): EntriesByOrigin<WorldObject> {
   return {
     fromSaveA: worldObjects.fromSaveA,
-    fromSaveB: worldObjects.fromSaveB.map(worldObject => {
-      const rewritten: WorldObject = {...worldObject};
-      if (rewritten.liId !== undefined) {
-        rewritten.liId = remapId(rewritten.liId, remappings.inventoryIds);
-      }
-      if (rewritten.siIds !== undefined) {
-        rewritten.siIds = remapIdList(rewritten.siIds, remappings.inventoryIds);
-      }
-      if (rewritten.linkedWo !== undefined) {
-        rewritten.linkedWo = remapId(rewritten.linkedWo, remappings.worldObjectIds);
-      }
-      if (rewritten.woIds !== undefined) {
-        rewritten.woIds = remapIdList(rewritten.woIds, remappings.worldObjectIds);
-      }
-      return rewritten;
-    })
+    fromSaveB: worldObjects.fromSaveB.map(worldObject => ({
+      ...worldObject,
+      liId: remapOptionalId(worldObject.liId, remappings.inventoryIds),
+      siIds: remapOptionalIdList(worldObject.siIds, remappings.inventoryIds),
+      linkedWo: remapOptionalId(worldObject.linkedWo, remappings.worldObjectIds),
+      woIds: remapOptionalIdList(worldObject.woIds, remappings.worldObjectIds)
+    }))
   };
 }
 
@@ -72,6 +63,16 @@ export function rewriteInventoryReferences(inventories: EntriesByOrigin<Inventor
 
 function remapId(id: number, remapping: ReadonlyMap<number, number>): number {
   return remapping.get(id) ?? id;
+}
+
+/** A field absent from the save stays absent: `undefined` is dropped when the entry is serialized. */
+function remapOptionalId(id: number | undefined, remapping: ReadonlyMap<number, number>): number | undefined {
+  return id === undefined ? undefined : remapId(id, remapping);
+}
+
+/** A field absent from the save stays absent: `undefined` is dropped when the entry is serialized. */
+function remapOptionalIdList(idList: string | undefined, remapping: ReadonlyMap<number, number>): string | undefined {
+  return idList === undefined ? undefined : remapIdList(idList, remapping);
 }
 
 function remapIdList(idList: string, remapping: ReadonlyMap<number, number>): string {
