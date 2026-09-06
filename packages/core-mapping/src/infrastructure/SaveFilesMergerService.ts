@@ -1,6 +1,6 @@
 import {mergeParsedSaveSections} from "../domain/rules/merge/mergeParsedSaveSections";
 import {resolveIdConflicts} from "../domain/rules/merge/resolveIdConflicts";
-import {buildMergedFileName} from "../domain/rules/merge/buildMergedFileName";
+import {buildMergedFileName} from "./buildMergedFileName";
 import {SaveFilesMergerPort} from "../application/ports/SaveFilesMergerPort";
 import {createMergedSaveValueObject, MergedSaveValueObject} from "../domain/valueObjects/MergedSaveValueObject";
 import {parseSaveSections} from "shared-save-processing/parseSaveSections.js";

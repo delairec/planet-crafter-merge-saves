@@ -11,7 +11,7 @@ const NUMBER_FIELD_FALLBACKS = {
 };
 
 /**
- * @see GR-PLAYER-1, GR-PLAYER-2, GR-PLAYER-3, GR-PLAYER-4 in docs/business-rules.md
+ * @see GR-PLAYER-1, GR-PLAYER-2, GR-PLAYER-3, GR-PLAYER-4 in docs/game-rules.md
  */
 export function mergePlayers(playersA: LegacyCompatiblePlayer[], playersB: LegacyCompatiblePlayer[]): string {
   const validatedPlayersA = playersA ?? [];

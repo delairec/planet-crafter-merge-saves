@@ -1,7 +1,7 @@
 import {StoryEvent} from 'shared-save-processing/gameDefinitions';
 
 /**
- * @see GR-STORY-1, GR-STORY-2 in docs/business-rules.md
+ * @see GR-STORY-1, GR-STORY-2 in docs/game-rules.md
  */
 export function mergeStoryEvents(storyEventsA: StoryEvent[], storyEventsB: StoryEvent[]): string {
   const validatedStoryEventsA = storyEventsA ?? [];

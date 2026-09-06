@@ -18,15 +18,13 @@ function* EMPTY_GENERATOR(): Generator<never> {
 export interface MergeParsedSaveSectionsResult {
   mergeSaves: () => string;
   saveAWorldObjectIds: Set<number>;
-  indexFileA: number;
-  indexFileB: number;
 }
 
 /**
  * Merges two Planet Crafter save strings section by section.
  * If one save has `planetId === 'Prime'` in its configuration, it is promoted to save A.
  * @param saveDisplayName - Overrides `saveDisplayName` in the merged configuration.
- * @see GR-ORDER-1 in docs/business-rules.md
+ * @see GR-ORDER-1 in docs/game-rules.md
  */
 export function mergeParsedSaveSections(saveA: ParsedSave, saveB: ParsedSave, saveDisplayName: string): MergeParsedSaveSectionsResult {
     if (!Array.isArray(saveA.sections) && !Array.isArray(saveB.sections)) {
@@ -65,10 +63,5 @@ export function mergeParsedSaveSections(saveA: ParsedSave, saveB: ParsedSave, sa
         return sections.join('\n@\n') + '\n@';
     }
 
-    return {
-        mergeSaves,
-        saveAWorldObjectIds,
-        indexFileA: mainSave === saveA.sections ? 0 : 1,
-        indexFileB: secondarySave === saveB.sections ? 1 : 0
-    };
+    return {mergeSaves, saveAWorldObjectIds};
 }
