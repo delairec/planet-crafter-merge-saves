@@ -1,0 +1,203 @@
+import {describe, expect, it} from 'bun:test';
+import {
+  collectInventoryIdsOwnedByRenumberedWorldObjects,
+  rewriteInventoryReferences,
+  rewritePlayerReferences,
+  rewriteWorldObjectReferences
+} from './rewriteReferences';
+import {Player} from 'shared-save-processing/gameDefinitions';
+
+describe('Rewrite references', () => {
+  const noRemapping = {inventoryIds: new Map<number, number>(), worldObjectIds: new Map<number, number>()};
+  const inventory10BecameInventory51 = {inventoryIds: new Map([[10, 51]]), worldObjectIds: new Map<number, number>()};
+  const worldObject100BecameWorldObject501 = {inventoryIds: new Map<number, number>(), worldObjectIds: new Map([[100, 501]])};
+
+  function aPlayer(id: number, inventoryId: number, equipmentId: number): Player {
+    return {
+      id, inventoryId, equipmentId,
+      name: 'Nikowa',
+      playerPosition: '0,0,0',
+      playerRotation: '0,0,0,0',
+      playerGaugeOxygen: 280.0,
+      playerGaugeThirst: 96.0,
+      playerGaugeHealth: 72.0,
+      playerGaugeToxic: 0.0,
+      host: true,
+      planetId: 'Toxicity',
+      cameraView: 0,
+      totalCraftedObjects: 0,
+      totalTerraTokenEarned: 0
+    };
+  }
+
+  describe('When both saves have a player on a renumbered inventory', () => {
+    it('should point the save B player at the new inventory id', () => {
+      // Arrange
+      const players = {fromSaveA: [aPlayer(1, 10, 11)], fromSaveB: [aPlayer(2, 10, 11)]};
+
+      // Act
+      const result = rewritePlayerReferences(players, inventory10BecameInventory51);
+
+      // Assert
+      expect(result.fromSaveB.map(player => ({inventoryId: player.inventoryId, equipmentId: player.equipmentId})))
+        .toEqual([{inventoryId: 51, equipmentId: 11}]);
+    });
+
+    it('should leave the save A player pointing at the id it always used', () => {
+      // Arrange
+      const players = {fromSaveA: [aPlayer(1, 10, 11)], fromSaveB: [aPlayer(2, 10, 11)]};
+
+      // Act
+      const result = rewritePlayerReferences(players, inventory10BecameInventory51);
+
+      // Assert
+      expect(result.fromSaveA.map(player => player.inventoryId)).toEqual([10]);
+    });
+  });
+
+  describe('When no save A player uses the renumbered inventory id', () => {
+    it('should leave the save B player on that id, as the pre-T11 implementation did', () => {
+      // Arrange
+      const players = {fromSaveA: [aPlayer(1, 30, 31)], fromSaveB: [aPlayer(2, 10, 11)]};
+
+      // Act
+      const result = rewritePlayerReferences(players, inventory10BecameInventory51);
+
+      // Assert
+      expect(result.fromSaveB.map(player => player.inventoryId)).toEqual([10]);
+    });
+  });
+
+  describe('When an inventory linked to a world object was renumbered', () => {
+    it('should point the save B world object linked inventory at the new id', () => {
+      // Arrange
+      const worldObjects = {fromSaveA: [{id: 1, gId: 'Container2', liId: 10}], fromSaveB: [{id: 2, gId: 'Container2', liId: 10}]};
+
+      // Act
+      const result = rewriteWorldObjectReferences(worldObjects, inventory10BecameInventory51);
+
+      // Assert
+      expect(result.fromSaveB.map(worldObject => worldObject.liId)).toEqual([51]);
+    });
+
+    it('should point every save B sub-inventory slot at its new id', () => {
+      // Arrange
+      const worldObjects = {fromSaveA: [], fromSaveB: [{id: 2, gId: 'Farm1', siIds: '10,20,10'}]};
+
+      // Act
+      const result = rewriteWorldObjectReferences(worldObjects, inventory10BecameInventory51);
+
+      // Assert
+      expect(result.fromSaveB.map(worldObject => worldObject.siIds)).toEqual(['51,20,51']);
+    });
+
+    it('should leave the save A world object untouched', () => {
+      // Arrange
+      const worldObjects = {fromSaveA: [{id: 1, gId: 'Container2', liId: 10, siIds: '10'}], fromSaveB: []};
+
+      // Act
+      const result = rewriteWorldObjectReferences(worldObjects, inventory10BecameInventory51);
+
+      // Assert
+      expect(result.fromSaveA).toEqual([{id: 1, gId: 'Container2', liId: 10, siIds: '10'}]);
+    });
+  });
+
+  describe('When a world object was renumbered', () => {
+    it('should point a save B linked world object at the new id', () => {
+      // Arrange
+      const worldObjects = {fromSaveA: [], fromSaveB: [{id: 2, gId: 'WaterGenerator', linkedWo: 100}]};
+
+      // Act
+      const result = rewriteWorldObjectReferences(worldObjects, worldObject100BecameWorldObject501);
+
+      // Assert
+      expect(result.fromSaveB.map(worldObject => worldObject.linkedWo)).toEqual([501]);
+    });
+
+    it('should point the contained world object ids of a save B world object at the new id', () => {
+      // Arrange
+      const worldObjects = {fromSaveA: [], fromSaveB: [{id: 2, gId: 'Container2', woIds: '100,200'}]};
+
+      // Act
+      const result = rewriteWorldObjectReferences(worldObjects, worldObject100BecameWorldObject501);
+
+      // Assert
+      expect(result.fromSaveB.map(worldObject => worldObject.woIds)).toEqual(['501,200']);
+    });
+  });
+
+  describe('When a renumbered world object owns an inventory', () => {
+    const renumberedContainer = {fromSaveA: [], fromSaveB: [{id: 100, gId: 'Container2', liId: 30}]};
+
+    it('should report that inventory as one whose contents must be rewritten', () => {
+      // Act
+      const result = collectInventoryIdsOwnedByRenumberedWorldObjects(renumberedContainer, worldObject100BecameWorldObject501);
+
+      // Assert
+      expect([...result]).toEqual([30]);
+    });
+
+    it('should report it under the id the inventory itself was renumbered to', () => {
+      // Arrange
+      const remappings = {inventoryIds: new Map([[30, 51]]), worldObjectIds: new Map([[100, 501]])};
+
+      // Act
+      const result = collectInventoryIdsOwnedByRenumberedWorldObjects(renumberedContainer, remappings);
+
+      // Assert
+      expect([...result]).toEqual([51]);
+    });
+
+    it('should rewrite the contents of that inventory only', () => {
+      // Arrange
+      const inventories = {fromSaveA: [{id: 40, woIds: '100', size: 20}], fromSaveB: [{id: 30, woIds: '100,200', size: 20}]};
+
+      // Act
+      const result = rewriteInventoryReferences(inventories, worldObject100BecameWorldObject501, new Set([30]));
+
+      // Assert
+      expect({
+        fromSaveA: result.fromSaveA.map(inventory => inventory.woIds),
+        fromSaveB: result.fromSaveB.map(inventory => inventory.woIds)
+      }).toEqual({fromSaveA: ['100'], fromSaveB: ['501,200']});
+    });
+  });
+
+  describe('When a world object owns no inventory', () => {
+    it('should report no inventory to rewrite', () => {
+      // Arrange
+      const worldObjects = {fromSaveA: [], fromSaveB: [{id: 100, gId: 'Iron'}]};
+
+      // Act
+      const result = collectInventoryIdsOwnedByRenumberedWorldObjects(worldObjects, worldObject100BecameWorldObject501);
+
+      // Assert
+      expect([...result]).toEqual([]);
+    });
+  });
+
+  describe('When nothing was renumbered', () => {
+    it('should leave every reference as it is', () => {
+      // Arrange
+      const worldObjects = {fromSaveA: [], fromSaveB: [{id: 2, gId: 'Container2', liId: 10, siIds: '10,20', linkedWo: 100, woIds: '100'}]};
+
+      // Act
+      const result = rewriteWorldObjectReferences(worldObjects, noRemapping);
+
+      // Assert
+      expect(result.fromSaveB).toEqual([{id: 2, gId: 'Container2', liId: 10, siIds: '10,20', linkedWo: 100, woIds: '100'}]);
+    });
+
+    it('should leave an empty contained world object list as it is', () => {
+      // Arrange
+      const inventories = {fromSaveA: [], fromSaveB: [{id: 2, woIds: '', size: 20}]};
+
+      // Act
+      const result = rewriteInventoryReferences(inventories, worldObject100BecameWorldObject501, new Set([2]));
+
+      // Assert
+      expect(result.fromSaveB).toEqual([{id: 2, woIds: '', size: 20}]);
+    });
+  });
+});

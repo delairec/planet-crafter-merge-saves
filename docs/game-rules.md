@@ -197,11 +197,14 @@
 - `WorldObject.siIds` (CSV) → remapped inventory ids.
 - `WorldObject.linkedWo` → remapped world object ids.
 - `WorldObject.woIds` (CSV) → remapped world object ids.
-- `Inventory.woIds` (CSV) → remapped world object ids.
+- `Inventory.woIds` (CSV) → remapped world object ids, for the inventory owned by a remapped world
+  object. An inventory that merely holds a remapped world object is left untouched, and a player
+  that is the first to reference a remapped inventory keeps the original id: both are known
+  narrower-than-documented behaviours, kept until they are fixed as a behaviour change.
 
-**Rule GR-ID-4:** Id conflict resolution runs on the raw serialized string produced by the main merge, re-parses it, and returns a new serialized string. It is the last step before the output is written.
+**Rule GR-ID-4:** Id conflict resolution runs on the merged sections, as structured entries, and returns merged sections. It is the last step before the sections are serialized and written.
 
-**Rule GR-ID-5:** `WorldObject.liId` and `WorldObject.siIds` remapping is **save-origin-aware**. When an inventory id was duplicated across both saves (save A's inventory keeps the original id; save B's gets a new id), a world object from save A must keep its `liId`/`siIds` pointing to the original id, while a world object from save B must point to the remapped (new) id. To enable this, `mergeWorldObjects` collects the set of world object ids that originated from save A (`saveAWorldObjectIds`) and passes it through `merge()` to `resolveIdConflicts()`. A world object whose id is in `saveAWorldObjectIds` is treated as an A-origin object; all others are treated as B-origin.
+**Rule GR-ID-5:** Reference rewriting is **save-origin-aware**. When an inventory id was duplicated across both saves (save A's inventory keeps the original id; save B's gets a new id), a world object from save A keeps its `liId`/`siIds` pointing to the original id, while a world object from save B points to the remapped (new) id. The origin is carried by the merged sections themselves: the three sections holding identifiers (players, inventories, world objects) keep their entries grouped as `fromSaveA` / `fromSaveB`, so it never has to be reconstructed.
 
-**Implementation:** `packages/core-mapping/src/domain/rules/merge/resolveIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/mergeWorldObjects.ts`, `packages/core-mapping/src/domain/rules/merge/mergeParsedSaveSections.ts`
+**Implementation:** `packages/core-mapping/src/domain/rules/merge/resolveIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/createIdSequence.ts`, `packages/core-mapping/src/domain/rules/merge/resolvePlayerIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/resolveInventoryIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/resolveWorldObjectIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/rewriteReferences.ts`
 

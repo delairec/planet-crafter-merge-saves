@@ -16,8 +16,7 @@ export class SaveFilesMergerService implements SaveFilesMergerPort {
     const parsedSaveB = parseSaveSections(contentB);
 
     const mergedSections = mergeSaveSections(parsedSaveA.sections, parsedSaveB.sections, resolvedSaveDisplayName);
-    const saveAWorldObjectIds = new Set(mergedSections.worldObjects.fromSaveA.map(worldObject => worldObject.id));
-    const content = resolveIdConflicts(serialize(mergedSections), saveAWorldObjectIds);
+    const content = serialize(resolveIdConflicts(mergedSections));
 
     return createMergedSaveValueObject({fileName, content});
   }
