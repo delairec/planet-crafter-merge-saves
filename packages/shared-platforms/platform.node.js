@@ -1,21 +1,26 @@
 import fs from 'node:fs/promises';
+import path from 'node:path';
 import process from 'node:process';
 
 /**
- * @param {string} path
+ * @param {string} filePath
  * @returns {Promise<string>}
  */
-export function readTextFile(path) {
-  return fs.readFile(path, 'utf8');
+export function readTextFile(filePath) {
+  return fs.readFile(filePath, 'utf8');
 }
 
 /**
- * @param {string} path
+ * Creates the destination folder when it is missing, so that callers may write to a path whose
+ * parent folders do not exist yet — the behaviour `Bun.write` already has.
+ *
+ * @param {string} filePath
  * @param {string} content
  * @returns {Promise<void>}
  */
-export async function writeTextFile(path, content) {
-  await fs.writeFile(path, content, 'utf8');
+export async function writeTextFile(filePath, content) {
+  await fs.mkdir(path.dirname(filePath), {recursive: true});
+  await fs.writeFile(filePath, content, 'utf8');
 }
 
 /**
