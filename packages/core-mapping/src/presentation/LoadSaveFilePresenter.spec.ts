@@ -1,13 +1,12 @@
 import {describe, expect, it} from 'bun:test';
 import {LoadSaveFilePresenter} from './LoadSaveFilePresenter';
 import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue';
-import {ParsedSections} from 'shared-save-processing/gameDefinitions';
+import {ParsedSections, WORLD_OBJECTS_SECTION_INDEX} from 'shared-save-processing/gameDefinitions';
 
-const saveSectionCount = 11;
-const worldObjectsSectionIndex = 3;
+const parsedSectionCount: ParsedSections['length'] = 11;
 
-const emptySections = Array(saveSectionCount).fill([]) as ParsedSections;
-emptySections[worldObjectsSectionIndex] = function* () {};
+const emptySections = Array(parsedSectionCount).fill([]) as ParsedSections;
+emptySections[WORLD_OBJECTS_SECTION_INDEX] = function* EMPTY_GENERATOR() {};
 
 describe('LoadSaveFilePresenter', () => {
 
