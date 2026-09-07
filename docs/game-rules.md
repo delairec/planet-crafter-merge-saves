@@ -33,7 +33,8 @@
 - The current save format (11 sections) is the only format used internally. Legacy saves (12 sections, still
   containing the Terrain Layers section removed by a game update) are only supported at the user-input boundary
   (loading a save file): they are automatically adapted to the current format, and a warning is reported to the
-  user — see [`docs/save-format.md`](./save-format.md#appendix--legacy-format-before-the-terrain-layers-section-was-removed).
+  user — including when such a save is merged, since the merged file is written in the current format —
+  see [`docs/save-format.md`](./save-format.md#appendix--legacy-format-before-the-terrain-layers-section-was-removed).
 
 ---
 

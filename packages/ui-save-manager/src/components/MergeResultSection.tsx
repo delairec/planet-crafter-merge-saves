@@ -4,7 +4,9 @@ import {
   mergeResultSectionDownloadLinkLabel,
   mergeResultSectionFileCreatedMessage,
   mergeResultSectionSaveAInvalidMessage,
+  mergeResultSectionSaveAWarningsTitle,
   mergeResultSectionSaveBInvalidMessage,
+  mergeResultSectionSaveBWarningsTitle,
   mergeResultSectionSuccessMessage
 } from '~/messages/mergeResultSectionMessages';
 import ValidationMessagesList from "~/components/validation/ValidationMessagesList";
@@ -39,6 +41,15 @@ export default function MergeResultSection(props: MergeResultSectionProps) {
 
   return (
     <Show when={props.result()}>
+      <Show when={props.result()!.saveAWarningMessages.length > 0}>
+        <ValidationMessagesList title={mergeResultSectionSaveAWarningsTitle} severity="warning"
+                                messages={props.result()!.saveAWarningMessages}/>
+      </Show>
+      <Show when={props.result()!.saveBWarningMessages.length > 0}>
+        <ValidationMessagesList title={mergeResultSectionSaveBWarningsTitle} severity="warning"
+                                messages={props.result()!.saveBWarningMessages}/>
+      </Show>
+
       <Show when={isSuccess()}>
         <p class="text-color-success">{mergeResultSectionSuccessMessage}</p>
         <p>{mergeResultSectionFileCreatedMessage} <code>{props.result()!.fileName}</code> <a class="button-link"

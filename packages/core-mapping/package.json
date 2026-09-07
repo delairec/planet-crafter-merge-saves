@@ -9,8 +9,7 @@
   },
   "exports": {
     "./controllers/*": "./src/controllers/*.ts",
-    "./presentation/viewModels/*": "./src/presentation/viewModels/*.ts",
-    "./infrastructure/validateSaveContent.js": "./src/infrastructure/validateSaveContent.js"
+    "./presentation/viewModels/*": "./src/presentation/viewModels/*.ts"
   },
   "dependencies": {
     "ajv": "catalog:testing",

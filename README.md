@@ -148,13 +148,17 @@ If you prefer to run the scripts using Node.js instead of Bun, use the following
 npm run node:merge
 ```
 
-Equivalent to `bun merge`.
+Node.js counterpart of `bun merge`.
 
 ```
 npm run node:validate -- --file=<filepath>
 ```
 
-Equivalent to `bun validate`.
+Node.js counterpart of `bun validate`.
+
+> ⚠️ Both commands currently fail: they reach the TypeScript controllers of `core-mapping`, which Node.js cannot
+> execute as they stand (relative imports without an explicit extension, constructor parameter properties, and
+> type-only imports not marked `import type`). Use the Bun commands until this is addressed.
 
 
 ### Preparing data

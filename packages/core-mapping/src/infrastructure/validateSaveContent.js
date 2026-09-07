@@ -15,7 +15,7 @@ const SECTION_COUNT = 10;
  * `warnings` instead of an error.
  *
  * @param {string} mergedSave
- * @returns {{isValid: boolean, errors: import('../application/ports/ValidationIssue').ValidationIssue[], warnings: string[]}}
+ * @returns {{isValid: boolean, errors: import('../application/ports/ValidationIssue').ValidationIssue[], warnings: import('shared-save-processing/normalizeRawSections.js').SaveWarningCode[]}}
  */
 export function validateSaveContent(mergedSave) {
   const rawSections = mergedSave.split('@');

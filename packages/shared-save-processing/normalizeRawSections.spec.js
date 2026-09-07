@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'bun:test';
-import {normalizeRawSections, LEGACY_SAVE_FORMAT_WARNING} from './normalizeRawSections.js';
+import {normalizeRawSections} from './normalizeRawSections.js';
 
 describe('normalizeRawSections', () => {
 
@@ -46,7 +46,7 @@ describe('normalizeRawSections', () => {
       const {warnings} = normalizeRawSections(legacyParts);
 
       // Assert
-      expect(warnings).toEqual([LEGACY_SAVE_FORMAT_WARNING]);
+      expect(warnings).toEqual(['legacy-save-format']);
     });
   });
 

@@ -8,6 +8,7 @@ import {MailboxMessage} from "./MailboxMessage";
 import {StoryEvent} from "./StoryEvent";
 import {SaveConfiguration} from "./SaveConfiguration";
 import {WorldEvent} from "./WorldEvent";
+import {SaveWarningCode} from "../normalizeRawSections.js";
 
 export type ParsedSections = [
   GlobalMetadata[],
@@ -26,5 +27,5 @@ export type ParsedSections = [
 export type ParsedSave = {
   sections: ParsedSections;
   errors: string[];
-  warnings: string[];
+  warnings: SaveWarningCode[];
 };

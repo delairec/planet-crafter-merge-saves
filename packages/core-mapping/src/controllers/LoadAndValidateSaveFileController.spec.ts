@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 import {LoadAndValidateSaveFileController} from './LoadAndValidateSaveFileController';
-import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
+import {createFakeSaveContent, createLegacyFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
 
 describe('LoadAndValidateSaveFileController', () => {
 
@@ -38,6 +38,17 @@ describe('LoadAndValidateSaveFileController', () => {
       expect(viewModel.status).toBe('invalid');
       expect(viewModel.sections).toBeNull();
       expect(viewModel.errorMessages).toEqual(['Expected 11 sections but found 1']);
+    });
+  });
+
+  describe('When the content is a save in the legacy format', () => {
+    it('should return a valid view model with a user message about the format adaptation', async () => {
+      // Act
+      const viewModel = await LoadAndValidateSaveFileController.loadAndValidateSaveFile('Save-A.json', createLegacyFakeSaveContent());
+
+      // Assert
+      expect(viewModel.status).toBe('valid');
+      expect(viewModel.warnings).toEqual(['This save was created by an older version of the game and has been adapted to the current format. The obsolete Terrain Layers section was ignored.']);
     });
   });
 });

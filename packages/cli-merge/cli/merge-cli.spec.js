@@ -1,6 +1,6 @@
 import {beforeEach, describe, expect, it, mock, spyOn} from 'bun:test';
 import {initMergeCli} from './merge-cli.js';
-import {FAKE_SAVE_STRING_A, FAKE_SAVE_STRING_B} from '../testing/fakeSaveStrings.js';
+import {FAKE_SAVE_STRING_A, FAKE_SAVE_STRING_B, LEGACY_FAKE_SAVE_STRING_A} from '../testing/fakeSaveStrings.js';
 import {
   MERGED_SAVE_OUTPUT_PATH,
   SAVE_A_FILENAME,
@@ -261,6 +261,51 @@ describe('Merge CLI', () => {
 
       // Assert
       expect(writeTextFile.mock.calls[0][0]).toBe(`custom-output/${INPUT_SUBFOLDER_ALPHA}/Standard-1-Standard-2-merged.json`);
+    });
+  });
+
+  describe('When a merged save is in the legacy format', () => {
+    beforeEach(() => {
+      readDirectory.mockResolvedValueOnce([INPUT_SUBFOLDER_ALPHA]);
+      readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME]);
+      readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME]);
+      readTextFile.mockImplementation((path) => {
+        if (path === SAVE_A_INPUT_PATH) return Promise.resolve(LEGACY_FAKE_SAVE_STRING_A);
+        if (path === SAVE_B_INPUT_PATH) return Promise.resolve(FAKE_SAVE_STRING_B);
+        return Promise.reject(new Error(`Unexpected path: ${path}`));
+      });
+    });
+
+    it('should warn about the format adaptation of the affected save', async () => {
+      // Act
+      await main();
+
+      // Assert
+      expect(consoleErrorSpy).toHaveBeenCalledWith('  [save A] This save was created by an older version of the game and has been adapted to the current format. The obsolete Terrain Layers section was ignored.');
+    });
+
+    it('should name the folder the adapted save comes from', async () => {
+      // Act
+      await main();
+
+      // Assert
+      expect(consoleErrorSpy).toHaveBeenCalledWith(`⚠ Folder "${INPUT_SUBFOLDER_ALPHA}" contains a save adapted from an older format:`);
+    });
+
+    it('should still write the merged file', async () => {
+      // Act
+      await main();
+
+      // Assert
+      expect(writeTextFile.mock.calls[0][0]).toBe(MERGED_SAVE_OUTPUT_PATH);
+    });
+
+    it('should still exit successfully', async () => {
+      // Act
+      await main();
+
+      // Assert
+      expect(exitProcess).toHaveBeenCalledWith(0);
     });
   });
 });

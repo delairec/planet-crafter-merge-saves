@@ -1,7 +1,7 @@
 import {getCliArguments} from 'shared-platforms/platform.common.js';
 import {extractPlatformParameter} from 'shared-platforms/extractPlatformParameter.js';
 import {createPlatform} from 'shared-platforms/platform.js';
-import {validateSaveContent} from 'core-mapping/infrastructure/validateSaveContent.js';
+import {ValidateSaveFileController} from 'core-mapping/controllers/ValidateSaveFileController';
 
 const USAGE_MESSAGE = `Usage: bun validate-cli.js --file=<path-to-save-file>`;
 
@@ -38,19 +38,19 @@ export function initValidateCli({readTextFile, exitProcess, isEntryPoint, getCli
     }
 
     const save = await readTextFile(filePath);
-    const {isValid, errors, warnings} = validateSaveContent(save);
+    const {status, errors, warnings} = await ValidateSaveFileController.validateSaveFile(filePath, save);
 
-    for (const warning of warnings ?? []) {
+    for (const warning of warnings) {
       console.warn(`⚠ ${warning}`);
     }
 
-    if (isValid) {
+    if (status === 'valid') {
       console.log(`✓ ${filePath} is valid`);
       exitProcess(0);
     } else {
       console.error(`✖ ${filePath} has ${errors.length} error(s):\n`);
       for (const error of errors) {
-        console.error(`  [${formatErrorLocation(error)}] ${error.detail}`);
+        console.error(`  ${formatErrorLine(error)}`);
       }
       exitProcess(1);
     }
@@ -59,9 +59,9 @@ export function initValidateCli({readTextFile, exitProcess, isEntryPoint, getCli
   return {isEntryPoint, main, exitProcess, getCliArguments};
 }
 
-function formatErrorLocation(error) {
-  if (error.section !== undefined) {
-    return `section ${error.section}, entry ${error.entryIndex}`;
+function formatErrorLine(error) {
+  if (error.section === undefined) {
+    return error.message;
   }
-  return error.code ?? 'structure';
+  return `[section ${error.section}, entry ${error.entryIndex}] ${error.message}`;
 }

@@ -3,6 +3,8 @@ import {ParsedSaveSections, SaveSectionsParserPort} from "../application/ports/S
 
 export class SaveSectionsParserService implements SaveSectionsParserPort {
   parse(content: string): ParsedSaveSections {
-    return parseSaveSections(content);
+    const {sections, errors} = parseSaveSections(content);
+
+    return {sections, errors};
   }
 }

@@ -1,6 +1,6 @@
 /** @import { WorldObject } from '../gameDefinitions' */
 
-import {createFakeSaveString} from './createFakeSaveString.js';
+import {createFakeSaveString, createLegacyFakeSaveString} from './createFakeSaveString.js';
 import {
   createEquipment,
   createGlobalMetadata,
@@ -46,8 +46,8 @@ function createDefaultWorldObjects() {
   ];
 }
 
-export function createFakeSaveContent(overrides = {}) {
-  return createFakeSaveString({
+function createDefaultSaveOptions() {
+  return {
     globalMetadata: createGlobalMetadata(),
     terraformationLevels: [createTerraformationLevel()],
     players: [createPlayer()],
@@ -59,7 +59,20 @@ export function createFakeSaveContent(overrides = {}) {
     ],
     worldObjects: createDefaultWorldObjects(),
     statistics: createStatistics(),
-    saveConfiguration: createSaveConfiguration(),
-    ...overrides
-  });
+    saveConfiguration: createSaveConfiguration()
+  };
+}
+
+export function createFakeSaveContent(overrides = {}) {
+  return createFakeSaveString({...createDefaultSaveOptions(), ...overrides});
+}
+
+const DEFAULT_TERRAIN_LAYERS = [{layerId: 'PC-Toxicity-Layer2', planet: 110910045, colorBase: '0.5-0.5-0.5-1'}];
+
+/**
+ * Same content as `createFakeSaveContent`, in the legacy format: the Terrain Layers section a later
+ * game update removed is still there, so loading it reports the legacy save format warning.
+ */
+export function createLegacyFakeSaveContent(overrides = {}) {
+  return createLegacyFakeSaveString({...createDefaultSaveOptions(), terrainLayers: DEFAULT_TERRAIN_LAYERS, ...overrides});
 }

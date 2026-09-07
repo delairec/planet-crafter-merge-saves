@@ -15,11 +15,11 @@ export class LoadAndValidateSaveFile {
     const validation = this.validator.validate(fileName, content);
 
     if (!validation.isValid) {
-      this.presenter.presentInvalidSaveFile(validation.errors);
+      this.presenter.presentInvalidSaveFile(validation.errors, validation.warnings);
       return;
     }
 
-    const {sections, errors, warnings} = this.parser.parse(content);
-    this.presenter.presentLoadedSaveFile(sections, errors, warnings);
+    const {sections, errors} = this.parser.parse(content);
+    this.presenter.presentLoadedSaveFile(sections, errors, validation.warnings);
   }
 }

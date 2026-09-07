@@ -1,7 +1,8 @@
 import {ValidationIssue} from "./ValidationIssue";
+import {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
 
 export interface SaveFileValidationPresenterPort {
-  presentValidSaveFile(): void;
+  presentValidSaveFile(warnings: SaveWarningCode[]): void;
 
-  presentInvalidSaveFile(errors: ValidationIssue[]): void;
+  presentInvalidSaveFile(errors: ValidationIssue[], warnings: SaveWarningCode[]): void;
 }

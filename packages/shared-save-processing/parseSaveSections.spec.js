@@ -1,7 +1,6 @@
 import {describe, it, expect, spyOn} from 'bun:test';
 import {parseSaveSections} from './parseSaveSections.js';
 import {createFakeSaveString, createLegacyFakeSaveString} from './testing/createFakeSaveString.js';
-import {LEGACY_SAVE_FORMAT_WARNING} from './normalizeRawSections.js';
 
 describe('utils/parseSaveSections', () => {
   const expectedGlobalMetadata = {
@@ -218,7 +217,7 @@ describe('utils/parseSaveSections', () => {
       const {warnings} = parseSaveSections(save);
 
       // Assert
-      expect(warnings).toEqual([LEGACY_SAVE_FORMAT_WARNING]);
+      expect(warnings).toEqual(['legacy-save-format']);
     });
 
     it('should still parse world events at the current index (shifted from the legacy index)', () => {

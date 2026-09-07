@@ -4,4 +4,6 @@ export interface MergeResultViewModel {
   content: string;
   saveAErrorMessages: string[];
   saveBErrorMessages: string[];
+  saveAWarningMessages: string[];
+  saveBWarningMessages: string[];
 }
