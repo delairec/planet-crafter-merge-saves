@@ -151,6 +151,27 @@ bun run build:ui
 Builds the UI for production. `bun run preview:ui` builds then serves the result, and `bun run clean:ui` removes the
 build output.
 
+```
+bun run test:ui:install
+```
+
+Downloads the three browser engines the scenario suite drives (Chromium, Firefox and WebKit). Run it once, and again
+after a Playwright upgrade. On a machine missing the system libraries the engines need, install them too with
+`bunx playwright install --with-deps chromium firefox webkit`, which asks for administrator rights.
+
+```
+bun run test:ui
+```
+
+Runs the UI scenarios of `packages/ui-save-manager/e2e/` against the production build, on the three engines. Nothing
+has to be started beforehand: the suite builds the application, serves it, waits for the port and stops it afterwards.
+The save files the scenarios load are generated fixtures versioned next to them, so the suite never depends on the
+content of `input/`.
+
+These scenarios are not part of `bun test`, which only collects unit tests: the `*.e2e.ts` suffix keeps the two
+runners apart. In the CI they run in their own workflow, on the pull requests targeting `master` and on manual
+dispatch — not on the pull requests targeting an integration branch.
+
 #### With Node.js
 
 If you prefer to run the scripts using Node.js instead of Bun, use the following commands:
