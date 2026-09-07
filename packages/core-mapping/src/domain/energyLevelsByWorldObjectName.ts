@@ -141,6 +141,12 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   PortalGenerator1: 1890,
   InterplanetaryExchangePlatform1: 375,
   PlanetaryDeliveryDepot1: 450,
+  // Extraction platform, per https://planet-crafter.fandom.com/wiki/Extraction_Platform
+  // (game v2.102): `energy = -265 kW/s`. The game labels both gIds "Extraction platform" —
+  // `DeparturePlatformHumble` is the same machine on the second planet, and the wiki documents
+  // a single one.
+  DeparturePlatform: 265,
+  DeparturePlatformHumble: 265,
   Optimizer1: 50,
   Optimizer2: 150
 };
