@@ -23,7 +23,11 @@ defined in
   atmosphere purifiers, detoxification machines, toxic/atmospheric/lake water collectors, vegetubes, algae
   generators, food growers, the DNA manipulator, the biolab, the incubator, the auto-crafter, craft stations
   (T2, Advanced, Quartz, Refinement), the vehicle station, beehives, the butterfly dome, biodomes, the launch
-  platform, display screens, lamps and the beacon.
+  platform, display screens, lamps and the beacon; plus, since the 2026-09-07 cross-check, outdoor farms, fish
+  farms, aquariums, butterfly farms, the amphibian farm, the animal shelter, the animal feeder, the ecosystem,
+  the silk generator, the water life collector, the genetic synthesizer and extractor, ore crushers, the
+  harvesting robot, the drone station, the portal generator, the interplanetary exchange shuttle, the
+  planetary delivery depot and the extraction platform.
 
 **Rule EN-BASE-2 (exhaustiveness):** every positioned `WorldObject` whose `gId` corresponds to a machine that
 has a power cost in-game must have an entry in `energyConsumptionLevelsByWorldObjectName`, otherwise the
@@ -38,6 +42,39 @@ cross-checked against the wiki (see the [Craft Stations](https://planet-crafter.
 [Biodomes](https://planet-crafter.fandom.com/wiki/Biodomes),
 [Base Building](https://planet-crafter.fandom.com/wiki/Base_Building) and
 [Display Screens](https://planet-crafter.fandom.com/wiki/Display_Screens) wiki pages).
+
+**EN-BASE-2 is not verifiable by a unit test, and no test claims it.** The rule is a statement about the
+*game*, and this repository holds no inventory of the game's power-drawing machines that is independent of the
+table the rule constrains. `worldObjectNames.ts` is not such an inventory: it mixes machines with resources,
+seeds, furniture and posters, it has no effect at runtime (it only derives the `WorldObjectName` type, and every
+construction site casts through `as WorldObjectName`), and it is itself incomplete. Reference saves cannot serve
+either — they are private and unavailable in CI. A test whose input set is `Object.keys(...)` of the table under
+test therefore cannot fail on the very defect the rule describes, and must not be titled as if it could.
+
+**What the versioned guard does cover.** `computeEnergyConsumptionLevel.spec.ts` asserts that every name in
+`WORLD_OBJECT_NAMES` belonging to a machine family that already draws power has an energy level. Its input set
+comes from `worldObjectNames.ts`, not from the table, so deleting a table entry turns it red instead of silently
+dropping a case. It catches the regression that actually occurs — a new tier of a known machine (a `Drill5`, an
+`OreBreaker4`) reaching the type without a value. It does **not** catch a wholly new machine family, nor the
+removal of a family's only entry (`Beacon`, `ComAntenna`), and it recognizes a family by stripping trailing tier
+digits off the name, which is a naming convention rather than a declaration.
+
+**Identifying a `gId` before pricing it.** `gId`s do not reliably match wiki page titles: `OreBreaker*` is the
+Ore Crusher and not the Ore Extractor, `InterplanetaryExchangePlatform1` is the Interplanetary Exchange Shuttle,
+and `LarvaeBase1..3` are larva *items* rather than machines. Every `gId` added to the table is therefore first
+resolved against the game's own English localization label file (`GROUP_NAME_<gId>=<display name>`) before its
+value is read off the corresponding wiki page.
+
+**Last wiki cross-check: 2026-09-07**, against game version 2.102. It covered every `gId` observed placed in the
+reference saves. Machines whose wiki page documents the object but prints no energy value — among them the
+Megadome, the trade space rocket, the light box, the hologram projector, the server, the planet viewer, the
+cooking station and the display boxes — are deliberately absent from the table rather than priced at zero: an
+absent infobox field is an undocumented value, not a stated absence of cost. Resources, seeds, growables,
+furniture, structural parts, posters, effigies and rockets are excluded as non-machines. Two exclusions rest on
+an explicit statement rather than on silence: drones draw no power of their own ("Each additional Drone does not
+draw any energy", [Drone Station](https://planet-crafter.fandom.com/wiki/Drone_Station)), and the wreck
+[fusion reactor](https://planet-crafter.fandom.com/wiki/Fusion_reactor) is inert scenery that "ha[s] run out of
+power since [it] crashed" — not the player-built nuclear fusion generator, which the same page disambiguates.
 
 **Rule EN-BASE-1:** The base energy balance of a save is
 `sum(production of every positioned world object) - sum(consumption of every positioned world object)`,
