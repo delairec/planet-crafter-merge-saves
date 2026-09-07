@@ -5,10 +5,15 @@
   "type": "module",
   "scripts": {
     "test": "bun test",
-    "lint:types": "tsc --noEmit"
+    "lint:types": "tsc --noEmit",
+    "build:node": "bun build src/controllers/MergeSaveFilesController.ts src/controllers/ValidateSaveFileController.ts --target=node --format=esm --outdir dist/controllers",
+    "clean:node": "rm -rf dist"
   },
   "exports": {
-    "./controllers/*": "./src/controllers/*.ts",
+    "./controllers/*": {
+      "node-bundle": "./dist/controllers/*.js",
+      "default": "./src/controllers/*.ts"
+    },
     "./presentation/viewModels/*": "./src/presentation/viewModels/*.ts"
   },
   "dependencies": {

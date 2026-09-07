@@ -10,7 +10,7 @@
     "lint:types": "tsc --noEmit",
     "merge": "bun --cwd ../.. packages/cli-merge/cli/merge-cli.js ",
     "merge:test": "bun test packages/cli-merge",
-    "node:merge": "node cli/merge-cli.js --platform=node"
+    "node:merge": "node --conditions=node-bundle cli/merge-cli.js --platform=node"
   },
   "dependencies": {
     "core-mapping": "workspace:*",
