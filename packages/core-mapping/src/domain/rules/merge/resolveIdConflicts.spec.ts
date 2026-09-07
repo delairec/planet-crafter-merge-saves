@@ -94,15 +94,15 @@ describe('Resolve id conflicts', () => {
       // Assert
       expect(result.players).toEqual({
         fromSaveA: [playerFromSaveA],
-        fromSaveB: [{...playerFromSaveB, id: 12, inventoryId: 13, equipmentId: 14}]
+        fromSaveB: [{...playerFromSaveB, id: 101, inventoryId: 102, equipmentId: 103}]
       });
       expect(result.inventories).toEqual({
         fromSaveA: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}],
-        fromSaveB: [{id: 13, woIds: '', size: 35}, {id: 14, woIds: '', size: 5}]
+        fromSaveB: [{id: 102, woIds: '', size: 35}, {id: 103, woIds: '', size: 5}]
       });
       expect(result.worldObjects).toEqual({
         fromSaveA: [{id: 100, gId: 'SomeObject'}],
-        fromSaveB: [{id: 101, gId: 'OtherObject'}]
+        fromSaveB: [{id: 104, gId: 'OtherObject'}]
       });
     });
 
@@ -167,9 +167,9 @@ describe('Resolve id conflicts', () => {
       // Assert
       expect(result.worldObjects).toEqual({
         fromSaveA: [{id: 100, gId: 'Container2', liId: 50}],
-        fromSaveB: [{id: 200, gId: 'Container2', liId: 51}]
+        fromSaveB: [{id: 200, gId: 'Container2', liId: 201}]
       });
-      expect(result.inventories.fromSaveB).toEqual([{id: 51, woIds: '200', size: 12}]);
+      expect(result.inventories.fromSaveB).toEqual([{id: 201, woIds: '200', size: 12}]);
     });
   });
 
@@ -234,8 +234,8 @@ describe('Resolve id conflicts', () => {
 
       // Assert
       expect(result.worldObjects.fromSaveB).toEqual([
-        {id: 101, gId: 'Lake2'},
-        {id: 201, gId: 'WaterGenerator', linkedWo: 101}
+        {id: 202, gId: 'Lake2'},
+        {id: 201, gId: 'WaterGenerator', linkedWo: 202}
       ]);
     });
   });

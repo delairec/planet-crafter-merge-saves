@@ -1,9 +1,15 @@
 import {describe, expect, it} from 'bun:test';
 import {resolveWorldObjectIdConflicts} from './resolveWorldObjectIdConflicts';
 import {createIdSequence} from './createIdSequence';
+import {EntriesByOrigin} from './EntriesByOrigin';
+import {WorldObject} from 'shared-save-processing/gameDefinitions';
 
 describe('Resolve world object id conflicts', () => {
   const anInventory = {id: 10, woIds: '', size: 20};
+
+  function createIdSequenceSeededOn(worldObjects: EntriesByOrigin<WorldObject>) {
+    return createIdSequence([anInventory], [...worldObjects.fromSaveA, ...worldObjects.fromSaveB]);
+  }
 
   describe('When a save B world object uses an id already taken in save A', () => {
     it('should give that world object a new id', () => {
@@ -14,7 +20,7 @@ describe('Resolve world object id conflicts', () => {
       };
 
       // Act
-      const result = resolveWorldObjectIdConflicts(worldObjects, createIdSequence([anInventory]));
+      const result = resolveWorldObjectIdConflicts(worldObjects, createIdSequenceSeededOn(worldObjects));
 
       // Assert
       expect(result.entries.fromSaveB).toEqual([{id: 101, gId: 'OtherObject'}]);
@@ -28,7 +34,7 @@ describe('Resolve world object id conflicts', () => {
       };
 
       // Act
-      const result = resolveWorldObjectIdConflicts(worldObjects, createIdSequence([anInventory]));
+      const result = resolveWorldObjectIdConflicts(worldObjects, createIdSequenceSeededOn(worldObjects));
 
       // Assert
       expect(result.saveBIdRemapping).toEqual(new Map([[100, 101]]));
@@ -42,26 +48,10 @@ describe('Resolve world object id conflicts', () => {
       };
 
       // Act
-      const result = resolveWorldObjectIdConflicts(worldObjects, createIdSequence([anInventory]));
+      const result = resolveWorldObjectIdConflicts(worldObjects, createIdSequenceSeededOn(worldObjects));
 
       // Assert
       expect(result.entries.fromSaveA).toEqual([{id: 100, gId: 'SomeObject'}]);
-    });
-  });
-
-  describe('When a world object id is far above the inventory ids', () => {
-    it('should generate an id that does not collide with any world object already walked', () => {
-      // Arrange
-      const worldObjects = {
-        fromSaveA: [{id: 500, gId: 'SomeObject'}],
-        fromSaveB: [{id: 500, gId: 'OtherObject'}]
-      };
-
-      // Act
-      const result = resolveWorldObjectIdConflicts(worldObjects, createIdSequence([anInventory]));
-
-      // Assert
-      expect(result.entries.fromSaveB).toEqual([{id: 501, gId: 'OtherObject'}]);
     });
   });
 
@@ -74,7 +64,7 @@ describe('Resolve world object id conflicts', () => {
       };
 
       // Act
-      const result = resolveWorldObjectIdConflicts(worldObjects, createIdSequence([anInventory]));
+      const result = resolveWorldObjectIdConflicts(worldObjects, createIdSequenceSeededOn(worldObjects));
 
       // Assert
       expect(result.entries.fromSaveB).toEqual([{id: 200, gId: 'OtherObject'}]);

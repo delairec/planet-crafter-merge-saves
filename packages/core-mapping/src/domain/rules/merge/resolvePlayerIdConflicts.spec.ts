@@ -25,7 +25,8 @@ describe('Resolve player id conflicts', () => {
     return {...basePlayer, id, name};
   }
 
-  const createIdSequenceStartingAt51 = () => createIdSequence([{id: 50, woIds: '', size: 20}]);
+  const noWorldObjects: never[] = [];
+  const createIdSequenceStartingAt51 = () => createIdSequence([{id: 50, woIds: '', size: 20}], noWorldObjects);
 
   describe('When a save B player uses an id already taken in save A', () => {
     it('should give that player a new id', () => {
