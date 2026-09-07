@@ -130,6 +130,17 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   OreBreaker1: 2.6,
   OreBreaker2: 21,
   OreBreaker3: 125,
+  // Logistics and transport machines, each per its own wiki page (game v2.102):
+  // Harvesting Robot -120.00 kW/s  https://planet-crafter.fandom.com/wiki/Harvesting_Robot
+  // Drone Station -850 kW/s        https://planet-crafter.fandom.com/wiki/Drone_Station
+  // Portal Generator -1890 kW/s    https://planet-crafter.fandom.com/wiki/Portal_Generator
+  // Interplanetary Exchange Shuttle -375.00 kW/s and Planetary Delivery Depot -450.00 kW/s
+  //   https://planet-crafter.fandom.com/wiki/Interplanetary_Logistics
+  HarvestingRobot1: 120,
+  DroneStation1: 850,
+  PortalGenerator1: 1890,
+  InterplanetaryExchangePlatform1: 375,
+  PlanetaryDeliveryDepot1: 450,
   Optimizer1: 50,
   Optimizer2: 150
 };
