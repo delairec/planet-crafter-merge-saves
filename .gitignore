@@ -9,8 +9,8 @@ package-lock.json
 # generated
 output/
 
-# user input
-input/
+# user input, a real folder here and a symlink in a linked worktree
+input
 
 # other
 .claude/
