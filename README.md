@@ -131,7 +131,10 @@ bun run check:assertions
 
 Fails on any spec asserting a fabricated boolean (`expect(list.some(...)).toBeTruthy()`, `expect(a > b).toBe(true)`):
 a matcher applies to the value itself so that a failure shows the actual data. Boolean matchers stay legitimate on
-business booleans such as `expect(player.host).toBe(true)`.
+business booleans such as `expect(player.host).toBe(true)`. Every `*.spec.{js,ts,tsx}` file of the repository is
+scanned, outside dependencies and build outputs, and only the outermost asserted expression is read: a comparison
+written inside a callback (`expect(list.find(item => item.id === 1)).toBeTruthy()`) builds the asserted value, it is
+not the assertion. The check reads one line at a time, so an assertion spread over several lines escapes it.
 
 #### Save Manager UI
 

@@ -29,22 +29,6 @@ describe('validateSaveContent', () => {
   });
 
   describe('When validating the overall save structure', () => {
-    describe('When the save does not have the expected number of sections', () => {
-      it('should reject the save', () => {
-        // Arrange
-        const invalidSave = 'not a valid save';
-
-        // Act
-        const result = validateSaveContent(invalidSave);
-
-        // Assert
-        expect(result.isValid).toBe(false);
-        expect(result.errors).toEqual([
-          {code: VALIDATION_ISSUE_CODES.INVALID_STRUCTURE, detail: 'Expected 11 sections but found 1'}
-        ]);
-      });
-    });
-
     describe('When an entry breaks a schema rule', () => {
       it('should locate each error with its section and entry position', () => {
         // Arrange

@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'bun:test';
-import {findFabricatedBooleanAssertions} from './check-test-assertions.ts';
+import {findFabricatedBooleanAssertions, isOwnSpecFile} from './check-test-assertions.ts';
 
 describe('findFabricatedBooleanAssertions', () => {
 
@@ -106,6 +106,45 @@ describe('findFabricatedBooleanAssertions', () => {
     });
   });
 
+  describe('When a comparison only appears inside a callback of the asserted expression', () => {
+    it('should report nothing, the asserted value being the result of the call', () => {
+      // Arrange
+      const source = 'expect(players.find(player => player.id === 3)).toBeTruthy();';
+
+      // Act
+      const assertions = findFabricatedBooleanAssertions(source);
+
+      // Assert
+      expect(assertions).toEqual([]);
+    });
+  });
+
+  describe('When the asserted expression calls a generic function', () => {
+    it('should report nothing, the type arguments not being a comparison', () => {
+      // Arrange
+      const source = 'expect(readSetting<boolean>(\'host\')).toBe(true);';
+
+      // Act
+      const assertions = findFabricatedBooleanAssertions(source);
+
+      // Assert
+      expect(assertions).toEqual([]);
+    });
+  });
+
+  describe('When a JSX element is passed to a call of the asserted expression', () => {
+    it('should report nothing, its angle brackets not being a comparison', () => {
+      // Arrange
+      const source = 'expect(render(<SaveManager />).container).toBeTruthy();';
+
+      // Act
+      const assertions = findFabricatedBooleanAssertions(source);
+
+      // Assert
+      expect(assertions).toEqual([]);
+    });
+  });
+
   describe('When a built boolean is compared with a matcher other than a boolean one', () => {
     it('should report nothing, that matcher showing the actual value already', () => {
       // Arrange
@@ -190,6 +229,31 @@ describe('findFabricatedBooleanAssertions', () => {
 
       // Assert
       expect(assertions).toEqual([]);
+    });
+  });
+});
+
+describe('isOwnSpecFile', () => {
+
+  describe('When a spec lives outside the packages directory', () => {
+    it('should be checked, wherever it is written in the repository', () => {
+      // Act
+      const checkedPaths = ['testIsolation.spec.ts', 'scripts/node/hooks.spec.js', 'packages/cli-merge/cli/merge-cli.spec.js']
+        .filter(isOwnSpecFile);
+
+      // Assert
+      expect(checkedPaths).toEqual(['testIsolation.spec.ts', 'scripts/node/hooks.spec.js', 'packages/cli-merge/cli/merge-cli.spec.js']);
+    });
+  });
+
+  describe('When a spec comes from a dependency or a build output', () => {
+    it('should be left out, that spec not being ours', () => {
+      // Act
+      const checkedPaths = ['node_modules/some-lib/index.spec.js', 'packages/ui-save-manager/dist/bundle.spec.js']
+        .filter(isOwnSpecFile);
+
+      // Assert
+      expect(checkedPaths).toEqual([]);
     });
   });
 });

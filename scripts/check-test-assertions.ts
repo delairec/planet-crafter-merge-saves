@@ -1,6 +1,7 @@
 import {Glob} from 'bun';
 
-const SPEC_FILES_PATTERN = 'packages/**/*.spec.{js,ts,tsx}';
+const SPEC_FILES_PATTERN = '**/*.spec.{js,ts,tsx}';
+const GENERATED_DIRECTORY = /(?:^|\/)(?:node_modules|dist|build|coverage)\//;
 
 const EXPECT_CALL = 'expect(';
 const STRING_LITERAL = /'(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*"|`(?:\\.|[^`\\])*`/g;
@@ -8,7 +9,10 @@ const BOOLEAN_MATCHER = /^\.(?:not\.)?(?:toBeTruthy\(\)|toBeFalsy\(\)|toBe\((?:t
 const BOOLEAN_PRODUCING_CALL = /\.(?:some|every|includes)\(/;
 const MEMBERSHIP_OR_TYPE_OPERATOR = /\b(?:in|typeof)\s/;
 const COMPARISON_OPERATOR = /===|!==|==|!=|>=|<=|>|</;
+const GENERIC_TYPE_ARGUMENTS = /(?<=[\w$\]])<[^<>()]*>(?=\s*\()/g;
 const ARROW = /=>/g;
+const OPENING_BRACKETS = '([{';
+const CLOSING_BRACKETS = ')]}';
 
 export interface FabricatedBooleanAssertion {
   line: number;
@@ -22,6 +26,36 @@ export interface FabricatedBooleanAssertion {
  */
 function maskStringLiterals(line: string): string {
   return line.replace(STRING_LITERAL, literal => '_'.repeat(literal.length));
+}
+
+/**
+ * Replaces everything nested in brackets with filler of the same length, so that only the
+ * operators applied to the asserted value itself remain — those of a callback body, of an
+ * index or of a nested call belong to another expression.
+ * @param {string} expression
+ */
+function maskNestedGroups(expression: string): string {
+  let depth = 0;
+  return Array.from(expression, character => {
+    if (OPENING_BRACKETS.includes(character)) {
+      depth++;
+      return character;
+    }
+    if (CLOSING_BRACKETS.includes(character)) {
+      depth = Math.max(0, depth - 1);
+      return character;
+    }
+    return depth > 0 ? '_' : character;
+  }).join('');
+}
+
+/**
+ * Replaces the type arguments of a generic call with filler of the same length, so that their
+ * angle brackets are not read as comparisons.
+ * @param {string} expression
+ */
+function maskGenericTypeArguments(expression: string): string {
+  return expression.replace(GENERIC_TYPE_ARGUMENTS, typeArguments => '_'.repeat(typeArguments.length));
 }
 
 /**
@@ -47,14 +81,16 @@ function findArgumentEnd(maskedLine: string, argumentStart: number): number {
 /**
  * A fabricated boolean is an expression evaluated to a boolean before the matcher sees it:
  * a predicate or membership call, the `in` or `typeof` operator, a negation, or a comparison.
+ * Only the outermost expression counts: a comparison nested in a callback or in a call argument
+ * produces the value being asserted, it is not the asserted value itself.
  * @param {string} argument the masked text passed to `expect(...)`
  */
 function isFabricatedBoolean(argument: string): boolean {
-  const trimmedArgument = argument.trim();
-  return trimmedArgument.startsWith('!')
-    || BOOLEAN_PRODUCING_CALL.test(trimmedArgument)
-    || MEMBERSHIP_OR_TYPE_OPERATOR.test(trimmedArgument)
-    || COMPARISON_OPERATOR.test(trimmedArgument.replace(ARROW, ''));
+  const assertedExpression = maskGenericTypeArguments(maskNestedGroups(argument)).trim();
+  return assertedExpression.startsWith('!')
+    || BOOLEAN_PRODUCING_CALL.test(assertedExpression)
+    || MEMBERSHIP_OR_TYPE_OPERATOR.test(assertedExpression)
+    || COMPARISON_OPERATOR.test(assertedExpression.replace(ARROW, ''));
 }
 
 /**
@@ -86,9 +122,20 @@ export function findFabricatedBooleanAssertions(source: string): FabricatedBoole
     .filter(({text}) => hasFabricatedBooleanAssertion(maskStringLiterals(text)));
 }
 
+/**
+ * @param {string} filePath a spec file path relative to the repository root
+ * @returns whether that spec is one of ours, wherever it lives in the repository
+ */
+export function isOwnSpecFile(filePath: string): boolean {
+  return !GENERATED_DIRECTORY.test(filePath);
+}
+
 async function checkSpecFiles(): Promise<number> {
   const violations: string[] = [];
   for await (const filePath of new Glob(SPEC_FILES_PATTERN).scan({cwd: process.cwd()})) {
+    if (!isOwnSpecFile(filePath)) {
+      continue;
+    }
     const source = await Bun.file(filePath).text();
     findFabricatedBooleanAssertions(source)
       .forEach(({line, text}) => violations.push(`${filePath}:${line}: ${text}`));
