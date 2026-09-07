@@ -122,8 +122,16 @@ constraint is updated.
 bun run audit:quality
 ```
 
-Runs the [Fallow](https://github.com/fallow-rs/fallow) audit and health reports (dead files, unused exports,
-unresolved imports) against `master`, as the CI does.
+Runs `check:assertions`, then the [Fallow](https://github.com/fallow-rs/fallow) audit and health reports (dead files,
+unused exports, unresolved imports) against `master`, as the CI does.
+
+```
+bun run check:assertions
+```
+
+Fails on any spec asserting a fabricated boolean (`expect(list.some(...)).toBeTruthy()`, `expect(a > b).toBe(true)`):
+a matcher applies to the value itself so that a failure shows the actual data. Boolean matchers stay legitimate on
+business booleans such as `expect(player.host).toBe(true)`.
 
 #### Save Manager UI
 
