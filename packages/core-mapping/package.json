@@ -12,7 +12,7 @@
     "./presentation/viewModels/*": "./src/presentation/viewModels/*.ts"
   },
   "dependencies": {
-    "ajv": "catalog:testing",
-    "shared-save-processing": "workspace:*"
+    "ajv": "^8.20.0",
+    "shared-save-processing": "*"
   }
 }

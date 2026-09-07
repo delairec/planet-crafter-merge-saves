@@ -13,8 +13,8 @@
     "node:merge": "node --import ../../scripts/node/register.js cli/merge-cli.js --platform=node"
   },
   "dependencies": {
-    "core-mapping": "workspace:*",
-    "shared-platforms": "workspace:*",
-    "shared-save-processing": "workspace:*"
+    "core-mapping": "*",
+    "shared-platforms": "*",
+    "shared-save-processing": "*"
   }
 }
