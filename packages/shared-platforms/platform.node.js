@@ -2,12 +2,19 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 
+const BYTE_ORDER_MARK = /^\uFEFF/;
+
 /**
+ * Strips a leading UTF-8 byte order mark, so that callers receive the file content the way
+ * `Bun.file().text()` already returns it — keeping it would make the first parsed entry fail.
+ *
  * @param {string} filePath
  * @returns {Promise<string>}
  */
-export function readTextFile(filePath) {
-  return fs.readFile(filePath, 'utf8');
+export async function readTextFile(filePath) {
+  const content = await fs.readFile(filePath, 'utf8');
+
+  return content.replace(BYTE_ORDER_MARK, '');
 }
 
 /**
