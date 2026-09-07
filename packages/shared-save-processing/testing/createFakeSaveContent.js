@@ -1,5 +1,8 @@
 /** @import { WorldObject } from '../gameDefinitions' */
 
+// One of the two renderings of the records of `createSaveRecords.js`: a complete default save
+// serialized into a save string. `createFakeParsedSave.js` is the other one, in sections.
+
 import {createFakeSaveString, createLegacyFakeSaveString} from './createFakeSaveString.js';
 import {
   createEquipment,

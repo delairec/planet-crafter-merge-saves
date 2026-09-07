@@ -1,7 +1,8 @@
 /** @import { Player, Inventory, SaveConfiguration, GlobalMetadata, TerraformationLevel, Statistics } from '../gameDefinitions' */
 
-// Factories for the individual records of a save file, in business language. Used both by
-// `createFakeSaveContent` (save string) and by `createFakeParsedSave` (already parsed sections).
+// Single source of the factories building the individual records of a save file, in business
+// language. No other testing module defines or re-exports them: `createFakeSaveContent.js` renders
+// them as a save string, `createFakeParsedSave.js` as already parsed sections.
 
 /**
  * @param {Partial<Player>} overrides

@@ -1,6 +1,10 @@
 /** @import { SaveWarningCode } from '../normalizeRawSections.js' */
 /** @import { ParsedSave, GlobalMetadata, TerraformationLevel, Player, WorldObject, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, WorldEvent } from '../gameDefinitions' */
 
+// One of the two renderings of the records of `createSaveRecords.js`: a save already split into
+// sections (`ParsedSave`), each section filled by the caller. `createFakeSaveContent.js` is the
+// other one, as a save string.
+
 import {DEFAULT_GLOBAL_METADATA} from './createFakeSaveString.js';
 
 /** @returns {Generator<never>} */
