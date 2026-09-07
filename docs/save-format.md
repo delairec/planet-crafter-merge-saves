@@ -4,7 +4,7 @@
 
 ---
 **JSON Schemas** : each section has a validation schema in [`packages/shared-save-processing/schemas/`](../packages/shared-save-processing/schemas/).
-The root schema [`save-file.schema.json`](./schemas/save-file.schema.json) validates a fully parsed save (array of 11 sections).
+The root schema [`save-file.schema.json`](../packages/shared-save-processing/schemas/save-file.schema.json) validates a fully parsed save (array of 11 sections, indexes 0 to 10).
 
 ## General structure
 

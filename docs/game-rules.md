@@ -108,7 +108,7 @@
 
 **Rule GR-WO-3 (orphan removal):** Before merging, world objects that belong to the inventories of **ejected players** from save B (players whose `name` already exists in save A) are removed. See GR-PLAYER-1.
 
-**Rule GR-WO-4:** After the main merge, remaining id conflicts across the combined list are resolved by the id conflict resolution step (section 14).
+**Rule GR-WO-4:** After the main merge, remaining id conflicts across the combined list are resolved by the id conflict resolution step ([section 13](#13-id-conflict-resolution)).
 
 **Implementation:** `packages/core-mapping/src/domain/rules/merge/mergeWorldObjects.ts`, `packages/core-mapping/src/domain/rules/merge/collectEjectedPlayerInventoryIds.ts`
 
@@ -122,7 +122,7 @@
 
 **Rule GR-INV-2:** All inventories from save B are kept, **except** inventories whose `id` matches the `inventoryId` or `equipmentId` of an ejected player (see GR-PLAYER-1 and GR-WO-3).
 
-**Rule GR-INV-3:** Duplicate `id` values across saves are not treated as the same logical object; they are remapped by the id conflict resolution step (section 14).
+**Rule GR-INV-3:** Duplicate `id` values across saves are not treated as the same logical object; they are remapped by the id conflict resolution step ([section 13](#13-id-conflict-resolution)).
 
 **Implementation:** `packages/core-mapping/src/domain/rules/merge/mergeInventories.ts`
 
