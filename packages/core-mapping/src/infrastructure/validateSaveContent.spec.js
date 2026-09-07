@@ -16,7 +16,7 @@ import {
 describe('validateSaveContent', () => {
 
   describe('When the save meets every rule', () => {
-    it('should return a validation result with a validity flag and a list of errors', () => {
+    it('should report the save as valid, with no error and no warning', () => {
       // Arrange
       const save = createFakeSaveContent();
 
@@ -24,20 +24,7 @@ describe('validateSaveContent', () => {
       const result = validateSaveContent(save);
 
       // Assert
-      expect('isValid' in result).toBeTruthy();
-      expect('errors' in result).toBeTruthy();
-    });
-
-    it('should report the save as valid with no errors', () => {
-      // Arrange
-      const save = createFakeSaveContent();
-
-      // Act
-      const result = validateSaveContent(save);
-
-      // Assert
-      expect(result.isValid).toBe(true);
-      expect(result.errors).toEqual([]);
+      expect(result).toEqual({isValid: true, errors: [], warnings: []});
     });
   });
 
@@ -52,7 +39,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.length > 0).toBeTruthy();
+        expect(result.errors).toEqual([
+          {code: VALIDATION_ISSUE_CODES.INVALID_STRUCTURE, detail: 'Expected 11 sections but found 1'}
+        ]);
       });
     });
 
@@ -75,7 +64,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(error => 'section' in error && 'entryIndex' in error)).toBeTruthy();
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 0, entryIndex: 0}
+        ]);
       });
     });
   });
@@ -92,7 +83,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.section === 0)).toBeTruthy();
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 0, entryIndex: 0}
+        ]);
       });
     });
 
@@ -108,7 +101,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.section === 0)).toBeTruthy();
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 0, entryIndex: 0}
+        ]);
       });
     });
   });
@@ -125,7 +120,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.section === 1)).toBeTruthy();
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 1, entryIndex: 0}
+        ]);
       });
     });
 
@@ -141,7 +138,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.section === 1)).toBeTruthy();
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 1, entryIndex: 0}
+        ]);
       });
     });
   });
@@ -158,7 +157,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.section === 2)).toBeTruthy();
+        expect(result.errors).toContainEqual(expect.objectContaining(
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 2, entryIndex: 0}
+        ));
       });
     });
 
@@ -172,7 +173,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.section === 2)).toBeTruthy();
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 2, entryIndex: 0}
+        ]);
       });
     });
 
@@ -186,7 +189,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.section === 2)).toBeTruthy();
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 2, entryIndex: 0}
+        ]);
       });
     });
 
@@ -217,7 +222,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.section === 4)).toBeTruthy();
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 4, entryIndex: 0}
+        ]);
       });
     });
 
@@ -231,7 +238,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.section === 4)).toBeTruthy();
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 4, entryIndex: 0}
+        ]);
       });
     });
   });
@@ -247,7 +256,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.section === 5)).toBeTruthy();
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 5, entryIndex: 0}
+        ]);
       });
     });
   });
@@ -264,7 +275,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.section === 8)).toBeTruthy();
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 8, entryIndex: 0}
+        ]);
       });
     });
 
@@ -280,7 +293,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.section === 8)).toBeTruthy();
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 8, entryIndex: 0}
+        ]);
       });
     });
   });
@@ -296,7 +311,9 @@ describe('validateSaveContent', () => {
 
         // Assert
         expect(result.isValid).toBe(false);
-        expect(result.errors.some(e => e.section === 9)).toBeTruthy();
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 9, entryIndex: 0}
+        ]);
       });
     });
   });
@@ -313,7 +330,10 @@ describe('validateSaveContent', () => {
 
           // Assert
           expect(result.isValid).toBe(false);
-          expect(result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION)).toBeTruthy();
+          expect(result.errors).toEqual([{
+            code: VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION,
+            detail: 'Field "playerGaugeOxygen" has integer value serialized without .0 suffix (got: 280)'
+          }]);
         });
       });
 
@@ -327,7 +347,7 @@ describe('validateSaveContent', () => {
 
           // Assert
           expect(result.isValid).toBe(true);
-          expect(!result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION)).toBeTruthy();
+          expect(result.errors).toEqual([]);
         });
       });
 
@@ -357,8 +377,24 @@ describe('validateSaveContent', () => {
 
           // Assert
           expect(result.isValid).toBe(false);
-          const floatErrors = result.errors.filter(e => e.code === VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION);
-          expect(floatErrors.length >= 4).toBeTruthy();
+          expect(result.errors).toEqual([
+            {
+              code: VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION,
+              detail: 'Field "playerGaugeOxygen" has integer value serialized without .0 suffix (got: 280)'
+            },
+            {
+              code: VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION,
+              detail: 'Field "playerGaugeThirst" has integer value serialized without .0 suffix (got: 100)'
+            },
+            {
+              code: VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION,
+              detail: 'Field "playerGaugeHealth" has integer value serialized without .0 suffix (got: 72)'
+            },
+            {
+              code: VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION,
+              detail: 'Field "playerGaugeToxic" has integer value serialized without .0 suffix (got: 0)'
+            }
+          ]);
         });
       });
     });
@@ -374,7 +410,9 @@ describe('validateSaveContent', () => {
 
           // Assert
           expect(result.isValid).toBe(false);
-          expect(result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.UNIQUE_HOST)).toBeTruthy();
+          expect(result.errors).toEqual([
+            {code: VALIDATION_ISSUE_CODES.UNIQUE_HOST, detail: 'Expected exactly one host player, found 0'}
+          ]);
         });
       });
 
@@ -399,7 +437,9 @@ describe('validateSaveContent', () => {
 
           // Assert
           expect(result.isValid).toBe(false);
-          expect(result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.UNIQUE_HOST)).toBeTruthy();
+          expect(result.errors).toEqual([
+            {code: VALIDATION_ISSUE_CODES.UNIQUE_HOST, detail: 'Expected exactly one host player, found 2'}
+          ]);
         });
       });
 
@@ -412,7 +452,7 @@ describe('validateSaveContent', () => {
           const result = validateSaveContent(save);
 
           // Assert
-          expect(!result.errors.some(e => e.code === VALIDATION_ISSUE_CODES.UNIQUE_HOST)).toBeTruthy();
+          expect(result.errors).toEqual([]);
         });
       });
     });
