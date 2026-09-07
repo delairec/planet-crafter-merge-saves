@@ -118,6 +118,18 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   Ecosystem1: 325,
   SilkGenerator: 38,
   WaterLifeCollector1: 105.5,
+  // Genetics machines (game v2.102): Genetic Synthesizer 292 kW/s
+  // (https://planet-crafter.fandom.com/wiki/Genetic_Synthesizer) and Genetic Extractor
+  // -317.5 kW/s (https://planet-crafter.fandom.com/wiki/Genetic_Extractor). The genetic
+  // manipulator above is a third, distinct machine.
+  GeneticSynthetizer1: 292,
+  GeneticExtractor1: 317.5,
+  // Ore crushers, per https://planet-crafter.fandom.com/wiki/Ore_Crushers (game v2.102):
+  // T1 -2.6 kW, T2 -21 kW, T3 -125 kW. Distinct from the ore extractors above, despite the
+  // `OreBreaker` gId prefix: the game labels these `T1/T2/T3 Ore Crusher`.
+  OreBreaker1: 2.6,
+  OreBreaker2: 21,
+  OreBreaker3: 125,
   Optimizer1: 50,
   Optimizer2: 150
 };
