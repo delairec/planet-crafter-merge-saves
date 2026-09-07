@@ -156,10 +156,11 @@ npm run node:validate -- --file=<filepath>
 
 Node.js counterpart of `bun validate`.
 
-Both run `bun run build:node` first: `core-mapping` bundles its two CLI controllers into
-`packages/core-mapping/dist/`, which Node resolves through the `node-bundle` export condition. Node strips
-TypeScript types but transforms nothing else, so it cannot run the sources as they are; Bun and the UI build keep
-reading them directly. The bundle is a build output, not committed, and rebuilt on every run — Bun stays required to produce it.
+Both run the same sources as the Bun commands, straight from `packages/`, with no build step: `--import
+./scripts/node/register.js` installs two [module customization hooks](https://nodejs.org/api/module.html#customization-hooks)
+that resolve the extensionless relative imports and hand every `.ts` module to esbuild, which removes the
+TypeScript syntax Node cannot strip on its own (type-only imports, constructor parameter properties). Bun is still
+the package manager: run `bun install` once, then the two commands only need Node.
 
 
 ### Preparing data

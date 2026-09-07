@@ -1,6 +1,7 @@
 entry = [
     "packages/cli-merge/cli/merge-cli.js",
     "packages/cli-validate/cli/validate-cli.js",
+    "scripts/node/register.js",
     "packages/ui-save-manager/src/entry-client.tsx",
     "packages/ui-save-manager/src/entry-server.tsx",
     "packages/**/*.spec.js",

@@ -24,8 +24,6 @@
     "test:watch": "bun test --watch",
     "lint:types": "tsc --noEmit",
     "build:ui": "bun run --filter ui-save-manager build",
-    "build:node": "bun run --filter core-mapping build:node",
-    "clean:node": "bun run --filter core-mapping clean:node",
     "audit:quality": "bun run fallow:quality && bun run fallow:health",
     "fallow:quality": "fallow audit --config ./fallow.toml --base master --no-cache --ci",
     "fallow:quality:local": "fallow audit --config ./fallow.toml --base master --no-cache",
@@ -40,8 +38,8 @@
     "test:merge": "bun test --filter cli-merge",
     "validate": "bun run --filter cli-validate validate",
     "test:validate": "bun test --filter cli-validate",
-    "node:merge": "bun run build:node && node --conditions=node-bundle packages/cli-merge/cli/merge-cli.js --platform=node",
-    "node:validate": "bun run build:node && node --conditions=node-bundle packages/cli-validate/cli/validate-cli.js --platform=node"
+    "node:merge": "node --import ./scripts/node/register.js packages/cli-merge/cli/merge-cli.js --platform=node",
+    "node:validate": "node --import ./scripts/node/register.js packages/cli-validate/cli/validate-cli.js --platform=node"
   },
   "catalogs": {
     "typescript": {
@@ -54,6 +52,7 @@
   },
   "devDependencies": {
     "@types/bun": "catalog:typescript",
+    "esbuild": "^0.28.2",
     "fallow": "^3.20.0",
     "typescript": "catalog:typescript"
   },

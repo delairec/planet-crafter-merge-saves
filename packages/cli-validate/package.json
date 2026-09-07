@@ -10,7 +10,7 @@
     "lint:types": "tsc --noEmit",
     "validate": "bun --cwd ../.. packages/cli-validate/cli/validate-cli.js ",
     "validate:test": "bun test packages/cli-validate",
-    "node:validate": "node --conditions=node-bundle cli/validate-cli.js --platform=node"
+    "node:validate": "node --import ../../scripts/node/register.js cli/validate-cli.js --platform=node"
   },
   "dependencies": {
     "core-mapping": "workspace:*",
