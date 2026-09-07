@@ -12,14 +12,7 @@ import * as nodePlatform from './platform.node.js';
  * @property {(filePath: string, content: string) => Promise<void>} writeTextFile
  */
 
-/**
- * `readTextFile` and `writeTextFile` are the substitutable part of the runtime platform: the `node:*`
- * commands only behave like their Bun counterparts as long as both adapters honour the same contract.
- * The cases below therefore run against every adapter, and assert against the filesystem rather than
- * against the sibling function, so that a divergence symmetrical to the adapter cannot hide.
- *
- * @type {FileAccessAdapter[]}
- */
+/** @type {FileAccessAdapter[]} */
 const FILE_ACCESS_ADAPTERS = [
   {platformName: 'bun', readTextFile: bunPlatform.readTextFile, writeTextFile: bunPlatform.writeTextFile},
   {platformName: 'node', readTextFile: nodePlatform.readTextFile, writeTextFile: nodePlatform.writeTextFile}

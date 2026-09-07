@@ -1,10 +1,5 @@
 export const SUPPORTED_PLATFORMS = /** @type {readonly ['bun', 'node']} */ (['bun', 'node']);
 
-/**
- * @param argv
- * @returns {'bun'|'node'}
- * @throws {Error} If the platform parameter is invalid
- */
 export function extractPlatformParameter(argv) {
   const platformArg = argv.find(arg => arg.startsWith('--platform='));
 

@@ -9,10 +9,7 @@ const PLATFORM_MODULES = {
   bun: bunPlatform
 };
 
-/**
- * @param {'bun'|'node'} platformName
- * @returns {RuntimePlatform}
- */
+/** @returns {RuntimePlatform} */
 export function createPlatform(platformName) {
   const specificModule = PLATFORM_MODULES[platformName];
 
