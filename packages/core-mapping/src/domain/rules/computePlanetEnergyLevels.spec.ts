@@ -101,28 +101,35 @@ describe('computePlanetEnergyLevels', () => {
     }]);
   });
 
-  it('should ignore world objects placed on another planet, each planet having its own power grid', () => {
+  // Cross-planet scoping itself belongs to the caller that builds the planet subset, and is covered by
+  // SaveSectionsReaderService.spec.ts ("should group placed world objects by planet (Rule EN-PLANET-1)").
+  // What this composition owns is narrower: production and consumption come from the planet subset alone,
+  // never from the whole-save list that only serves to resolve Energy Fuses held in optimizer inventories.
+  it('should draw production and consumption from the planet subset alone, not from the whole save', () => {
     // Arrange
-    const producerOnThisPlanet: PlacedWorldObjectEntity = {
+    const producerInThePlanetSubset: PlacedWorldObjectEntity = {
       id: '1', name: 'EnergyGenerator1' as WorldObjectName, position: [0, 0, 0], planetId: 1
     };
-    const producerOnAnotherPlanet: PlacedWorldObjectEntity = {
+    const producerOutsideThePlanetSubset: PlacedWorldObjectEntity = {
       id: '2', name: 'EnergyGenerator6' as WorldObjectName, position: [0, 0, 0], planetId: 2
     };
-    const consumerOnAnotherPlanet: PlacedWorldObjectEntity = {
+    const consumerOutsideThePlanetSubset: PlacedWorldObjectEntity = {
       id: '3', name: 'Drill4' as WorldObjectName, position: [10, 0, 0], planetId: 2
     };
-    const allWorldObjects: WorldObjectEntity[] = [
-      producerOnThisPlanet, producerOnAnotherPlanet, consumerOnAnotherPlanet
+    const wholeSaveWorldObjects: WorldObjectEntity[] = [
+      producerInThePlanetSubset, producerOutsideThePlanetSubset, consumerOutsideThePlanetSubset
     ];
     const noInventories: InventoryEntity[] = [];
 
     // Act
-    const result = computePlanetEnergyLevels(allWorldObjects, [producerOnThisPlanet], noInventories);
+    const result = computePlanetEnergyLevels(wholeSaveWorldObjects, [producerInThePlanetSubset], noInventories);
 
     // Assert
     expect(result.production).toBe(1.2);
     expect(result.consumption).toBe(0);
-    expect(result.available).toBe(1.2);
+    expect(result.productionBreakdown).toEqual([
+      {name: 'EnergyGenerator1', quantity: 1, unitLevel: 1.2, totalLevel: 1.2, productionRatio: 1}
+    ]);
+    expect(result.consumptionBreakdown).toEqual([]);
   });
 });

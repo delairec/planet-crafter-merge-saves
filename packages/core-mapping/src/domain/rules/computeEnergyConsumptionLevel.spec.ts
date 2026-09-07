@@ -35,7 +35,7 @@ describe('computeEnergyConsumptionLevel', () => {
 
   const consumerNames = Object.keys(energyConsumptionLevelsByWorldObjectName) as WorldObjectName[];
 
-  it.each(consumerNames)('should recognize %s as a consumer (Rule EN-BASE-2)', (name) => {
+  it.each(consumerNames)('should read a strictly positive consumption level for the table entry %s', (name) => {
     // Arrange
     const consumer: PlacedWorldObjectEntity = {id: name, name, position: [0, 0, 0], planetId: 1};
 

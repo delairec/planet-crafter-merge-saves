@@ -85,7 +85,7 @@ describe('computeEnergyProductionLevel', () => {
 
   const producerNames = Object.keys(energyProductionLevelsByWorldObjectName) as WorldObjectName[];
 
-  it.each(producerNames)('should recognize %s as a producer (Rule EN-BASE-2)', (name) => {
+  it.each(producerNames)('should read a strictly positive production level for the table entry %s', (name) => {
     // Arrange
     const producer: PlacedWorldObjectEntity = {id: name, name, position: [0, 0, 0], planetId: 1};
     const noInventories: InventoryEntity[] = [];
