@@ -3,6 +3,7 @@ import {ValidationIssue} from "../application/ports/ValidationIssue";
 import {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
 import {MergeResultViewModel} from "./viewModels/MergeResultViewModel";
 import {formatValidationIssue} from "./formatValidationIssue";
+import {formatValidationError} from "./formatValidationError";
 import {formatSaveWarning} from "./formatSaveWarning";
 
 export class MergeResultPresenter implements MergeResultPresenterPort {
@@ -15,6 +16,8 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
       content: '',
       saveAErrorMessages: [],
       saveBErrorMessages: [],
+      saveAErrors: [],
+      saveBErrors: [],
       saveAWarningMessages: [],
       saveBWarningMessages: []
     };
@@ -31,6 +34,8 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
       content,
       saveAErrorMessages: [],
       saveBErrorMessages: [],
+      saveAErrors: [],
+      saveBErrors: [],
       saveAWarningMessages: saveAWarnings.map(formatSaveWarning),
       saveBWarningMessages: saveBWarnings.map(formatSaveWarning)
     };
@@ -43,6 +48,8 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
       content: '',
       saveAErrorMessages: saveAErrors.map(formatValidationIssue),
       saveBErrorMessages: saveBErrors.map(formatValidationIssue),
+      saveAErrors: saveAErrors.map(formatValidationError),
+      saveBErrors: saveBErrors.map(formatValidationError),
       saveAWarningMessages: saveAWarnings.map(formatSaveWarning),
       saveBWarningMessages: saveBWarnings.map(formatSaveWarning)
     };

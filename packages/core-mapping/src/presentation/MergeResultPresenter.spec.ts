@@ -19,6 +19,8 @@ describe('MergeResultPresenter', () => {
         content: 'merged content',
         saveAErrorMessages: [],
         saveBErrorMessages: [],
+        saveAErrors: [],
+        saveBErrors: [],
         saveAWarningMessages: [],
         saveBWarningMessages: []
       });
@@ -52,6 +54,8 @@ describe('MergeResultPresenter', () => {
         content: '',
         saveAErrorMessages: ['Invalid JSON: contentA'],
         saveBErrorMessages: [],
+        saveAErrors: [{message: 'Invalid JSON: contentA', location: null}],
+        saveBErrors: [],
         saveAWarningMessages: [],
         saveBWarningMessages: []
       });
@@ -66,6 +70,23 @@ describe('MergeResultPresenter', () => {
 
       // Assert
       expect(presenter.viewModel.saveBWarningMessages).toEqual(['This save was created by an older version of the game and has been adapted to the current format. The obsolete Terrain Layers section was ignored.']);
+    });
+
+    it('should tell where in each save the errors were found', () => {
+      // Arrange
+      const presenter = new MergeResultPresenter();
+
+      // Act
+      presenter.presentSaveFilesInvalid(
+        [{code: VALIDATION_ISSUE_CODES.INVALID_JSON, detail: 'Invalid JSON: { broken', section: 2, entryIndex: 1}],
+        [{code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, detail: 'must have required property gId', section: 4, entryIndex: 0}],
+        [],
+        []
+      );
+
+      // Assert
+      expect(presenter.viewModel.saveAErrors).toEqual([{message: 'Invalid JSON: { broken', location: 'Players (section 2), entry 1'}]);
+      expect(presenter.viewModel.saveBErrors).toEqual([{message: 'must have required property gId', location: 'Inventories (section 4), entry 0'}]);
     });
   });
 });

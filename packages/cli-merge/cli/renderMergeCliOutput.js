@@ -1,3 +1,5 @@
+/** @import { SaveValidationErrorViewModel } from 'core-mapping/presentation/viewModels/SaveFileValidationViewModel' */
+
 /**
  * Rendering for the merge CLI. Diagnostics go to stderr, the merge result (output file paths) goes to stdout.
  */
@@ -19,13 +21,21 @@ export function renderMergeSucceeded(outputPath) {
 
 /**
  * @param {string} folder
- * @param {string[]} saveAErrorMessages
- * @param {string[]} saveBErrorMessages
+ * @param {SaveValidationErrorViewModel[]} saveAErrors
+ * @param {SaveValidationErrorViewModel[]} saveBErrors
  */
-export function renderMergeFailed(folder, saveAErrorMessages, saveBErrorMessages) {
+export function renderMergeFailed(folder, saveAErrors, saveBErrors) {
   console.error(`✖ Folder "${folder}" contains an invalid save file:`);
-  for (const message of saveAErrorMessages) console.error(`  [save A] ${message}`);
-  for (const message of saveBErrorMessages) console.error(`  [save B] ${message}`);
+  for (const error of saveAErrors) console.error(`  [save A] ${formatErrorLine(error)}`);
+  for (const error of saveBErrors) console.error(`  [save B] ${formatErrorLine(error)}`);
+}
+
+/** @param {SaveValidationErrorViewModel} error */
+function formatErrorLine(error) {
+  if (error.location === null) {
+    return error.message;
+  }
+  return `[${error.location}] ${error.message}`;
 }
 
 /**
