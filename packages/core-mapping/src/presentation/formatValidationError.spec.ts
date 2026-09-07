@@ -5,7 +5,7 @@ import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue';
 describe('formatValidationError', () => {
 
   describe('When the issue was found in a save entry', () => {
-    it('should keep the section and the entry alongside the message', () => {
+    it('should report the location alongside the message', () => {
       // Act
       const error = formatValidationError({
         code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION,
@@ -15,7 +15,7 @@ describe('formatValidationError', () => {
       });
 
       // Assert
-      expect(error).toEqual({message: 'must have required property gId', section: 2, entryIndex: 3});
+      expect(error).toEqual({message: 'must have required property gId', location: 'Players (section 2), entry 3'});
     });
   });
 
@@ -28,7 +28,7 @@ describe('formatValidationError', () => {
       });
 
       // Assert
-      expect(error).toEqual({message: 'Invalid file extension: expected a .json file.'});
+      expect(error).toEqual({message: 'Invalid file extension: expected a .json file.', location: null});
     });
   });
 
@@ -42,7 +42,7 @@ describe('formatValidationError', () => {
       });
 
       // Assert
-      expect(error).toEqual({message: 'Unexpected number of sections.', section: 0});
+      expect(error).toEqual({message: 'Unexpected number of sections.', location: 'Global metadata (section 0)'});
     });
   });
 });

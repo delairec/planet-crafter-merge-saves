@@ -127,7 +127,7 @@ describe('Validate CLI', () => {
       await main(VALIDATE_SAVE_FILE_PATH);
 
       // Assert
-      expect(consoleErrorSpy).toHaveBeenCalledWith('  [section 2, entry 1] Invalid JSON: { broken entry');
+      expect(consoleErrorSpy).toHaveBeenCalledWith('  [Players (section 2), entry 1] Invalid JSON: { broken entry');
     });
 
     it('should report an error concerning the whole file without any location', async () => {

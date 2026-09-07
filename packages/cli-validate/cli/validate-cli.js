@@ -60,8 +60,8 @@ export function initValidateCli({readTextFile, exitProcess, isEntryPoint, getCli
 }
 
 function formatErrorLine(error) {
-  if (error.section === undefined) {
+  if (error.location === null) {
     return error.message;
   }
-  return `[section ${error.section}, entry ${error.entryIndex}] ${error.message}`;
+  return `[${error.location}] ${error.message}`;
 }

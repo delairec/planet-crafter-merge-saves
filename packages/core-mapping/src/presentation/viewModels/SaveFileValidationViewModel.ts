@@ -1,12 +1,11 @@
 /**
- * `section` and `entryIndex` are absent when the error concerns the file as a whole (a wrong
- * extension, a wrong number of sections). The location stays structured rather than folded into the
- * message, so each delivery mechanism decides how to show it.
+ * `location` names where in the save the error was found, already worded for a reader; it is `null`
+ * when the error concerns the file as a whole (a wrong extension, a wrong number of sections). It
+ * stays apart from the message, so each delivery mechanism decides whether and where to show it.
  */
 export interface SaveValidationErrorViewModel {
   message: string;
-  section?: number;
-  entryIndex?: number;
+  location: string | null;
 }
 
 export interface SaveFileValidationViewModel {
