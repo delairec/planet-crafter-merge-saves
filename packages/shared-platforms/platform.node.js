@@ -1,27 +1,20 @@
 import fs from 'node:fs/promises';
+import path from 'node:path';
 import process from 'node:process';
 
-/**
- * @param {string} path
- * @returns {Promise<string>}
- */
-export function readTextFile(path) {
-  return fs.readFile(path, 'utf8');
+const BYTE_ORDER_MARK = /^\uFEFF/;
+
+export async function readTextFile(filePath) {
+  const content = await fs.readFile(filePath, 'utf8');
+
+  return content.replace(BYTE_ORDER_MARK, '');
 }
 
-/**
- * @param {string} path
- * @param {string} content
- * @returns {Promise<void>}
- */
-export async function writeTextFile(path, content) {
-  await fs.writeFile(path, content, 'utf8');
+export async function writeTextFile(filePath, content) {
+  await fs.mkdir(path.dirname(filePath), {recursive: true});
+  await fs.writeFile(filePath, content, 'utf8');
 }
 
-/**
- * @param {{main?: boolean, url?: string}} importMeta
- * @returns {boolean}
- */
 export function isEntryPoint(importMeta) {
   if (!importMeta || !importMeta.url) return false;
   const scriptPath = process.argv[1];

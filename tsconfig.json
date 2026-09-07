@@ -14,7 +14,7 @@
     "types": ["@types/bun"],
     "maxNodeModuleJsDepth": 1
   },
-  "include": ["packages/**/*.js", "packages/**/*.ts", "testing/**/*.ts", "testSetup.ts", "testIsolation.spec.ts"],
+  "include": ["packages/**/*.js", "packages/**/*.ts", "scripts/**/*.js", "testing/**/*.ts", "testSetup.ts", "testIsolation.spec.ts"],
   "exclude": ["node_modules", ".output"]
 }
 

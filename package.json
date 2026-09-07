@@ -38,22 +38,14 @@
     "test:merge": "bun test --filter cli-merge",
     "validate": "bun run --filter cli-validate validate",
     "test:validate": "bun test --filter cli-validate",
-    "node:merge": "node packages/cli-merge/cli/merge-cli.js --platform=node",
-    "node:validate": "node packages/cli-validate/cli/validate-cli.js --platform=node"
-  },
-  "catalogs": {
-    "typescript": {
-      "@types/bun": "^1.3.14",
-      "typescript": "^7.0.2"
-    },
-    "testing": {
-      "ajv": "^8.20.0"
-    }
+    "node:merge": "node --import ./scripts/node/register.js packages/cli-merge/cli/merge-cli.js --platform=node",
+    "node:validate": "node --import ./scripts/node/register.js packages/cli-validate/cli/validate-cli.js --platform=node"
   },
   "devDependencies": {
-    "@types/bun": "catalog:typescript",
+    "@types/bun": "^1.3.14",
+    "esbuild": "^0.28.2",
     "fallow": "^3.20.0",
-    "typescript": "catalog:typescript"
+    "typescript": "^7.0.2"
   },
   "engines": {
     "node": ">=23.6.0",

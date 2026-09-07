@@ -156,9 +156,14 @@ npm run node:validate -- --file=<filepath>
 
 Node.js counterpart of `bun validate`.
 
-> ⚠️ Both commands currently fail: they reach the TypeScript controllers of `core-mapping`, which Node.js cannot
-> execute as they stand (relative imports without an explicit extension, constructor parameter properties, and
-> type-only imports not marked `import type`). Use the Bun commands until this is addressed.
+`npm install` works without Bun: the workspace declares nothing npm cannot read. Run it once, then the two
+commands only need Node. A `package-lock.json` is yours to keep: the repository ignores it and maintains `bun.lock`
+only, and the CI runs under Bun.
+
+Both commands run the same sources as the Bun commands, straight from `packages/`, with no build step: `--import
+./scripts/node/register.js` installs two [module customization hooks](https://nodejs.org/api/module.html#customization-hooks)
+that resolve the extensionless relative imports and hand every `.ts` module to esbuild, which removes the
+TypeScript syntax Node cannot strip on its own (type-only imports, constructor parameter properties).
 
 
 ### Preparing data
