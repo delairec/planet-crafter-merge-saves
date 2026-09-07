@@ -4,7 +4,8 @@ import {normalizeRawSections} from './normalizeRawSections.js';
 import {verifySectionCount} from './verifySectionCount.js';
 
 /**
- * Parses a Planet Crafter save string into 10 typed sections (current format; the Terrain Layers
+ * Parses a Planet Crafter save string into the 11 sections of the current format (indexes 0 to 10;
+ * section 10 is the reserved empty part produced by the terminating `@`, and the Terrain Layers
  * section was removed from the save format by a game update).
  * Section 3 (WorldObjects) is a Generator factory; all others are arrays.
  * Legacy saves (still containing Terrain Layers) are transparently adapted to the current format —
