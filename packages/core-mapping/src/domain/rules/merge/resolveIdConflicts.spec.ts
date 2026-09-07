@@ -199,6 +199,26 @@ describe('Resolve id conflicts', () => {
     });
   });
 
+  describe('When a world object already holds the identifier that follows the highest inventory identifier', () => {
+    it('should renumber the save B inventory above that world object', () => {
+      // Arrange
+      const sections = createMergedSections({
+        inventories: {
+          fromSaveA: [{id: 10, woIds: '', size: 20}],
+          fromSaveB: [{id: 10, woIds: '', size: 35}]
+        },
+        worldObjects: {fromSaveA: [{id: 11, gId: 'Iron'}], fromSaveB: []}
+      });
+
+      // Act
+      const result = resolveIdConflicts(sections);
+
+      // Assert
+      expect(result.inventories.fromSaveB).toEqual([{id: 12, woIds: '', size: 35}]);
+      expect(result.worldObjects.fromSaveA).toEqual([{id: 11, gId: 'Iron'}]);
+    });
+  });
+
   describe('When a save B world object is linked to a renumbered save B world object', () => {
     it('should point it at the new world object id', () => {
       // Arrange
