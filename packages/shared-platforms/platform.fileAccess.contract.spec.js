@@ -53,6 +53,21 @@ describe.each(FILE_ACCESS_ADAPTERS)('Platform file access — $platformName adap
     });
   });
 
+  describe('When the file starts with a byte order mark', () => {
+    it('should return its content without the mark', async () => {
+      // Arrange
+      const directory = await createTemporaryDirectory();
+      const filePath = path.join(directory, 'save.json');
+      await fs.writeFile(filePath, '\uFEFF{"saveDisplayName":"Prime"}', 'utf8');
+
+      // Act
+      const result = await readTextFile(filePath);
+
+      // Assert
+      expect(result).toBe('{"saveDisplayName":"Prime"}');
+    });
+  });
+
   describe('When the file exists', () => {
     it('should return its content', async () => {
       // Arrange
