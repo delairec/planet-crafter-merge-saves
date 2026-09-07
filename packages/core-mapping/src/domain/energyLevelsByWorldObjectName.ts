@@ -96,6 +96,11 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   FishFarm2: 185,
   Aquarium1: 75,
   Aquarium2: 225,
+  // Butterfly farms, per https://planet-crafter.fandom.com/wiki/Butterfly_Farms (game v2.102):
+  // Butterfly Farm -30 kW, T2 Butterfly Farm -45 kW, T3 Butterfly Farm -196 kW.
+  ButterflyFarm1: 30,
+  ButterflyFarm2: 45,
+  ButterflyFarm3: 196,
   Optimizer1: 50,
   Optimizer2: 150
 };
