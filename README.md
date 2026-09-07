@@ -156,9 +156,10 @@ npm run node:validate -- --file=<filepath>
 
 Node.js counterpart of `bun validate`.
 
-> ⚠️ Both commands currently fail: they reach the TypeScript controllers of `core-mapping`, which Node.js cannot
-> execute as they stand (relative imports without an explicit extension, constructor parameter properties, and
-> type-only imports not marked `import type`). Use the Bun commands until this is addressed.
+Both run `bun run build:node` first: `core-mapping` bundles its two CLI controllers into
+`packages/core-mapping/dist/`, which Node resolves through the `node-bundle` export condition. Node strips
+TypeScript types but transforms nothing else, so it cannot run the sources as they are; Bun and the UI build keep
+reading them directly. The bundle is a build output, not committed, and rebuilt on every run — Bun stays required to produce it.
 
 
 ### Preparing data
