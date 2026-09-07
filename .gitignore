@@ -8,6 +8,7 @@ package-lock.json
 
 # generated
 output/
+.output/
 
 # user input: no trailing slash, so the rule also covers the symlink a linked worktree points
 # at the folder of the main checkout
