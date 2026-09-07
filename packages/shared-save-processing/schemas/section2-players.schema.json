@@ -1,79 +1,79 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "section2-players.schema.json",
-  "title": "Section 2 — Joueurs",
-  "description": "Données d'un joueur. Clé de déduplication : id (Steam ID) et name.",
+  "title": "Section 2 — Players",
+  "description": "Player data. Deduplication key: id (Steam ID) and name.",
   "type": "object",
   "required": ["id", "name", "inventoryId", "equipmentId", "playerPosition", "playerRotation", "playerGaugeOxygen", "playerGaugeThirst", "playerGaugeHealth", "playerGaugeToxic", "host", "planetId"],
   "additionalProperties": false,
   "properties": {
     "id": {
       "type": "integer",
-      "description": "Steam ID du joueur (clé primaire, int64)"
+      "description": "Player Steam ID (primary key, int64)"
     },
     "name": {
       "type": "string",
-      "description": "Nom Steam du joueur (clé de déduplication)"
+      "description": "Player Steam name (deduplication key)"
     },
     "inventoryId": {
       "type": "integer",
-      "description": "→ Section 4 Inventory.id — inventaire personnel du joueur"
+      "description": "→ Section 4 Inventory.id — the player's personal inventory"
     },
     "equipmentId": {
       "type": "integer",
-      "description": "→ Section 4 Inventory.id — équipement porté par le joueur"
+      "description": "→ Section 4 Inventory.id — the equipment worn by the player"
     },
     "playerPosition": {
       "type": "string",
       "pattern": "^-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*$",
-      "description": "Position 3D du joueur au format 'x,y,z'"
+      "description": "3D position of the player, formatted as 'x,y,z'"
     },
     "playerRotation": {
       "type": "string",
       "pattern": "^-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*$",
-      "description": "Rotation quaternion du joueur au format 'x,y,z,w'"
+      "description": "Quaternion rotation of the player, formatted as 'x,y,z,w'"
     },
     "playerGaugeOxygen": {
       "type": "number",
       "minimum": 0,
-      "description": "Niveau de la jauge d'oxygène (float Unity — sérialisé avec .0)"
+      "description": "Oxygen gauge level (Unity float — serialized with a trailing .0)"
     },
     "playerGaugeThirst": {
       "type": "number",
       "minimum": 0,
-      "description": "Niveau de la jauge d'hydratation (float Unity — sérialisé avec .0)"
+      "description": "Hydration gauge level (Unity float — serialized with a trailing .0)"
     },
     "playerGaugeHealth": {
       "type": "number",
       "minimum": 0,
-      "description": "Niveau de la jauge de santé (float Unity — sérialisé avec .0)"
+      "description": "Health gauge level (Unity float — serialized with a trailing .0)"
     },
     "playerGaugeToxic": {
       "type": "number",
       "minimum": 0,
-      "description": "Niveau de toxicité du joueur (float Unity — sérialisé avec .0 ; plus bas = mieux)"
+      "description": "Player toxicity level (Unity float — serialized with a trailing .0; lower is better)"
     },
     "host": {
       "type": "boolean",
-      "description": "true si ce joueur est l'hôte de la session. Un seul joueur peut être host."
+      "description": "true when this player hosts the session. Only one player can be the host."
     },
     "planetId": {
       "type": "string",
-      "description": "Planète actuelle du joueur (doit correspondre à la planète de l'hôte)"
+      "description": "Planet the player is currently on (must match the host's planet)"
     },
     "cameraView": {
       "type": "integer",
-      "description": "Vue caméra du joueur (ajouté par une mise à jour du jeu)"
+      "description": "Player camera view (added by a game update)"
     },
     "totalCraftedObjects": {
       "type": "integer",
       "minimum": 0,
-      "description": "Nombre total d'objets fabriqués par le joueur (ajouté par une mise à jour du jeu)"
+      "description": "Total number of objects crafted by the player (added by a game update)"
     },
     "totalTerraTokenEarned": {
       "type": "integer",
       "minimum": 0,
-      "description": "Nombre total de terra tokens gagnés par le joueur (ajouté par une mise à jour du jeu)"
+      "description": "Total number of terra tokens earned by the player (added by a game update)"
     }
   }
 }

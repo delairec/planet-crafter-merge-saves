@@ -1,85 +1,85 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "section3-world-objects.schema.json",
-  "title": "Section 3 — World Objects",
-  "description": "Objet du monde (bâtiment, ressource, plante, animal…). Clé de domaine : id. Seuls id et gId sont systématiquement présents.",
+  "title": "Section 3 — World objects",
+  "description": "World object (building, resource, plant, animal…). Domain key: id. Only id and gId are always present.",
   "type": "object",
   "required": ["id", "gId"],
   "additionalProperties": false,
   "properties": {
     "id": {
       "type": "integer",
-      "description": "Identifiant unique de l'objet dans la sauvegarde"
+      "description": "Unique identifier of the object within the save"
     },
     "gId": {
       "type": "string",
-      "description": "Game ID — type/prefab de l'objet (ex: 'WindTurbineT1', 'EscapePodToxicity')"
+      "description": "Game ID — type/prefab of the object (e.g. 'WindTurbineT1', 'EscapePodToxicity')"
     },
     "pos": {
       "type": "string",
       "pattern": "^-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*$",
-      "description": "Position 3D de l'objet au format 'x,y,z'"
+      "description": "3D position of the object, formatted as 'x,y,z'"
     },
     "rot": {
       "type": "string",
-      "description": "Rotation quaternion de l'objet au format 'x,y,z,w'"
+      "description": "Quaternion rotation of the object, formatted as 'x,y,z,w'"
     },
     "planet": {
       "type": "integer",
-      "description": "Id numérique de la planète (ex: 110910045 pour Toxicity)"
+      "description": "Numeric planet id (e.g. 110910045 for Toxicity)"
     },
     "count": {
       "type": "string",
-      "description": "Quantité ou état cumulé (ex: '0,125' pour un gisement de minerai)"
+      "description": "Accumulated quantity or state (e.g. '0,125' for an ore deposit)"
     },
     "grwth": {
       "type": "integer",
-      "description": "Progression de croissance (plantes) — stocké comme integer par Unity"
+      "description": "Growth progress (plants) — stored as an integer by Unity"
     },
     "pnls": {
       "type": "string",
-      "description": "Puissance produite (panneaux solaires, générateurs)"
+      "description": "Power produced (solar panels, generators)"
     },
     "color": {
       "type": "string",
-      "description": "Couleur RGBA de l'objet"
+      "description": "RGBA color of the object"
     },
     "trtInd": {
       "type": "integer",
-      "description": "Index de l'étape de terraformation associée"
+      "description": "Index of the associated terraformation stage"
     },
     "liId": {
       "type": "integer",
-      "description": "Id d'une liste interne (logistique, drones)"
+      "description": "Id of an internal list (logistics, drones)"
     },
     "text": {
       "type": "string",
-      "description": "Texte affiché sur l'objet (panneaux, enseignes)"
+      "description": "Text displayed on the object (signs, panels)"
     },
     "liGrps": {
       "type": "string",
-      "description": "Groupes logistiques associés à l'objet"
+      "description": "Logistic groups associated with the object"
     },
     "linkedWo": {
       "type": "integer",
-      "description": "→ WorldObject.id — id de l'objet WorldObject lié (ex: machine ↔ inventaire)"
+      "description": "→ WorldObject.id — id of the linked world object (e.g. machine ↔ inventory)"
     },
     "siIds": {
       "type": "string",
-      "description": "Ids CSV de sous-inventaires internes à l'objet"
+      "description": "CSV ids of the sub-inventories internal to the object"
     },
     "trtVal": {
       "type": "integer",
-      "description": "Contribution numérique à la terraformation — stocké comme integer par Unity"
+      "description": "Numeric contribution to terraformation — stored as an integer by Unity"
     },
     "hunger": {
       "type": "number",
       "minimum": 0,
-      "description": "Niveau de faim d'un animal (float Unity — sérialisé avec .0)"
+      "description": "Hunger level of an animal (Unity float — serialized with a trailing .0)"
     },
     "set": {
       "type": "integer",
-      "description": "Identifiant de set d'équipement"
+      "description": "Equipment set identifier"
     }
   }
 }

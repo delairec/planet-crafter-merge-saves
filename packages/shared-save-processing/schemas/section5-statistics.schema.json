@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "section5-statistics.schema.json",
-  "title": "Section 5 — Statistiques",
-  "description": "Statistiques globales de la partie. Contient une seule entrée. Les valeurs sont sommées lors du merge.",
+  "title": "Section 5 — Statistics",
+  "description": "Global game statistics. Holds a single entry. Values are summed when saves are merged.",
   "type": "object",
   "required": ["craftedObjects", "totalSaveFileLoad", "totalSaveFileTime"],
   "additionalProperties": false,
@@ -10,17 +10,17 @@
     "craftedObjects": {
       "type": "integer",
       "minimum": 0,
-      "description": "Nombre total d'objets craftés depuis le début de la partie"
+      "description": "Total number of objects crafted since the beginning of the game"
     },
     "totalSaveFileLoad": {
       "type": "integer",
       "minimum": 0,
-      "description": "Nombre de fois que la sauvegarde a été chargée"
+      "description": "Number of times the save has been loaded"
     },
     "totalSaveFileTime": {
       "type": "integer",
       "minimum": 0,
-      "description": "Temps total de jeu enregistré, en secondes"
+      "description": "Total recorded play time, in seconds"
     }
   }
 }
