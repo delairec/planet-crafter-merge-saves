@@ -101,6 +101,10 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   ButterflyFarm1: 30,
   ButterflyFarm2: 45,
   ButterflyFarm3: 196,
+  // Outdoor farms, per https://planet-crafter.fandom.com/wiki/Outdoor_Farm (game v2.102):
+  // Outdoor farm -45.5 kW/s, T2 Outdoor farm -165.00 kW/s.
+  Farm1: 45.5,
+  Farm2: 165,
   Optimizer1: 50,
   Optimizer2: 150
 };
