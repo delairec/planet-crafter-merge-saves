@@ -79,7 +79,7 @@ describe('Merge CLI', () => {
       expect(writeTextFile.mock.calls[0][0]).toBe(MERGED_SAVE_OUTPUT_PATH);
     });
 
-    it('should write a non-empty merged save string', async () => {
+    it('should write the save string merged from both inputs', async () => {
       // Arrange
       readDirectory.mockResolvedValueOnce([INPUT_SUBFOLDER_ALPHA]);
       readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME]);
@@ -95,8 +95,9 @@ describe('Merge CLI', () => {
 
       // Assert
       const writtenContent = writeTextFile.mock.calls[0][1];
-      expect(typeof writtenContent).toBe('string');
-      expect(writtenContent.length).toBeGreaterThan(0);
+      const [globalMetadataSection] = writtenContent.split('\n@\n');
+      expect(globalMetadataSection)
+        .toBe('{"terraTokens":30,"allTimeTerraTokens":30,"unlockedGroups":"BootsSpeed1","openedInstanceSeed":0,"openedInstanceTimeLeft":0}');
     });
   });
 
