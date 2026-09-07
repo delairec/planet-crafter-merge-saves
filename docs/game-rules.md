@@ -190,7 +190,7 @@
 
 **Rule GR-ID-1:** After all sections are merged, every `id` in the combined inventory + world object list must be unique.
 
-**Rule GR-ID-2:** When a duplicate `id` is found (same numeric value used for two different logical objects — one from each save), the **later-encountered** entry receives a new id generated from a monotonically increasing sequence seeded above the current maximum id.
+**Rule GR-ID-2:** When a duplicate `id` is found (same numeric value used for two different logical objects — one from each save), the **later-encountered** entry receives a new id generated from a monotonically increasing sequence. The sequence is seeded, before a single id is handed out, above the maximum id of *every* section sharing the numbering space GR-ID-1 governs — inventories **and** world objects. Seeding on the inventories alone would let the first generated id land on an id a world object already carries. Player ids are deliberately excluded from the seed: they are Steam identifiers well beyond `Number.MAX_SAFE_INTEGER`, for which `id + 1 === id`, so a sequence seeded on them would hand out the same id forever.
 
 **Rule GR-ID-3:** All back-references are updated to match remapped ids:
 - `Player.inventoryId` and `Player.equipmentId` → remapped inventory ids.
