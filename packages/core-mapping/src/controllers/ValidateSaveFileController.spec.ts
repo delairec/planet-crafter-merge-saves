@@ -8,7 +8,7 @@ describe('ValidateSaveFileController', () => {
     const viewModel = await ValidateSaveFileController.validateSaveFile('Save-A.json', createFakeSaveContent());
 
     // Assert
-    expect(viewModel).toEqual({status: 'valid', errorMessages: [], errors: [], warnings: []});
+    expect(viewModel).toEqual({status: 'valid', errors: [], warnings: []});
   });
 
   it('should report the errors of an invalid save file', async () => {
@@ -18,7 +18,6 @@ describe('ValidateSaveFileController', () => {
     // Assert
     expect(viewModel).toEqual({
       status: 'invalid',
-      errorMessages: ['Expected 11 sections but found 1'],
       errors: [{message: 'Expected 11 sections but found 1', location: null}],
       warnings: []
     });
@@ -31,7 +30,6 @@ describe('ValidateSaveFileController', () => {
     // Assert
     expect(viewModel).toEqual({
       status: 'valid',
-      errorMessages: [],
       errors: [],
       warnings: ['This save was created by an older version of the game and has been adapted to the current format. The obsolete Terrain Layers section was ignored.']
     });

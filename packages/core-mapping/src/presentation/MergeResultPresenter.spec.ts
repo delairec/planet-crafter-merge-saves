@@ -17,8 +17,6 @@ describe('MergeResultPresenter', () => {
         status: 'success',
         fileName: 'merged.json',
         content: 'merged content',
-        saveAErrorMessages: [],
-        saveBErrorMessages: [],
         saveAErrors: [],
         saveBErrors: [],
         saveAWarningMessages: [],
@@ -40,7 +38,7 @@ describe('MergeResultPresenter', () => {
   });
 
   describe('When presenting invalid save files', () => {
-    it('should update the view model with the validation error status and each save error messages', () => {
+    it('should update the view model with the validation error status and each save errors', () => {
       // Arrange
       const presenter = new MergeResultPresenter();
 
@@ -52,8 +50,6 @@ describe('MergeResultPresenter', () => {
         status: 'validationError',
         fileName: '',
         content: '',
-        saveAErrorMessages: ['Invalid JSON: contentA'],
-        saveBErrorMessages: [],
         saveAErrors: [{message: 'Invalid JSON: contentA', location: null}],
         saveBErrors: [],
         saveAWarningMessages: [],

@@ -12,7 +12,7 @@ describe('LoadAndValidateSaveFileController', () => {
       // Assert
       expect(viewModel.status).toBe('invalid');
       expect(viewModel.sections).toBeNull();
-      expect(viewModel.errorMessages).toEqual(['Invalid file extension: expected a .json file.']);
+      expect(viewModel.errors).toEqual([{message: 'Invalid file extension: expected a .json file.', location: null}]);
     });
   });
 
@@ -24,7 +24,7 @@ describe('LoadAndValidateSaveFileController', () => {
       // Assert
       expect(viewModel.status).toBe('valid');
       expect(viewModel.sections).not.toBeNull();
-      expect(viewModel.errorMessages).toEqual([]);
+      expect(viewModel.errors).toEqual([]);
       expect(viewModel.warnings).toEqual([]);
     });
   });
@@ -37,7 +37,7 @@ describe('LoadAndValidateSaveFileController', () => {
       // Assert
       expect(viewModel.status).toBe('invalid');
       expect(viewModel.sections).toBeNull();
-      expect(viewModel.errorMessages).toEqual(['Expected 11 sections but found 1']);
+      expect(viewModel.errors).toEqual([{message: 'Expected 11 sections but found 1', location: null}]);
     });
   });
 

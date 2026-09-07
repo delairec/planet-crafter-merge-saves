@@ -5,7 +5,7 @@ import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue';
 describe('SaveFileValidationPresenter', () => {
 
   describe('When presenting a valid save file', () => {
-    it('should update the view model with the valid status and no error messages', () => {
+    it('should update the view model with the valid status and no error', () => {
       // Arrange
       const presenter = new SaveFileValidationPresenter();
 
@@ -13,7 +13,7 @@ describe('SaveFileValidationPresenter', () => {
       presenter.presentValidSaveFile([]);
 
       // Assert
-      expect(presenter.viewModel).toEqual({status: 'valid', errorMessages: [], errors: [], warnings: []});
+      expect(presenter.viewModel).toEqual({status: 'valid', errors: [], warnings: []});
     });
 
     it('should translate the warning codes into user messages', () => {
@@ -29,7 +29,7 @@ describe('SaveFileValidationPresenter', () => {
   });
 
   describe('When presenting an invalid save file', () => {
-    it('should update the view model with the invalid status and the formatted error messages', () => {
+    it('should update the view model with the invalid status and the formatted errors', () => {
       // Arrange
       const presenter = new SaveFileValidationPresenter();
 
@@ -39,7 +39,6 @@ describe('SaveFileValidationPresenter', () => {
       // Assert
       expect(presenter.viewModel).toEqual({
         status: 'invalid',
-        errorMessages: ['Invalid file extension: expected a .json file.'],
         errors: [{message: 'Invalid file extension: expected a .json file.', location: null}],
         warnings: []
       });

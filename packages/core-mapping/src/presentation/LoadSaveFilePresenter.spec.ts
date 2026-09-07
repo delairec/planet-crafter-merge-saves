@@ -22,7 +22,6 @@ describe('LoadSaveFilePresenter', () => {
       expect(presenter.viewModel).toEqual({
         status: 'valid',
         sections: emptySections,
-        errorMessages: ['Failed to parse world object line: {'],
         errors: [{message: 'Failed to parse world object line: {', location: null}],
         warnings: []
       });
@@ -41,7 +40,7 @@ describe('LoadSaveFilePresenter', () => {
   });
 
   describe('When presenting an invalid save file', () => {
-    it('should update the view model with the invalid status and the formatted error messages', () => {
+    it('should update the view model with the invalid status and the formatted errors', () => {
       // Arrange
       const presenter = new LoadSaveFilePresenter();
 
@@ -52,7 +51,6 @@ describe('LoadSaveFilePresenter', () => {
       expect(presenter.viewModel).toEqual({
         status: 'invalid',
         sections: null,
-        errorMessages: ['Invalid file extension: expected a .json file.'],
         errors: [{message: 'Invalid file extension: expected a .json file.', location: null}],
         warnings: []
       });

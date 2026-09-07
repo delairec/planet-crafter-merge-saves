@@ -10,7 +10,6 @@ export interface SaveValidationErrorViewModel {
 
 export interface SaveFileValidationViewModel {
   status: 'idle' | 'valid' | 'invalid';
-  errorMessages: string[];
   errors: SaveValidationErrorViewModel[];
   warnings: string[];
 }

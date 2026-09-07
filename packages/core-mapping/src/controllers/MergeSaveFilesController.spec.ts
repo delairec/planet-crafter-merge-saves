@@ -36,8 +36,8 @@ describe('MergeSaveFilesController', () => {
 
     // Assert
     expect(viewModel.status).toBe('validationError');
-    expect(viewModel.saveAErrorMessages).toEqual(['Expected 11 sections but found 1']);
-    expect(viewModel.saveBErrorMessages).toEqual([]);
+    expect(viewModel.saveAErrors).toEqual([{message: 'Expected 11 sections but found 1', location: null}]);
+    expect(viewModel.saveBErrors).toEqual([]);
   });
 
   it('should report a user message about the format adaptation when a merged save is in the legacy format', async () => {

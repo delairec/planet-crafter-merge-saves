@@ -3,7 +3,6 @@ import {ValidationIssue} from "../application/ports/ValidationIssue";
 import {ParsedSections} from "shared-save-processing/gameDefinitions";
 import {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
 import {LoadSaveFileViewModel} from "./viewModels/LoadSaveFileViewModel";
-import {formatValidationIssue} from "./formatValidationIssue";
 import {formatValidationError} from "./formatValidationError";
 import {formatSaveWarning} from "./formatSaveWarning";
 
@@ -11,7 +10,7 @@ export class LoadSaveFilePresenter implements LoadAndValidateSaveFilePresenterPo
   private _viewModel: LoadSaveFileViewModel;
 
   constructor() {
-    this._viewModel = {status: 'idle', sections: null, errorMessages: [], errors: [], warnings: []};
+    this._viewModel = {status: 'idle', sections: null, errors: [], warnings: []};
   }
 
   get viewModel(): LoadSaveFileViewModel {
@@ -22,7 +21,6 @@ export class LoadSaveFilePresenter implements LoadAndValidateSaveFilePresenterPo
     this._viewModel = {
       status: 'invalid',
       sections: null,
-      errorMessages: errors.map(formatValidationIssue),
       errors: errors.map(formatValidationError),
       warnings: warnings.map(formatSaveWarning)
     };
@@ -36,7 +34,6 @@ export class LoadSaveFilePresenter implements LoadAndValidateSaveFilePresenterPo
     this._viewModel = {
       status: 'valid',
       sections,
-      errorMessages: errors,
       errors: errors.map(message => ({message, location: null})),
       warnings: warnings.map(formatSaveWarning)
     };
