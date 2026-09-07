@@ -105,6 +105,19 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   // Outdoor farm -45.5 kW/s, T2 Outdoor farm -165.00 kW/s.
   Farm1: 45.5,
   Farm2: 165,
+  // Animal husbandry and wildlife machines, each per its own wiki page (game v2.102):
+  // Amphibian Farm -155 kW/s  https://planet-crafter.fandom.com/wiki/Amphibian_Farm
+  // Animal Shelter -270 kW    https://planet-crafter.fandom.com/wiki/Animal_Shelter
+  // Animal Feeder -95 kW/s    https://planet-crafter.fandom.com/wiki/Animal_Feeder
+  // Ecosystem -325 kW/s       https://planet-crafter.fandom.com/wiki/Ecosystem
+  // Silk Generator -38.00 kW/s        https://planet-crafter.fandom.com/wiki/Silk_Generator
+  // Water Life Collector -105.50 kW/s https://planet-crafter.fandom.com/wiki/Water_Life_Collector
+  AmphibiansFarm1: 155,
+  AnimalShelter1: 270,
+  AnimalFeeder1: 95,
+  Ecosystem1: 325,
+  SilkGenerator: 38,
+  WaterLifeCollector1: 105.5,
   Optimizer1: 50,
   Optimizer2: 150
 };
