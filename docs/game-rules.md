@@ -88,7 +88,7 @@
 
 **Rule GR-PLAYER-1:** Players are deduplicated by `name`. When the same name appears in both saves, the **entire** player object from save A is kept; no field-level merge is performed. The save-B version is discarded (including its inventory and equipment).
 
-**Rule GR-PLAYER-2:** Exactly one player in the output may have `host === true`: the player who was host in save A. All other `host` fields are set to `false`.
+**Rule GR-PLAYER-2:** At most one player in the output has `host === true`: the save A entry flagged as host, identified by its position in save A and never by its `id` (a Steam account identifier, reused across saves and not unique). When save A flags no host, the first kept save B host is retained. Every other `host` field is set to `false`.
 
 **Rule GR-PLAYER-3:** Players from save B whose `name` does not exist in save A are appended to the merged list.
 
