@@ -4,13 +4,14 @@ import {ParsedSections} from "shared-save-processing/gameDefinitions";
 import {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
 import {LoadSaveFileViewModel} from "./viewModels/LoadSaveFileViewModel";
 import {formatValidationIssue} from "./formatValidationIssue";
+import {formatValidationError} from "./formatValidationError";
 import {formatSaveWarning} from "./formatSaveWarning";
 
 export class LoadSaveFilePresenter implements LoadAndValidateSaveFilePresenterPort {
   private _viewModel: LoadSaveFileViewModel;
 
   constructor() {
-    this._viewModel = {status: 'idle', sections: null, errorMessages: [], warnings: []};
+    this._viewModel = {status: 'idle', sections: null, errorMessages: [], errors: [], warnings: []};
   }
 
   get viewModel(): LoadSaveFileViewModel {
@@ -18,10 +19,26 @@ export class LoadSaveFilePresenter implements LoadAndValidateSaveFilePresenterPo
   }
 
   presentInvalidSaveFile(errors: ValidationIssue[], warnings: SaveWarningCode[]): void {
-    this._viewModel = {status: 'invalid', sections: null, errorMessages: errors.map(formatValidationIssue), warnings: warnings.map(formatSaveWarning)};
+    this._viewModel = {
+      status: 'invalid',
+      sections: null,
+      errorMessages: errors.map(formatValidationIssue),
+      errors: errors.map(formatValidationError),
+      warnings: warnings.map(formatSaveWarning)
+    };
   }
 
+  /**
+   * The errors of a save that parsed are the parser's own sentences: they name no section and no
+   * entry, so they reach the screen without a location.
+   */
   presentLoadedSaveFile(sections: ParsedSections, errors: string[], warnings: SaveWarningCode[]): void {
-    this._viewModel = {status: 'valid', sections, errorMessages: errors, warnings: warnings.map(formatSaveWarning)};
+    this._viewModel = {
+      status: 'valid',
+      sections,
+      errorMessages: errors,
+      errors: errors.map(message => ({message, location: null})),
+      warnings: warnings.map(formatSaveWarning)
+    };
   }
 }

@@ -23,6 +23,7 @@ describe('LoadSaveFilePresenter', () => {
         status: 'valid',
         sections: emptySections,
         errorMessages: ['Failed to parse world object line: {'],
+        errors: [{message: 'Failed to parse world object line: {', location: null}],
         warnings: []
       });
     });
@@ -52,6 +53,7 @@ describe('LoadSaveFilePresenter', () => {
         status: 'invalid',
         sections: null,
         errorMessages: ['Invalid file extension: expected a .json file.'],
+        errors: [{message: 'Invalid file extension: expected a .json file.', location: null}],
         warnings: []
       });
     });
@@ -65,6 +67,17 @@ describe('LoadSaveFilePresenter', () => {
 
       // Assert
       expect(presenter.viewModel.warnings).toEqual(['This save was created by an older version of the game and has been adapted to the current format. The obsolete Terrain Layers section was ignored.']);
+    });
+
+    it('should tell where in the save each error was found', () => {
+      // Arrange
+      const presenter = new LoadSaveFilePresenter();
+
+      // Act
+      presenter.presentInvalidSaveFile([{code: VALIDATION_ISSUE_CODES.INVALID_JSON, detail: 'Invalid JSON: {', section: 2, entryIndex: 1}], []);
+
+      // Assert
+      expect(presenter.viewModel.errors).toEqual([{message: 'Invalid JSON: {', location: 'Players (section 2), entry 1'}]);
     });
   });
 });

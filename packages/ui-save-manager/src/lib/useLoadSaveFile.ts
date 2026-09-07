@@ -3,13 +3,14 @@
 import {Accessor, createSignal} from 'solid-js';
 import {LoadAndValidateSaveFileController} from "core-mapping/controllers/LoadAndValidateSaveFileController";
 import {MergeResultViewModel} from "core-mapping/presentation/viewModels/MergeResultViewModel";
+import {SaveValidationErrorViewModel} from "core-mapping/presentation/viewModels/SaveFileValidationViewModel";
 import {ParsedSections} from "shared-save-processing/gameDefinitions";
 import {yieldToPaint} from "./yieldToPaint";
 
 export interface LoadSaveFile {
   file: Accessor<File | null>;
   sections: Accessor<ParsedSections | null>;
-  errors: Accessor<string[]>;
+  errors: Accessor<SaveValidationErrorViewModel[]>;
   warnings: Accessor<string[]>;
   mergeResult: Accessor<MergeResultViewModel | null>;
   isLoading: Accessor<boolean>;
@@ -21,7 +22,7 @@ export interface LoadSaveFile {
 export function useLoadSaveFile(): LoadSaveFile {
   const [file, setFile] = createSignal<File | null>(null);
   const [sections, setSections] = createSignal<ParsedSections | null>(null);
-  const [errors, setErrors] = createSignal<string[]>([]);
+  const [errors, setErrors] = createSignal<SaveValidationErrorViewModel[]>([]);
   const [warnings, setWarnings] = createSignal<string[]>([]);
   const [mergeResult, setMergeResult] = createSignal<MergeResultViewModel | null>(null);
   const [isLoading, setIsLoading] = createSignal<boolean>(false);
@@ -58,7 +59,7 @@ export function useLoadSaveFile(): LoadSaveFile {
       const viewModel = await LoadAndValidateSaveFileController.loadAndValidateSaveFile(selectedFile.name, content);
 
       setSections(viewModel.sections);
-      setErrors(viewModel.errorMessages);
+      setErrors(viewModel.errors);
       setWarnings(viewModel.warnings);
     } finally {
       setIsLoading(false);
