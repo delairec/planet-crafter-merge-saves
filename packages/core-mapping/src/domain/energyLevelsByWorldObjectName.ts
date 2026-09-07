@@ -89,6 +89,13 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   ScreenToxic1: 2,
   biodome: 37,
   Biodome2: 75,
+  // Fish farms and aquariums, per https://planet-crafter.fandom.com/wiki/Fish_Farms_and_Aquariums
+  // (game v2.102): Fish Farm -155.5 kW/s, T2 Fish Farm -185 kW/s, T1 Aquarium -75 kW/s,
+  // T2 Aquarium -225 kW/s.
+  FishFarm1: 155.5,
+  FishFarm2: 185,
+  Aquarium1: 75,
+  Aquarium2: 225,
   Optimizer1: 50,
   Optimizer2: 150
 };
