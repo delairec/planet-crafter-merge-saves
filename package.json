@@ -24,7 +24,7 @@
     "test:watch": "bun test --watch",
     "test:ui": "bun run --filter ui-save-manager test:ui",
     "test:ui:install": "bun run --filter ui-save-manager test:ui:install",
-    "lint:types": "tsc --noEmit && tsc --noEmit --project packages/ui-save-manager/e2e",
+    "lint:types": "tsc --noEmit && bun run --filter ui-save-manager lint:types",
     "build:ui": "bun run --filter ui-save-manager build",
     "audit:quality": "bun run check:assertions && bun run fallow:quality && bun run fallow:health",
     "check:assertions": "bun scripts/check-test-assertions.ts",
