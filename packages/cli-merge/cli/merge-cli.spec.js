@@ -1,6 +1,11 @@
 import {beforeEach, describe, expect, it, mock, spyOn} from 'bun:test';
 import {initMergeCli} from './merge-cli.js';
-import {FAKE_SAVE_STRING_A, FAKE_SAVE_STRING_B, LEGACY_FAKE_SAVE_STRING_A} from '../testing/fakeSaveStrings.js';
+import {
+  FAKE_SAVE_STRING_A,
+  FAKE_SAVE_STRING_B,
+  FAKE_SAVE_STRING_WITH_INVALID_ENTRY,
+  LEGACY_FAKE_SAVE_STRING_A
+} from '../testing/fakeSaveStrings.js';
 import {
   MERGED_SAVE_OUTPUT_PATH,
   SAVE_A_FILENAME,
@@ -306,6 +311,43 @@ describe('Merge CLI', () => {
 
       // Assert
       expect(exitProcess).toHaveBeenCalledWith(0);
+    });
+  });
+
+  describe('When a folder contains a save with an invalid entry', () => {
+    beforeEach(() => {
+      readDirectory.mockResolvedValueOnce([INPUT_SUBFOLDER_ALPHA]);
+      readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME]);
+      readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME]);
+      readTextFile.mockImplementation((path) => {
+        if (path === SAVE_A_INPUT_PATH) return Promise.resolve(FAKE_SAVE_STRING_WITH_INVALID_ENTRY);
+        if (path === SAVE_B_INPUT_PATH) return Promise.resolve(FAKE_SAVE_STRING_B);
+        return Promise.reject(new Error(`Unexpected path: ${path}`));
+      });
+    });
+
+    it('should tell where in the save the error was found', async () => {
+      // Act
+      await main();
+
+      // Assert
+      expect(consoleErrorSpy).toHaveBeenCalledWith('  [save A] [Players (section 2), entry 1] Invalid JSON: { broken entry');
+    });
+
+    it('should name the folder the invalid save comes from', async () => {
+      // Act
+      await main();
+
+      // Assert
+      expect(consoleErrorSpy).toHaveBeenCalledWith(`✖ Folder "${INPUT_SUBFOLDER_ALPHA}" contains an invalid save file:`);
+    });
+
+    it('should write no merged file', async () => {
+      // Act
+      await main();
+
+      // Assert
+      expect(writeTextFile).not.toHaveBeenCalled();
     });
   });
 });

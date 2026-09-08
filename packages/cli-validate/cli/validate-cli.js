@@ -3,6 +3,8 @@ import {extractPlatformParameter} from 'shared-platforms/extractPlatformParamete
 import {createPlatform} from 'shared-platforms/platform.js';
 import {ValidateSaveFileController} from 'core-mapping/controllers/ValidateSaveFileController';
 
+/** @import { SaveValidationMessageViewModel } from 'core-mapping/presentation/viewModels/SaveFileValidationViewModel' */
+
 const USAGE_MESSAGE = `Usage: bun validate-cli.js --file=<path-to-save-file>`;
 
 const {readTextFile, exitProcess, isEntryPoint} = createPlatform(extractPlatformParameter(getCliArguments()));
@@ -41,7 +43,7 @@ export function initValidateCli({readTextFile, exitProcess, isEntryPoint, getCli
     const {status, errors, warnings} = await ValidateSaveFileController.validateSaveFile(filePath, save);
 
     for (const warning of warnings) {
-      console.warn(`⚠ ${warning}`);
+      console.warn(`⚠ ${formatMessageLine(warning)}`);
     }
 
     if (status === 'valid') {
@@ -50,7 +52,7 @@ export function initValidateCli({readTextFile, exitProcess, isEntryPoint, getCli
     } else {
       console.error(`✖ ${filePath} has ${errors.length} error(s):\n`);
       for (const error of errors) {
-        console.error(`  ${formatErrorLine(error)}`);
+        console.error(`  ${formatMessageLine(error)}`);
       }
       exitProcess(1);
     }
@@ -59,9 +61,10 @@ export function initValidateCli({readTextFile, exitProcess, isEntryPoint, getCli
   return {isEntryPoint, main, exitProcess, getCliArguments};
 }
 
-function formatErrorLine(error) {
-  if (error.section === undefined) {
-    return error.message;
+/** @param {SaveValidationMessageViewModel} validationMessage */
+function formatMessageLine({message, location}) {
+  if (location === null) {
+    return message;
   }
-  return `[section ${error.section}, entry ${error.entryIndex}] ${error.message}`;
+  return `[${location}] ${message}`;
 }

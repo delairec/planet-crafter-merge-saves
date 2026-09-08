@@ -2,7 +2,7 @@ import {MergeResultPresenterPort} from "../application/ports/MergeResultPresente
 import {ValidationIssue} from "../application/ports/ValidationIssue";
 import {SaveWarningCode} from "shared-save-processing/normalizeRawSections.js";
 import {MergeResultViewModel} from "./viewModels/MergeResultViewModel";
-import {formatValidationIssue} from "./formatValidationIssue";
+import {formatValidationError} from "./formatValidationError";
 import {formatSaveWarning} from "./formatSaveWarning";
 
 export class MergeResultPresenter implements MergeResultPresenterPort {
@@ -13,10 +13,10 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
       status: 'idle',
       fileName: '',
       content: '',
-      saveAErrorMessages: [],
-      saveBErrorMessages: [],
-      saveAWarningMessages: [],
-      saveBWarningMessages: []
+      saveAErrors: [],
+      saveBErrors: [],
+      saveAWarnings: [],
+      saveBWarnings: []
     };
   }
 
@@ -29,10 +29,10 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
       status: 'success',
       fileName,
       content,
-      saveAErrorMessages: [],
-      saveBErrorMessages: [],
-      saveAWarningMessages: saveAWarnings.map(formatSaveWarning),
-      saveBWarningMessages: saveBWarnings.map(formatSaveWarning)
+      saveAErrors: [],
+      saveBErrors: [],
+      saveAWarnings: saveAWarnings.map(formatSaveWarning),
+      saveBWarnings: saveBWarnings.map(formatSaveWarning)
     };
   }
 
@@ -41,10 +41,10 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
       status: 'validationError',
       fileName: '',
       content: '',
-      saveAErrorMessages: saveAErrors.map(formatValidationIssue),
-      saveBErrorMessages: saveBErrors.map(formatValidationIssue),
-      saveAWarningMessages: saveAWarnings.map(formatSaveWarning),
-      saveBWarningMessages: saveBWarnings.map(formatSaveWarning)
+      saveAErrors: saveAErrors.map(formatValidationError),
+      saveBErrors: saveBErrors.map(formatValidationError),
+      saveAWarnings: saveAWarnings.map(formatSaveWarning),
+      saveBWarnings: saveBWarnings.map(formatSaveWarning)
     };
   }
 }
