@@ -41,13 +41,13 @@ export default function MergeResultSection(props: MergeResultSectionProps) {
 
   return (
     <Show when={props.result()}>
-      <Show when={props.result()!.saveAWarningMessages.length > 0}>
+      <Show when={props.result()!.saveAWarnings.length > 0}>
         <ValidationMessagesList title={mergeResultSectionSaveAWarningsTitle} severity="warning"
-                                messages={props.result()!.saveAWarningMessages}/>
+                                messages={props.result()!.saveAWarnings}/>
       </Show>
-      <Show when={props.result()!.saveBWarningMessages.length > 0}>
+      <Show when={props.result()!.saveBWarnings.length > 0}>
         <ValidationMessagesList title={mergeResultSectionSaveBWarningsTitle} severity="warning"
-                                messages={props.result()!.saveBWarningMessages}/>
+                                messages={props.result()!.saveBWarnings}/>
       </Show>
 
       <Show when={isSuccess()}>

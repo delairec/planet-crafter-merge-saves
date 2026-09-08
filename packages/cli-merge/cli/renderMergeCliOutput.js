@@ -1,4 +1,4 @@
-/** @import { SaveValidationErrorViewModel } from 'core-mapping/presentation/viewModels/SaveFileValidationViewModel' */
+/** @import { SaveValidationMessageViewModel } from 'core-mapping/presentation/viewModels/SaveFileValidationViewModel' */
 
 /**
  * Rendering for the merge CLI. Diagnostics go to stderr, the merge result (output file paths) goes to stdout.
@@ -21,38 +21,38 @@ export function renderMergeSucceeded(outputPath) {
 
 /**
  * @param {string} folder
- * @param {SaveValidationErrorViewModel[]} saveAErrors
- * @param {SaveValidationErrorViewModel[]} saveBErrors
+ * @param {SaveValidationMessageViewModel[]} saveAErrors
+ * @param {SaveValidationMessageViewModel[]} saveBErrors
  */
 export function renderMergeFailed(folder, saveAErrors, saveBErrors) {
   console.error(`✖ Folder "${folder}" contains an invalid save file:`);
-  for (const error of saveAErrors) console.error(`  [save A] ${formatErrorLine(error)}`);
-  for (const error of saveBErrors) console.error(`  [save B] ${formatErrorLine(error)}`);
+  for (const error of saveAErrors) console.error(`  [save A] ${formatMessageLine(error)}`);
+  for (const error of saveBErrors) console.error(`  [save B] ${formatMessageLine(error)}`);
 }
 
-/** @param {SaveValidationErrorViewModel} error */
-function formatErrorLine(error) {
-  if (error.location === null) {
-    return error.message;
+/** @param {SaveValidationMessageViewModel} validationMessage */
+function formatMessageLine({message, location}) {
+  if (location === null) {
+    return message;
   }
-  return `[${error.location}] ${error.message}`;
+  return `[${location}] ${message}`;
 }
 
 /**
  * Reports the adaptations a save needed to match the current format. Not an error: the exit code is
  * unaffected and the merge goes on.
  * @param {string} folder
- * @param {string[]} saveAWarningMessages
- * @param {string[]} saveBWarningMessages
+ * @param {SaveValidationMessageViewModel[]} saveAWarnings
+ * @param {SaveValidationMessageViewModel[]} saveBWarnings
  */
-export function renderMergeWarnings(folder, saveAWarningMessages, saveBWarningMessages) {
-  if (saveAWarningMessages.length === 0 && saveBWarningMessages.length === 0) {
+export function renderMergeWarnings(folder, saveAWarnings, saveBWarnings) {
+  if (saveAWarnings.length === 0 && saveBWarnings.length === 0) {
     return;
   }
 
   console.error(`⚠ Folder "${folder}" contains a save adapted from an older format:`);
-  for (const message of saveAWarningMessages) console.error(`  [save A] ${message}`);
-  for (const message of saveBWarningMessages) console.error(`  [save B] ${message}`);
+  for (const warning of saveAWarnings) console.error(`  [save A] ${formatMessageLine(warning)}`);
+  for (const warning of saveBWarnings) console.error(`  [save B] ${formatMessageLine(warning)}`);
 }
 
 /** @param {string} inputDir */

@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'bun:test';
 import {MergeSaveFilesController} from './MergeSaveFilesController';
 import {createFakeSaveContent, createLegacyFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
+import {SaveValidationMessageViewModel} from '../presentation/viewModels/SaveFileValidationViewModel';
 
 describe('MergeSaveFilesController', () => {
   it('should merge two valid saves', async () => {
@@ -36,8 +37,8 @@ describe('MergeSaveFilesController', () => {
 
     // Assert
     expect(viewModel.status).toBe('validationError');
-    expect(viewModel.saveAErrors).toEqual([{message: 'Expected 11 sections but found 1', location: null}]);
-    expect(viewModel.saveBErrors).toEqual([]);
+    expect<SaveValidationMessageViewModel[]>(viewModel.saveAErrors).toEqual([{message: 'Expected 11 sections but found 1', location: null}]);
+    expect<SaveValidationMessageViewModel[]>(viewModel.saveBErrors).toEqual([]);
   });
 
   it('should report a user message about the format adaptation when a merged save is in the legacy format', async () => {
@@ -55,7 +56,10 @@ describe('MergeSaveFilesController', () => {
 
     // Assert
     expect(viewModel.status).toBe('success');
-    expect(viewModel.saveAWarningMessages).toEqual(['This save was created by an older version of the game and has been adapted to the current format. The obsolete Terrain Layers section was ignored.']);
-    expect(viewModel.saveBWarningMessages).toEqual([]);
+    expect<SaveValidationMessageViewModel[]>(viewModel.saveAWarnings).toEqual([{
+      message: 'This save was created by an older version of the game and has been adapted to the current format. The obsolete Terrain Layers section was ignored.',
+      location: null
+    }]);
+    expect<SaveValidationMessageViewModel[]>(viewModel.saveBWarnings).toEqual([]);
   });
 });

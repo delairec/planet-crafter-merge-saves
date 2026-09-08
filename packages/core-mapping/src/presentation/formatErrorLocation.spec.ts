@@ -82,7 +82,7 @@ describe('formatErrorLocation', () => {
         .filter(section => formatErrorLocation({section}) === `section ${section}`);
 
       // Assert
-      expect(sectionsWithoutOwnLabel).toEqual([]);
+      expect<number[]>(sectionsWithoutOwnLabel).toEqual([]);
     });
   });
 });

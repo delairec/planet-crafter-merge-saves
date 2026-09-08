@@ -15,8 +15,8 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
       content: '',
       saveAErrors: [],
       saveBErrors: [],
-      saveAWarningMessages: [],
-      saveBWarningMessages: []
+      saveAWarnings: [],
+      saveBWarnings: []
     };
   }
 
@@ -31,8 +31,8 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
       content,
       saveAErrors: [],
       saveBErrors: [],
-      saveAWarningMessages: saveAWarnings.map(formatSaveWarning),
-      saveBWarningMessages: saveBWarnings.map(formatSaveWarning)
+      saveAWarnings: saveAWarnings.map(formatSaveWarning),
+      saveBWarnings: saveBWarnings.map(formatSaveWarning)
     };
   }
 
@@ -43,8 +43,8 @@ export class MergeResultPresenter implements MergeResultPresenterPort {
       content: '',
       saveAErrors: saveAErrors.map(formatValidationError),
       saveBErrors: saveBErrors.map(formatValidationError),
-      saveAWarningMessages: saveAWarnings.map(formatSaveWarning),
-      saveBWarningMessages: saveBWarnings.map(formatSaveWarning)
+      saveAWarnings: saveAWarnings.map(formatSaveWarning),
+      saveBWarnings: saveBWarnings.map(formatSaveWarning)
     };
   }
 }

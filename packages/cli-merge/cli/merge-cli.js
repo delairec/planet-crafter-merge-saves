@@ -62,7 +62,7 @@ export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirec
         saveDisplayName: folder
       });
 
-      renderMergeWarnings(folder, viewModel.saveAWarningMessages, viewModel.saveBWarningMessages);
+      renderMergeWarnings(folder, viewModel.saveAWarnings, viewModel.saveBWarnings);
 
       if (viewModel.status !== 'success') {
         renderMergeFailed(folder, viewModel.saveAErrors, viewModel.saveBErrors);

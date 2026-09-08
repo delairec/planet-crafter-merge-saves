@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'bun:test';
 import {LoadAndValidateSaveFileController} from './LoadAndValidateSaveFileController';
 import {createFakeSaveContent, createLegacyFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
+import {LoadSaveFileViewModel} from '../presentation/viewModels/LoadSaveFileViewModel';
 
 describe('LoadAndValidateSaveFileController', () => {
 
@@ -10,9 +11,12 @@ describe('LoadAndValidateSaveFileController', () => {
       const viewModel = await LoadAndValidateSaveFileController.loadAndValidateSaveFile('Save-A.txt', createFakeSaveContent());
 
       // Assert
-      expect(viewModel.status).toBe('invalid');
-      expect(viewModel.sections).toBeNull();
-      expect(viewModel.errors).toEqual([{message: 'Invalid file extension: expected a .json file.', location: null}]);
+      expect<LoadSaveFileViewModel>(viewModel).toEqual({
+        status: 'invalid',
+        sections: null,
+        errors: [{message: 'Invalid file extension: expected a .json file.', location: null}],
+        warnings: []
+      });
     });
   });
 
@@ -22,10 +26,9 @@ describe('LoadAndValidateSaveFileController', () => {
       const viewModel = await LoadAndValidateSaveFileController.loadAndValidateSaveFile('Save-A.json', createFakeSaveContent());
 
       // Assert
-      expect(viewModel.status).toBe('valid');
+      // The parsed sections cannot be part of the expected literal: section 3 is a generator factory.
+      expect<LoadSaveFileViewModel>(viewModel).toMatchObject({status: 'valid', errors: [], warnings: []});
       expect(viewModel.sections).not.toBeNull();
-      expect(viewModel.errors).toEqual([]);
-      expect(viewModel.warnings).toEqual([]);
     });
   });
 
@@ -35,9 +38,12 @@ describe('LoadAndValidateSaveFileController', () => {
       const viewModel = await LoadAndValidateSaveFileController.loadAndValidateSaveFile('Save-A.json', 'not a valid save at all');
 
       // Assert
-      expect(viewModel.status).toBe('invalid');
-      expect(viewModel.sections).toBeNull();
-      expect(viewModel.errors).toEqual([{message: 'Expected 11 sections but found 1', location: null}]);
+      expect<LoadSaveFileViewModel>(viewModel).toEqual({
+        status: 'invalid',
+        sections: null,
+        errors: [{message: 'Expected 11 sections but found 1', location: null}],
+        warnings: []
+      });
     });
   });
 
@@ -47,8 +53,14 @@ describe('LoadAndValidateSaveFileController', () => {
       const viewModel = await LoadAndValidateSaveFileController.loadAndValidateSaveFile('Save-A.json', createLegacyFakeSaveContent());
 
       // Assert
-      expect(viewModel.status).toBe('valid');
-      expect(viewModel.warnings).toEqual(['This save was created by an older version of the game and has been adapted to the current format. The obsolete Terrain Layers section was ignored.']);
+      expect<LoadSaveFileViewModel>(viewModel).toMatchObject({
+        status: 'valid',
+        errors: [],
+        warnings: [{
+          message: 'This save was created by an older version of the game and has been adapted to the current format. The obsolete Terrain Layers section was ignored.',
+          location: null
+        }]
+      });
     });
   });
 });
