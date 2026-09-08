@@ -13,6 +13,9 @@ const FLOAT_FIELDS = Object.freeze(new Set([
  * reinterpreted from the text of another field.
  * @param {TerraformationLevel | Player | WorldObject | Record<string, unknown>} entry
  * @returns {string}
+ * @throws {Error} when a field holds a nested value. Only the first level is serialized here, so a
+ * nested value means the wire format is no longer flat: extend this module to apply the float
+ * notation below the first level instead of relaxing the check.
  */
 export function stringifyEntry(entry) {
   const fields = Object.entries(entry)
@@ -42,6 +45,10 @@ function stringifyField(key, value) {
  * @returns {string | undefined}
  */
 function stringifyValue(key, value) {
+  if (typeof value === 'object' && value !== null) {
+    throw new Error(`Unexpected save data: field "${key}" holds a nested value, while save entries are expected to be flat.`);
+  }
+
   if (FLOAT_FIELDS.has(key) && typeof value === 'number' && Number.isInteger(value)) {
     return `${value}.0`;
   }
