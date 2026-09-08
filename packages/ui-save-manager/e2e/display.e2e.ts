@@ -9,9 +9,7 @@ test.describe('Save display', () => {
       await page.goto('/');
 
       // Act
-      // The file field of the display flow carries no label: 'Choose File' is the accessible name
-      // Playwright computes for an unlabelled file input, on the three engines alike.
-      await page.getByRole('button', {name: 'Choose File'}).setInputFiles(validSaveFixturePath);
+      await page.getByLabel('Save file:').setInputFiles(validSaveFixturePath);
       await page.getByRole('button', {name: 'Visualize'}).click();
 
       // Assert
