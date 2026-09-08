@@ -26,7 +26,6 @@ describe('LoadAndValidateSaveFileController', () => {
       const viewModel = await LoadAndValidateSaveFileController.loadAndValidateSaveFile('Save-A.json', createFakeSaveContent());
 
       // Assert
-      // The parsed sections cannot be part of the expected literal: section 3 is a generator factory.
       expect<LoadSaveFileViewModel>(viewModel).toMatchObject({status: 'valid', errors: [], warnings: []});
       expect(viewModel.sections).not.toBeNull();
     });
