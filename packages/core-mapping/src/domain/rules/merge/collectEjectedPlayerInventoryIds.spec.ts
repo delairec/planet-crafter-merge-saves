@@ -4,7 +4,7 @@ import {collectEjectedPlayerInventoryIds} from './collectEjectedPlayerInventoryI
 
 describe('collectEjectedPlayerInventoryIds', () => {
   const basePlayer: Player = {
-    id: 76561198155441595,
+    id: 76561190000000000,
     name: 'Nikowa',
     inventoryId: 44,
     equipmentId: 45,

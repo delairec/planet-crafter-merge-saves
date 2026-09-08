@@ -27,7 +27,7 @@ const validSaveConfiguration = {
   gameStartLocation: 'Standard'
 };
 const validPlayer = {
-  id: 76561198155441595,
+  id: 76561190000000000,
   name: 'Nikowa',
   inventoryId: 44,
   equipmentId: 45,
