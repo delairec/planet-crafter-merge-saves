@@ -116,18 +116,18 @@ describe('Merge players', () => {
     });
   });
 
-  describe('When save A designates no host', () => {
+  describe('When save A holds no player entry', () => {
     it('should keep the save B host', () => {
       // Arrange
-      const guestInSaveA = {...playerFromSaveA, host: false};
+      const noPlayersFromSaveA: never[] = [];
       const hostInSaveB = {...playerFromSaveB, name: 'Aneta', host: true};
 
       // Act
-      const result = mergePlayers([guestInSaveA], [hostInSaveB]);
+      const result = mergePlayers(noPlayersFromSaveA, [hostInSaveB]);
 
       // Assert
       expect(result).toEqual({
-        fromSaveA: [{...guestInSaveA, host: false}],
+        fromSaveA: [],
         fromSaveB: [{...hostInSaveB, host: true}]
       });
     });
