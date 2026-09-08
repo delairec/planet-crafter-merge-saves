@@ -1,5 +1,9 @@
 import {describe, expect, it} from 'bun:test';
-import {createEnergyLevelsRawDataValueObject, createPlanetWorldObjectsValueObject} from './EnergyLevelsRawDataValueObject';
+import {
+  createEnergyLevelsRawDataValueObject,
+  createPlanetWorldObjectsValueObject,
+  EnergyLevelsRawDataValueObject
+} from './EnergyLevelsRawDataValueObject';
 import {InvalidSaveDataError} from '../errors/InvalidSaveDataError';
 
 describe('PlanetWorldObjectsValueObject', () => {
@@ -37,7 +41,12 @@ describe('EnergyLevelsRawDataValueObject', () => {
 
   it('should reject a non-array planets field', () => {
     // Arrange
-    const input = {allWorldObjects: [], inventories: [], planets: undefined as unknown as []};
+    const input: EnergyLevelsRawDataValueObject = {
+      allWorldObjects: [],
+      inventories: [],
+      // @ts-expect-error a `planets` field holding no array at all is the invalid save data under test
+      planets: undefined
+    };
 
     // Act & Assert
     expect(() => createEnergyLevelsRawDataValueObject(input)).toThrow(InvalidSaveDataError);
