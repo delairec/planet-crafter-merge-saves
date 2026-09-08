@@ -124,7 +124,8 @@ Checks typings in all the project files (using `tsc --noEmit` under the hood). E
 extending the root one and its own `lint:types` script, which the root script chains over the workspace: each package
 is therefore checked as a separate program, with the libraries it is entitled to. Only `ui-*` declares the DOM
 libraries, so a browser global referenced from a `core-*` or a `cli-*` package fails the check instead of resolving
-silently, and the `.tsx` files of the UI are covered.
+silently, and the `.tsx` files of the UI are covered. `ui-save-manager` runs two programs, its own and the one of
+`e2e/`, the Playwright types belonging to the scenarios alone.
 
 ```
 bun run audit
