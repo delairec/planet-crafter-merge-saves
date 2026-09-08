@@ -3,7 +3,7 @@ import {mergePlayers} from './mergePlayers';
 
 describe('Merge players', () => {
   const basePlayer = {
-    id: 76561198155441595,
+    id: 76561190000000000,
     name: 'Nikowa',
     inventoryId: 44,
     equipmentId: 45,
@@ -21,7 +21,7 @@ describe('Merge players', () => {
   };
 
   const playerFromSaveA = {...basePlayer};
-  const playerFromSaveB = {...basePlayer, id: 76561198055446664, name: 'Chileny', host: false};
+  const playerFromSaveB = {...basePlayer, id: 76561190000000030, name: 'Chileny', host: false};
 
   describe('When players are unique', () => {
     it('should keep the players of each save under their own origin', () => {
@@ -66,7 +66,7 @@ describe('Merge players', () => {
       // Arrange
       const hostInSaveA = {...playerFromSaveA, host: true};
       const guestInSaveA = {...playerFromSaveB, host: false};
-      const hostInSaveB = {...playerFromSaveB, host: true};
+      const hostInSaveB = {...playerFromSaveB, name: 'Anya', host: true};
 
       // Act
       const result = mergePlayers([hostInSaveA, guestInSaveA], [hostInSaveB]);
@@ -74,7 +74,61 @@ describe('Merge players', () => {
       // Assert
       expect(result).toEqual({
         fromSaveA: [{...hostInSaveA, host: true}, {...guestInSaveA, host: false}],
+        fromSaveB: [{...hostInSaveB, host: false}]
+      });
+    });
+  });
+
+  describe('When a save B player carries the save A host identifier', () => {
+    it('should mark only the save A host', () => {
+      // Arrange
+      const steamIdentifierSharedByBothPlayers = 76561190000000030;
+      const hostInSaveA = {...playerFromSaveA, id: steamIdentifierSharedByBothPlayers, host: true};
+      const hostInSaveB = {...playerFromSaveB, id: steamIdentifierSharedByBothPlayers, name: 'Anya', host: true};
+
+      // Act
+      const result = mergePlayers([hostInSaveA], [hostInSaveB]);
+
+      // Assert
+      expect(result).toEqual({
+        fromSaveA: [{...hostInSaveA, host: true}],
+        fromSaveB: [{...hostInSaveB, host: false}]
+      });
+    });
+  });
+
+  describe('When two save A players share an identifier', () => {
+    it('should mark only the player flagged as host in save A', () => {
+      // Arrange
+      const steamIdentifierSharedByBothPlayers = 76561190000000000;
+      const hostInSaveA = {...playerFromSaveA, id: steamIdentifierSharedByBothPlayers, host: true};
+      const guestInSaveA = {...playerFromSaveA, id: steamIdentifierSharedByBothPlayers, name: 'Chileny', host: false};
+      const noPlayersFromSaveB: never[] = [];
+
+      // Act
+      const result = mergePlayers([hostInSaveA, guestInSaveA], noPlayersFromSaveB);
+
+      // Assert
+      expect(result).toEqual({
+        fromSaveA: [{...hostInSaveA, host: true}, {...guestInSaveA, host: false}],
         fromSaveB: []
+      });
+    });
+  });
+
+  describe('When save A holds no player entry', () => {
+    it('should keep the save B host', () => {
+      // Arrange
+      const noPlayersFromSaveA: never[] = [];
+      const hostInSaveB = {...playerFromSaveB, name: 'Anya', host: true};
+
+      // Act
+      const result = mergePlayers(noPlayersFromSaveA, [hostInSaveB]);
+
+      // Assert
+      expect(result).toEqual({
+        fromSaveA: [],
+        fromSaveB: [{...hostInSaveB, host: true}]
       });
     });
   });

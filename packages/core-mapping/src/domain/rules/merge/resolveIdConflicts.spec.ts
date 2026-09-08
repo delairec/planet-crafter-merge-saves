@@ -128,7 +128,7 @@ describe('Resolve id conflicts', () => {
   describe('When a save B player owns an inventory that no save A player owns', () => {
     it('should point that player at its own renumbered inventory rather than at the save A one', () => {
       // Arrange
-      const playerFromSaveB = createPlayer({id: 2, name: 'Rrose', inventoryId: 44, equipmentId: 45});
+      const playerFromSaveB = createPlayer({id: 2, name: 'Chileny', inventoryId: 44, equipmentId: 45});
       const sections = createMergedSections({
         players: {fromSaveA: [createPlayer({id: 1, inventoryId: 3, equipmentId: 4})], fromSaveB: [playerFromSaveB]},
         inventories: {
