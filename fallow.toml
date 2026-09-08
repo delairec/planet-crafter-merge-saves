@@ -25,10 +25,7 @@ ignoreDependencies = [
     "bun",
     "@types/bun",
     "typescript",
-    "ui-save-manager",
-    # shared-platforms consumes it through a JSDoc `@import` directive, which fallow does not read.
-    # `bun run check:dependencies` reports a workspace dependency that is never imported, this one included.
-    "util-types"
+    "ui-save-manager"
 ]
 
 ignoreUnresolvedImports = [
