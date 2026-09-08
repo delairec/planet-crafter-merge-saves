@@ -66,7 +66,7 @@ describe('Merge players', () => {
       // Arrange
       const hostInSaveA = {...playerFromSaveA, host: true};
       const guestInSaveA = {...playerFromSaveB, host: false};
-      const hostInSaveB = {...playerFromSaveB, name: 'Aneta', host: true};
+      const hostInSaveB = {...playerFromSaveB, name: 'Anya', host: true};
 
       // Act
       const result = mergePlayers([hostInSaveA, guestInSaveA], [hostInSaveB]);
@@ -84,7 +84,7 @@ describe('Merge players', () => {
       // Arrange
       const steamIdentifierSharedByBothPlayers = 76561198055446664;
       const hostInSaveA = {...playerFromSaveA, id: steamIdentifierSharedByBothPlayers, host: true};
-      const hostInSaveB = {...playerFromSaveB, id: steamIdentifierSharedByBothPlayers, name: 'Aneta', host: true};
+      const hostInSaveB = {...playerFromSaveB, id: steamIdentifierSharedByBothPlayers, name: 'Anya', host: true};
 
       // Act
       const result = mergePlayers([hostInSaveA], [hostInSaveB]);
@@ -102,7 +102,7 @@ describe('Merge players', () => {
       // Arrange
       const steamIdentifierSharedByBothPlayers = 76561198155441595;
       const hostInSaveA = {...playerFromSaveA, id: steamIdentifierSharedByBothPlayers, host: true};
-      const guestInSaveA = {...playerFromSaveA, id: steamIdentifierSharedByBothPlayers, name: 'Chillie', host: false};
+      const guestInSaveA = {...playerFromSaveA, id: steamIdentifierSharedByBothPlayers, name: 'Chileny', host: false};
       const noPlayersFromSaveB: never[] = [];
 
       // Act
@@ -120,7 +120,7 @@ describe('Merge players', () => {
     it('should keep the save B host', () => {
       // Arrange
       const noPlayersFromSaveA: never[] = [];
-      const hostInSaveB = {...playerFromSaveB, name: 'Aneta', host: true};
+      const hostInSaveB = {...playerFromSaveB, name: 'Anya', host: true};
 
       // Act
       const result = mergePlayers(noPlayersFromSaveA, [hostInSaveB]);
