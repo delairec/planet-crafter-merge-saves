@@ -105,6 +105,32 @@ describe('stringifyEntry', () => {
     });
   });
 
+  describe('When a gauge or level field is absent from the entry', () => {
+    it('should serialize the remaining fields only', () => {
+      // Arrange
+      const worldObjectWithoutHunger = {id: 12, gId: 'Sign1'};
+
+      // Act
+      const result = stringifyEntry(worldObjectWithoutHunger);
+
+      // Assert
+      expect(result).toBe('{"id":12,"gId":"Sign1"}');
+    });
+  });
+
+  describe('When a gauge or level field holds no value', () => {
+    it('should omit it from the serialized entry', () => {
+      // Arrange
+      const worldObjectWithoutHungerValue = {id: 12, hunger: undefined};
+
+      // Act
+      const result = stringifyEntry(worldObjectWithoutHungerValue);
+
+      // Assert
+      expect(result).toBe('{"id":12}');
+    });
+  });
+
   describe('When a field is not a gauge or level field', () => {
     it('should serialize integer values without decimal notation', () => {
       // Arrange
@@ -126,6 +152,56 @@ describe('stringifyEntry', () => {
 
       // Assert
       expect(result).toBe('{"name":"Nikowa"}');
+    });
+  });
+
+  describe('When a text field contains the float notation marker', () => {
+    it('should serialize the text unchanged', () => {
+      // Arrange
+      const signWithMarkerLikeText = {id: 1, text: 'FLOAT:5', hunger: 3};
+
+      // Act
+      const result = stringifyEntry(signWithMarkerLikeText);
+
+      // Assert
+      expect(result).toBe('{"id":1,"text":"FLOAT:5","hunger":3.0}');
+    });
+  });
+
+  describe('When a field holds a nested value', () => {
+    it('should reject an entry carrying a nested object', () => {
+      // Arrange
+      const entryWithNestedObject = {id: 1, position: {x: 0, y: 0, z: 0}};
+
+      // Act
+      const serializeNestedObject = () => stringifyEntry(entryWithNestedObject);
+
+      // Assert
+      expect(serializeNestedObject).toThrow('Unexpected save data: field "position" holds a nested value, while save entries are expected to be flat.');
+    });
+
+    it('should reject an entry carrying a nested array', () => {
+      // Arrange
+      const entryWithNestedArray = {id: 1, inventory: [12, 13]};
+
+      // Act
+      const serializeNestedArray = () => stringifyEntry(entryWithNestedArray);
+
+      // Assert
+      expect(serializeNestedArray).toThrow('Unexpected save data: field "inventory" holds a nested value, while save entries are expected to be flat.');
+    });
+  });
+
+  describe('When a field holds an empty value', () => {
+    it('should serialize it as null', () => {
+      // Arrange
+      const worldObjectWithoutText = {id: 12, text: null};
+
+      // Act
+      const result = stringifyEntry(worldObjectWithoutText);
+
+      // Assert
+      expect(result).toBe('{"id":12,"text":null}');
     });
   });
 
