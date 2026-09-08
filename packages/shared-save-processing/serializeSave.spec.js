@@ -2,78 +2,13 @@
 
 import {describe, it, expect} from 'bun:test';
 import {serializeSave} from './serializeSave.js';
+import {createPlayer, createSaveConfiguration, createStatistics, createTerraformationLevel} from './testing/createSaveRecords.js';
 
 describe('serializeSave', () => {
   /** @type {SerializeSaveParams} */
   const emptyParams = {
-    metadata: [],
-    terraformationLevels: [],
-    players: [],
-    worldObjects: [],
-    inventories: [],
-    statistics: [],
-    mailboxes: [],
-    storyEvents: [],
-    saveConfigurations: [],
-    worldEvents: [],
-  };
-
-  const statistics = {craftedObjects: 10, totalSaveFileLoad: 5, totalSaveFileTime: 3600};
-
-  const saveConfiguration = {
-    saveDisplayName: 'Fake Save',
-    planetId: 'Toxicity',
-    version: '1.0',
-    mode: 'Standard',
-    worldSeed: 42,
-    modded: false,
-    modifierTerraformationPace: 1,
-    modifierPowerConsumption: 1,
-    modifierGaugeDrain: 1,
-    modifierMeteoOccurence: 1,
-    modifierMultiplayerTerraformationFactor: 1,
-    unlockedSpaceTrading: false,
-    unlockedOreExtrators: false,
-    unlockedTeleporters: false,
-    unlockedDrones: false,
-    unlockedAutocrafter: false,
-    unlockedEverything: false,
-    freeCraft: false,
-    preInterplanetarySave: false,
-    randomizeMineables: false,
-    dyingConsequencesLabel: 'DropSomeItems',
-    startLocationLabel: 'Standard',
-    hasPlayedIntro: true,
-    gameStartLocation: 'Standard'
-  };
-
-  const terraformationLevel = {
-    planetId: 'Toxicity',
-    unitOxygenLevel: 100,
-    unitHeatLevel: 200,
-    unitPressureLevel: 300,
-    unitPlantsLevel: 400,
-    unitInsectsLevel: 500,
-    unitAnimalsLevel: 600,
-    unitPurificationLevel: 700
-  };
-
-  const player = {
-    id: 1,
-    name: 'Nikowa',
-    inventoryId: 10,
-    equipmentId: 11,
-    playerPosition: '0,0,0',
-    playerRotation: '0,0,0,0',
-    playerGaugeOxygen: 280,
-    playerGaugeThirst: 96,
-    playerGaugeHealth: 72,
-    playerGaugeToxic: 0,
-    host: true,
-    planetId: 'Toxicity',
-    cameraView: 0,
-    totalCraftedObjects: 0,
-    totalTerraTokenEarned: 0
+    metadata: [], terraformationLevels: [], players: [], worldObjects: [], inventories: [],
+    statistics: [], mailboxes: [], storyEvents: [], saveConfigurations: [], worldEvents: []
   };
 
   it('should join all sections with the section separator and terminate the save', () => {
@@ -119,7 +54,7 @@ describe('serializeSave', () => {
   describe('When statistics has an entry', () => {
     it('should serialize that single entry', () => {
       // Arrange
-      const params = {...emptyParams, statistics: [statistics]};
+      const params = {...emptyParams, statistics: [createStatistics()]};
 
       // Act
       const sections = serializeSave(params).split('\n@\n');
@@ -142,25 +77,25 @@ describe('serializeSave', () => {
   describe('When saveConfigurations has an entry', () => {
     it('should serialize that single entry', () => {
       // Arrange
-      const params = {...emptyParams, saveConfigurations: [saveConfiguration]};
+      const params = {...emptyParams, saveConfigurations: [createSaveConfiguration()]};
 
       // Act
       const sections = serializeSave(params).split('\n@\n');
 
       // Assert
-      expect(sections[8]).toBe('{"saveDisplayName":"Fake Save","planetId":"Toxicity","version":"1.0","mode":"Standard","worldSeed":42,"modded":false,"modifierTerraformationPace":1,"modifierPowerConsumption":1,"modifierGaugeDrain":1,"modifierMeteoOccurence":1,"modifierMultiplayerTerraformationFactor":1,"unlockedSpaceTrading":false,"unlockedOreExtrators":false,"unlockedTeleporters":false,"unlockedDrones":false,"unlockedAutocrafter":false,"unlockedEverything":false,"freeCraft":false,"preInterplanetarySave":false,"randomizeMineables":false,"dyingConsequencesLabel":"DropSomeItems","startLocationLabel":"Standard","hasPlayedIntro":true,"gameStartLocation":"Standard"}');
+      expect(sections[8]).toBe('{"saveDisplayName":"Merged Save","planetId":"Toxicity","unlockedSpaceTrading":false,"unlockedOreExtrators":false,"unlockedTeleporters":false,"unlockedDrones":false,"unlockedAutocrafter":false,"unlockedEverything":false,"freeCraft":false,"preInterplanetarySave":false,"randomizeMineables":false,"modifierTerraformationPace":0.1,"modifierPowerConsumption":0.2,"modifierGaugeDrain":0.3,"modifierMeteoOccurence":0.4,"modifierMultiplayerTerraformationFactor":0.5,"modded":false,"version":"1.0","mode":"Standard","dyingConsequencesLabel":"DropSomeItems","startLocationLabel":"Standard","worldSeed":42,"hasPlayedIntro":true,"gameStartLocation":"Standard"}');
     });
   });
 
   it('should preserve decimal notation for known float fields in terraformation levels and players', () => {
     // Arrange
-    const params = {...emptyParams, terraformationLevels: [terraformationLevel], players: [player]};
+    const params = {...emptyParams, terraformationLevels: [createTerraformationLevel()], players: [createPlayer()]};
 
     // Act
     const sections = serializeSave(params).split('\n@\n');
 
     // Assert
     expect(sections[1]).toBe('{"planetId":"Toxicity","unitOxygenLevel":100.0,"unitHeatLevel":200.0,"unitPressureLevel":300.0,"unitPlantsLevel":400.0,"unitInsectsLevel":500.0,"unitAnimalsLevel":600.0,"unitPurificationLevel":700.0}');
-    expect(sections[2]).toBe('{"id":1,"name":"Nikowa","inventoryId":10,"equipmentId":11,"playerPosition":"0,0,0","playerRotation":"0,0,0,0","playerGaugeOxygen":280.0,"playerGaugeThirst":96.0,"playerGaugeHealth":72.0,"playerGaugeToxic":0.0,"host":true,"planetId":"Toxicity","cameraView":0,"totalCraftedObjects":0,"totalTerraTokenEarned":0}');
+    expect(sections[2]).toBe('{"id":76561190000000000,"name":"Nikowa","inventoryId":44,"equipmentId":45,"playerPosition":"1751.865,472.58,-1106.104","playerRotation":"0,0.5740051,0,-0.8188518","playerGaugeOxygen":280.0,"playerGaugeThirst":96.3858642578125,"playerGaugeHealth":72.67363739013672,"playerGaugeToxic":0.0,"host":true,"planetId":"Toxicity","cameraView":0,"totalCraftedObjects":1820,"totalTerraTokenEarned":9000}');
   });
 });
