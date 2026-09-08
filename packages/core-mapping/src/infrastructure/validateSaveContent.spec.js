@@ -2,16 +2,16 @@ import {describe, expect, it} from 'bun:test';
 import {validateSaveContent} from './validateSaveContent.js';
 import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue.ts';
 import {createFakeSaveString, createLegacyFakeSaveString} from 'shared-save-processing/testing/createFakeSaveString.js';
+import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
 import {
   createEquipment,
-  createFakeSaveContent,
   createGlobalMetadata,
   createInventory,
   createPlayer,
   createSaveConfiguration,
   createStatistics,
   createTerraformationLevel
-} from 'shared-save-processing/testing/createFakeSaveContent.js';
+} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('validateSaveContent', () => {
 

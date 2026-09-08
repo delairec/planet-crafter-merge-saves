@@ -11,16 +11,6 @@ import {
   createTerraformationLevel
 } from './createSaveRecords.js';
 
-export {
-  createEquipment,
-  createGlobalMetadata,
-  createInventory,
-  createPlayer,
-  createSaveConfiguration,
-  createStatistics,
-  createTerraformationLevel
-};
-
 /**
  * @returns {WorldObject[]}
  */
