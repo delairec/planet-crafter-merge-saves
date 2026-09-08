@@ -74,13 +74,13 @@ describe('SaveFilesMergerService', () => {
       const {sections} = parseSaveSections(result.content);
       expect([...sections[3]()]).toEqual([
         {id: 100, gId: 'Container2', liId: 50, pos: '1,0,1'},
-        {id: 200, gId: 'VegetubeOutside1', liId: 51, pos: '5,0,5'}
+        {id: 200, gId: 'VegetubeOutside1', liId: 201, pos: '5,0,5'}
       ]);
       expect(sections[4]).toEqual([
         {id: 10, woIds: '', size: 20},
         {id: 11, woIds: '', size: 10},
         {id: 50, woIds: '100', size: 35},
-        {id: 51, woIds: '999', size: 1}
+        {id: 201, woIds: '999', size: 1}
       ]);
     });
   });

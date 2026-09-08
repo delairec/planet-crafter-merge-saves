@@ -94,15 +94,15 @@ describe('Resolve id conflicts', () => {
       // Assert
       expect(result.players).toEqual({
         fromSaveA: [playerFromSaveA],
-        fromSaveB: [{...playerFromSaveB, id: 12, inventoryId: 13, equipmentId: 14}]
+        fromSaveB: [{...playerFromSaveB, inventoryId: 101, equipmentId: 102}]
       });
       expect(result.inventories).toEqual({
         fromSaveA: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}],
-        fromSaveB: [{id: 13, woIds: '', size: 35}, {id: 14, woIds: '', size: 5}]
+        fromSaveB: [{id: 101, woIds: '', size: 35}, {id: 102, woIds: '', size: 5}]
       });
       expect(result.worldObjects).toEqual({
         fromSaveA: [{id: 100, gId: 'SomeObject'}],
-        fromSaveB: [{id: 101, gId: 'OtherObject'}]
+        fromSaveB: [{id: 103, gId: 'OtherObject'}]
       });
     });
 
@@ -122,6 +122,27 @@ describe('Resolve id conflicts', () => {
 
       // Assert
       expect(result.players.fromSaveB).toEqual([{...playerFromSaveB, inventoryId: 12, equipmentId: 13}]);
+    });
+  });
+
+  describe('When a save B player carries the identifier of a save A player', () => {
+    it('should leave that identifier untouched', () => {
+      // Arrange
+      const playerFromSaveA = createPlayer({id: 1, inventoryId: 10, equipmentId: 11});
+      const playerFromSaveB = createPlayer({id: 1, name: 'Chileny', inventoryId: 20, equipmentId: 21});
+      const sections = createMergedSections({
+        players: {fromSaveA: [playerFromSaveA], fromSaveB: [playerFromSaveB]},
+        inventories: {
+          fromSaveA: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}],
+          fromSaveB: [{id: 20, woIds: '', size: 35}, {id: 21, woIds: '', size: 5}]
+        }
+      });
+
+      // Act
+      const result = resolveIdConflicts(sections);
+
+      // Assert
+      expect(result.players).toEqual({fromSaveA: [playerFromSaveA], fromSaveB: [playerFromSaveB]});
     });
   });
 
@@ -167,9 +188,9 @@ describe('Resolve id conflicts', () => {
       // Assert
       expect(result.worldObjects).toEqual({
         fromSaveA: [{id: 100, gId: 'Container2', liId: 50}],
-        fromSaveB: [{id: 200, gId: 'Container2', liId: 51}]
+        fromSaveB: [{id: 200, gId: 'Container2', liId: 201}]
       });
-      expect(result.inventories.fromSaveB).toEqual([{id: 51, woIds: '200', size: 12}]);
+      expect(result.inventories.fromSaveB).toEqual([{id: 201, woIds: '200', size: 12}]);
     });
   });
 
@@ -199,6 +220,26 @@ describe('Resolve id conflicts', () => {
     });
   });
 
+  describe('When a world object already holds the identifier that follows the highest inventory identifier', () => {
+    it('should renumber the save B inventory above that world object', () => {
+      // Arrange
+      const sections = createMergedSections({
+        inventories: {
+          fromSaveA: [{id: 10, woIds: '', size: 20}],
+          fromSaveB: [{id: 10, woIds: '', size: 35}]
+        },
+        worldObjects: {fromSaveA: [{id: 11, gId: 'Iron'}], fromSaveB: []}
+      });
+
+      // Act
+      const result = resolveIdConflicts(sections);
+
+      // Assert
+      expect(result.inventories.fromSaveB).toEqual([{id: 12, woIds: '', size: 35}]);
+      expect(result.worldObjects.fromSaveA).toEqual([{id: 11, gId: 'Iron'}]);
+    });
+  });
+
   describe('When a save B world object is linked to a renumbered save B world object', () => {
     it('should point it at the new world object id', () => {
       // Arrange
@@ -214,8 +255,8 @@ describe('Resolve id conflicts', () => {
 
       // Assert
       expect(result.worldObjects.fromSaveB).toEqual([
-        {id: 101, gId: 'Lake2'},
-        {id: 201, gId: 'WaterGenerator', linkedWo: 101}
+        {id: 202, gId: 'Lake2'},
+        {id: 201, gId: 'WaterGenerator', linkedWo: 202}
       ]);
     });
   });

@@ -190,7 +190,7 @@
 
 **Rule GR-ID-1:** After all sections are merged, every `id` in the combined inventory + world object list must be unique.
 
-**Rule GR-ID-2:** When a duplicate `id` is found (same numeric value used for two different logical objects — one from each save), the **later-encountered** entry receives a new id generated from a monotonically increasing sequence seeded above the current maximum id.
+**Rule GR-ID-2:** When a duplicate `id` is found (same numeric value used for two different logical objects — one from each save), the **later-encountered** entry receives a new id generated from a monotonically increasing sequence. The sequence is seeded, before a single id is handed out, above the maximum id of *every* section sharing the numbering space GR-ID-1 governs — inventories **and** world objects. Seeding on the inventories alone would let the first generated id land on an id a world object already carries.
 
 **Rule GR-ID-3:** All back-references are updated to match remapped ids:
 - `Player.inventoryId` and `Player.equipmentId` → remapped inventory ids.
@@ -207,5 +207,7 @@ are authoritative, so they still designate the same entry after the merge.
 
 **Rule GR-ID-5:** Reference rewriting is **save-origin-aware**. When an inventory id was duplicated across both saves (save A's inventory keeps the original id; save B's gets a new id), a world object from save A keeps its `liId`/`siIds` pointing to the original id, while a world object from save B points to the remapped (new) id. The origin is carried by the merged sections themselves: the three sections holding identifiers (players, inventories, world objects) keep their entries grouped as `fromSaveA` / `fromSaveB`, so it never has to be reconstructed.
 
-**Implementation:** `packages/core-mapping/src/domain/rules/merge/resolveIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/createIdSequence.ts`, `packages/core-mapping/src/domain/rules/merge/resolvePlayerIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/resolveInventoryIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/resolveWorldObjectIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/rewriteReferences.ts`
+**Rule GR-ID-6:** A `Player.id` is never regenerated. It is a Steam account identifier, not a save-local one: the game reuses it from one save to the next, no entry back-references it, and two players sharing it across the two saves is therefore not a conflict. Players neither seed the sequence of GR-ID-2 nor draw from it — seeding on them would be impossible anyway, their values sitting beyond `Number.MAX_SAFE_INTEGER`, where `id + 1 === id` makes a sequence hand out one and the same id forever.
+
+**Implementation:** `packages/core-mapping/src/domain/rules/merge/resolveIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/createIdSequence.ts`, `packages/core-mapping/src/domain/rules/merge/resolveInventoryIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/resolveWorldObjectIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/rewriteReferences.ts`
 

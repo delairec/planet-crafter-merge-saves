@@ -5,6 +5,7 @@ import {createIdSequence} from './createIdSequence';
 describe('Resolve inventory id conflicts', () => {
   const inventoryOfSaveA = {id: 10, woIds: '', size: 20};
   const equipmentOfSaveA = {id: 11, woIds: '', size: 10};
+  const noWorldObjects: never[] = [];
 
   describe('When a save B inventory uses an id already taken in save A', () => {
     it('should give that inventory a new id above every existing inventory id', () => {
@@ -12,7 +13,7 @@ describe('Resolve inventory id conflicts', () => {
       const inventories = {fromSaveA: [inventoryOfSaveA], fromSaveB: [{id: 10, woIds: '', size: 35}]};
 
       // Act
-      const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA]));
+      const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA], noWorldObjects));
 
       // Assert
       expect(result.entries.fromSaveB).toEqual([{id: 11, woIds: '', size: 35}]);
@@ -23,7 +24,7 @@ describe('Resolve inventory id conflicts', () => {
       const inventories = {fromSaveA: [inventoryOfSaveA], fromSaveB: [{id: 10, woIds: '', size: 35}]};
 
       // Act
-      const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA]));
+      const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA], noWorldObjects));
 
       // Assert
       expect(result.saveBIdRemapping).toEqual(new Map([[10, 11]]));
@@ -34,7 +35,7 @@ describe('Resolve inventory id conflicts', () => {
       const inventories = {fromSaveA: [inventoryOfSaveA], fromSaveB: [{id: 10, woIds: '', size: 35}]};
 
       // Act
-      const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA]));
+      const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA], noWorldObjects));
 
       // Assert
       expect(result.entries.fromSaveA).toEqual([{id: 10, woIds: '', size: 20}]);
@@ -50,7 +51,7 @@ describe('Resolve inventory id conflicts', () => {
       };
 
       // Act
-      const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA, equipmentOfSaveA]));
+      const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA, equipmentOfSaveA], noWorldObjects));
 
       // Assert
       expect(result.entries.fromSaveB).toEqual([{id: 12, woIds: '', size: 35}, {id: 13, woIds: '', size: 5}]);
@@ -63,7 +64,7 @@ describe('Resolve inventory id conflicts', () => {
       const inventories = {fromSaveA: [inventoryOfSaveA], fromSaveB: [{id: 99, woIds: '', size: 50}]};
 
       // Act
-      const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA]));
+      const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA], noWorldObjects));
 
       // Assert
       expect(result.entries.fromSaveB).toEqual([{id: 99, woIds: '', size: 50}]);
