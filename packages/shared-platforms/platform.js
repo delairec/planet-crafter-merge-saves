@@ -1,4 +1,6 @@
-/** @import { RuntimePlatform } from 'util-types/gameDefinitions' */
+// `@typedef {import(...)}` rather than the `@import` tag used elsewhere: fallow tracks the former as a
+// type-only import, so the `util-types` dependency stays under its unused-dependency rule.
+/** @typedef {import('util-types/gameDefinitions').RuntimePlatform} RuntimePlatform */
 import {SUPPORTED_PLATFORMS} from './extractPlatformParameter.js';
 import * as platformCommon from './platform.common.js';
 import * as nodePlatform from './platform.node.js';

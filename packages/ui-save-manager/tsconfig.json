@@ -1,19 +1,15 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
+    "lib": ["esnext", "dom", "dom.iterable"],
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "allowJs": true,
-    "noEmit": true,
-    "strict": true,
     "types": ["vite/client"],
     "isolatedModules": true,
     "paths": {
       "~/*": ["./src/*"]
     }
-  }
+  },
+  "include": ["**/*.js", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", ".output", ".vinxi", "e2e"]
 }

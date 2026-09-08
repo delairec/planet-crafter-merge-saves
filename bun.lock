@@ -40,6 +40,9 @@
     "packages/shared-platforms": {
       "name": "shared-platforms",
       "version": "1.0.0",
+      "dependencies": {
+        "util-types": "*",
+      },
     },
     "packages/shared-save-processing": {
       "name": "shared-save-processing",

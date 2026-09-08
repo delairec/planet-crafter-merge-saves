@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-
 /**
  * Waits until the browser has painted the pending DOM updates.
  *
