@@ -9,7 +9,6 @@ import MergeResultSection from "~/components/MergeResultSection";
 import {
   displayRouteDisplayTitle,
   displayRouteErrorsTitle,
-  displayRouteFileInputLabel,
   displayRouteLoadingLabel,
   displayRouteParsedDataPlaceholder,
   displayRouteSubmitButtonLabel,
@@ -55,9 +54,7 @@ export default function Home() {
         <HomeDisclaimer/>
 
         <h2>{displayRouteDisplayTitle}</h2>
-        <p><label>{displayRouteFileInputLabel}<input ref={fileInputElement} type="file"
-                                                    accept="application/json"
-                                                    onChange={handleFileChange}/></label></p>
+        <input ref={fileInputElement} type="file" accept="application/json" onChange={handleFileChange}/>
         <button onClick={handleSubmit} disabled={!file() || isLoading()}>{displayRouteSubmitButtonLabel}</button>
         <Show when={isLoading()}>
           <Spinner/>
