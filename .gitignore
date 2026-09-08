@@ -9,7 +9,8 @@ package-lock.json
 # generated
 output/
 
-# user input, a real folder here and a symlink in a linked worktree
+# user input: no trailing slash, so the rule also covers the symlink a linked worktree points
+# at the folder of the main checkout
 input
 
 # other
