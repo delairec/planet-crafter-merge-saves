@@ -1,25 +1,10 @@
 import {describe, expect, it} from 'bun:test';
 import {Player, Inventory} from 'shared-save-processing/gameDefinitions';
 import {collectEjectedPlayerInventoryIds} from './collectEjectedPlayerInventoryIds';
+import {createPlayer} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('collectEjectedPlayerInventoryIds', () => {
-  const basePlayer: Player = {
-    id: 76561190000000000,
-    name: 'Nikowa',
-    inventoryId: 44,
-    equipmentId: 45,
-    playerPosition: '0,0,0',
-    playerRotation: '0,0,0,1',
-    playerGaugeOxygen: 280.0,
-    playerGaugeThirst: 96.0,
-    playerGaugeHealth: 72.0,
-    playerGaugeToxic: 0.0,
-    host: true,
-    planetId: 'Toxicity',
-    cameraView: 0,
-    totalCraftedObjects: 0,
-    totalTerraTokenEarned: 0
-  };
+  const basePlayer: Player = createPlayer();
 
   describe('When no player in save B shares a name with a player in save A', () => {
     it('should return empty inventory and world object id sets', () => {

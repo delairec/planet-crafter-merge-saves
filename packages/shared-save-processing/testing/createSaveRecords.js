@@ -1,4 +1,4 @@
-/** @import { Player, Inventory, SaveConfiguration, GlobalMetadata, TerraformationLevel, Statistics } from '../gameDefinitions' */
+/** @import { Player, Inventory, SaveConfiguration, GlobalMetadata, TerraformationLevel, Statistics, WorldObject, MailboxMessage, StoryEvent, WorldEvent } from '../gameDefinitions' */
 
 // Single source of the factories building the individual records of a save file, in business
 // language. No other testing module defines or re-exports them: `createFakeSaveContent.js` renders
@@ -123,5 +123,39 @@ export function createStatistics(overrides = {}) {
     totalSaveFileTime: 3600,
     ...overrides
   };
+}
+
+/**
+ * A world object carried in an inventory: only the two fields every world object holds. A placed
+ * machine adds its `pos` and its `planet` through the overrides.
+ * @param {Partial<WorldObject>} overrides
+ * @returns {WorldObject}
+ */
+export function createWorldObject(overrides = {}) {
+  return {id: 79111656, gId: 'Phytoplankton3', ...overrides};
+}
+
+/**
+ * @param {Partial<MailboxMessage>} overrides
+ * @returns {MailboxMessage}
+ */
+export function createMailboxMessage(overrides = {}) {
+  return {stringId: 'MailWelcome', isRead: false, ...overrides};
+}
+
+/**
+ * @param {Partial<StoryEvent>} overrides
+ * @returns {StoryEvent}
+ */
+export function createStoryEvent(overrides = {}) {
+  return {stringId: 'StoryFirstLaunch', ...overrides};
+}
+
+/**
+ * @param {Partial<WorldEvent>} overrides
+ * @returns {WorldEvent}
+ */
+export function createWorldEvent(overrides = {}) {
+  return {planet: 110910045, seed: 1, pos: '0,0,0', ...overrides};
 }
 

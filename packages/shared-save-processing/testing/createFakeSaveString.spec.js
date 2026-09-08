@@ -1,5 +1,6 @@
 import {describe, it, expect} from 'bun:test';
 import {createFakeSaveString, createLegacyFakeSaveString} from './createFakeSaveString.js';
+import {createPlayer, createTerraformationLevel, createWorldEvent} from './createSaveRecords.js';
 
 describe('createFakeSaveString', () => {
 
@@ -23,23 +24,23 @@ describe('createFakeSaveString', () => {
 
   it('should serialize the provided entries for a given section', () => {
     // Arrange
-    const player = /** @type {any} */ ({id: 1, name: 'Nikowa'});
+    const player = createPlayer({id: 1, name: 'Nikowa'});
 
     // Act
     const save = createFakeSaveString({players: [player]});
 
     // Assert
     const sections = save.split('\n@\n');
-    expect(sections[2]).toBe('{"id":1,"name":"Nikowa"}');
+    expect(sections[2]).toBe('{"id":1,"name":"Nikowa","inventoryId":44,"equipmentId":45,"playerPosition":"1751.865,472.58,-1106.104","playerRotation":"0,0.5740051,0,-0.8188518","playerGaugeOxygen":280.0,"playerGaugeThirst":96.3858642578125,"playerGaugeHealth":72.67363739013672,"playerGaugeToxic":0.0,"host":true,"planetId":"Toxicity","cameraView":0,"totalCraftedObjects":1820,"totalTerraTokenEarned":9000}');
   });
 
   it('should preserve decimal notation for known float fields', () => {
     // Act
-    const save = createFakeSaveString({terraformationLevels: [/** @type {any} */ ({unitOxygenLevel: 100})]});
+    const save = createFakeSaveString({terraformationLevels: [createTerraformationLevel({unitOxygenLevel: 100})]});
 
     // Assert
     const sections = save.split('\n@\n');
-    expect(sections[1]).toBe('{"unitOxygenLevel":100.0}');
+    expect(sections[1]).toBe('{"planetId":"Toxicity","unitOxygenLevel":100.0,"unitHeatLevel":200.0,"unitPressureLevel":300.0,"unitPlantsLevel":400.0,"unitInsectsLevel":500.0,"unitAnimalsLevel":600.0,"unitPurificationLevel":700.0}');
   });
 
   describe('When statistics and saveConfiguration are not provided', () => {
@@ -79,7 +80,7 @@ describe('createLegacyFakeSaveString', () => {
 
   it('should keep World Events after the inserted Terrain Layers section', () => {
     // Arrange
-    const worldEvent = {planet: 110910045, seed: 1, pos: '0,0,0', owner: 0, index: 0};
+    const worldEvent = createWorldEvent({planet: 110910045, seed: 1, pos: '0,0,0', owner: 0, index: 0});
 
     // Act
     const save = createLegacyFakeSaveString({worldEvents: [worldEvent]});

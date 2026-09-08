@@ -1,17 +1,7 @@
 import {describe, expect, it} from 'bun:test';
 import {validateUniqueHost} from './validateUniqueHost';
-import {Player} from 'shared-save-processing/gameDefinitions';
 import {VALIDATION_ISSUE_CODES} from '../../application/ports/ValidationIssue';
-
-function createPlayer(overrides: Partial<Player> = {}): Player {
-  return {
-    id: 1, name: 'Player', inventoryId: 1, equipmentId: 2,
-    playerPosition: '0,0,0', playerRotation: '0,0,0,1',
-    playerGaugeOxygen: 1, playerGaugeThirst: 1, playerGaugeHealth: 1, playerGaugeToxic: 1,
-    host: false, planetId: 'Prime', cameraView: 1, totalCraftedObjects: 0, totalTerraTokenEarned: 0,
-    ...overrides
-  };
-}
+import {createPlayer} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('validateUniqueHost', () => {
 

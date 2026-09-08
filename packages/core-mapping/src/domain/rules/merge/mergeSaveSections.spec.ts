@@ -1,24 +1,13 @@
 import {describe, expect, it} from 'bun:test';
 import {mergeSaveSections} from './mergeSaveSections';
 import {createFakeParsedSave} from 'shared-save-processing/testing/createFakeParsedSave.js';
+import {createPlayer} from 'shared-save-processing/testing/createSaveRecords.js';
 import {ParsedSections} from 'shared-save-processing/gameDefinitions';
 
 describe('Merge saves', () => {
     const saveDisplayName = 'SAVE_NAME';
 
-    const basePlayer = {
-        playerPosition: '0,0,0',
-        playerRotation: '0,0,0,0',
-        playerGaugeOxygen: 280.0,
-        playerGaugeThirst: 96.0,
-        playerGaugeHealth: 72.0,
-        playerGaugeToxic: 0.0,
-        host: false,
-        planetId: 'Toxicity',
-        cameraView: 0,
-        totalCraftedObjects: 0,
-        totalTerraTokenEarned: 0
-    };
+    const basePlayer = createPlayer({host: false});
 
     function createSections(options: Parameters<typeof createFakeParsedSave>[0]): ParsedSections {
         return createFakeParsedSave(options).sections;

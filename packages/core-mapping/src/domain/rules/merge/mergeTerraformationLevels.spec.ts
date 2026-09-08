@@ -1,21 +1,13 @@
 import {describe, expect, it} from 'bun:test';
 import {mergeTerraformationLevels} from './mergeTerraformationLevels';
+import {createTerraformationLevel} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('Merge terraformation levels', () => {
-  const baseTerraformationLevel = {
-    planetId: 'Toxicity',
-    unitOxygenLevel: 100.0,
-    unitHeatLevel: 200.0,
-    unitPressureLevel: 300.0,
-    unitPlantsLevel: 400.0,
-    unitInsectsLevel: 500.0,
-    unitAnimalsLevel: 600.0,
-    unitPurificationLevel: 700.0
-  };
+  const baseTerraformationLevel = createTerraformationLevel();
 
   const toxicityLevelFromSaveA = {...baseTerraformationLevel};
 
-  const primeLevelFromSaveB = {
+  const primeLevelFromSaveB = createTerraformationLevel({
     planetId: 'Prime',
     unitOxygenLevel: 10.0,
     unitHeatLevel: 20.0,
@@ -24,9 +16,9 @@ describe('Merge terraformation levels', () => {
     unitInsectsLevel: 50.0,
     unitAnimalsLevel: 60.0,
     unitPurificationLevel: -1.0
-  };
+  });
 
-  const aqualisLevelFromSaveB = {
+  const aqualisLevelFromSaveB = createTerraformationLevel({
     planetId: 'Aqualis',
     unitOxygenLevel: 1.0,
     unitHeatLevel: 2.0,
@@ -35,7 +27,7 @@ describe('Merge terraformation levels', () => {
     unitInsectsLevel: 5.0,
     unitAnimalsLevel: 6.0,
     unitPurificationLevel: -1.0
-  };
+  });
 
   describe('When terraformation levels are unique', () => {
     it('should simply concat terraformation levels', () => {

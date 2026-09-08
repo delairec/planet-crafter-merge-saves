@@ -7,7 +7,8 @@ import {
   createPlayer,
   createSaveConfiguration,
   createStatistics,
-  createTerraformationLevel
+  createTerraformationLevel,
+  createWorldObject
 } from 'shared-save-processing/testing/createSaveRecords.js';
 import {ParsedSections, WorldObject} from 'shared-save-processing/gameDefinitions';
 import {SaveSectionsReaderService} from './SaveSectionsReaderService';
@@ -22,15 +23,15 @@ const PRIME_PLANET_NUMERIC_ID = -1140328421;
 const UNKNOWN_PLANET_NUMERIC_ID = 1;
 
 const CARRIED_WORLD_OBJECTS: WorldObject[] = [
-  {id: 79111656, gId: 'Phytoplankton3'},
-  {id: 58524136, gId: 'MagnetarQuartz'},
-  {id: 85274195, gId: 'Backpack4'},
-  {id: 48456321, gId: 'OxygenTank5'},
-  {id: 15974863, gId: 'Phytoplankton1'},
-  {id: 28491667, gId: 'PulsarQuartz'},
-  {id: 39187611, gId: 'Backpack7'},
-  {id: 65514812, gId: 'OxygenTank4'}
-] as WorldObject[];
+  createWorldObject({id: 79111656, gId: 'Phytoplankton3'}),
+  createWorldObject({id: 58524136, gId: 'MagnetarQuartz'}),
+  createWorldObject({id: 85274195, gId: 'Backpack4'}),
+  createWorldObject({id: 48456321, gId: 'OxygenTank5'}),
+  createWorldObject({id: 15974863, gId: 'Phytoplankton1'}),
+  createWorldObject({id: 28491667, gId: 'PulsarQuartz'}),
+  createWorldObject({id: 39187611, gId: 'Backpack7'}),
+  createWorldObject({id: 65514812, gId: 'OxygenTank4'})
+];
 
 function worldObjectsOf(worldObjects: WorldObject[]): () => Generator<WorldObject> {
   return function* worldObjectsGenerator() {

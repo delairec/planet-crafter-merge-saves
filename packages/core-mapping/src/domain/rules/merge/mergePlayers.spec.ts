@@ -1,24 +1,9 @@
 import {describe, expect, it} from 'bun:test';
 import {mergePlayers} from './mergePlayers';
+import {createPlayer} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('Merge players', () => {
-  const basePlayer = {
-    id: 76561190000000000,
-    name: 'Nikowa',
-    inventoryId: 44,
-    equipmentId: 45,
-    playerPosition: '1751.865,472.58,-1106.104',
-    playerRotation: '0,0.5740051,0,-0.8188518',
-    playerGaugeOxygen: 280.0,
-    playerGaugeThirst: 96.3858642578125,
-    playerGaugeHealth: 72.67363739013672,
-    playerGaugeToxic: 0.0,
-    host: true,
-    planetId: 'Toxicity',
-    cameraView: 0,
-    totalCraftedObjects: 0,
-    totalTerraTokenEarned: 0
-  };
+  const basePlayer = createPlayer();
 
   const playerFromSaveA = {...basePlayer};
   const playerFromSaveB = {...basePlayer, id: 76561190000000030, name: 'Chileny', host: false};

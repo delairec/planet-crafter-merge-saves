@@ -1,35 +1,17 @@
 import {describe, expect, it} from 'bun:test';
 import {rewriteInventoryReferences, rewritePlayerReferences, rewriteWorldObjectReferences} from './rewriteReferences';
-import {Player} from 'shared-save-processing/gameDefinitions';
+import {createPlayer} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('Rewrite references', () => {
   const noRemapping = {inventoryIds: new Map<number, number>(), worldObjectIds: new Map<number, number>()};
   const inventory10BecameInventory51 = {inventoryIds: new Map([[10, 51]]), worldObjectIds: new Map<number, number>()};
   const worldObject100BecameWorldObject501 = {inventoryIds: new Map<number, number>(), worldObjectIds: new Map([[100, 501]])};
 
-  function createPlayer(id: number, inventoryId: number, equipmentId: number): Player {
-    return {
-      id, inventoryId, equipmentId,
-      name: 'Nikowa',
-      playerPosition: '0,0,0',
-      playerRotation: '0,0,0,0',
-      playerGaugeOxygen: 280.0,
-      playerGaugeThirst: 96.0,
-      playerGaugeHealth: 72.0,
-      playerGaugeToxic: 0.0,
-      host: true,
-      planetId: 'Toxicity',
-      cameraView: 0,
-      totalCraftedObjects: 0,
-      totalTerraTokenEarned: 0
-    };
-  }
-
   describe('When both saves have a player on a renumbered inventory', () => {
     it('should point the save B player at the new inventory id', () => {
       // Arrange
-      const playerFromSaveB = createPlayer(2, 10, 11);
-      const players = {fromSaveA: [createPlayer(1, 10, 11)], fromSaveB: [playerFromSaveB]};
+      const playerFromSaveB = createPlayer({id: 2, inventoryId: 10, equipmentId: 11});
+      const players = {fromSaveA: [createPlayer({id: 1, inventoryId: 10, equipmentId: 11})], fromSaveB: [playerFromSaveB]};
 
       // Act
       const result = rewritePlayerReferences(players, inventory10BecameInventory51);
@@ -40,8 +22,8 @@ describe('Rewrite references', () => {
 
     it('should leave the save A player pointing at the id it always used', () => {
       // Arrange
-      const playerFromSaveA = createPlayer(1, 10, 11);
-      const players = {fromSaveA: [playerFromSaveA], fromSaveB: [createPlayer(2, 10, 11)]};
+      const playerFromSaveA = createPlayer({id: 1, inventoryId: 10, equipmentId: 11});
+      const players = {fromSaveA: [playerFromSaveA], fromSaveB: [createPlayer({id: 2, inventoryId: 10, equipmentId: 11})]};
 
       // Act
       const result = rewritePlayerReferences(players, inventory10BecameInventory51);
@@ -54,8 +36,8 @@ describe('Rewrite references', () => {
   describe('When no save A player uses the renumbered inventory id', () => {
     it('should still point the save B player at its own renumbered inventory', () => {
       // Arrange
-      const playerFromSaveB = createPlayer(2, 10, 11);
-      const players = {fromSaveA: [createPlayer(1, 30, 31)], fromSaveB: [playerFromSaveB]};
+      const playerFromSaveB = createPlayer({id: 2, inventoryId: 10, equipmentId: 11});
+      const players = {fromSaveA: [createPlayer({id: 1, inventoryId: 30, equipmentId: 31})], fromSaveB: [playerFromSaveB]};
 
       // Act
       const result = rewritePlayerReferences(players, inventory10BecameInventory51);

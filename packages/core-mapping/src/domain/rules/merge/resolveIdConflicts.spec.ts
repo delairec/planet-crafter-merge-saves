@@ -3,34 +3,16 @@ import {resolveIdConflicts} from './resolveIdConflicts';
 import {MergedSaveSections} from './MergedSaveSections';
 import {Inventory, Player, WorldObject} from 'shared-save-processing/gameDefinitions';
 import {EntriesByOrigin} from './EntriesByOrigin';
+import {createGlobalMetadata, createPlayer} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('Resolve id conflicts', () => {
-  const basePlayer = {
-    name: 'Nikowa',
-    playerPosition: '0,0,0',
-    playerRotation: '0,0,0,0',
-    playerGaugeOxygen: 280.0,
-    playerGaugeThirst: 96.0,
-    playerGaugeHealth: 72.0,
-    playerGaugeToxic: 0.0,
-    host: true,
-    planetId: 'Toxicity',
-    cameraView: 0,
-    totalCraftedObjects: 0,
-    totalTerraTokenEarned: 0
-  };
-
-  function createPlayer(overrides: Partial<Player>): Player {
-    return {...basePlayer, id: 1, inventoryId: 10, equipmentId: 11, ...overrides};
-  }
-
   function createMergedSections(overrides: {
     players?: EntriesByOrigin<Player>,
     inventories?: EntriesByOrigin<Inventory>,
     worldObjects?: EntriesByOrigin<WorldObject>
   }): MergedSaveSections {
     return {
-      globalMetadata: {terraTokens: 0, allTimeTerraTokens: 0, unlockedGroups: '', openedInstanceSeed: 0, openedInstanceTimeLeft: 0},
+      globalMetadata: createGlobalMetadata(),
       terraformationLevels: [],
       players: {fromSaveA: [], fromSaveB: []},
       worldObjects: {fromSaveA: [], fromSaveB: []},
@@ -47,7 +29,7 @@ describe('Resolve id conflicts', () => {
   describe('When no identifier is shared between the two saves', () => {
     it('should return the sections unchanged', () => {
       // Arrange
-      const playerFromSaveA = createPlayer({id: 1});
+      const playerFromSaveA = createPlayer({id: 1, inventoryId: 10, equipmentId: 11});
       const playerFromSaveB = createPlayer({id: 2, inventoryId: 20, equipmentId: 21});
       const sections = createMergedSections({
         players: {fromSaveA: [playerFromSaveA], fromSaveB: [playerFromSaveB]},
@@ -77,8 +59,8 @@ describe('Resolve id conflicts', () => {
   describe('When both saves use the same identifiers', () => {
     it('should renumber the save B entries and keep every entry of both saves', () => {
       // Arrange
-      const playerFromSaveA = createPlayer({id: 1});
-      const playerFromSaveB = createPlayer({id: 1, name: 'Chileny'});
+      const playerFromSaveA = createPlayer({id: 1, inventoryId: 10, equipmentId: 11});
+      const playerFromSaveB = createPlayer({id: 1, name: 'Chileny', inventoryId: 10, equipmentId: 11});
       const sections = createMergedSections({
         players: {fromSaveA: [playerFromSaveA], fromSaveB: [playerFromSaveB]},
         inventories: {
@@ -108,9 +90,9 @@ describe('Resolve id conflicts', () => {
 
     it('should point the save B player at its own renumbered inventory and equipment', () => {
       // Arrange
-      const playerFromSaveB = createPlayer({id: 2, name: 'Chileny'});
+      const playerFromSaveB = createPlayer({id: 2, name: 'Chileny', inventoryId: 10, equipmentId: 11});
       const sections = createMergedSections({
-        players: {fromSaveA: [createPlayer({id: 1})], fromSaveB: [playerFromSaveB]},
+        players: {fromSaveA: [createPlayer({id: 1, inventoryId: 10, equipmentId: 11})], fromSaveB: [playerFromSaveB]},
         inventories: {
           fromSaveA: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}],
           fromSaveB: [{id: 10, woIds: '', size: 35}, {id: 11, woIds: '', size: 5}]
@@ -171,7 +153,7 @@ describe('Resolve id conflicts', () => {
     it('should send the save B world object to the renumbered inventory and leave the save A one on the shared id', () => {
       // Arrange
       const sections = createMergedSections({
-        players: {fromSaveA: [createPlayer({id: 1})], fromSaveB: []},
+        players: {fromSaveA: [createPlayer({id: 1, inventoryId: 10, equipmentId: 11})], fromSaveB: []},
         inventories: {
           fromSaveA: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}, {id: 50, woIds: '100', size: 35}],
           fromSaveB: [{id: 50, woIds: '200', size: 12}]
