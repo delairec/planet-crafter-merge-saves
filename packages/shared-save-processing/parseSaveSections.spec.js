@@ -147,7 +147,7 @@ describe('utils/parseSaveSections', () => {
       [...worldObjectsFactory()];
 
       // Assert
-      expect(errors.some(error => error.includes('{not valid json'))).toBe(true);
+      expect(errors).toEqual(['Failed to parse world object line: \n{not valid json\n']);
       expect(consoleLogSpy).not.toHaveBeenCalled();
     });
   });

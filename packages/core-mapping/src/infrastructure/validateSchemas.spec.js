@@ -33,8 +33,9 @@ describe('validateSchemas', () => {
       const issues = validateSchemas(parsedSections);
 
       // Assert
-      expect(issues.length > 0).toBeTruthy();
-      expect(issues.every(issue => issue.code === VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION && issue.section === 2 && issue.entryIndex === 0)).toBeTruthy();
+      expect(issues).toMatchObject([
+        {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 2, entryIndex: 0}
+      ]);
     });
   });
 });

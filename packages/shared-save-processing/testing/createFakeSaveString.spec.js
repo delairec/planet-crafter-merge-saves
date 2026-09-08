@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'bun:test';
-import {createFakeSaveString, createLegacyFakeSaveString, DEFAULT_GLOBAL_METADATA} from './createFakeSaveString.js';
+import {createFakeSaveString, createLegacyFakeSaveString} from './createFakeSaveString.js';
 
 describe('createFakeSaveString', () => {
 
@@ -17,7 +17,8 @@ describe('createFakeSaveString', () => {
 
     // Assert
     const [globalMetadataSection] = save.split('\n@\n');
-    expect(globalMetadataSection).toBe(JSON.stringify(DEFAULT_GLOBAL_METADATA));
+    expect(globalMetadataSection)
+      .toBe('{"terraTokens":0,"allTimeTerraTokens":0,"unlockedGroups":"","openedInstanceSeed":0,"openedInstanceTimeLeft":0}');
   });
 
   it('should serialize the provided entries for a given section', () => {
@@ -29,7 +30,7 @@ describe('createFakeSaveString', () => {
 
     // Assert
     const sections = save.split('\n@\n');
-    expect(sections[2]).toBe(JSON.stringify(player));
+    expect(sections[2]).toBe('{"id":1,"name":"Nikowa"}');
   });
 
   it('should preserve decimal notation for known float fields', () => {
@@ -73,7 +74,7 @@ describe('createLegacyFakeSaveString', () => {
 
     // Assert
     const sections = save.split('\n@\n');
-    expect(sections[9]).toBe(JSON.stringify(terrainLayer));
+    expect(sections[9]).toBe('{"layerId":"PC-Toxicity-Layer1","planet":110910047,"colorBase":"1-1-1-1"}');
   });
 
   it('should keep World Events after the inserted Terrain Layers section', () => {
@@ -85,6 +86,6 @@ describe('createLegacyFakeSaveString', () => {
 
     // Assert
     const sections = save.replace(/\n@$/, '').split('\n@\n');
-    expect(sections[10]).toBe(JSON.stringify(worldEvent));
+    expect(sections[10]).toBe('{"planet":110910045,"seed":1,"pos":"0,0,0","owner":0,"index":0}');
   });
 });
