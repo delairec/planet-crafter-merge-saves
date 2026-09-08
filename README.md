@@ -29,6 +29,18 @@ This is a Bun workspace monorepo, organized around Clean Architecture package pr
 | `cli-validate`           | Thin CLI: parses `--file` argument and delegates to `core-mapping`.                                                     |
 | `ui-save-manager`        | SolidStart UI to visualize save files, consuming `core-mapping` controllers.                                            |
 
+The prefix of a package name sets what it is allowed to depend on. A type-only import counts as a dependency.
+
+| Prefix     | May depend on                  |
+|------------|--------------------------------|
+| `util-*`   | nothing                        |
+| `shared-*` | `util-*`                       |
+| `core-*`   | `shared-*`, `util-*`           |
+| `cli-*`    | `shared-*`, `util-*`, `core-*` |
+| `ui-*`     | `shared-*`, `util-*`, `core-*` |
+
+`bun run check:dependencies` enforces this matrix.
+
 ## Merge and Validate tools
 Merges two **Planet Crafter** save files into a single one, preserving as much information as possible.
 
@@ -108,7 +120,11 @@ configurations created after the change only, so delete the temporary ones alrea
 bun run lint:types
 ```
 
-Checks typings in all the project files (using `tsc --noEmit` under the hood).
+Checks typings in all the project files (using `tsc --noEmit` under the hood). Every package owns a `tsconfig.json`
+extending the root one and its own `lint:types` script, which the root script chains over the workspace: each package
+is therefore checked as a separate program, with the libraries it is entitled to. Only `ui-*` declares the DOM
+libraries, so a browser global referenced from a `core-*` or a `cli-*` package fails the check instead of resolving
+silently, and the `.tsx` files of the UI are covered.
 
 ```
 bun run audit
@@ -122,8 +138,8 @@ constraint is updated.
 bun run audit:quality
 ```
 
-Runs `check:assertions`, then the [Fallow](https://github.com/fallow-rs/fallow) audit and health reports (dead files,
-unused exports, unresolved imports) against `master`, as the CI does.
+Runs `check:assertions` and `check:dependencies`, then the [Fallow](https://github.com/fallow-rs/fallow) audit and
+health reports (dead files, unused exports, unresolved imports) against `master`, as the CI does.
 
 ```
 bun run check:assertions
@@ -135,6 +151,16 @@ business booleans such as `expect(player.host).toBe(true)`. Every `*.spec.{js,ts
 scanned, outside dependencies and build outputs, and only the outermost asserted expression is read: a comparison
 written inside a callback (`expect(list.find(item => item.id === 1)).toBeTruthy()`) builds the asserted value, it is
 not the assertion. The check reads one line at a time, so an assertion spread over several lines escapes it.
+
+```
+bun run check:dependencies
+```
+
+Fails on any breach of the dependency matrix above. It reads the manifest of every workspace package and the package
+specifiers imported by its `.js`, `.ts` and `.tsx` sources, then reports a dependency declared on a forbidden prefix,
+an import of a forbidden prefix, an import of a workspace package the manifest does not declare, and a declared
+workspace dependency that is never imported. A dependency on a library outside the workspace is left to the Fallow
+audit. Type-only imports count, JSDoc `@import` directives included, so the check sees what `tsc` erases.
 
 #### Save Manager UI
 

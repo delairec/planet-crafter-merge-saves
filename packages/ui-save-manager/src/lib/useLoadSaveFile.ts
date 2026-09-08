@@ -1,5 +1,3 @@
-/// <reference lib="dom" />
-
 import {Accessor, createSignal} from 'solid-js';
 import {LoadAndValidateSaveFileController} from "core-mapping/controllers/LoadAndValidateSaveFileController";
 import {MergeResultViewModel} from "core-mapping/presentation/viewModels/MergeResultViewModel";

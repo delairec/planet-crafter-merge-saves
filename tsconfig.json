@@ -14,7 +14,7 @@
     "types": ["@types/bun"],
     "maxNodeModuleJsDepth": 1
   },
-  "include": ["packages/**/*.js", "packages/**/*.ts", "scripts/**/*.js", "scripts/**/*.ts", "testing/**/*.ts", "testSetup.ts", "testIsolation.spec.ts"],
-  "exclude": ["node_modules", ".output", "packages/ui-save-manager/e2e"]
+  "include": ["scripts/**/*.js", "scripts/**/*.ts", "testing/**/*.ts", "testSetup.ts", "testIsolation.spec.ts"],
+  "exclude": ["node_modules", ".output"]
 }
 

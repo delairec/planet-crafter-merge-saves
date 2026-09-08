@@ -4,6 +4,8 @@ entry = [
     "scripts/node/register.js",
     "scripts/check-test-assertions.ts",
     "scripts/check-test-assertions.spec.ts",
+    "scripts/check-package-dependencies.ts",
+    "scripts/check-package-dependencies.spec.ts",
     "packages/ui-save-manager/src/entry-client.tsx",
     "packages/ui-save-manager/src/entry-server.tsx",
     "packages/**/*.spec.js",
@@ -23,7 +25,10 @@ ignoreDependencies = [
     "bun",
     "@types/bun",
     "typescript",
-    "ui-save-manager"
+    "ui-save-manager",
+    # shared-platforms consumes it through a JSDoc `@import` directive, which fallow does not read.
+    # `bun run check:dependencies` reports a workspace dependency that is never imported, this one included.
+    "util-types"
 ]
 
 ignoreUnresolvedImports = [
