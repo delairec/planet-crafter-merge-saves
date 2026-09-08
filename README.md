@@ -238,6 +238,13 @@ Both commands run the same sources as the Bun commands, straight from `packages/
 that resolve the extensionless relative imports and hand every `.ts` module to esbuild, which removes the
 TypeScript syntax Node cannot strip on its own (type-only imports, constructor parameter properties).
 
+Both are covered by execution tests: `packages/cli-validate/cli/validate-cli.node.spec.js` and
+`packages/cli-merge/cli/merge-cli.node.spec.js` spawn them as real Node processes on save files generated into a
+temporary directory, and assert their output, their exit code and the content of the merged save. They run with
+`bun test`, so a command that no longer starts under Node — or that loses the content of a save while still
+reporting success — fails the suite instead of reaching a release. Running them needs the Node version
+`engines.node` declares.
+
 
 ### Preparing data
 
