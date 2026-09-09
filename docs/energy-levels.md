@@ -27,7 +27,8 @@ defined in
   farms, aquariums, butterfly farms, the amphibian farm, the animal shelter, the animal feeder, the ecosystem,
   the silk generator, the water life collector, the genetic synthesizer and extractor, ore crushers, the
   harvesting robot, the drone station, the portal generator, the interplanetary exchange shuttle, the
-  planetary delivery depot and the extraction platform.
+  planetary delivery depot, the extraction platform and, since the 2026-09-09 cross-check, the T2
+  incubator and the intense area lamp.
 
 **Rule EN-BASE-2 (exhaustiveness):** every positioned `WorldObject` whose `gId` corresponds to a machine that
 has a power cost in-game must have an entry in `energyConsumptionLevelsByWorldObjectName`, otherwise the
@@ -44,28 +45,32 @@ cross-checked against the wiki (see the [Craft Stations](https://planet-crafter.
 [Display Screens](https://planet-crafter.fandom.com/wiki/Display_Screens) wiki pages).
 
 **EN-BASE-2 is not verifiable by a unit test, and no test claims it.** The rule is a statement about the
-*game*, and this repository holds no inventory of the game's power-drawing machines that is independent of the
-table the rule constrains. `worldObjectNames.ts` is not such an inventory: it mixes machines with resources,
-seeds, furniture and posters, it has no effect at runtime (it only derives the `WorldObjectName` type, and every
-construction site casts through `as WorldObjectName`), and it is itself incomplete. Reference saves cannot serve
-either — they are private and unavailable in CI. A test whose input set is `Object.keys(...)` of the table under
-test therefore cannot fail on the very defect the rule describes, and must not be titled as if it could.
+*game*: proving it would need an inventory of the game's power-drawing machines *and of their cost*, which no
+public source provides. `worldObjectNames.ts` now inventories the `gId`s themselves (see section 6), but it says
+which world objects exist, not which of them draw power. Reference saves cannot serve either — they are private
+and unavailable in CI. A test whose input set is `Object.keys(...)` of the table under test therefore cannot fail
+on the very defect the rule describes, and must not be titled as if it could.
 
-**What the versioned guard does cover.** `computeEnergyConsumptionLevel.spec.ts` asserts that every name in
-`WORLD_OBJECT_NAMES` belonging to a machine family that already draws power has an energy level. Its input set
-comes from `worldObjectNames.ts`, not from the table, so deleting a table entry turns it red instead of silently
-dropping a case. It catches the regression that actually occurs — a new tier of a known machine (a `Drill5`, an
-`OreBreaker4`) reaching the type without a value. It does **not** catch a wholly new machine family, nor the
-removal of a family's only entry (`Beacon`, `ComAntenna`), and it recognizes a family by stripping trailing tier
-digits off the name, which is a naming convention rather than a declaration.
+**What the versioned guard covers.** `worldObjectNames.ts` declares every known `gId` in exactly one of three
+groups — producing energy, consuming energy, or without a known energy level (section 6) — and
+`computeEnergyConsumptionLevel.spec.ts` / `computeEnergyProductionLevel.spec.ts` assert the two directions of that
+partition: every name of the producing and consuming groups yields a strictly positive level, and no name of the
+third group yields any. Consequences: removing a table entry turns the suite red (including the entry of a machine
+that has no sibling tier, `Beacon` or `ComAntenna`, which the earlier by-family guard let through), pricing a name
+without moving it into its group turns it red, and a `gId` added on the next regeneration of the list cannot reach
+the type without an energy decision being made about it.
+
+It does **not** prove EN-BASE-2: putting a machine in the third group asserts only that *this repository has not
+established* a level for it, never that the game charges nothing for it. The machines whose cost the sources leave
+undecided are listed below, and they sit in that third group.
 
 **Identifying a `gId` before pricing it.** `gId`s do not reliably match wiki page titles: `OreBreaker*` is the
 Ore Crusher and not the Ore Extractor, `InterplanetaryExchangePlatform1` is the Interplanetary Exchange Shuttle,
 and `LarvaeBase1..3` are larva *items* rather than machines. Every `gId` added to the table is therefore first
-resolved against the game's own English localization label file (`GROUP_NAME_<gId>=<display name>`) before its
-value is read off the corresponding wiki page.
+resolved to a display name through the label file described in section 6, before its value is read off the
+corresponding wiki page.
 
-**Last wiki cross-check: 2026-09-07**, against game version 2.102. It covered every `gId` observed placed in the
+**Last wiki cross-check: 2026-09-09**, against game version 2.102. It covered every `gId` observed placed in the
 reference saves. Machines whose wiki page documents the object but prints no energy value — among them the
 Megadome, the trade space rocket, the light box, the hologram projector, the server, the planet viewer, the
 cooking station and the display boxes — are deliberately absent from the table rather than priced at zero: an
@@ -75,6 +80,34 @@ an explicit statement rather than on silence: drones draw no power of their own 
 draw any energy", [Drone Station](https://planet-crafter.fandom.com/wiki/Drone_Station)), and the wreck
 [fusion reactor](https://planet-crafter.fandom.com/wiki/Fusion_reactor) is inert scenery that "ha[s] run out of
 power since [it] crashed" — not the player-built nuclear fusion generator, which the same page disambiguates.
+
+**Source registry.** The values the 2026-09-07/09 cross-check added to
+`energyConsumptionLevelsByWorldObjectName`, with the machine each `gId` names and the page the value was read
+from (game v2.102). Earlier values are sourced by the wiki pages listed in EN-BASE-2 above.
+
+| `gId` | In-game machine | kW | Source |
+|---|---|---:|---|
+| `FishFarm1`, `FishFarm2` | Fish farm, T2 fish farm | 155.5, 185 | [Fish Farms and Aquariums](https://planet-crafter.fandom.com/wiki/Fish_Farms_and_Aquariums) |
+| `Aquarium1`, `Aquarium2` | T1 / T2 aquarium | 75, 225 | same page |
+| `ButterflyFarm1..3` | Butterfly farm, T2, T3 | 30, 45, 196 | [Butterfly Farms](https://planet-crafter.fandom.com/wiki/Butterfly_Farms) |
+| `Farm1`, `Farm2` | Outdoor farm, T2 outdoor farm | 45.5, 165 | [Outdoor Farm](https://planet-crafter.fandom.com/wiki/Outdoor_Farm) |
+| `AmphibiansFarm1` | Amphibian farm | 155 | [Amphibian Farm](https://planet-crafter.fandom.com/wiki/Amphibian_Farm) |
+| `AnimalShelter1` | Animal shelter | 270 | [Animal Shelter](https://planet-crafter.fandom.com/wiki/Animal_Shelter) |
+| `AnimalFeeder1` | Animal feeder | 95 | [Animal Feeder](https://planet-crafter.fandom.com/wiki/Animal_Feeder) |
+| `Ecosystem1` | Ecosystem | 325 | [Ecosystem](https://planet-crafter.fandom.com/wiki/Ecosystem) |
+| `SilkGenerator` | Silk generator | 38 | [Silk Generator](https://planet-crafter.fandom.com/wiki/Silk_Generator) |
+| `WaterLifeCollector1` | Water life collector | 105.5 | [Water Life Collector](https://planet-crafter.fandom.com/wiki/Water_Life_Collector) |
+| `GeneticSynthetizer1` | Genetic synthesizer | 292 | [Genetic Synthesizer](https://planet-crafter.fandom.com/wiki/Genetic_Synthesizer) |
+| `GeneticExtractor1` | Genetic extractor | 317.5 | [Genetic Extractor](https://planet-crafter.fandom.com/wiki/Genetic_Extractor) |
+| `OreBreaker1..3` | T1/T2/T3 ore crusher — not the ore extractor | 2.6, 21, 125 | [Ore Crushers](https://planet-crafter.fandom.com/wiki/Ore_Crushers) |
+| `HarvestingRobot1` | Harvesting robot | 120 | [Harvesting Robot](https://planet-crafter.fandom.com/wiki/Harvesting_Robot) |
+| `DroneStation1` | Drone station | 850 | [Drone Station](https://planet-crafter.fandom.com/wiki/Drone_Station) |
+| `PortalGenerator1` | Portal generator | 1890 | [Portal Generator](https://planet-crafter.fandom.com/wiki/Portal_Generator) |
+| `InterplanetaryExchangePlatform1` | Interplanetary exchange shuttle | 375 | [Interplanetary Logistics](https://planet-crafter.fandom.com/wiki/Interplanetary_Logistics) |
+| `PlanetaryDeliveryDepot1` | Planetary delivery depot | 450 | same page |
+| `DeparturePlatform`, `DeparturePlatformHumble` | Extraction platform, and the same machine on the second planet | 265, 265 | [Extraction Platform](https://planet-crafter.fandom.com/wiki/Extraction_Platform) |
+| `Incubator2` | T2 incubator | 715 | [Incubator](https://planet-crafter.fandom.com/wiki/Incubator) (`energy=-715.00 kW/s`) |
+| `InsideLamp2` | Intense area lamp | 25 | [Base Building](https://planet-crafter.fandom.com/wiki/Base_Building) (`energy = -25 kW/s`) |
 
 **Rule EN-BASE-1:** The base energy balance of a save is
 `sum(production of every positioned world object) - sum(consumption of every positioned world object)`,
@@ -241,3 +274,49 @@ that planet's world objects) shows:
   boosts, `baseLevel × fuseCount × 1.5`, summed across all boosted producers. When a producer is reached by
   several Optimizers (Rule EN-OPT-3), each Optimizer's card reports its own share rather than the producer's
   final combined output, so contributions across cards do not necessarily sum to `production - baseProduction`.
+
+---
+
+## 6. World object names and labels
+
+`packages/core-mapping/src/domain/worldObjectNames.ts` lists the `gId`s the game is known to use, and derives the
+`WorldObjectName` type from them. Until 2026-09-09 the list had been collected by hand from sources that were not
+recorded, and it was wrong in both directions: it carried 104 names nothing corroborated and lacked 56 that two
+independent sources attest, among them `Incubator2` and `InsideLamp2`, two real consumers that could not be priced
+because the type refused them.
+
+**Attestation rule.** A name is kept only if at least one of these two sources carries it:
+
+- the 639 `GROUP_NAME_<gId>=<display name>` keys of the English label file of the community mod [(UI) English Plus Translation](https://github.com/akarnokd/ThePlanetCrafterMods/blob/3f10f457eb9dab78537a3b9dc9f1692679782391/UITranslationEnglishPlus/labels-engplus.txt).
+  That mod overrides the game's vanilla English labels, so its *wording* is community-made, but its *keys* are the
+  game's own group identifiers — a translation file that used any other key would not resolve in-game. It targets
+  game version 2.102 (`LibCommon/GameVersionCheck.cs`, `TargetVersion = "2.102"`), and it is the source that
+  distinguishes `OreBreaker*` (ore crusher) from `OreExtractor*`, `InterplanetaryExchangePlatform1` (exchange
+  shuttle) and `LarvaeBase1..3` (larva items, not machines).
+- the `gId`s read in the six private reference saves — 14 further names, all unlabelled scenery, blueprints and
+  escape pods (`RockExplodable`, `Elevator`, `GenerationGroupVein`, `Blueprint*`, `EscapePod*`, …).
+
+The 104 names attested by neither were dropped, including the six `*T*` spellings
+(`AirPurificationMachine1T1`..`4T4`, `AlgaeGenerator1T1`, `2T2`): the label file has an entry for every plain
+tier and none for any `*T*` form, and none of them appears in a reference save. Dropping a name has no runtime
+effect — every construction site casts through `as WorldObjectName` — so the risk of dropping a real one is a
+name to re-add, not a defect.
+
+**Energy partition.** The list is declared as three groups whose concatenation is `WORLD_OBJECT_NAMES`: producing
+energy, consuming energy, and without a known energy level. Totality is by construction rather than asserted, and
+the guard described in section 1 turns any drift between a group and a table red.
+
+**Labels.** `packages/core-mapping/src/presentation/worldObjectLabels.ts` maps every `WorldObjectName` to a
+display label. Its three sub-tables are typed `satisfies Partial<Record<WorldObjectName, string>>` and their union
+is typed `Record<WorldObjectName, string>`, so a label for an unknown name and a name without a label are both
+type errors: the two files can no longer drift apart. The 25 labels added on 2026-09-09 come from the label file
+above.
+
+**Open point — label wording.** 178 of the 614 labels this repository shares with the label file differ in more
+than word order or case, and the repository's wording is often the more useful of the two: it disambiguates names
+the game repeats (`GoldenEffigie1..9` are all "Golden effigy" in the game, `WreckEntryLocked1..5` all "Access
+Console") and carries bonus percentages the label file does not print. The labels were therefore left as they are.
+Two of the differences are identity discrepancies rather than wording, and are worth settling before the labels are
+trusted: `GeneticManipulator1` ("DNA Manipulator" here, "Tree seed sequencer" in the label file, no wiki page under
+either name) and `DebrisContainer1` ("Debris" here, "Container from space" in the label file). The first also
+carries an energy value (117.5 kW) whose source predates this cross-check.
