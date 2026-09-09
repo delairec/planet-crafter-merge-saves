@@ -1,5 +1,8 @@
 import {WorldObjectName} from './worldObjectNames';
 
+// Every value below, its in-game machine and the page it was read from are recorded in
+// docs/energy-levels.md, "Base energy values".
+
 export const energyProductionLevelsByWorldObjectName: Partial<Record<WorldObjectName, number>> = {
   EnergyGenerator1: 1.2,
   WindTurbine1: 290,
@@ -37,11 +40,6 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   RecyclingMachine: 12.5,
   RecyclingMachine2: 283,
   Destructor1: 18,
-  // Rule EN-BASE-2: additional consumers, cross-checked against the wiki (Craft Stations,
-  // Atmosphere Purifiers, Detoxification Machines, Toxic Water Collectors, Water Collectors,
-  // Vegetubes, Algae Generators, Food Growers, Biodomes, Base Building, Beehives), previously
-  // missing from this table and causing the computed consumption to fall well short of the
-  // in-game HUD value.
   AirPurificationMachine1: 1.1,
   AirPurificationMachine2: 12,
   AirPurificationMachine3: 35,
@@ -64,6 +62,7 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   GeneticManipulator1: 117.5,
   Biolab: 40,
   Incubator1: 215,
+  Incubator2: 715,
   AutoCrafter1: 155,
   CraftStation1: 0.5,
   CraftStation2: 12.5,
@@ -75,6 +74,7 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   ButterflyDome1: 139,
   LaunchPlatform: 55,
   InsideLamp1: 1.2,
+  InsideLamp2: 25,
   Beacon: 0.25,
   OutsideLamp1: 0.3,
   ScreenUnlockables: 0.2,
@@ -89,62 +89,31 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   ScreenToxic1: 2,
   biodome: 37,
   Biodome2: 75,
-  // Fish farms and aquariums, per https://planet-crafter.fandom.com/wiki/Fish_Farms_and_Aquariums
-  // (game v2.102): Fish Farm -155.5 kW/s, T2 Fish Farm -185 kW/s, T1 Aquarium -75 kW/s,
-  // T2 Aquarium -225 kW/s.
   FishFarm1: 155.5,
   FishFarm2: 185,
   Aquarium1: 75,
   Aquarium2: 225,
-  // Butterfly farms, per https://planet-crafter.fandom.com/wiki/Butterfly_Farms (game v2.102):
-  // Butterfly Farm -30 kW, T2 Butterfly Farm -45 kW, T3 Butterfly Farm -196 kW.
   ButterflyFarm1: 30,
   ButterflyFarm2: 45,
   ButterflyFarm3: 196,
-  // Outdoor farms, per https://planet-crafter.fandom.com/wiki/Outdoor_Farm (game v2.102):
-  // Outdoor farm -45.5 kW/s, T2 Outdoor farm -165.00 kW/s.
   Farm1: 45.5,
   Farm2: 165,
-  // Animal husbandry and wildlife machines, each per its own wiki page (game v2.102):
-  // Amphibian Farm -155 kW/s  https://planet-crafter.fandom.com/wiki/Amphibian_Farm
-  // Animal Shelter -270 kW    https://planet-crafter.fandom.com/wiki/Animal_Shelter
-  // Animal Feeder -95 kW/s    https://planet-crafter.fandom.com/wiki/Animal_Feeder
-  // Ecosystem -325 kW/s       https://planet-crafter.fandom.com/wiki/Ecosystem
-  // Silk Generator -38.00 kW/s        https://planet-crafter.fandom.com/wiki/Silk_Generator
-  // Water Life Collector -105.50 kW/s https://planet-crafter.fandom.com/wiki/Water_Life_Collector
   AmphibiansFarm1: 155,
   AnimalShelter1: 270,
   AnimalFeeder1: 95,
   Ecosystem1: 325,
   SilkGenerator: 38,
   WaterLifeCollector1: 105.5,
-  // Genetics machines (game v2.102): Genetic Synthesizer 292 kW/s
-  // (https://planet-crafter.fandom.com/wiki/Genetic_Synthesizer) and Genetic Extractor
-  // -317.5 kW/s (https://planet-crafter.fandom.com/wiki/Genetic_Extractor). The genetic
-  // manipulator above is a third, distinct machine.
   GeneticSynthetizer1: 292,
   GeneticExtractor1: 317.5,
-  // Ore crushers, per https://planet-crafter.fandom.com/wiki/Ore_Crushers (game v2.102):
-  // T1 -2.6 kW, T2 -21 kW, T3 -125 kW. Distinct from the ore extractors above, despite the
-  // `OreBreaker` gId prefix: the game labels these `T1/T2/T3 Ore Crusher`.
   OreBreaker1: 2.6,
   OreBreaker2: 21,
   OreBreaker3: 125,
-  // Logistics and transport machines, each per its own wiki page (game v2.102):
-  // Harvesting Robot -120.00 kW/s  https://planet-crafter.fandom.com/wiki/Harvesting_Robot
-  // Drone Station -850 kW/s        https://planet-crafter.fandom.com/wiki/Drone_Station
-  // Portal Generator -1890 kW/s    https://planet-crafter.fandom.com/wiki/Portal_Generator
-  // Interplanetary Exchange Shuttle -375.00 kW/s and Planetary Delivery Depot -450.00 kW/s
-  //   https://planet-crafter.fandom.com/wiki/Interplanetary_Logistics
   HarvestingRobot1: 120,
   DroneStation1: 850,
   PortalGenerator1: 1890,
   InterplanetaryExchangePlatform1: 375,
   PlanetaryDeliveryDepot1: 450,
-  // Extraction platform, per https://planet-crafter.fandom.com/wiki/Extraction_Platform
-  // (game v2.102): `energy = -265 kW/s`. The game labels both gIds "Extraction platform" —
-  // `DeparturePlatformHumble` is the same machine on the second planet, and the wiki documents
-  // a single one.
   DeparturePlatform: 265,
   DeparturePlatformHumble: 265,
   Optimizer1: 50,
