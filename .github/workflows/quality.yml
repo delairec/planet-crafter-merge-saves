@@ -19,6 +19,10 @@ jobs:
         with:
           command: audit
           format: github-summary
+      - uses: fallow-rs/fallow@v3
+        with:
+          command: health
+          format: github-summary
 
   lint:
     runs-on: ubuntu-latest
@@ -29,6 +33,16 @@ jobs:
           bun-version-file: package.json
       - run: bun install --frozen-lockfile
       - run: bun run lint:types
+
+  guards:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+      - run: bun install --frozen-lockfile
+      - run: bun run check:guards
 
   test:
     runs-on: ubuntu-latest

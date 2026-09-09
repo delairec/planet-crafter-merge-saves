@@ -139,9 +139,19 @@ constraint is updated.
 bun run audit:quality
 ```
 
-Runs `check:assertions`, `check:fixtures` and `check:dependencies`, then the
-[Fallow](https://github.com/fallow-rs/fallow) audit and health reports (dead files, unused exports, unresolved
-imports) against `master`, as the CI does.
+Runs `check:guards`, then the [Fallow](https://github.com/fallow-rs/fallow) audit and health reports (dead files,
+unused exports, unresolved imports) against `master`. This is the whole gate in one command, for a working copy. The
+CI covers the same ground in two jobs, each running the half it is equipped for: `guards` runs `check:guards`, and
+`fallow` runs the audit and the health report through the Fallow action, which scopes them to the base of the pull
+request and renders them into the run summary.
+
+```
+bun run check:guards
+```
+
+Runs the three guard scripts of this repository — `check:assertions`, `check:fixtures` and `check:dependencies` —
+which enforce conventions no off-the-shelf linter knows about. They read no git history and take a fraction of a
+second, so they are the half of `audit:quality` to run while writing code.
 
 ```
 bun run check:assertions
