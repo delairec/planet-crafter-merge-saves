@@ -134,8 +134,8 @@ describe('utils/parseSaveSections', () => {
     expect(inventories).toEqual([]);
   });
 
-  describe('When a world object line is malformed', () => {
-    it('should record a parse error instead of logging to the console', () => {
+  describe('When a world object line cannot be read', () => {
+    it('should record the failure with its section, its position and the line itself, instead of logging to the console', () => {
       // Arrange
       const save = createFakeSaveString({worldObjects: [expectedWorldObject]})
         .replace(JSON.stringify(expectedWorldObject), '{not valid json');
@@ -147,7 +147,9 @@ describe('utils/parseSaveSections', () => {
       [...worldObjectsFactory()];
 
       // Assert
-      expect(errors).toEqual(['Failed to parse world object line: \n{not valid json\n']);
+      expect(errors).toEqual([
+        {detail: 'Invalid JSON: {not valid json', section: 3, entryIndex: 0, line: '{not valid json'}
+      ]);
       expect(consoleLogSpy).not.toHaveBeenCalled();
     });
   });
@@ -177,18 +179,72 @@ describe('utils/parseSaveSections', () => {
     expect(worldEvents).toEqual([expectedWorldEvent]);
   });
 
-  describe('When save file is invalid', () => {
-    it('should fill the errors list', () => {
+  describe('When the save does not split into the expected number of parts', () => {
+    it('should report the expected and the actual count', () => {
       // Arrange
-      const save = 'This is not @ valid save string';
+      const saveOfTwoReadableParts = '{}@{}';
+
+      // Act
+      const {errors} = parseSaveSections(saveOfTwoReadableParts);
+
+      // Assert
+      expect(errors).toEqual([{detail: 'Expected 11 sections but found 2'}]);
+    });
+  });
+
+  describe('When a line of a section cannot be read', () => {
+    it('should report the failure with its section, its position and the line itself', () => {
+      // Arrange
+      const unreadableInventory = {id: 45, woIds: '', size: 20};
+      const save = createFakeSaveString({inventories: [expectedInventory, unreadableInventory]})
+        .replace(JSON.stringify(unreadableInventory), '{not valid json');
 
       // Act
       const {errors} = parseSaveSections(save);
 
       // Assert
       expect(errors).toEqual([
-        'INVALID: Expected 11 sections but found 2',
+        {detail: 'Invalid JSON: {not valid json', section: 4, entryIndex: 1, line: '{not valid json'}
       ]);
+    });
+
+    it('should keep the readable entries surrounding it', () => {
+      // Arrange
+      const unreadableInventory = {id: 45, woIds: '', size: 20};
+      const save = createFakeSaveString({inventories: [expectedInventory, unreadableInventory]})
+        .replace(JSON.stringify(unreadableInventory), '{not valid json');
+
+      // Act
+      const {sections} = parseSaveSections(save);
+
+      // Assert
+      const [, , , , inventories] = sections;
+      expect(inventories).toEqual([expectedInventory]);
+    });
+  });
+
+  describe('When the save holds blank sections', () => {
+    it('should report no error for them nor for the reserved trailing part', () => {
+      // Arrange
+      const saveWithoutMailboxesStoryEventsAndWorldEvents = createFakeSaveString({});
+
+      // Act
+      const {errors} = parseSaveSections(saveWithoutMailboxesStoryEventsAndWorldEvents);
+
+      // Assert
+      expect(errors).toEqual([]);
+    });
+
+    it('should read the reserved trailing part as an empty section', () => {
+      // Arrange
+      const save = createFakeSaveString({});
+
+      // Act
+      const {sections} = parseSaveSections(save);
+
+      // Assert
+      const reservedTrailingSection = sections[10];
+      expect(reservedTrailingSection).toEqual([]);
     });
   });
 

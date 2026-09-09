@@ -4,6 +4,7 @@ export * from './MailboxMessage';
 export * from './ParsedSave';
 export * from './Player';
 export * from './SaveConfiguration';
+export * from './SaveParseError';
 export * from '../sectionIndexes';
 export * from './Statistics';
 export * from './StoryEvent';

@@ -23,7 +23,7 @@ export function validateSaveContent(mergedSave) {
   if (sectionCountErrors.length > 0) {
     return {
       isValid: false,
-      errors: [{code: VALIDATION_ISSUE_CODES.INVALID_STRUCTURE, detail: sectionCountErrors[0].replace(/^INVALID: /, '')}],
+      errors: [{code: VALIDATION_ISSUE_CODES.INVALID_STRUCTURE, detail: sectionCountErrors[0].detail}],
       warnings: []
     };
   }

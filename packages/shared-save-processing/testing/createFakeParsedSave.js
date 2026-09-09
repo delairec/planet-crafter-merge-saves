@@ -1,5 +1,5 @@
 /** @import { SaveWarningCode } from '../normalizeRawSections.js' */
-/** @import { ParsedSave, GlobalMetadata, TerraformationLevel, Player, WorldObject, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, WorldEvent } from '../gameDefinitions' */
+/** @import { ParsedSave, SaveParseError, GlobalMetadata, TerraformationLevel, Player, WorldObject, Inventory, Statistics, MailboxMessage, StoryEvent, SaveConfiguration, WorldEvent } from '../gameDefinitions' */
 
 import {DEFAULT_GLOBAL_METADATA} from './createFakeSaveString.js';
 
@@ -19,7 +19,7 @@ function* EMPTY_GENERATOR() {
  * @property {StoryEvent[]} [storyEvents]
  * @property {SaveConfiguration[]} [saveConfigurations]
  * @property {WorldEvent[]} [worldEvents]
- * @property {string[]} [errors]
+ * @property {SaveParseError[]} [errors]
  * @property {SaveWarningCode[]} [warnings]
  */
 

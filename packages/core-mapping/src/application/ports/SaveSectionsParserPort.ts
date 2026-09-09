@@ -1,4 +1,4 @@
-import {ParsedSections} from "shared-save-processing/gameDefinitions";
+import {ParsedSections, SaveParseError} from "shared-save-processing/gameDefinitions";
 
 /**
  * Parsing reports the errors it hits while reading the sections. Format adaptations are not
@@ -7,7 +7,7 @@ import {ParsedSections} from "shared-save-processing/gameDefinitions";
  */
 export interface ParsedSaveSections {
   sections: ParsedSections;
-  errors: string[];
+  errors: SaveParseError[];
 }
 
 export interface SaveSectionsParserPort {

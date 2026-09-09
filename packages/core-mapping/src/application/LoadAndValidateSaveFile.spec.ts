@@ -51,7 +51,7 @@ describe('LoadAndValidateSaveFile', () => {
     it('should parse the content and present the loaded save file', async () => {
       // Arrange
       const {useCase, parser, presenter} = setupUseCase({
-        parsedSaveSections: {sections: emptySections, errors: ['parse error']}
+        parsedSaveSections: {sections: emptySections, errors: [{detail: 'Invalid JSON: {', section: 3, entryIndex: 2, line: '{'}]}
       });
 
       // Act
@@ -59,7 +59,7 @@ describe('LoadAndValidateSaveFile', () => {
 
       // Assert
       expect(parser.parse).toHaveBeenCalledWith('content');
-      expect(presenter.presentLoadedSaveFile).toHaveBeenCalledWith(emptySections, ['parse error'], []);
+      expect(presenter.presentLoadedSaveFile).toHaveBeenCalledWith(emptySections, [{detail: 'Invalid JSON: {', section: 3, entryIndex: 2, line: '{'}], []);
       expect(presenter.presentInvalidSaveFile).not.toHaveBeenCalled();
     });
   });
