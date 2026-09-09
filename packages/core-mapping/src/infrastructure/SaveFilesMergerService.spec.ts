@@ -77,7 +77,7 @@ describe('SaveFilesMergerService', () => {
     it('should stop the merge, naming the file and the line, rather than produce an amputated save', () => {
       // Arrange
       const service = new SaveFilesMergerService();
-      const unreadableInventory = {id: 45, woIds: '', size: 20};
+      const unreadableInventory = createEquipment({id: 45, woIds: '', size: 20});
       const contentA = createFakeSaveContent({inventories: [unreadableInventory]})
         .replace(JSON.stringify(unreadableInventory), '{not valid json');
       const contentB = createFakeSaveContent();
@@ -93,7 +93,7 @@ describe('SaveFilesMergerService', () => {
     it('should stop the merge when the unreadable line is a world object, only readable while the section is serialized', () => {
       // Arrange
       const service = new SaveFilesMergerService();
-      const unreadableWorldObject = {id: 79111656, gId: 'Phytoplankton3'};
+      const unreadableWorldObject = createWorldObject({id: 79111656, gId: 'Phytoplankton3'});
       const contentA = createFakeSaveContent();
       const contentB = createFakeSaveContent()
         .replace(stringifyEntry(unreadableWorldObject), '{not valid json');
