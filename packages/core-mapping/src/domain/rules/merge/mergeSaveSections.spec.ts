@@ -14,8 +14,8 @@ describe('Merge saves', () => {
     describe('When both saves carry entries in the sections holding identifiers', () => {
         it('should keep the origin of players, inventories and world objects', () => {
             // Arrange
-            const playerFromSaveA = createPlayer({host: false, id: 1, name: 'PlayerA', inventoryId: 10, equipmentId: 11});
-            const playerFromSaveB = createPlayer({host: false, id: 2, name: 'PlayerB', inventoryId: 20, equipmentId: 21});
+            const playerFromSaveA = createPlayer({host: false, id: '1', name: 'PlayerA', inventoryId: 10, equipmentId: 11});
+            const playerFromSaveB = createPlayer({host: false, id: '2', name: 'PlayerB', inventoryId: 20, equipmentId: 21});
             const inventoryFromSaveA = createInventory({id: 10, woIds: '', size: 20});
             const inventoryFromSaveB = createInventory({id: 20, woIds: '', size: 20});
             const worldObjectFromSaveA = createWorldObject({id: 100, gId: 'Container2', pos: '1,0,1'});

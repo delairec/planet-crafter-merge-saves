@@ -1,5 +1,6 @@
 export interface Player {
-  id: number;
+  /** Steam64 identifier, carried as its exact decimal text — see `int64Identifiers.js`. */
+  id: string;
   name: string;
   inventoryId: number;
   equipmentId: number;

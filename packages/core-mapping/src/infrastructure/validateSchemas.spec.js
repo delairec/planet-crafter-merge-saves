@@ -10,7 +10,7 @@ describe('validateSchemas', () => {
       // Arrange
       const parsedSections = [];
       parsedSections[PLAYERS_SECTION_INDEX] = [{
-        id: 1, name: 'Player', inventoryId: 1, equipmentId: 2,
+        id: '1', name: 'Player', inventoryId: 1, equipmentId: 2,
         playerPosition: '0,0,0', playerRotation: '0,0,0,1',
         playerGaugeOxygen: 1.0, playerGaugeThirst: 1.0, playerGaugeHealth: 1.0, playerGaugeToxic: 1.0,
         host: true, planetId: 'Prime'

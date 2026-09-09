@@ -29,8 +29,8 @@ describe('Resolve id conflicts', () => {
   describe('When no identifier is shared between the two saves', () => {
     it('should return the sections unchanged', () => {
       // Arrange
-      const playerFromSaveA = createPlayer({id: 1, inventoryId: 10, equipmentId: 11});
-      const playerFromSaveB = createPlayer({id: 2, inventoryId: 20, equipmentId: 21});
+      const playerFromSaveA = createPlayer({id: '1', inventoryId: 10, equipmentId: 11});
+      const playerFromSaveB = createPlayer({id: '2', inventoryId: 20, equipmentId: 21});
       const sections = createMergedSections({
         players: {fromSaveA: [playerFromSaveA], fromSaveB: [playerFromSaveB]},
         inventories: {
@@ -59,8 +59,8 @@ describe('Resolve id conflicts', () => {
   describe('When both saves use the same identifiers', () => {
     it('should renumber the save B entries and keep every entry of both saves', () => {
       // Arrange
-      const playerFromSaveA = createPlayer({id: 1, inventoryId: 10, equipmentId: 11});
-      const playerFromSaveB = createPlayer({id: 1, name: 'Chileny', inventoryId: 10, equipmentId: 11});
+      const playerFromSaveA = createPlayer({id: '1', inventoryId: 10, equipmentId: 11});
+      const playerFromSaveB = createPlayer({id: '1', name: 'Chileny', inventoryId: 10, equipmentId: 11});
       const sections = createMergedSections({
         players: {fromSaveA: [playerFromSaveA], fromSaveB: [playerFromSaveB]},
         inventories: {
@@ -90,9 +90,9 @@ describe('Resolve id conflicts', () => {
 
     it('should point the save B player at its own renumbered inventory and equipment', () => {
       // Arrange
-      const playerFromSaveB = createPlayer({id: 2, name: 'Chileny', inventoryId: 10, equipmentId: 11});
+      const playerFromSaveB = createPlayer({id: '2', name: 'Chileny', inventoryId: 10, equipmentId: 11});
       const sections = createMergedSections({
-        players: {fromSaveA: [createPlayer({id: 1, inventoryId: 10, equipmentId: 11})], fromSaveB: [playerFromSaveB]},
+        players: {fromSaveA: [createPlayer({id: '1', inventoryId: 10, equipmentId: 11})], fromSaveB: [playerFromSaveB]},
         inventories: {
           fromSaveA: [createInventory({id: 10, woIds: '', size: 20}), createInventory({id: 11, woIds: '', size: 10})],
           fromSaveB: [createInventory({id: 10, woIds: '', size: 35}), createInventory({id: 11, woIds: '', size: 5})]
@@ -110,8 +110,8 @@ describe('Resolve id conflicts', () => {
   describe('When a save B player carries the identifier of a save A player', () => {
     it('should leave that identifier untouched', () => {
       // Arrange
-      const playerFromSaveA = createPlayer({id: 1, inventoryId: 10, equipmentId: 11});
-      const playerFromSaveB = createPlayer({id: 1, name: 'Chileny', inventoryId: 20, equipmentId: 21});
+      const playerFromSaveA = createPlayer({id: '1', inventoryId: 10, equipmentId: 11});
+      const playerFromSaveB = createPlayer({id: '1', name: 'Chileny', inventoryId: 20, equipmentId: 21});
       const sections = createMergedSections({
         players: {fromSaveA: [playerFromSaveA], fromSaveB: [playerFromSaveB]},
         inventories: {
@@ -131,9 +131,9 @@ describe('Resolve id conflicts', () => {
   describe('When a save B player owns an inventory that no save A player owns', () => {
     it('should point that player at its own renumbered inventory rather than at the save A one', () => {
       // Arrange
-      const playerFromSaveB = createPlayer({id: 2, name: 'Chileny', inventoryId: 44, equipmentId: 45});
+      const playerFromSaveB = createPlayer({id: '2', name: 'Chileny', inventoryId: 44, equipmentId: 45});
       const sections = createMergedSections({
-        players: {fromSaveA: [createPlayer({id: 1, inventoryId: 3, equipmentId: 4})], fromSaveB: [playerFromSaveB]},
+        players: {fromSaveA: [createPlayer({id: '1', inventoryId: 3, equipmentId: 4})], fromSaveB: [playerFromSaveB]},
         inventories: {
           fromSaveA: [createInventory({id: 3, woIds: '', size: 20}), createInventory({id: 4, woIds: '', size: 10}), createInventory({id: 44, woIds: '', size: 35}), createInventory({id: 45, woIds: '', size: 35})],
           fromSaveB: [createInventory({id: 44, woIds: '', size: 20}), createInventory({id: 45, woIds: '', size: 10})]
@@ -153,7 +153,7 @@ describe('Resolve id conflicts', () => {
     it('should send the save B world object to the renumbered inventory and leave the save A one on the shared id', () => {
       // Arrange
       const sections = createMergedSections({
-        players: {fromSaveA: [createPlayer({id: 1, inventoryId: 10, equipmentId: 11})], fromSaveB: []},
+        players: {fromSaveA: [createPlayer({id: '1', inventoryId: 10, equipmentId: 11})], fromSaveB: []},
         inventories: {
           fromSaveA: [createInventory({id: 10, woIds: '', size: 20}), createInventory({id: 11, woIds: '', size: 10}), createInventory({id: 50, woIds: '100', size: 35})],
           fromSaveB: [createInventory({id: 50, woIds: '200', size: 12})]

@@ -18,7 +18,7 @@ describe('utils/parseSaveSections', () => {
     openedInstanceTimeLeft: 0
   };
   const expectedPlayer = {
-    id: 1,
+    id: '1',
     name: 'Nikowa',
     inventoryId: 44,
     equipmentId: 45,
@@ -34,6 +34,22 @@ describe('utils/parseSaveSections', () => {
     totalCraftedObjects: 0,
     totalTerraTokenEarned: 0
   };
+  const SECTION_SEPARATOR = '\n@\n';
+
+  /**
+   * A save whose players section holds the given text verbatim. The text of an identifier is what
+   * the parser has to preserve, and a record builder can only express it through the serializer
+   * this very text is meant to be independent of.
+   * @param {string} playersSection
+   * @returns {string}
+   */
+  function createSaveHoldingPlayersSection(playersSection) {
+    return createFakeSaveString({})
+      .split(SECTION_SEPARATOR)
+      .with(PLAYERS_SECTION_INDEX, playersSection)
+      .join(SECTION_SEPARATOR);
+  }
+
   const expectedWorldObject = {id: 101, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 110910047};
   const expectedInventory = {id: 44, woIds: '101,102', size: 10};
   const expectedTerraformationLevel = {
@@ -103,6 +119,21 @@ describe('utils/parseSaveSections', () => {
     // Assert
     const players = sections[PLAYERS_SECTION_INDEX];
     expect(players).toEqual([expectedPlayer]);
+  });
+
+  describe('When a player carries an int64 identifier', () => {
+    it('should keep the identifier exactly as written', () => {
+      // Arrange
+      const savedPlayersSection = '{"id":76561198055446664,"name":"Nikowa","inventoryId":44,"equipmentId":45,"playerPosition":"0,0,0","playerRotation":"0,0,0,0","playerGaugeOxygen":280.0,"playerGaugeThirst":96.0,"playerGaugeHealth":72.0,"playerGaugeToxic":0.0,"host":true,"planetId":"Toxicity","cameraView":0,"totalCraftedObjects":0,"totalTerraTokenEarned":0}';
+      const save = createSaveHoldingPlayersSection(savedPlayersSection);
+
+      // Act
+      const {sections} = parseSaveSections(save);
+
+      // Assert
+      const players = sections[PLAYERS_SECTION_INDEX];
+      expect(players).toEqual([{...expectedPlayer, id: '76561198055446664'}]);
+    });
   });
 
   it('should parse world objects', () => {

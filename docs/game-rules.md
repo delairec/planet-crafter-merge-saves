@@ -188,7 +188,11 @@
 
 ## 13. Id conflict resolution
 
-**Rule GR-ID-1:** After all sections are merged, every `id` in the combined inventory + world object list must be unique.
+**Rule GR-ID-1:** Inventories and world objects share one numbering space. The merge introduces into that space no
+duplicate the input saves did not already carry: an `id` held at once by an inventory and by a world object of the
+merged save is one the game itself wrote that way. Uniqueness across the union is **not** a property of the merged
+save and cannot be one — the saves the game writes already break it, and restoring it would mean renumbering entries
+of save A, whose ids are authoritative and designate the same entry after the merge as before it.
 
 **Rule GR-ID-2:** When a duplicate `id` is found (same numeric value used for two different logical objects — one from each save), the **later-encountered** entry receives a new id generated from a monotonically increasing sequence. The sequence is seeded, before a single id is handed out, above the maximum id of *every* section sharing the numbering space GR-ID-1 governs — inventories **and** world objects. Seeding on the inventories alone would let the first generated id land on an id a world object already carries.
 
@@ -207,7 +211,9 @@ are authoritative, so they still designate the same entry after the merge.
 
 **Rule GR-ID-5:** Reference rewriting is **save-origin-aware**. When an inventory id was duplicated across both saves (save A's inventory keeps the original id; save B's gets a new id), a world object from save A keeps its `liId`/`siIds` pointing to the original id, while a world object from save B points to the remapped (new) id. The origin is carried by the merged sections themselves: the three sections holding identifiers (players, inventories, world objects) keep their entries grouped as `fromSaveA` / `fromSaveB`, so it never has to be reconstructed.
 
-**Rule GR-ID-6:** A `Player.id` is never regenerated. It is a Steam account identifier, not a save-local one: the game reuses it from one save to the next, no entry back-references it, and two players sharing it across the two saves is therefore not a conflict. Players neither seed the sequence of GR-ID-2 nor draw from it — seeding on them would be impossible anyway, their values sitting beyond `Number.MAX_SAFE_INTEGER`, where `id + 1 === id` makes a sequence hand out one and the same id forever.
+**Rule GR-ID-6:** A `Player.id` is never regenerated. It is a Steam account identifier, not a save-local one: the game reuses it from one save to the next, no entry back-references it, and two players sharing it across the two saves is therefore not a conflict. Players neither seed the sequence of GR-ID-2 nor draw from it — seeding on them would be impossible anyway, their values sitting beyond `Number.MAX_SAFE_INTEGER` (GR-ID-7), where `id + 1 === id` would make a sequence hand out one and the same id forever.
 
-**Implementation:** `packages/core-mapping/src/domain/rules/merge/resolveIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/createIdSequence.ts`, `packages/core-mapping/src/domain/rules/merge/resolveInventoryIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/resolveWorldObjectIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/rewriteReferences.ts`
+**Rule GR-ID-7:** A player identifier is a Steam64 value that exceeds the exact integer range of a double; it is carried and written as its exact decimal text, never parsed into a number. Reading it as a number rounds it — consecutive doubles are 16 apart at that magnitude — and writing it back then produces the shortest decimal reading to the same double, so the merged save would name no existing Steam account. The tool only compares and copies such an identifier, two operations a string performs exactly.
+
+**Implementation:** `packages/shared-save-processing/int64Identifiers.js`, `packages/core-mapping/src/domain/rules/merge/resolveIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/createIdSequence.ts`, `packages/core-mapping/src/domain/rules/merge/resolveInventoryIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/resolveWorldObjectIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/rewriteReferences.ts`
 
