@@ -208,6 +208,49 @@ describe('validateSaveContent', () => {
     });
   });
 
+  describe('When validating the world objects section', () => {
+    describe('When a world object breaks a schema rule', () => {
+      it('should reject the save, naming the world objects section and the position of the entry, and leave the readable entries around it silent', () => {
+        // Arrange
+        const {gId: _, ...worldObjectWithoutGameId} = createWorldObject({id: 58524136});
+        const save = createFakeSaveContent({
+          worldObjects: [
+            createWorldObject({id: 79111656, gId: 'Phytoplankton3'}),
+            worldObjectWithoutGameId,
+            createWorldObject({id: 85274195, gId: 'Backpack4'})
+          ]
+        });
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: WORLD_OBJECTS_SECTION_INDEX, entryIndex: 1}
+        ]);
+      });
+    });
+
+    describe('When a world object names a position without naming its planet', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({
+          worldObjects: [createWorldObject({id: 95585241, gId: 'EnergyGenerator1', pos: '0,0,0'})]
+        });
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: WORLD_OBJECTS_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+  });
+
   describe('When validating the inventories section', () => {
     describe('When size is missing', () => {
       it('should reject the save', () => {
