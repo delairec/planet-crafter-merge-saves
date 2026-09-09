@@ -22,7 +22,7 @@ describe('LoadSaveFilePresenter', () => {
       const presenter = new LoadSaveFilePresenter();
 
       // Act
-      presenter.presentLoadedSaveFile(emptySections, [{detail: 'Invalid JSON: {', section: 3, entryIndex: 2, line: '{'}], noWarnings);
+      presenter.presentLoadedSaveFile(emptySections, [{detail: 'Invalid JSON: {', section: WORLD_OBJECTS_SECTION_INDEX, entryIndex: 2}], noWarnings);
 
       // Assert
       expect<LoadSaveFileViewModel>(presenter.viewModel).toEqual({

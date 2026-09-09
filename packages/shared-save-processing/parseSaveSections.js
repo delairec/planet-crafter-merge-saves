@@ -77,8 +77,7 @@ function* createSectionEntriesGenerator(section, sectionIndex, errors) {
       errors.push({
         detail: `Invalid JSON: ${line.slice(0, REPORTED_LINE_LENGTH)}`,
         section: sectionIndex,
-        entryIndex,
-        line
+        entryIndex
       });
       continue;
     }

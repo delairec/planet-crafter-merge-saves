@@ -135,7 +135,7 @@ describe('utils/parseSaveSections', () => {
   });
 
   describe('When a world object line cannot be read', () => {
-    it('should record the failure with its section, its position and the line itself, instead of logging to the console', () => {
+    it('should record the failure with its section, its position and an excerpt of the line, instead of logging to the console', () => {
       // Arrange
       const save = createFakeSaveString({worldObjects: [expectedWorldObject]})
         .replace(JSON.stringify(expectedWorldObject), '{not valid json');
@@ -148,7 +148,7 @@ describe('utils/parseSaveSections', () => {
 
       // Assert
       expect(errors).toEqual([
-        {detail: 'Invalid JSON: {not valid json', section: 3, entryIndex: 0, line: '{not valid json'}
+        {detail: 'Invalid JSON: {not valid json', section: 3, entryIndex: 0}
       ]);
       expect(consoleLogSpy).not.toHaveBeenCalled();
     });
@@ -193,7 +193,7 @@ describe('utils/parseSaveSections', () => {
   });
 
   describe('When a line of a section cannot be read', () => {
-    it('should report the failure with its section, its position and the line itself', () => {
+    it('should report the failure with its section, its position and an excerpt of the line', () => {
       // Arrange
       const unreadableInventory = {id: 45, woIds: '', size: 20};
       const save = createFakeSaveString({inventories: [expectedInventory, unreadableInventory]})
@@ -204,7 +204,7 @@ describe('utils/parseSaveSections', () => {
 
       // Assert
       expect(errors).toEqual([
-        {detail: 'Invalid JSON: {not valid json', section: 4, entryIndex: 1, line: '{not valid json'}
+        {detail: 'Invalid JSON: {not valid json', section: 4, entryIndex: 1}
       ]);
     });
 
