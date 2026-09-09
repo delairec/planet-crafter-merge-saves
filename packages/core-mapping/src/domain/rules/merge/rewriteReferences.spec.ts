@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 import {rewriteInventoryReferences, rewritePlayerReferences, rewriteWorldObjectReferences} from './rewriteReferences';
-import {createPlayer} from 'shared-save-processing/testing/createSaveRecords.js';
+import {createInventory, createPlayer, createWorldObject} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('Rewrite references', () => {
   const noRemapping = {inventoryIds: new Map<number, number>(), worldObjectIds: new Map<number, number>()};
@@ -50,7 +50,7 @@ describe('Rewrite references', () => {
   describe('When an inventory linked to a world object was renumbered', () => {
     it('should point the save B world object linked inventory at the new id', () => {
       // Arrange
-      const worldObjects = {fromSaveA: [{id: 1, gId: 'Container2', liId: 10}], fromSaveB: [{id: 2, gId: 'Container2', liId: 10}]};
+      const worldObjects = {fromSaveA: [createWorldObject({id: 1, gId: 'Container2', liId: 10})], fromSaveB: [createWorldObject({id: 2, gId: 'Container2', liId: 10})]};
 
       // Act
       const result = rewriteWorldObjectReferences(worldObjects, inventory10BecameInventory51);
@@ -61,7 +61,7 @@ describe('Rewrite references', () => {
 
     it('should point every save B sub-inventory slot at its new id', () => {
       // Arrange
-      const worldObjects = {fromSaveA: [], fromSaveB: [{id: 2, gId: 'Farm1', siIds: '10,20,10'}]};
+      const worldObjects = {fromSaveA: [], fromSaveB: [createWorldObject({id: 2, gId: 'Farm1', siIds: '10,20,10'})]};
 
       // Act
       const result = rewriteWorldObjectReferences(worldObjects, inventory10BecameInventory51);
@@ -72,7 +72,7 @@ describe('Rewrite references', () => {
 
     it('should leave the save A world object untouched', () => {
       // Arrange
-      const worldObjects = {fromSaveA: [{id: 1, gId: 'Container2', liId: 10, siIds: '10'}], fromSaveB: []};
+      const worldObjects = {fromSaveA: [createWorldObject({id: 1, gId: 'Container2', liId: 10, siIds: '10'})], fromSaveB: []};
 
       // Act
       const result = rewriteWorldObjectReferences(worldObjects, inventory10BecameInventory51);
@@ -85,7 +85,7 @@ describe('Rewrite references', () => {
   describe('When a world object was renumbered', () => {
     it('should point a save B linked world object at the new id', () => {
       // Arrange
-      const worldObjects = {fromSaveA: [], fromSaveB: [{id: 2, gId: 'WaterGenerator', linkedWo: 100}]};
+      const worldObjects = {fromSaveA: [], fromSaveB: [createWorldObject({id: 2, gId: 'WaterGenerator', linkedWo: 100})]};
 
       // Act
       const result = rewriteWorldObjectReferences(worldObjects, worldObject100BecameWorldObject501);
@@ -96,7 +96,7 @@ describe('Rewrite references', () => {
 
     it('should point the contained world object ids of a save B world object at the new id', () => {
       // Arrange
-      const worldObjects = {fromSaveA: [], fromSaveB: [{id: 2, gId: 'Container2', woIds: '100,200'}]};
+      const worldObjects = {fromSaveA: [], fromSaveB: [createWorldObject({id: 2, gId: 'Container2', woIds: '100,200'})]};
 
       // Act
       const result = rewriteWorldObjectReferences(worldObjects, worldObject100BecameWorldObject501);
@@ -109,7 +109,7 @@ describe('Rewrite references', () => {
   describe('When a save B inventory holds a renumbered world object', () => {
     it('should point its contents at the new world object id', () => {
       // Arrange
-      const inventories = {fromSaveA: [{id: 40, woIds: '100', size: 20}], fromSaveB: [{id: 30, woIds: '100,200', size: 20}]};
+      const inventories = {fromSaveA: [createInventory({id: 40, woIds: '100', size: 20})], fromSaveB: [createInventory({id: 30, woIds: '100,200', size: 20})]};
 
       // Act
       const result = rewriteInventoryReferences(inventories, worldObject100BecameWorldObject501);
@@ -120,7 +120,7 @@ describe('Rewrite references', () => {
 
     it('should leave the save A inventory untouched', () => {
       // Arrange
-      const inventories = {fromSaveA: [{id: 40, woIds: '100', size: 20}], fromSaveB: []};
+      const inventories = {fromSaveA: [createInventory({id: 40, woIds: '100', size: 20})], fromSaveB: []};
 
       // Act
       const result = rewriteInventoryReferences(inventories, worldObject100BecameWorldObject501);
@@ -133,7 +133,7 @@ describe('Rewrite references', () => {
   describe('When nothing was renumbered', () => {
     it('should leave every reference as it is', () => {
       // Arrange
-      const worldObjects = {fromSaveA: [], fromSaveB: [{id: 2, gId: 'Container2', liId: 10, siIds: '10,20', linkedWo: 100, woIds: '100'}]};
+      const worldObjects = {fromSaveA: [], fromSaveB: [createWorldObject({id: 2, gId: 'Container2', liId: 10, siIds: '10,20', linkedWo: 100, woIds: '100'})]};
 
       // Act
       const result = rewriteWorldObjectReferences(worldObjects, noRemapping);
@@ -144,7 +144,7 @@ describe('Rewrite references', () => {
 
     it('should leave an empty contained world object list as it is', () => {
       // Arrange
-      const inventories = {fromSaveA: [], fromSaveB: [{id: 2, woIds: '', size: 20}]};
+      const inventories = {fromSaveA: [], fromSaveB: [createInventory({id: 2, woIds: '', size: 20})]};
 
       // Act
       const result = rewriteInventoryReferences(inventories, worldObject100BecameWorldObject501);

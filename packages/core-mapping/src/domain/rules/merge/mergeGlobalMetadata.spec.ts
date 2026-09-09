@@ -1,22 +1,23 @@
 import {describe, expect, it} from 'bun:test';
 import {mergeGlobalMetadata} from './mergeGlobalMetadata';
+import {createGlobalMetadata} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('Merge global metadata', () => {
-    const metadataFromSaveA = {
+    const metadataFromSaveA = createGlobalMetadata({
         terraTokens: 122279,
         allTimeTerraTokens: 222154,
         unlockedGroups: 'MultiToolMineSpeed1,BootsSpeed1,BootsSpeed2,SofaColored',
         openedInstanceSeed: 0,
         openedInstanceTimeLeft: 2
-    };
+    });
 
-    const metadataFromSaveB = {
+    const metadataFromSaveB = createGlobalMetadata({
         terraTokens: 10928,
         allTimeTerraTokens: 11456,
         unlockedGroups: 'MultiToolMineSpeed1,BootsSpeed1,BedDoubleColored',
         openedInstanceSeed: 1,
         openedInstanceTimeLeft: 5
-    };
+    });
 
     describe('When both saves contain full global metadata', () => {
         it('should sum terra tokens', () => {

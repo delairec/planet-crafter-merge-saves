@@ -193,11 +193,11 @@ describe('SaveSectionsReaderService', () => {
       // Arrange
       const sections = createFakeParsedSave({
         worldObjects: worldObjectsOf([
-          {id: 1, gId: 'EnergyGenerator1', pos: '0,0,0', planet: 1},
-          {id: 2, gId: 'FuseEnergy1'},
-          {id: 3, gId: 'EnergyGenerator1', pos: '10,0,0'},
-          {id: 4, gId: 'EnergyGenerator1', planet: 1}
-        ] as WorldObject[])
+          createWorldObject({id: 1, gId: 'EnergyGenerator1', pos: '0,0,0', planet: 1}),
+          createWorldObject({id: 2, gId: 'FuseEnergy1'}),
+          createWorldObject({id: 3, gId: 'EnergyGenerator1', pos: '10,0,0'}),
+          createWorldObject({id: 4, gId: 'EnergyGenerator1', planet: 1})
+        ])
       }).sections;
       const service = new SaveSectionsReaderService(sections);
 
@@ -227,10 +227,10 @@ describe('SaveSectionsReaderService', () => {
       // Arrange
       const sections = createFakeParsedSave({
         worldObjects: worldObjectsOf([
-          {id: 1, gId: 'EnergyGenerator1', pos: '0,0,0', planet: 1},
-          {id: 2, gId: 'Drill0', pos: '10,0,0', planet: 2},
-          {id: 3, gId: 'Heater1', pos: '20,0,0', planet: 1}
-        ] as WorldObject[])
+          createWorldObject({id: 1, gId: 'EnergyGenerator1', pos: '0,0,0', planet: 1}),
+          createWorldObject({id: 2, gId: 'Drill0', pos: '10,0,0', planet: 2}),
+          createWorldObject({id: 3, gId: 'Heater1', pos: '20,0,0', planet: 1})
+        ])
       }).sections;
       const service = new SaveSectionsReaderService(sections);
 
@@ -261,9 +261,9 @@ describe('SaveSectionsReaderService', () => {
       // Arrange
       const sections = createFakeParsedSave({
         worldObjects: worldObjectsOf([
-          {id: 1, gId: 'EnergyGenerator1', pos: '0,0,0', planet: PRIME_PLANET_NUMERIC_ID},
-          {id: 2, gId: 'EnergyGenerator1', pos: '0,0,0', planet: UNKNOWN_PLANET_NUMERIC_ID}
-        ] as WorldObject[])
+          createWorldObject({id: 1, gId: 'EnergyGenerator1', pos: '0,0,0', planet: PRIME_PLANET_NUMERIC_ID}),
+          createWorldObject({id: 2, gId: 'EnergyGenerator1', pos: '0,0,0', planet: UNKNOWN_PLANET_NUMERIC_ID})
+        ])
       }).sections;
       const service = new SaveSectionsReaderService(sections);
 
@@ -279,9 +279,9 @@ describe('SaveSectionsReaderService', () => {
       const sections = createFakeParsedSave({
         terraformationLevels: [createTerraformationLevel({planetId: 'Humble'})],
         worldObjects: worldObjectsOf([
-          {id: 1, gId: 'Seed7Humble', pos: '0,0,0', planet: 1},
-          {id: 2, gId: 'EnergyGenerator1', pos: '10,0,0', planet: 1}
-        ] as WorldObject[])
+          createWorldObject({id: 1, gId: 'Seed7Humble', pos: '0,0,0', planet: 1}),
+          createWorldObject({id: 2, gId: 'EnergyGenerator1', pos: '10,0,0', planet: 1})
+        ])
       }).sections;
       const service = new SaveSectionsReaderService(sections);
 
@@ -296,8 +296,8 @@ describe('SaveSectionsReaderService', () => {
       // Arrange
       const sections = createFakeParsedSave({
         worldObjects: worldObjectsOf([
-          {id: 95585241, gId: 'Optimizer1', pos: '1751.865,-472.58,1106.104', planet: 1, liId: 100}
-        ] as WorldObject[])
+          createWorldObject({id: 95585241, gId: 'Optimizer1', pos: '1751.865,-472.58,1106.104', planet: 1, liId: 100})
+        ])
       }).sections;
       const service = new SaveSectionsReaderService(sections);
 
@@ -318,8 +318,8 @@ describe('SaveSectionsReaderService', () => {
       // Arrange
       const sections = createFakeParsedSave({
         inventories: [
-          {id: 100, woIds: '20,21', size: 3},
-          {id: 101, woIds: '', size: 1}
+          createInventory({id: 100, woIds: '20,21', size: 3}),
+          createInventory({id: 101, woIds: '', size: 1})
         ]
       }).sections;
       const service = new SaveSectionsReaderService(sections);

@@ -3,7 +3,7 @@ import {resolveIdConflicts} from './resolveIdConflicts';
 import {MergedSaveSections} from './MergedSaveSections';
 import {Inventory, Player, WorldObject} from 'shared-save-processing/gameDefinitions';
 import {EntriesByOrigin} from './EntriesByOrigin';
-import {createGlobalMetadata, createPlayer} from 'shared-save-processing/testing/createSaveRecords.js';
+import {createGlobalMetadata, createInventory, createPlayer, createWorldObject} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('Resolve id conflicts', () => {
   function createMergedSections(overrides: {
@@ -34,10 +34,10 @@ describe('Resolve id conflicts', () => {
       const sections = createMergedSections({
         players: {fromSaveA: [playerFromSaveA], fromSaveB: [playerFromSaveB]},
         inventories: {
-          fromSaveA: [{id: 10, woIds: '100', size: 20}, {id: 11, woIds: '', size: 10}],
-          fromSaveB: [{id: 20, woIds: '', size: 20}, {id: 21, woIds: '', size: 10}]
+          fromSaveA: [createInventory({id: 10, woIds: '100', size: 20}), createInventory({id: 11, woIds: '', size: 10})],
+          fromSaveB: [createInventory({id: 20, woIds: '', size: 20}), createInventory({id: 21, woIds: '', size: 10})]
         },
-        worldObjects: {fromSaveA: [{id: 100, gId: 'SomeObject'}], fromSaveB: [{id: 200, gId: 'OtherObject'}]}
+        worldObjects: {fromSaveA: [createWorldObject({id: 100, gId: 'SomeObject'})], fromSaveB: [createWorldObject({id: 200, gId: 'OtherObject'})]}
       });
 
       // Act
@@ -64,10 +64,10 @@ describe('Resolve id conflicts', () => {
       const sections = createMergedSections({
         players: {fromSaveA: [playerFromSaveA], fromSaveB: [playerFromSaveB]},
         inventories: {
-          fromSaveA: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}],
-          fromSaveB: [{id: 10, woIds: '', size: 35}, {id: 11, woIds: '', size: 5}]
+          fromSaveA: [createInventory({id: 10, woIds: '', size: 20}), createInventory({id: 11, woIds: '', size: 10})],
+          fromSaveB: [createInventory({id: 10, woIds: '', size: 35}), createInventory({id: 11, woIds: '', size: 5})]
         },
-        worldObjects: {fromSaveA: [{id: 100, gId: 'SomeObject'}], fromSaveB: [{id: 100, gId: 'OtherObject'}]}
+        worldObjects: {fromSaveA: [createWorldObject({id: 100, gId: 'SomeObject'})], fromSaveB: [createWorldObject({id: 100, gId: 'OtherObject'})]}
       });
 
       // Act
@@ -94,8 +94,8 @@ describe('Resolve id conflicts', () => {
       const sections = createMergedSections({
         players: {fromSaveA: [createPlayer({id: 1, inventoryId: 10, equipmentId: 11})], fromSaveB: [playerFromSaveB]},
         inventories: {
-          fromSaveA: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}],
-          fromSaveB: [{id: 10, woIds: '', size: 35}, {id: 11, woIds: '', size: 5}]
+          fromSaveA: [createInventory({id: 10, woIds: '', size: 20}), createInventory({id: 11, woIds: '', size: 10})],
+          fromSaveB: [createInventory({id: 10, woIds: '', size: 35}), createInventory({id: 11, woIds: '', size: 5})]
         }
       });
 
@@ -115,8 +115,8 @@ describe('Resolve id conflicts', () => {
       const sections = createMergedSections({
         players: {fromSaveA: [playerFromSaveA], fromSaveB: [playerFromSaveB]},
         inventories: {
-          fromSaveA: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}],
-          fromSaveB: [{id: 20, woIds: '', size: 35}, {id: 21, woIds: '', size: 5}]
+          fromSaveA: [createInventory({id: 10, woIds: '', size: 20}), createInventory({id: 11, woIds: '', size: 10})],
+          fromSaveB: [createInventory({id: 20, woIds: '', size: 35}), createInventory({id: 21, woIds: '', size: 5})]
         }
       });
 
@@ -135,8 +135,8 @@ describe('Resolve id conflicts', () => {
       const sections = createMergedSections({
         players: {fromSaveA: [createPlayer({id: 1, inventoryId: 3, equipmentId: 4})], fromSaveB: [playerFromSaveB]},
         inventories: {
-          fromSaveA: [{id: 3, woIds: '', size: 20}, {id: 4, woIds: '', size: 10}, {id: 44, woIds: '', size: 35}, {id: 45, woIds: '', size: 35}],
-          fromSaveB: [{id: 44, woIds: '', size: 20}, {id: 45, woIds: '', size: 10}]
+          fromSaveA: [createInventory({id: 3, woIds: '', size: 20}), createInventory({id: 4, woIds: '', size: 10}), createInventory({id: 44, woIds: '', size: 35}), createInventory({id: 45, woIds: '', size: 35})],
+          fromSaveB: [createInventory({id: 44, woIds: '', size: 20}), createInventory({id: 45, woIds: '', size: 10})]
         }
       });
 
@@ -155,12 +155,12 @@ describe('Resolve id conflicts', () => {
       const sections = createMergedSections({
         players: {fromSaveA: [createPlayer({id: 1, inventoryId: 10, equipmentId: 11})], fromSaveB: []},
         inventories: {
-          fromSaveA: [{id: 10, woIds: '', size: 20}, {id: 11, woIds: '', size: 10}, {id: 50, woIds: '100', size: 35}],
-          fromSaveB: [{id: 50, woIds: '200', size: 12}]
+          fromSaveA: [createInventory({id: 10, woIds: '', size: 20}), createInventory({id: 11, woIds: '', size: 10}), createInventory({id: 50, woIds: '100', size: 35})],
+          fromSaveB: [createInventory({id: 50, woIds: '200', size: 12})]
         },
         worldObjects: {
-          fromSaveA: [{id: 100, gId: 'Container2', liId: 50}],
-          fromSaveB: [{id: 200, gId: 'Container2', liId: 50}]
+          fromSaveA: [createWorldObject({id: 100, gId: 'Container2', liId: 50})],
+          fromSaveB: [createWorldObject({id: 200, gId: 'Container2', liId: 50})]
         }
       });
 
@@ -181,12 +181,12 @@ describe('Resolve id conflicts', () => {
       // Arrange
       const sections = createMergedSections({
         inventories: {
-          fromSaveA: [{id: 30, woIds: '100', size: 50}],
-          fromSaveB: [{id: 31, woIds: '100', size: 50}]
+          fromSaveA: [createInventory({id: 30, woIds: '100', size: 50})],
+          fromSaveB: [createInventory({id: 31, woIds: '100', size: 50})]
         },
         worldObjects: {
-          fromSaveA: [{id: 100, gId: 'Iron'}],
-          fromSaveB: [{id: 100, gId: 'Cobalt'}]
+          fromSaveA: [createWorldObject({id: 100, gId: 'Iron'})],
+          fromSaveB: [createWorldObject({id: 100, gId: 'Cobalt'})]
         }
       });
 
@@ -207,10 +207,10 @@ describe('Resolve id conflicts', () => {
       // Arrange
       const sections = createMergedSections({
         inventories: {
-          fromSaveA: [{id: 10, woIds: '', size: 20}],
-          fromSaveB: [{id: 10, woIds: '', size: 35}]
+          fromSaveA: [createInventory({id: 10, woIds: '', size: 20})],
+          fromSaveB: [createInventory({id: 10, woIds: '', size: 35})]
         },
-        worldObjects: {fromSaveA: [{id: 11, gId: 'Iron'}], fromSaveB: []}
+        worldObjects: {fromSaveA: [createWorldObject({id: 11, gId: 'Iron'})], fromSaveB: []}
       });
 
       // Act
@@ -227,8 +227,8 @@ describe('Resolve id conflicts', () => {
       // Arrange
       const sections = createMergedSections({
         worldObjects: {
-          fromSaveA: [{id: 100, gId: 'Lake1'}],
-          fromSaveB: [{id: 100, gId: 'Lake2'}, {id: 201, gId: 'WaterGenerator', linkedWo: 100}]
+          fromSaveA: [createWorldObject({id: 100, gId: 'Lake1'})],
+          fromSaveB: [createWorldObject({id: 100, gId: 'Lake2'}), createWorldObject({id: 201, gId: 'WaterGenerator', linkedWo: 100})]
         }
       });
 

@@ -1,9 +1,10 @@
 import {describe, it, expect} from 'bun:test';
 import {mergeStatistics} from './mergeStatistics';
+import {createStatistics} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('Merge statistics', () => {
-  const statisticsFromSaveA = {craftedObjects: 3952, totalSaveFileLoad: 10, totalSaveFileTime: 500};
-  const statisticsFromSaveB = {craftedObjects: 1000, totalSaveFileLoad: 20, totalSaveFileTime: 300};
+  const statisticsFromSaveA = createStatistics({craftedObjects: 3952, totalSaveFileLoad: 10, totalSaveFileTime: 500});
+  const statisticsFromSaveB = createStatistics({craftedObjects: 1000, totalSaveFileLoad: 20, totalSaveFileTime: 300});
 
   describe('When both saves have statistics', () => {
     it('should merge statistics by summing values', () => {

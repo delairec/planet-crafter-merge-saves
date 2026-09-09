@@ -1,16 +1,17 @@
 import {describe, expect, it} from 'bun:test';
 import {resolveInventoryIdConflicts} from './resolveInventoryIdConflicts';
 import {createIdSequence} from './createIdSequence';
+import {createEquipment, createInventory} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('Resolve inventory id conflicts', () => {
-  const inventoryOfSaveA = {id: 10, woIds: '', size: 20};
-  const equipmentOfSaveA = {id: 11, woIds: '', size: 10};
+  const inventoryOfSaveA = createInventory({id: 10, woIds: '', size: 20});
+  const equipmentOfSaveA = createEquipment({id: 11, woIds: '', size: 10});
   const noWorldObjects: never[] = [];
 
   describe('When a save B inventory uses an id already taken in save A', () => {
     it('should give that inventory a new id above every existing inventory id', () => {
       // Arrange
-      const inventories = {fromSaveA: [inventoryOfSaveA], fromSaveB: [{id: 10, woIds: '', size: 35}]};
+      const inventories = {fromSaveA: [inventoryOfSaveA], fromSaveB: [createInventory({id: 10, woIds: '', size: 35})]};
 
       // Act
       const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA], noWorldObjects));
@@ -21,7 +22,7 @@ describe('Resolve inventory id conflicts', () => {
 
     it('should report the new id under the id it replaces', () => {
       // Arrange
-      const inventories = {fromSaveA: [inventoryOfSaveA], fromSaveB: [{id: 10, woIds: '', size: 35}]};
+      const inventories = {fromSaveA: [inventoryOfSaveA], fromSaveB: [createInventory({id: 10, woIds: '', size: 35})]};
 
       // Act
       const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA], noWorldObjects));
@@ -32,7 +33,7 @@ describe('Resolve inventory id conflicts', () => {
 
     it('should leave the save A inventories untouched', () => {
       // Arrange
-      const inventories = {fromSaveA: [inventoryOfSaveA], fromSaveB: [{id: 10, woIds: '', size: 35}]};
+      const inventories = {fromSaveA: [inventoryOfSaveA], fromSaveB: [createInventory({id: 10, woIds: '', size: 35})]};
 
       // Act
       const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA], noWorldObjects));
@@ -47,7 +48,7 @@ describe('Resolve inventory id conflicts', () => {
       // Arrange
       const inventories = {
         fromSaveA: [inventoryOfSaveA, equipmentOfSaveA],
-        fromSaveB: [{id: 10, woIds: '', size: 35}, {id: 11, woIds: '', size: 5}]
+        fromSaveB: [createInventory({id: 10, woIds: '', size: 35}), createEquipment({id: 11, woIds: '', size: 5})]
       };
 
       // Act
@@ -61,7 +62,7 @@ describe('Resolve inventory id conflicts', () => {
   describe('When a save B inventory uses an id that is free', () => {
     it('should keep its id and report no remapping', () => {
       // Arrange
-      const inventories = {fromSaveA: [inventoryOfSaveA], fromSaveB: [{id: 99, woIds: '', size: 50}]};
+      const inventories = {fromSaveA: [inventoryOfSaveA], fromSaveB: [createInventory({id: 99, woIds: '', size: 50})]};
 
       // Act
       const result = resolveInventoryIdConflicts(inventories, createIdSequence([inventoryOfSaveA], noWorldObjects));
