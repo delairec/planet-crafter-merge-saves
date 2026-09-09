@@ -31,10 +31,16 @@ ignoreDependencies = [
     "ui-save-manager"
 ]
 
+# One entry per section schema, and nothing wider: the CI runs fallow on a bare checkout, where a
+# JSON import going through the `"./*": "./*"` exports map of `shared-save-processing` has no
+# `node_modules` to resolve against. What covers these imports instead is `bun test`, which fails
+# on a schema `validateSchemas.js` cannot load. Every schema of the ten is listed, so a new one
+# added without its entry is reported rather than silently unresolved.
 ignoreUnresolvedImports = [
     "shared-save-processing/schemas/section0-player-progression.schema.json",
     "shared-save-processing/schemas/section1-terraformation-levels.schema.json",
     "shared-save-processing/schemas/section2-players.schema.json",
+    "shared-save-processing/schemas/section3-world-objects.schema.json",
     "shared-save-processing/schemas/section4-inventories.schema.json",
     "shared-save-processing/schemas/section5-statistics.schema.json",
     "shared-save-processing/schemas/section6-messages.schema.json",
