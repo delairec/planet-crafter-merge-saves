@@ -12,8 +12,8 @@
  * save file). Everywhere else in the codebase, the canonical 11-part format is assumed.
  */
 
-const LEGACY_SECTION_COUNT = 11; // real sections when Terrain Layers still existed
-const LEGACY_SPLIT_PARTS_COUNT = LEGACY_SECTION_COUNT + 1; // + trailing reserved part
+const LEGACY_DATA_SECTIONS = 11; // real sections when Terrain Layers still existed
+const LEGACY_PARTS = LEGACY_DATA_SECTIONS + 1; // + trailing reserved part
 const LEGACY_TERRAIN_LAYERS_SECTION_INDEX = 9;
 const LEGACY_WORLD_EVENTS_SECTION_INDEX = 10;
 
@@ -32,7 +32,7 @@ export const SAVE_WARNING_CODES = /** @type {const} */ ({
  * @returns {{ sections: string[], warnings: SaveWarningCode[] }}
  */
 export function normalizeRawSections(rawParts) {
-  if (rawParts.length === LEGACY_SPLIT_PARTS_COUNT) {
+  if (rawParts.length === LEGACY_PARTS) {
     return {
       sections: [
         ...rawParts.slice(0, LEGACY_TERRAIN_LAYERS_SECTION_INDEX),
