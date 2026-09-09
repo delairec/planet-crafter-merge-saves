@@ -1,10 +1,11 @@
 import {describe, it, expect} from 'bun:test';
 import {mergeInventories} from './mergeInventories';
+import {createEquipment, createInventory} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('Merge Inventories', () => {
   const noOrphanInventoryIds = new Set<number>();
-  const inventoryFromSaveA = {id: 44, woIds: '79111656,58524136', size: 20};
-  const inventoryFromSaveB = {id: 77, woIds: '79111656,58524136', size: 20};
+  const inventoryFromSaveA = createInventory({id: 44, woIds: '79111656,58524136', size: 20});
+  const inventoryFromSaveB = createInventory({id: 77, woIds: '79111656,58524136', size: 20});
 
   describe('When inventories come from both saves', () => {
     it('should keep the inventories of each save under their own origin', () => {
@@ -22,7 +23,7 @@ describe('Merge Inventories', () => {
   describe('When an inventory has no ejected player id', () => {
     it('should keep the inventory as it may belong to a world object', () => {
       // Arrange
-      const worldObjectInventory = {id: 999, woIds: '', size: 5};
+      const worldObjectInventory = createInventory({id: 999, woIds: '', size: 5});
 
       // Act
       const result = mergeInventories([inventoryFromSaveA, worldObjectInventory], [inventoryFromSaveB], noOrphanInventoryIds);
@@ -36,8 +37,8 @@ describe('Merge Inventories', () => {
 
     it('should keep equipment inventories from both saves', () => {
       // Arrange
-      const equipmentFromSaveA = {id: 45, woIds: '', size: 10};
-      const equipmentFromSaveB = {id: 4, woIds: '', size: 10};
+      const equipmentFromSaveA = createEquipment({id: 45, woIds: '', size: 10});
+      const equipmentFromSaveB = createEquipment({id: 4, woIds: '', size: 10});
 
       // Act
       const result = mergeInventories([inventoryFromSaveA, equipmentFromSaveA], [inventoryFromSaveB, equipmentFromSaveB], noOrphanInventoryIds);
@@ -69,9 +70,9 @@ describe('Merge Inventories', () => {
   describe('When save B contains inventories from an ejected player', () => {
     it('should drop the orphan inventories of the ejected player', () => {
       // Arrange
-      const orphanInventory = {id: 77, woIds: '901,902', size: 10};
-      const orphanEquipment = {id: 78, woIds: '903', size: 5};
-      const remainingInventory = {id: 79, woIds: '904', size: 20};
+      const orphanInventory = createInventory({id: 77, woIds: '901,902', size: 10});
+      const orphanEquipment = createEquipment({id: 78, woIds: '903', size: 5});
+      const remainingInventory = createInventory({id: 79, woIds: '904', size: 20});
       const orphanInventoryIds = new Set([77, 78]);
 
       // Act

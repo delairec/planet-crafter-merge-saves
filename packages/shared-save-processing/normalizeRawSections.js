@@ -12,10 +12,10 @@
  * save file). Everywhere else in the codebase, the canonical 11-part format is assumed.
  */
 
+import {LEGACY_TERRAIN_LAYERS_SECTION_INDEX, LEGACY_WORLD_EVENTS_SECTION_INDEX} from './sectionIndexes.js';
+
 const LEGACY_SECTION_COUNT = 11; // real sections when Terrain Layers still existed
 const LEGACY_SPLIT_PARTS_COUNT = LEGACY_SECTION_COUNT + 1; // + trailing reserved part
-const LEGACY_TERRAIN_LAYERS_SECTION_INDEX = 9;
-const LEGACY_WORLD_EVENTS_SECTION_INDEX = 10;
 
 export const SAVE_WARNING_CODES = /** @type {const} */ ({
   LEGACY_SAVE_FORMAT: 'legacy-save-format'

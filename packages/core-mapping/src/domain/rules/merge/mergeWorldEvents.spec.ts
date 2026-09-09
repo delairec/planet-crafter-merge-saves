@@ -1,10 +1,11 @@
 import {describe, it, expect} from 'bun:test';
 import {mergeWorldEvents} from './mergeWorldEvents';
+import {createWorldEvent} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('Merge world events', () => {
-  const worldEventA = {planet: 110910045, seed: 12345, pos: '100,200,300'};
-  const worldEventB = {planet: 110910046, seed: 67890, pos: '400,500,600'};
-  const worldEventShared = {planet: 110910047, seed: 11111, pos: '700,800,900'};
+  const worldEventA = createWorldEvent({planet: 110910045, seed: 12345, pos: '100,200,300'});
+  const worldEventB = createWorldEvent({planet: 110910046, seed: 67890, pos: '400,500,600'});
+  const worldEventShared = createWorldEvent({planet: 110910047, seed: 11111, pos: '700,800,900'});
 
   describe('When world events are unique', () => {
     it('should concat world events from both saves', () => {

@@ -1,6 +1,7 @@
 import {describe, it, expect} from 'bun:test';
 import {mergeWorldObjects} from './mergeWorldObjects';
 import {WorldObject} from 'shared-save-processing/gameDefinitions';
+import {createWorldObject} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('Merge world objects', () => {
   function* createWorldObjectsGenerator(worldObjects: WorldObject[]): Generator<WorldObject> {
@@ -8,9 +9,9 @@ describe('Merge world objects', () => {
   }
 
   const noOrphanWorldObjectIds = new Set<number>();
-  const worldObjectFromSaveA = {id: 101, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 110910047};
-  const worldObjectFromSaveB = {id: 201, gId: 'OtherObject', pos: '400,500,600', rot: '0,0,0,1', planet: 110910047};
-  const sharedWorldObject = {id: 301, gId: 'SharedObject', pos: '700,800,900', rot: '0,0,0,1', planet: 110910047};
+  const worldObjectFromSaveA = createWorldObject({id: 101, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 110910047});
+  const worldObjectFromSaveB = createWorldObject({id: 201, gId: 'OtherObject', pos: '400,500,600', rot: '0,0,0,1', planet: 110910047});
+  const sharedWorldObject = createWorldObject({id: 301, gId: 'SharedObject', pos: '700,800,900', rot: '0,0,0,1', planet: 110910047});
 
   describe('When world objects are unique', () => {
     it('should keep the world objects of each save under their own origin', () => {
@@ -39,9 +40,9 @@ describe('Merge world objects', () => {
       const result = mergeWorldObjects(
         createWorldObjectsGenerator(noWorldObjectsFromSaveA),
         createWorldObjectsGenerator([
-          {id: 901, gId: 'Iron'},
-          {id: 902, gId: 'Cobalt'},
-          {id: 903, gId: 'AirFilter1'}
+          createWorldObject({id: 901, gId: 'Iron'}),
+          createWorldObject({id: 902, gId: 'Cobalt'}),
+          createWorldObject({id: 903, gId: 'AirFilter1'})
         ]),
         orphanWorldObjectIds
       );
@@ -75,8 +76,8 @@ describe('Merge world objects', () => {
   describe('When two world objects share the same pos but are on different planets', () => {
     it('should keep both world objects as they are distinct objects', () => {
       // Arrange
-      const worldObjectOnPlanetA = {id: 101, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 111111111};
-      const worldObjectOnPlanetB = {id: 201, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 222222222};
+      const worldObjectOnPlanetA = createWorldObject({id: 101, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 111111111});
+      const worldObjectOnPlanetB = createWorldObject({id: 201, gId: 'SomeObject', pos: '100,200,300', rot: '0,0,0,1', planet: 222222222});
 
       // Act
       const result = mergeWorldObjects(

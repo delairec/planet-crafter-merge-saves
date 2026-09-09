@@ -25,20 +25,6 @@ export const DEFAULT_GLOBAL_METADATA = /** @type {GlobalMetadata} */ ({
     openedInstanceTimeLeft: 0,
 });
 
-export const FAKE_SAVE_CONFIGURATION = /** @type {SaveConfiguration} */ ({
-    saveDisplayName: 'Fake Save',
-    planetId: 'Prime',
-    worldSeed: 0,
-    mode: 'standard',
-    modded: false,
-    version: '13',
-    modifierGaugeDrain: 1,
-    modifierMeteoOccurence: 1,
-    modifierMultiplayerTerraformationFactor: 0.5,
-    modifierPowerConsumption: 1,
-    modifierTerraformationPace: 1,
-});
-
 /**
  * @param {unknown[]} entries
  * @returns {string}

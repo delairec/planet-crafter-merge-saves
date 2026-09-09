@@ -1,10 +1,11 @@
 import {describe, it, expect} from 'bun:test';
 import {mergeMailboxes} from './mergeMailboxes';
+import {createMailboxMessage} from 'shared-save-processing/testing/createSaveRecords.js';
 
 describe('Merge mailboxes', () => {
-  const uniqueMailboxFromSaveA = {stringId: 'Message_YouAreAConvict', isRead: true};
-  const uniqueMailboxFromSaveB = {stringId: 'Message_toxicity_InfosGoo', isRead: false};
-  const unreadSharedMailbox = {stringId: 'Message_Shared', isRead: false};
+  const uniqueMailboxFromSaveA = createMailboxMessage({stringId: 'Message_YouAreAConvict', isRead: true});
+  const uniqueMailboxFromSaveB = createMailboxMessage({stringId: 'Message_toxicity_InfosGoo', isRead: false});
+  const unreadSharedMailbox = createMailboxMessage({stringId: 'Message_Shared', isRead: false});
   const readSharedMailbox = {...unreadSharedMailbox, isRead: true};
 
   describe('When mailboxes are unique', () => {

@@ -1,14 +1,14 @@
 import {describe, expect, it} from 'bun:test';
 import {mergeSaveSections} from './mergeSaveSections';
-import {FAKE_SAVE_CONFIGURATION} from 'shared-save-processing/testing/createFakeSaveString.js';
+import {createSaveConfiguration} from 'shared-save-processing/testing/createSaveRecords.js';
 import {createFakeParsedSave} from "shared-save-processing/testing/createFakeParsedSave.js";
 
 describe('Merge saves — #determineSaveOrder', () => {
     const saveDisplayName = 'SAVE_NAME';
 
-    const primeConfig = {...FAKE_SAVE_CONFIGURATION, saveDisplayName: 'SavePrime', planetId: 'Prime'};
-    const toxicityConfig = {...FAKE_SAVE_CONFIGURATION, saveDisplayName: 'SaveToxicity', planetId: 'Toxicity'};
-    const aqualisConfig = {...FAKE_SAVE_CONFIGURATION, saveDisplayName: 'SaveAqualis', planetId: 'Aqualis'};
+    const primeConfig = createSaveConfiguration({saveDisplayName: 'SavePrime', planetId: 'Prime'});
+    const toxicityConfig = createSaveConfiguration({saveDisplayName: 'SaveToxicity', planetId: 'Toxicity'});
+    const aqualisConfig = createSaveConfiguration({saveDisplayName: 'SaveAqualis', planetId: 'Aqualis'});
 
     describe('When only the second save has Prime as planetId', () => {
         it('should return the Prime save as save A', () => {

@@ -139,8 +139,9 @@ constraint is updated.
 bun run audit:quality
 ```
 
-Runs `check:assertions` and `check:dependencies`, then the [Fallow](https://github.com/fallow-rs/fallow) audit and
-health reports (dead files, unused exports, unresolved imports) against `master`, as the CI does.
+Runs `check:assertions`, `check:fixtures` and `check:dependencies`, then the
+[Fallow](https://github.com/fallow-rs/fallow) audit and health reports (dead files, unused exports, unresolved
+imports) against `master`, as the CI does.
 
 ```
 bun run check:assertions
@@ -152,6 +153,19 @@ business booleans such as `expect(player.host).toBe(true)`. Every `*.spec.{js,ts
 scanned, outside dependencies and build outputs, and only the outermost asserted expression is read: a comparison
 written inside a callback (`expect(list.find(item => item.id === 1)).toBeTruthy()`) builds the asserted value, it is
 not the assertion. The check reads one line at a time, so an assertion spread over several lines escapes it.
+
+```
+bun run check:fixtures
+```
+
+Fails on any spec making a fixture compile instead of typing it: `as unknown`, `as never`, an `any` annotation —
+including the JSDoc forms `/** @type {any} */` and `@param {any}`, which a search for `: any` does not see — and
+`@ts-ignore`. A test fixture is built by its builder (`packages/shared-save-processing/testing/createSaveRecords.js`
+for the save records) so that a record gaining a field breaks the build rather than a test. An input that is illegal
+on purpose is declared with `@ts-expect-error`, which fails the day the error disappears, and the check requires that
+directive to carry the justification saying which invalidity is under test. String literals are masked before the
+line is read, so a forbidden form quoted in a message is not reported; like `check:assertions`, the check reads one
+line at a time, so a declaration spread over several lines escapes it.
 
 ```
 bun run check:dependencies

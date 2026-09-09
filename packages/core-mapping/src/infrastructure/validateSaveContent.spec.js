@@ -8,10 +8,12 @@ import {
   createEquipment,
   createGlobalMetadata,
   createInventory,
+  createMailboxMessage,
   createPlayer,
   createSaveConfiguration,
   createStatistics,
-  createTerraformationLevel
+  createTerraformationLevel,
+  createWorldObject
 } from 'shared-save-processing/testing/createSaveRecords.js';
 import {
   GLOBAL_METADATA_SECTION_INDEX,
@@ -425,7 +427,7 @@ describe('validateSaveContent', () => {
           });
           const save = createFakeSaveContent({
             players: [firstPlayer, secondPlayer],
-            inventories: [createInventory(), createEquipment(), {id: 3, woIds: '', size: 20}, {id: 4, woIds: '', size: 10}]
+            inventories: [createInventory(), createEquipment(), createInventory({id: 3, woIds: '', size: 20}), createEquipment({id: 4, woIds: '', size: 10})]
           });
 
           // Act
@@ -468,7 +470,7 @@ describe('validateSaveContent', () => {
           });
           const save = createFakeSaveContent({
             players: [firstPlayer, playerOnOtherPlanet],
-            inventories: [createInventory(), createEquipment(), {id: 3, woIds: '', size: 20}, {id: 4, woIds: '', size: 10}]
+            inventories: [createInventory(), createEquipment(), createInventory({id: 3, woIds: '', size: 20}), createEquipment({id: 4, woIds: '', size: 10})]
           });
 
           // Act
@@ -525,7 +527,7 @@ describe('validateSaveContent', () => {
     describe('When the unreadable line is in the world objects section', () => {
       it('should reject the save, naming the world objects section and the position of the line', () => {
         // Arrange
-        const readableWorldObject = {id: 101, gId: 'Backpack4'};
+        const readableWorldObject = createWorldObject({id: 101, gId: 'Backpack4'});
         const save = createFakeSaveString({worldObjects: [readableWorldObject]})
           .replace(stringifyEntry(readableWorldObject), '{not valid json');
 
@@ -543,9 +545,9 @@ describe('validateSaveContent', () => {
     describe('When the unreadable line is surrounded by readable ones', () => {
       it('should reject the save and report only the line it could not read', () => {
         // Arrange
-        const unreadableMailboxMessage = {stringId: 'Message2', isRead: false};
+        const unreadableMailboxMessage = createMailboxMessage({stringId: 'Message2', isRead: false});
         const save = createFakeSaveContent({
-          mailboxes: [{stringId: 'Message1', isRead: true}, unreadableMailboxMessage, {stringId: 'Message3', isRead: false}]
+          mailboxes: [createMailboxMessage({stringId: 'Message1', isRead: true}), unreadableMailboxMessage, createMailboxMessage({stringId: 'Message3', isRead: false})]
         }).replace(JSON.stringify(unreadableMailboxMessage), '{not valid json');
 
         // Act

@@ -1,10 +1,6 @@
-import {Glob} from 'bun';
-
-const SPEC_FILES_PATTERN = '**/*.spec.{js,ts,tsx}';
-const GENERATED_DIRECTORY = /(?:^|\/)(?:node_modules|dist|build|coverage)\//;
+import {maskStringLiterals, readOwnSpecFiles, reportViolations} from './specSources.ts';
 
 const EXPECT_CALL = 'expect(';
-const STRING_LITERAL = /'(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*"|`(?:\\.|[^`\\])*`/g;
 const BOOLEAN_MATCHER = /^\.(?:not\.)?(?:toBeTruthy\(\)|toBeFalsy\(\)|toBe\((?:true|false)\))/;
 const BOOLEAN_PRODUCING_CALL = /\.(?:some|every|includes)\(/;
 const MEMBERSHIP_OR_TYPE_OPERATOR = /\b(?:in|typeof)\s/;
@@ -17,15 +13,6 @@ const CLOSING_BRACKETS = ')]}';
 export interface FabricatedBooleanAssertion {
   line: number;
   text: string;
-}
-
-/**
- * Replaces the content of every string literal with filler of the same length, so that
- * parentheses and operators written inside a literal are not read as code.
- * @param {string} line
- */
-function maskStringLiterals(line: string): string {
-  return line.replace(STRING_LITERAL, literal => '_'.repeat(literal.length));
 }
 
 /**
@@ -122,31 +109,18 @@ export function findFabricatedBooleanAssertions(source: string): FabricatedBoole
     .filter(({text}) => hasFabricatedBooleanAssertion(maskStringLiterals(text)));
 }
 
-/**
- * @param {string} filePath a spec file path relative to the repository root
- * @returns whether that spec is one of ours, wherever it lives in the repository
- */
-export function isOwnSpecFile(filePath: string): boolean {
-  return !GENERATED_DIRECTORY.test(filePath);
-}
-
 async function checkSpecFiles(): Promise<number> {
   const violations: string[] = [];
-  for await (const filePath of new Glob(SPEC_FILES_PATTERN).scan({cwd: process.cwd()})) {
-    if (!isOwnSpecFile(filePath)) {
-      continue;
-    }
-    const source = await Bun.file(filePath).text();
+  for await (const {filePath, source} of readOwnSpecFiles()) {
     findFabricatedBooleanAssertions(source)
       .forEach(({line, text}) => violations.push(`${filePath}:${line}: ${text}`));
   }
-  if (violations.length === 0) {
-    console.log('check:assertions: no fabricated boolean assertion found.');
-    return 0;
-  }
-  violations.forEach(violation => console.log(violation));
-  console.log(`check:assertions: ${violations.length} fabricated boolean assertion(s); apply the matcher to the value itself.`);
-  return 1;
+  return reportViolations({
+    checkName: 'check:assertions',
+    violations,
+    nothingFound: 'no fabricated boolean assertion found.',
+    summarize: count => `${count} fabricated boolean assertion(s); apply the matcher to the value itself.`
+  });
 }
 
 if (import.meta.main) {

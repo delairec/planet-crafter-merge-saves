@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'bun:test';
 import {validateSchemas} from './validateSchemas.js';
 import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue.ts';
+import {PLAYERS_SECTION_INDEX} from 'shared-save-processing/sectionIndexes.js';
 
 describe('validateSchemas', () => {
 
@@ -8,7 +9,7 @@ describe('validateSchemas', () => {
     it('should return no issue', () => {
       // Arrange
       const parsedSections = [];
-      parsedSections[2] = [{
+      parsedSections[PLAYERS_SECTION_INDEX] = [{
         id: 1, name: 'Player', inventoryId: 1, equipmentId: 2,
         playerPosition: '0,0,0', playerRotation: '0,0,0,1',
         playerGaugeOxygen: 1.0, playerGaugeThirst: 1.0, playerGaugeHealth: 1.0, playerGaugeToxic: 1.0,
@@ -27,7 +28,7 @@ describe('validateSchemas', () => {
     it('should return a schema-violation issue located at its section and entry index', () => {
       // Arrange
       const parsedSections = [];
-      parsedSections[2] = [{}];
+      parsedSections[PLAYERS_SECTION_INDEX] = [{}];
 
       // Act
       const issues = validateSchemas(parsedSections);
