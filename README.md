@@ -139,9 +139,19 @@ constraint is updated.
 bun run audit:quality
 ```
 
-Runs `check:assertions`, `check:fixtures` and `check:dependencies`, then the
-[Fallow](https://github.com/fallow-rs/fallow) audit and health reports (dead files, unused exports, unresolved
-imports) against `master`, as the CI does.
+Runs `check:guards`, then the [Fallow](https://github.com/fallow-rs/fallow) audit and health reports (dead files,
+unused exports, unresolved imports) against `master`. This is the whole gate in one command, for a working copy. The
+CI covers the same ground in two jobs, each running the half it is equipped for: `guards` runs `check:guards`, and
+`fallow` runs the audit and the health report through the Fallow action, which scopes them to the base of the pull
+request and renders them into the run summary.
+
+```
+bun run check:guards
+```
+
+Runs the three guard scripts of this repository — `check:assertions`, `check:fixtures` and `check:dependencies` —
+which enforce conventions no off-the-shelf linter knows about. They read no git history and take a fraction of a
+second, so they are the half of `audit:quality` to run while writing code.
 
 ```
 bun run check:assertions
@@ -237,6 +247,13 @@ Both commands run the same sources as the Bun commands, straight from `packages/
 ./scripts/node/register.js` installs two [module customization hooks](https://nodejs.org/api/module.html#customization-hooks)
 that resolve the extensionless relative imports and hand every `.ts` module to esbuild, which removes the
 TypeScript syntax Node cannot strip on its own (type-only imports, constructor parameter properties).
+
+Both are covered by execution tests: `packages/cli-validate/cli/validate-cli.node.spec.js` and
+`packages/cli-merge/cli/merge-cli.node.spec.js` spawn them as real Node processes on save files generated into a
+temporary directory, and assert their output, their exit code and the content of the merged save. They run with
+`bun test`, so a command that no longer starts under Node — or that loses the content of a save while still
+reporting success — fails the suite instead of reaching a release. Running them needs the Node version
+`engines.node` declares.
 
 
 ### Preparing data
