@@ -2,6 +2,13 @@
 
 import {describe, it, expect} from 'bun:test';
 import {serializeSave} from './serializeSave.js';
+import {
+  PLAYERS_SECTION_INDEX,
+  SAVE_CONFIGURATION_SECTION_INDEX,
+  STATISTICS_SECTION_INDEX,
+  TERRAFORMATION_LEVELS_SECTION_INDEX,
+  WORLD_OBJECTS_SECTION_INDEX
+} from './sectionIndexes.js';
 import {createPlayer, createSaveConfiguration, createStatistics, createTerraformationLevel} from './testing/createSaveRecords.js';
 
 describe('serializeSave', () => {
@@ -27,7 +34,7 @@ describe('serializeSave', () => {
     const sections = serializeSave(params).split('\n@\n');
 
     // Assert
-    expect(sections[3]).toBe('{"id":1,"gId":"Iron"}|\n{"id":2,"gId":"Cobalt"}');
+    expect(sections[WORLD_OBJECTS_SECTION_INDEX]).toBe('{"id":1,"gId":"Iron"}|\n{"id":2,"gId":"Cobalt"}');
   });
 
   it('should preserve decimal notation for known float fields in world objects', () => {
@@ -38,7 +45,7 @@ describe('serializeSave', () => {
     const sections = serializeSave(params).split('\n@\n');
 
     // Assert
-    expect(sections[3]).toBe('{"id":1,"gId":"Tree","hunger":50.0}');
+    expect(sections[WORLD_OBJECTS_SECTION_INDEX]).toBe('{"id":1,"gId":"Tree","hunger":50.0}');
   });
 
   describe('When statistics is empty', () => {
@@ -47,7 +54,7 @@ describe('serializeSave', () => {
       const sections = serializeSave(emptyParams).split('\n@\n');
 
       // Assert
-      expect(sections[5]).toBe('');
+      expect(sections[STATISTICS_SECTION_INDEX]).toBe('');
     });
   });
 
@@ -60,7 +67,7 @@ describe('serializeSave', () => {
       const sections = serializeSave(params).split('\n@\n');
 
       // Assert
-      expect(sections[5]).toBe('{"craftedObjects":10,"totalSaveFileLoad":5,"totalSaveFileTime":3600}');
+      expect(sections[STATISTICS_SECTION_INDEX]).toBe('{"craftedObjects":10,"totalSaveFileLoad":5,"totalSaveFileTime":3600}');
     });
   });
 
@@ -70,7 +77,7 @@ describe('serializeSave', () => {
       const sections = serializeSave(emptyParams).split('\n@\n');
 
       // Assert
-      expect(sections[8]).toBe('');
+      expect(sections[SAVE_CONFIGURATION_SECTION_INDEX]).toBe('');
     });
   });
 
@@ -83,7 +90,7 @@ describe('serializeSave', () => {
       const sections = serializeSave(params).split('\n@\n');
 
       // Assert
-      expect(sections[8]).toBe('{"saveDisplayName":"Merged Save","planetId":"Toxicity","unlockedSpaceTrading":false,"unlockedOreExtrators":false,"unlockedTeleporters":false,"unlockedDrones":false,"unlockedAutocrafter":false,"unlockedEverything":false,"freeCraft":false,"preInterplanetarySave":false,"randomizeMineables":false,"modifierTerraformationPace":0.1,"modifierPowerConsumption":0.2,"modifierGaugeDrain":0.3,"modifierMeteoOccurence":0.4,"modifierMultiplayerTerraformationFactor":0.5,"modded":false,"version":"1.0","mode":"Standard","dyingConsequencesLabel":"DropSomeItems","startLocationLabel":"Standard","worldSeed":42,"hasPlayedIntro":true,"gameStartLocation":"Standard"}');
+      expect(sections[SAVE_CONFIGURATION_SECTION_INDEX]).toBe('{"saveDisplayName":"Merged Save","planetId":"Toxicity","unlockedSpaceTrading":false,"unlockedOreExtrators":false,"unlockedTeleporters":false,"unlockedDrones":false,"unlockedAutocrafter":false,"unlockedEverything":false,"freeCraft":false,"preInterplanetarySave":false,"randomizeMineables":false,"modifierTerraformationPace":0.1,"modifierPowerConsumption":0.2,"modifierGaugeDrain":0.3,"modifierMeteoOccurence":0.4,"modifierMultiplayerTerraformationFactor":0.5,"modded":false,"version":"1.0","mode":"Standard","dyingConsequencesLabel":"DropSomeItems","startLocationLabel":"Standard","worldSeed":42,"hasPlayedIntro":true,"gameStartLocation":"Standard"}');
     });
   });
 
@@ -95,7 +102,7 @@ describe('serializeSave', () => {
     const sections = serializeSave(params).split('\n@\n');
 
     // Assert
-    expect(sections[1]).toBe('{"planetId":"Toxicity","unitOxygenLevel":100.0,"unitHeatLevel":200.0,"unitPressureLevel":300.0,"unitPlantsLevel":400.0,"unitInsectsLevel":500.0,"unitAnimalsLevel":600.0,"unitPurificationLevel":700.0}');
-    expect(sections[2]).toBe('{"id":76561190000000000,"name":"Nikowa","inventoryId":44,"equipmentId":45,"playerPosition":"1751.865,472.58,-1106.104","playerRotation":"0,0.5740051,0,-0.8188518","playerGaugeOxygen":280.0,"playerGaugeThirst":96.3858642578125,"playerGaugeHealth":72.67363739013672,"playerGaugeToxic":0.0,"host":true,"planetId":"Toxicity","cameraView":0,"totalCraftedObjects":1820,"totalTerraTokenEarned":9000}');
+    expect(sections[TERRAFORMATION_LEVELS_SECTION_INDEX]).toBe('{"planetId":"Toxicity","unitOxygenLevel":100.0,"unitHeatLevel":200.0,"unitPressureLevel":300.0,"unitPlantsLevel":400.0,"unitInsectsLevel":500.0,"unitAnimalsLevel":600.0,"unitPurificationLevel":700.0}');
+    expect(sections[PLAYERS_SECTION_INDEX]).toBe('{"id":76561190000000000,"name":"Nikowa","inventoryId":44,"equipmentId":45,"playerPosition":"1751.865,472.58,-1106.104","playerRotation":"0,0.5740051,0,-0.8188518","playerGaugeOxygen":280.0,"playerGaugeThirst":96.3858642578125,"playerGaugeHealth":72.67363739013672,"playerGaugeToxic":0.0,"host":true,"planetId":"Toxicity","cameraView":0,"totalCraftedObjects":1820,"totalTerraTokenEarned":9000}');
   });
 });

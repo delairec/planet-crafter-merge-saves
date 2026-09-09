@@ -11,3 +11,8 @@ export const WORLD_EVENTS_SECTION_INDEX = 9;
 
 export const SAVE_SECTIONS_COUNT = 10; // real sections of the current format, indexes 0 to 9
 export const RESERVED_TRAILING_SECTION_INDEX = SAVE_SECTIONS_COUNT; // empty part produced by the terminating '@'
+
+// The Terrain Layers section a game update removed: legacy saves still carry it, which shifts
+// World Events by one. Only the user-input boundary reads these two.
+export const LEGACY_TERRAIN_LAYERS_SECTION_INDEX = 9;
+export const LEGACY_WORLD_EVENTS_SECTION_INDEX = 10;
