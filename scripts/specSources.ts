@@ -33,20 +33,23 @@ export async function* readOwnSpecFiles(): AsyncGenerator<{filePath: string, sou
   }
 }
 
+export interface ViolationReport {
+  /** the npm script name, as the reader will type it again */
+  checkName: string;
+  /** one entry per offending line, already formatted */
+  violations: string[];
+  /** the sentence printed when the repository respects the rule */
+  nothingFound: string;
+  /** the sentence printed when it does not */
+  summarize: (count: number) => string;
+}
+
 /**
  * Prints what a guard found and gives the exit code it must return: the report is the whole
  * user interface of a guard, so both checks state their outcome the same way.
- * @param {string} checkName the npm script name, as the reader will type it again
- * @param {string[]} violations one entry per offending line, already formatted
- * @param {string} nothingFound the sentence printed when the repository respects the rule
- * @param {(count: number) => string} summarize the sentence printed when it does not
+ * @param {ViolationReport} report
  */
-export function reportViolations(
-  checkName: string,
-  violations: string[],
-  nothingFound: string,
-  summarize: (count: number) => string
-): number {
+export function reportViolations({checkName, violations, nothingFound, summarize}: ViolationReport): number {
   if (violations.length === 0) {
     console.log(`${checkName}: ${nothingFound}`);
     return 0;

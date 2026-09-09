@@ -50,12 +50,12 @@ async function checkSpecFiles(): Promise<number> {
     findFixtureTypingViolations(source)
       .forEach(({line, text, reason}) => violations.push(`${filePath}:${line}: ${text}\n  ${reason}`));
   }
-  return reportViolations(
-    'check:fixtures',
+  return reportViolations({
+    checkName: 'check:fixtures',
     violations,
-    'no untyped test fixture found.',
-    count => `${count} untyped test fixture(s).`
-  );
+    nothingFound: 'no untyped test fixture found.',
+    summarize: count => `${count} untyped test fixture(s).`
+  });
 }
 
 if (import.meta.main) {

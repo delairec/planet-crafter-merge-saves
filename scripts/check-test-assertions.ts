@@ -115,12 +115,12 @@ async function checkSpecFiles(): Promise<number> {
     findFabricatedBooleanAssertions(source)
       .forEach(({line, text}) => violations.push(`${filePath}:${line}: ${text}`));
   }
-  return reportViolations(
-    'check:assertions',
+  return reportViolations({
+    checkName: 'check:assertions',
     violations,
-    'no fabricated boolean assertion found.',
-    count => `${count} fabricated boolean assertion(s); apply the matcher to the value itself.`
-  );
+    nothingFound: 'no fabricated boolean assertion found.',
+    summarize: count => `${count} fabricated boolean assertion(s); apply the matcher to the value itself.`
+  });
 }
 
 if (import.meta.main) {
