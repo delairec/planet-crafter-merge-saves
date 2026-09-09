@@ -20,8 +20,6 @@ export class SaveFilesMergerService implements SaveFilesMergerPort {
     const mergedSections = mergeSaveSections(parsedSaveA.sections, parsedSaveB.sections, resolvedSaveDisplayName);
     const content = serialize(resolveIdConflicts(mergedSections));
 
-    // The world objects section only reports the lines it could not read once its generator has
-    // been walked, which serialization does: both saves can only be judged from here.
     failOnUnreadableSave(fileNameA, parsedSaveA.errors);
     failOnUnreadableSave(fileNameB, parsedSaveB.errors);
 

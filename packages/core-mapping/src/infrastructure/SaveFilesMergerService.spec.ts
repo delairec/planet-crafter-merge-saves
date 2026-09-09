@@ -89,8 +89,7 @@ describe('SaveFilesMergerService', () => {
 
   describe('When a save reaches the merger with a line that cannot be read', () => {
     it('should stop the merge, naming the file and the line, rather than produce an amputated save', () => {
-      // Arrange — every flow validates both saves before merging them, with the same reader, so
-      // an unreadable line reaching the merger is a broken invariant and not a user error.
+      // Arrange
       const service = new SaveFilesMergerService();
       const unreadableInventory = {id: 45, woIds: '', size: 20};
       const contentA = createFakeSaveContent({inventories: [unreadableInventory]})
