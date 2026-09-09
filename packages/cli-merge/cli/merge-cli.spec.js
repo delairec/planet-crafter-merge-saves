@@ -50,7 +50,7 @@ describe('Merge CLI', () => {
     ({main} = initCli());
   });
 
-  describe('When no input folders contain two or more JSON files', () => {
+  describe('When no input folder contains exactly two JSON files', () => {
     it('should report zero folders to process and write nothing', async () => {
       // Arrange
       readDirectory.mockResolvedValueOnce([INPUT_SUBFOLDER_ALPHA]);
@@ -187,7 +187,7 @@ describe('Merge CLI', () => {
     });
   });
 
-  describe('When no input folders contain two or more JSON files', () => {
+  describe('When no input folder contains exactly two JSON files', () => {
     it('should exit with a distinct exit code', async () => {
       // Arrange
       readDirectory.mockResolvedValueOnce([INPUT_SUBFOLDER_ALPHA]);
@@ -217,10 +217,9 @@ describe('Merge CLI', () => {
   describe('When an input folder contains more than two JSON files', () => {
     const SAVE_C_FILENAME = 'Standard-3.json';
 
-    it('should merge all files present in the folder rather than only the first two', async () => {
+    it('should skip the folder and write nothing', async () => {
       // Arrange
       readDirectory.mockResolvedValueOnce([INPUT_SUBFOLDER_ALPHA]);
-      readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME, SAVE_C_FILENAME]);
       readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME, SAVE_C_FILENAME]);
       readTextFile.mockResolvedValue(FAKE_SAVE_STRING_A);
 
@@ -228,10 +227,7 @@ describe('Merge CLI', () => {
       await main();
 
       // Assert
-      expect(writeTextFile).toHaveBeenCalledTimes(1);
-      const writtenContent = writeTextFile.mock.calls[0][1];
-      const terraTokensMatches = writtenContent.match(/"terraTokens":\d+/);
-      expect(terraTokensMatches[0]).toBe('"terraTokens":30');
+      expect(writeTextFile).not.toHaveBeenCalled();
     });
   });
 

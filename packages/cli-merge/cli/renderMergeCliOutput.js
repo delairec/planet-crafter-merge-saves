@@ -57,7 +57,7 @@ export function renderMergeWarnings(folder, saveAWarnings, saveBWarnings) {
 
 /** @param {string} inputDir */
 export function renderNoValidFolders(inputDir) {
-  console.error(`No folder in "${inputDir}" contains at least two JSON save files to merge.`);
+  console.error(`No folder in "${inputDir}" contains exactly two JSON save files to merge.`);
 }
 
 export function renderDone() {

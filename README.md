@@ -6,7 +6,7 @@
 ## Overview
 
 This project provides tools to manipulate **Planet Crafter** save files. Currently, the available tools are:
-- **Merge**: combine two or more save files into one, following specific rules to preserve as much information as possible.
+- **Merge**: combine two save files into one, following specific rules to preserve as much information as possible.
 - **Validate**: check if a save file is correctly formatted according to the game's specifications.
 
 In progress:
@@ -42,7 +42,7 @@ The prefix of a package name sets what it is allowed to depend on. A type-only i
 `bun run check:dependencies` enforces this matrix.
 
 ## Merge and Validate tools
-Merges **Planet Crafter** save files into a single one, preserving as much information as possible.
+Merges two **Planet Crafter** save files into a single one, preserving as much information as possible.
 
 ### Prerequisites
 
@@ -231,11 +231,8 @@ TypeScript syntax Node cannot strip on its own (type-only imports, constructor p
 
 Create one sub-folder per desired merge.
 
-> ❗ Each sub-folder must contain **at least 2 `.json` files**. A sub-folder holding fewer than two is skipped.
-
-Files are sorted by name and merged by accumulation: the first two are merged, the result is merged with the third,
-and so on. Every merge step applies the same rules, so the accumulated result always plays the role of save A unless
-the save order rule promotes the incoming file (see [Merge Logic](#merge-logic)).
+> ❗ Each sub-folder must contain **exactly 2 `.json` files**. A sub-folder holding any other number of `.json`
+> files is skipped.
 
 **The sub-folder name becomes the `saveDisplayName`** of the resulting save.
 This is the name you'll see when you'll be selecting your save in the game.

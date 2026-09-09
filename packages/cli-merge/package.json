@@ -1,7 +1,7 @@
 {
   "name": "cli-merge",
   "version": "1.0.0",
-  "description": "Merges Planet Crafter save files into a single one, ready to be used in the game",
+  "description": "Merges 2 Planet Crafter save files into a single one, ready to be used in the game",
   "type": "module",
   "main": "cli/merge-cli.js",
   "scripts": {
