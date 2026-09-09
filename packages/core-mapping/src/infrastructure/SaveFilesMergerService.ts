@@ -6,6 +6,8 @@ import {SaveFilesMergerPort} from "../application/ports/SaveFilesMergerPort";
 import {createMergedSaveValueObject, MergedSaveValueObject} from "../domain/valueObjects/MergedSaveValueObject";
 import {parseSaveSections} from "shared-save-processing/parseSaveSections.js";
 import {serializeSave} from "shared-save-processing/serializeSave.js";
+import {SaveParseError} from "shared-save-processing/gameDefinitions";
+import {UnreadableSaveContentError} from "./errors/UnreadableSaveContentError";
 
 export class SaveFilesMergerService implements SaveFilesMergerPort {
   merge(fileNameA: string, contentA: string, fileNameB: string, contentB: string, saveDisplayName?: string): MergedSaveValueObject {
@@ -18,7 +20,16 @@ export class SaveFilesMergerService implements SaveFilesMergerPort {
     const mergedSections = mergeSaveSections(parsedSaveA.sections, parsedSaveB.sections, resolvedSaveDisplayName);
     const content = serialize(resolveIdConflicts(mergedSections));
 
+    failOnUnreadableSave(fileNameA, parsedSaveA.errors);
+    failOnUnreadableSave(fileNameB, parsedSaveB.errors);
+
     return createMergedSaveValueObject({fileName, content});
+  }
+}
+
+function failOnUnreadableSave(fileName: string, errors: SaveParseError[]): void {
+  if (errors.length > 0) {
+    throw new UnreadableSaveContentError(fileName, errors);
   }
 }
 

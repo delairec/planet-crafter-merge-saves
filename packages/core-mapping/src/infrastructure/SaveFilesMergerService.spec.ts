@@ -2,7 +2,9 @@ import {describe, expect, it} from 'bun:test';
 import {SaveFilesMergerService} from './SaveFilesMergerService';
 import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
 import {createFakeSaveString} from 'shared-save-processing/testing/createFakeSaveString.js';
+import {stringifyEntry} from 'shared-save-processing/stringifyEntry.js';
 import {parseSaveSections} from 'shared-save-processing/parseSaveSections.js';
+import {UnreadableSaveContentError} from './errors/UnreadableSaveContentError';
 
 describe('SaveFilesMergerService', () => {
 
@@ -82,6 +84,40 @@ describe('SaveFilesMergerService', () => {
         {id: 50, woIds: '100', size: 35},
         {id: 201, woIds: '999', size: 1}
       ]);
+    });
+  });
+
+  describe('When a save reaches the merger with a line that cannot be read', () => {
+    it('should stop the merge, naming the file and the line, rather than produce an amputated save', () => {
+      // Arrange
+      const service = new SaveFilesMergerService();
+      const unreadableInventory = {id: 45, woIds: '', size: 20};
+      const contentA = createFakeSaveContent({inventories: [unreadableInventory]})
+        .replace(JSON.stringify(unreadableInventory), '{not valid json');
+      const contentB = createFakeSaveContent();
+
+      // Act
+      const mergeSaveFiles = () => service.merge('Standard-1.json', contentA, 'Standard-2.json', contentB);
+
+      // Assert
+      expect(mergeSaveFiles).toThrow(UnreadableSaveContentError);
+      expect(mergeSaveFiles).toThrow('Save file "Standard-1.json" cannot be parsed: Invalid JSON: {not valid json');
+    });
+
+    it('should stop the merge when the unreadable line is a world object, only readable while the section is serialized', () => {
+      // Arrange
+      const service = new SaveFilesMergerService();
+      const unreadableWorldObject = {id: 79111656, gId: 'Phytoplankton3'};
+      const contentA = createFakeSaveContent();
+      const contentB = createFakeSaveContent()
+        .replace(stringifyEntry(unreadableWorldObject), '{not valid json');
+
+      // Act
+      const mergeSaveFiles = () => service.merge('Standard-1.json', contentA, 'Standard-2.json', contentB);
+
+      // Assert
+      expect(mergeSaveFiles).toThrow(UnreadableSaveContentError);
+      expect(mergeSaveFiles).toThrow('Save file "Standard-2.json" cannot be parsed: Invalid JSON: {not valid json');
     });
   });
 });

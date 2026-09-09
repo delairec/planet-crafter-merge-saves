@@ -25,8 +25,10 @@ function getSchemaValidators() {
 }
 
 /**
- * Validates parsed save sections against their JSON schemas.
- * @param {unknown[][]} parsedSections
+ * Validates parsed save sections against their JSON schemas. Only the sections holding a schema are
+ * visited: the world objects section has none and reaches this function as a generator factory,
+ * which holds no entry to validate.
+ * @param {import('shared-save-processing/gameDefinitions').ParsedSections | unknown[][]} parsedSections
  * @returns {import('../application/ports/ValidationIssue.ts').ValidationIssue[]}
  */
 export function validateSchemas(parsedSections) {
@@ -35,7 +37,8 @@ export function validateSchemas(parsedSections) {
 
   for (const [sectionIndex, validate] of Object.entries(validators)) {
     const index = Number(sectionIndex);
-    const entries = parsedSections[index] ?? [];
+    const section = parsedSections[index];
+    const entries = Array.isArray(section) ? section : [];
     for (let entryIndex = 0; entryIndex < entries.length; entryIndex++) {
       const valid = validate(entries[entryIndex]);
       if (!valid) {

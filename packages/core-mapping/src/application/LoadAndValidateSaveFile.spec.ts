@@ -5,7 +5,7 @@ import {ParsedSaveSections, SaveSectionsParserPort} from './ports/SaveSectionsPa
 import {LoadAndValidateSaveFilePresenterPort} from './ports/LoadAndValidateSaveFilePresenterPort';
 import {ValidationIssue, VALIDATION_ISSUE_CODES} from './ports/ValidationIssue';
 import {SaveWarningCode} from 'shared-save-processing/normalizeRawSections.js';
-import {ParsedSections} from 'shared-save-processing/gameDefinitions';
+import {ParsedSections, WORLD_OBJECTS_SECTION_INDEX} from 'shared-save-processing/gameDefinitions';
 
 const emptySections: ParsedSections = [[], [], [], function* () {}, [], [], [], [], [], [], []];
 
@@ -51,7 +51,7 @@ describe('LoadAndValidateSaveFile', () => {
     it('should parse the content and present the loaded save file', async () => {
       // Arrange
       const {useCase, parser, presenter} = setupUseCase({
-        parsedSaveSections: {sections: emptySections, errors: ['parse error']}
+        parsedSaveSections: {sections: emptySections, errors: [{detail: 'Invalid JSON: {', section: WORLD_OBJECTS_SECTION_INDEX, entryIndex: 2}]}
       });
 
       // Act
@@ -59,7 +59,7 @@ describe('LoadAndValidateSaveFile', () => {
 
       // Assert
       expect(parser.parse).toHaveBeenCalledWith('content');
-      expect(presenter.presentLoadedSaveFile).toHaveBeenCalledWith(emptySections, ['parse error'], []);
+      expect(presenter.presentLoadedSaveFile).toHaveBeenCalledWith(emptySections, [{detail: 'Invalid JSON: {', section: WORLD_OBJECTS_SECTION_INDEX, entryIndex: 2}], []);
       expect(presenter.presentInvalidSaveFile).not.toHaveBeenCalled();
     });
   });

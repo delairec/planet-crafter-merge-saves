@@ -31,6 +31,14 @@ entry2|
 entry3
 ```
 
+A section is read line by line, and a line that is not valid JSON is **reported and located**, never ignored:
+`packages/shared-save-processing/parseSaveSections.js` is the single reader of this format and reports
+`{detail, section, entryIndex}` for every line it could not read, keeping the readable entries around it.
+Validation turns those reports into located errors (`bun validate` exits 1 and names the section and the entry
+position), and merging refuses to write a save whose input carries one. Blank sections stay silent: each section is
+trimmed first, which covers the reserved part the terminating `@` produces and the line break the game writes before
+the first entry of a section.
+
 ---
 
 ## Entity Relationship Diagram

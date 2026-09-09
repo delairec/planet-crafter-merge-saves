@@ -38,7 +38,7 @@ describe('verifySectionCount', () => {
       const errors = verifySectionCount(rawParts);
 
       // Assert
-      expect(errors).toEqual(['INVALID: Expected 11 sections but found 2']);
+      expect(errors).toEqual([{detail: 'Expected 11 sections but found 2'}]);
     });
   });
 });

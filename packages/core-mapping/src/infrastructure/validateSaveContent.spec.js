@@ -3,6 +3,7 @@ import {validateSaveContent} from './validateSaveContent.js';
 import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue.ts';
 import {createFakeSaveString, createLegacyFakeSaveString} from 'shared-save-processing/testing/createFakeSaveString.js';
 import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
+import {stringifyEntry} from 'shared-save-processing/stringifyEntry.js';
 import {
   createEquipment,
   createGlobalMetadata,
@@ -12,6 +13,17 @@ import {
   createStatistics,
   createTerraformationLevel
 } from 'shared-save-processing/testing/createSaveRecords.js';
+import {
+  GLOBAL_METADATA_SECTION_INDEX,
+  INVENTORIES_SECTION_INDEX,
+  MAILBOX_MESSAGES_SECTION_INDEX,
+  PLAYERS_SECTION_INDEX,
+  SAVE_CONFIGURATION_SECTION_INDEX,
+  STATISTICS_SECTION_INDEX,
+  TERRAFORMATION_LEVELS_SECTION_INDEX,
+  WORLD_EVENTS_SECTION_INDEX,
+  WORLD_OBJECTS_SECTION_INDEX
+} from 'shared-save-processing/sectionIndexes.js';
 
 describe('validateSaveContent', () => {
 
@@ -49,7 +61,7 @@ describe('validateSaveContent', () => {
         // Assert
         expect(result.isValid).toBe(false);
         expect(result.errors).toMatchObject([
-          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 0, entryIndex: 0}
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: GLOBAL_METADATA_SECTION_INDEX, entryIndex: 0}
         ]);
       });
     });
@@ -68,7 +80,7 @@ describe('validateSaveContent', () => {
         // Assert
         expect(result.isValid).toBe(false);
         expect(result.errors).toMatchObject([
-          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 0, entryIndex: 0}
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: GLOBAL_METADATA_SECTION_INDEX, entryIndex: 0}
         ]);
       });
     });
@@ -86,7 +98,7 @@ describe('validateSaveContent', () => {
         // Assert
         expect(result.isValid).toBe(false);
         expect(result.errors).toMatchObject([
-          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 0, entryIndex: 0}
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: GLOBAL_METADATA_SECTION_INDEX, entryIndex: 0}
         ]);
       });
     });
@@ -105,7 +117,7 @@ describe('validateSaveContent', () => {
         // Assert
         expect(result.isValid).toBe(false);
         expect(result.errors).toMatchObject([
-          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 1, entryIndex: 0}
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: TERRAFORMATION_LEVELS_SECTION_INDEX, entryIndex: 0}
         ]);
       });
     });
@@ -123,7 +135,7 @@ describe('validateSaveContent', () => {
         // Assert
         expect(result.isValid).toBe(false);
         expect(result.errors).toMatchObject([
-          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 1, entryIndex: 0}
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: TERRAFORMATION_LEVELS_SECTION_INDEX, entryIndex: 0}
         ]);
       });
     });
@@ -142,7 +154,7 @@ describe('validateSaveContent', () => {
         // Assert
         expect(result.isValid).toBe(false);
         expect(result.errors).toContainEqual(expect.objectContaining(
-          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 2, entryIndex: 0}
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: PLAYERS_SECTION_INDEX, entryIndex: 0}
         ));
       });
     });
@@ -158,7 +170,7 @@ describe('validateSaveContent', () => {
         // Assert
         expect(result.isValid).toBe(false);
         expect(result.errors).toMatchObject([
-          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 2, entryIndex: 0}
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: PLAYERS_SECTION_INDEX, entryIndex: 0}
         ]);
       });
     });
@@ -174,7 +186,7 @@ describe('validateSaveContent', () => {
         // Assert
         expect(result.isValid).toBe(false);
         expect(result.errors).toMatchObject([
-          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 2, entryIndex: 0}
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: PLAYERS_SECTION_INDEX, entryIndex: 0}
         ]);
       });
     });
@@ -207,7 +219,7 @@ describe('validateSaveContent', () => {
         // Assert
         expect(result.isValid).toBe(false);
         expect(result.errors).toMatchObject([
-          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 4, entryIndex: 0}
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: INVENTORIES_SECTION_INDEX, entryIndex: 0}
         ]);
       });
     });
@@ -223,7 +235,7 @@ describe('validateSaveContent', () => {
         // Assert
         expect(result.isValid).toBe(false);
         expect(result.errors).toMatchObject([
-          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 4, entryIndex: 0}
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: INVENTORIES_SECTION_INDEX, entryIndex: 0}
         ]);
       });
     });
@@ -241,7 +253,7 @@ describe('validateSaveContent', () => {
         // Assert
         expect(result.isValid).toBe(false);
         expect(result.errors).toMatchObject([
-          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 5, entryIndex: 0}
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: STATISTICS_SECTION_INDEX, entryIndex: 0}
         ]);
       });
     });
@@ -260,7 +272,7 @@ describe('validateSaveContent', () => {
         // Assert
         expect(result.isValid).toBe(false);
         expect(result.errors).toMatchObject([
-          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 8, entryIndex: 0}
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: SAVE_CONFIGURATION_SECTION_INDEX, entryIndex: 0}
         ]);
       });
     });
@@ -278,7 +290,7 @@ describe('validateSaveContent', () => {
         // Assert
         expect(result.isValid).toBe(false);
         expect(result.errors).toMatchObject([
-          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 8, entryIndex: 0}
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: SAVE_CONFIGURATION_SECTION_INDEX, entryIndex: 0}
         ]);
       });
     });
@@ -296,7 +308,7 @@ describe('validateSaveContent', () => {
         // Assert
         expect(result.isValid).toBe(false);
         expect(result.errors).toMatchObject([
-          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: 9, entryIndex: 0}
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: WORLD_EVENTS_SECTION_INDEX, entryIndex: 0}
         ]);
       });
     });
@@ -506,6 +518,45 @@ describe('validateSaveContent', () => {
 
       // Assert
       expect(result.warnings.length).toBe(1);
+    });
+  });
+
+  describe('When a line of the save cannot be read as JSON', () => {
+    describe('When the unreadable line is in the world objects section', () => {
+      it('should reject the save, naming the world objects section and the position of the line', () => {
+        // Arrange
+        const readableWorldObject = {id: 101, gId: 'Backpack4'};
+        const save = createFakeSaveString({worldObjects: [readableWorldObject]})
+          .replace(stringifyEntry(readableWorldObject), '{not valid json');
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toEqual([
+          {code: VALIDATION_ISSUE_CODES.INVALID_JSON, detail: 'Invalid JSON: {not valid json', section: WORLD_OBJECTS_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+
+    describe('When the unreadable line is surrounded by readable ones', () => {
+      it('should reject the save and report only the line it could not read', () => {
+        // Arrange
+        const unreadableMailboxMessage = {stringId: 'Message2', isRead: false};
+        const save = createFakeSaveContent({
+          mailboxes: [{stringId: 'Message1', isRead: true}, unreadableMailboxMessage, {stringId: 'Message3', isRead: false}]
+        }).replace(JSON.stringify(unreadableMailboxMessage), '{not valid json');
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toEqual([
+          {code: VALIDATION_ISSUE_CODES.INVALID_JSON, detail: 'Invalid JSON: {not valid json', section: MAILBOX_MESSAGES_SECTION_INDEX, entryIndex: 1}
+        ]);
+      });
     });
   });
 
