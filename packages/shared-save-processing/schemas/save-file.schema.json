@@ -1,73 +1,73 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "save-file.schema.json",
-  "title": "Planet Crafter — Save File (parsée)",
-  "description": "Représentation d'une sauvegarde Planet Crafter après parsing. Tableau de 11 sections (indices 0 à 10), chaque section étant un tableau d'entrées JSON.",
+  "title": "Planet Crafter — Parsed save file",
+  "description": "Representation of a Planet Crafter save after parsing. Array of 11 sections (indexes 0 to 10), each section being an array of JSON entries.",
   "type": "array",
   "minItems": 11,
   "maxItems": 11,
   "items": [
     {
-      "title": "Section 0 — Progression du joueur",
+      "title": "Section 0 — Player progression",
       "type": "array",
       "minItems": 1,
       "maxItems": 1,
       "items": { "$ref": "section0-player-progression.schema.json" }
     },
     {
-      "title": "Section 1 — Niveaux de terraformation",
+      "title": "Section 1 — Terraformation levels",
       "type": "array",
       "minItems": 1,
       "maxItems": 1,
       "items": { "$ref": "section1-terraformation-levels.schema.json" }
     },
     {
-      "title": "Section 2 — Joueurs",
+      "title": "Section 2 — Players",
       "type": "array",
       "minItems": 1,
       "items": { "$ref": "section2-players.schema.json" }
     },
     {
-      "title": "Section 3 — World Objects",
+      "title": "Section 3 — World objects",
       "type": "array",
       "items": { "$ref": "section3-world-objects.schema.json" }
     },
     {
-      "title": "Section 4 — Inventaires & Équipements",
+      "title": "Section 4 — Inventories & equipment",
       "type": "array",
       "items": { "$ref": "section4-inventories.schema.json" }
     },
     {
-      "title": "Section 5 — Statistiques",
+      "title": "Section 5 — Statistics",
       "type": "array",
       "minItems": 1,
       "maxItems": 1,
       "items": { "$ref": "section5-statistics.schema.json" }
     },
     {
-      "title": "Section 6 — Messages lus",
+      "title": "Section 6 — Read messages",
       "type": "array",
       "items": { "$ref": "section6-messages.schema.json" }
     },
     {
-      "title": "Section 7 — Story Events déclenchés",
+      "title": "Section 7 — Triggered story events",
       "type": "array",
       "items": { "$ref": "section7-story-events.schema.json" }
     },
     {
-      "title": "Section 8 — Configuration de la sauvegarde",
+      "title": "Section 8 — Save configuration",
       "type": "array",
       "minItems": 1,
       "maxItems": 1,
       "items": { "$ref": "section8-save-config.schema.json" }
     },
     {
-      "title": "Section 9 — World Events",
+      "title": "Section 9 — World events",
       "type": "array",
       "items": { "$ref": "section9-world-events.schema.json" }
     },
     {
-      "title": "Section 10 — Réservée",
+      "title": "Section 10 — Reserved",
       "type": "array",
       "maxItems": 0
     }

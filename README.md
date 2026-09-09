@@ -231,7 +231,8 @@ TypeScript syntax Node cannot strip on its own (type-only imports, constructor p
 
 Create one sub-folder per desired merge.
 
-> ❗ Each sub-folder must contain **exactly 2 `.json` files**.
+> ❗ Each sub-folder must contain **exactly 2 `.json` files**. A sub-folder holding any other number of `.json`
+> files is skipped, with a warning on stderr naming it and the number of save files it holds.
 
 **The sub-folder name becomes the `saveDisplayName`** of the resulting save.
 This is the name you'll see when you'll be selecting your save in the game.
@@ -281,6 +282,9 @@ Note: the file is ending by `@`.
 
 #### Sections (in order)
 
+A save splits into **11 sections indexed 0 to 10**. Sections 0 to 9 carry the data; section 10 is the reserved empty
+part produced by the terminating `@`.
+
 | #  | Content                                               | Format                 |
 |----|-------------------------------------------------------|------------------------|
 | 0  | Global metadata (`terraTokens`, `unlockedGroups`…)    | Single JSON object     |
@@ -293,6 +297,7 @@ Note: the file is ending by `@`.
 | 7  | Triggered story events                                | `\|`-separated records |
 | 8  | Save configuration (`saveDisplayName`, `worldSeed`…)  | `\|`-separated records |
 | 9  | World events (asteroid / instance spawns)             | `\|`-separated records |
+| 10 | Reserved — always empty                               | Empty                  |
 
 #### Planet Identification
 
@@ -301,64 +306,23 @@ numeric planet id (e.g. `110910045` for Toxicity).
 
 ### Merge Logic
 
-> 📖 The authoritative specification for every merge decision is in **[`docs/game-rules.md`](./docs/game-rules.md)**.
-> The tables below are a human-readable summary; the business rules document is the source of truth.
+> 📖 **[`docs/game-rules.md`](./docs/game-rules.md) is the single source of truth for every merge decision.**
+> Each rule is numbered (`GR-*`), states the section it governs and names the module that implements it. This README
+> deliberately does not restate the rules: a second copy would drift from the implementation.
 
-The original saves remain untouched, and the result is generated in a separate folder.
+The original saves are never modified; the merged result is written to a separate output folder.
 
-#### Save A and Save B
-
-The saves have one "host planet" (= where the player started the game).
-Prime hosted save is prioritized as Save A, otherwise it follows alphabetical order.
-This order is important because in case of conflicting data, save A data will be kept and save B data will be lost.
-
-#### Global Metadata
-
-| Field                         | Strategy                                |
-|-------------------------------|-----------------------------------------|
-| `terraTokens`                 | **Sum** of both saves                   |
-| `allTimeTerraTokens`          | **Sum** of both saves                   |
-| `unlockedGroups`              | **Union** (no duplicates) of both lists |
-| `openedInstanceSeed/TimeLeft` | Value from save A                       |
-
-#### Players
-
-- **Union** by `id` — every unique player from both saves is kept.
-- On duplicate `id`, the version from **save A** takes precedence (this includes inventory and equipment).
-
-This means that the duplicated player's inventory and equipment from save B is lost.
-
-#### Planets present in BOTH saves
-
-> ❗ Not implemented, not tested.
-
-| Chosen strategy | World objects      | Terraformation levels     | Planet config            |
-|-----------------|--------------------|---------------------------|--------------------------|
-| `merge`         | Combined from both | **Maximum** of each value | Save A (source of truth) |
-| `keepA`         | Save A only        | Save A                    | Save A                   |
-| `keepB`         | Save B only        | Save B                    | Save B                   |
-
-#### Messages & Story Events
-
-- **Union** by `stringId`, no duplicates.
-- For messages: if `isRead: true` in either save → `isRead: true` in the result.
-
-#### Statistics
-
-| Field            | Strategy              |
-|------------------|-----------------------|
-| `craftedObjects` | **Sum** of both saves |
-
-#### Inventories
-
-When a player is removed from the list (deduplication), the corresponding inventory and all the associated world objects are remove as well.
-Otherwise, all inventories and objects are kept.
-
-#### Duplicated IDs
-
-When merging 2 saves, it is a common case to have the same ID used in both saves for different objects. Since we want to keep a maximum of
-information from both saves (and especially objects), we need a strategy to resolve id conflicts.
-Currently, the strategy retained is the following:
-
-- generate a new unique id for save B item
-- update all associated references from save B data
+| Topic                              | Rules                                                                                             |
+|------------------------------------|---------------------------------------------------------------------------------------------------|
+| Which save is A, which is B        | [Save order](./docs/game-rules.md#2-save-order) — `GR-ORDER-*`                                     |
+| Global metadata                    | [Section 0](./docs/game-rules.md#3-section-0--global-metadata) — `GR-META-*`                       |
+| Terraformation levels              | [Section 1](./docs/game-rules.md#4-section-1--terraformation-levels) — `GR-TERRA-*`                |
+| Players                            | [Section 2](./docs/game-rules.md#5-section-2--players) — `GR-PLAYER-*`                             |
+| World objects                      | [Section 3](./docs/game-rules.md#6-section-3--world-objects) — `GR-WO-*`                           |
+| Inventories & equipment            | [Section 4](./docs/game-rules.md#7-section-4--inventories--equipment) — `GR-INV-*`                 |
+| Statistics                         | [Section 5](./docs/game-rules.md#8-section-5--statistics) — `GR-STAT-*`                            |
+| Messages / mailbox                 | [Section 6](./docs/game-rules.md#9-section-6--messages--mailbox) — `GR-MSG-*`                      |
+| Story events                       | [Section 7](./docs/game-rules.md#10-section-7--story-events) — `GR-STORY-*`                        |
+| Save configuration                 | [Section 8](./docs/game-rules.md#11-section-8--save-configuration) — `GR-CFG-*`                    |
+| World events                       | [Section 9](./docs/game-rules.md#12-section-9--world-events) — `GR-EVT-*`                          |
+| Duplicated ids across saves        | [Id conflict resolution](./docs/game-rules.md#13-id-conflict-resolution) — `GR-ID-*`               |

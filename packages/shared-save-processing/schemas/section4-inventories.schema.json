@@ -1,36 +1,36 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "section4-inventories.schema.json",
-  "title": "Section 4 — Inventaires & Équipements",
-  "description": "Inventaire ou équipement d'un joueur ou d'un WorldObject (bâtiment, machine…). Clé de domaine : id. Peut être référencé par Player.inventoryId, Player.equipmentId, ou WorldObject.siIds. Seuls les inventaires référencés par un joueur sont filtrés lors du merge des joueurs.",
+  "title": "Section 4 — Inventories & equipment",
+  "description": "Inventory or equipment of a player or of a world object (building, machine…). Domain key: id. May be referenced by Player.inventoryId, Player.equipmentId or WorldObject.siIds. Only inventories referenced by a player are filtered out when players are merged.",
   "type": "object",
   "required": ["id", "woIds", "size"],
   "additionalProperties": false,
   "properties": {
     "id": {
       "type": "integer",
-      "description": "Identifiant unique de l'inventaire (référencé par Player.inventoryId ou Player.equipmentId)"
+      "description": "Unique identifier of the inventory (referenced by Player.inventoryId or Player.equipmentId)"
     },
     "woIds": {
       "type": "string",
-      "description": "Ids CSV des WorldObjects contenus dans l'inventaire ('' si vide). → Section 3 WorldObject.id"
+      "description": "CSV ids of the world objects held in the inventory ('' when empty). → Section 3 WorldObject.id"
     },
     "size": {
       "type": "integer",
       "minimum": 0,
-      "description": "Capacité maximale de l'inventaire (nombre de slots)"
+      "description": "Maximum capacity of the inventory (number of slots)"
     },
     "demandGrps": {
       "type": "string",
-      "description": "(optionnel) Groupes de demande pour le trade automatique logistique"
+      "description": "(optional) Demand groups for automatic logistic trading"
     },
     "supplyGrps": {
       "type": "string",
-      "description": "(optionnel) Groupes d'offre pour le trade automatique logistique"
+      "description": "(optional) Supply groups for automatic logistic trading"
     },
     "priority": {
       "type": "integer",
-      "description": "(optionnel) Priorité dans le système logistique"
+      "description": "(optional) Priority in the logistic system"
     }
   }
 }

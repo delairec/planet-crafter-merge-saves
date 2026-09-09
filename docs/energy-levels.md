@@ -15,8 +15,7 @@
 
 Base production and consumption values (kW) per `WorldObject.gId`, **before any Optimizer/Fuse bonus**, are
 defined in
-[
-`packages/util-mapping/domain/energyLevelsByWorldObjectName.ts`](../packages/core-mapping/src/domain/energyLevelsByWorldObjectName.ts):
+[`packages/core-mapping/src/domain/energyLevelsByWorldObjectName.ts`](../packages/core-mapping/src/domain/energyLevelsByWorldObjectName.ts):
 
 - `energyProductionLevelsByWorldObjectName` — energy producers (`EnergyGenerator1..6`, `WindTurbine1`).
 - `energyConsumptionLevelsByWorldObjectName` — energy consumers: drills, heaters, extractors, spreaders,

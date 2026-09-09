@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "section8-save-config.schema.json",
-  "title": "Section 8 — Configuration de la sauvegarde",
-  "description": "Paramètres et modificateurs de la partie. Contient une seule entrée. saveDisplayName est défini par le paramètre de la fonction de merge.",
+  "title": "Section 8 — Save configuration",
+  "description": "Game settings and modifiers. Holds a single entry. saveDisplayName is set from the merge function parameter.",
   "type": "object",
   "required": [
     "saveDisplayName", "planetId", "unlockedSpaceTrading", "unlockedOreExtrators",
@@ -17,104 +17,104 @@
   "properties": {
     "saveDisplayName": {
       "type": "string",
-      "description": "Nom affiché de la sauvegarde (paramètre de la fonction de merge)"
+      "description": "Display name of the save (merge function parameter)"
     },
     "planetId": {
       "type": "string",
-      "description": "Identifiant textuel de la planète (ex: 'Toxicity')"
+      "description": "Textual planet identifier (e.g. 'Toxicity')"
     },
     "unlockedSpaceTrading": {
       "type": "boolean",
-      "description": "Commerce spatial débloqué"
+      "description": "Space trade unlocked"
     },
     "unlockedOreExtrators": {
       "type": "boolean",
-      "description": "Extracteurs de minerai débloqués (typo conservée du jeu)"
+      "description": "Ore extractors unlocked (game typo kept as is)"
     },
     "unlockedTeleporters": {
       "type": "boolean",
-      "description": "Téléporteurs débloqués"
+      "description": "Teleporters unlocked"
     },
     "unlockedDrones": {
       "type": "boolean",
-      "description": "Drones débloqués"
+      "description": "Drones unlocked"
     },
     "unlockedAutocrafter": {
       "type": "boolean",
-      "description": "Autocrafter débloqué"
+      "description": "Auto-crafter unlocked"
     },
     "unlockedEverything": {
       "type": "boolean",
-      "description": "Tout débloqué (mode développeur)"
+      "description": "Everything unlocked (developer mode)"
     },
     "freeCraft": {
       "type": "boolean",
-      "description": "Craft gratuit activé"
+      "description": "Free crafting enabled"
     },
     "preInterplanetarySave": {
       "type": "boolean",
-      "description": "Sauvegarde créée avant l'introduction du système interplanétaire"
+      "description": "Save created before the interplanetary system was introduced"
     },
     "randomizeMineables": {
       "type": "boolean",
-      "description": "Ressources minables placées aléatoirement"
+      "description": "Mineable resources placed randomly"
     },
     "modifierTerraformationPace": {
       "type": "number",
       "minimum": 0,
-      "description": "Multiplicateur de vitesse de terraformation (float Unity — sérialisé avec .0 ; 1.0 = normal)"
+      "description": "Terraformation speed multiplier (Unity float — serialized with a trailing .0; 1.0 = normal)"
     },
     "modifierPowerConsumption": {
       "type": "number",
       "minimum": 0,
-      "description": "Multiplicateur de consommation d'énergie (float Unity — sérialisé avec .0 ; 1.0 = normal)"
+      "description": "Energy consumption multiplier (Unity float — serialized with a trailing .0; 1.0 = normal)"
     },
     "modifierGaugeDrain": {
       "type": "number",
       "minimum": 0,
-      "description": "Multiplicateur de vidage des jauges joueur (float Unity — sérialisé avec .0 ; 1.0 = normal)"
+      "description": "Player gauge depletion multiplier (Unity float — serialized with a trailing .0; 1.0 = normal)"
     },
     "modifierMeteoOccurence": {
       "type": "number",
       "minimum": 0,
-      "description": "Multiplicateur de fréquence des événements météo (float Unity — sérialisé avec .0 ; 1.0 = normal)"
+      "description": "Weather event frequency multiplier (Unity float — serialized with a trailing .0; 1.0 = normal)"
     },
     "modifierMultiplayerTerraformationFactor": {
       "type": "number",
       "minimum": 0,
-      "description": "Facteur de contribution à la terraformation en mode multijoueur (float Unity — sérialisé avec .0)"
+      "description": "Terraformation contribution factor in multiplayer (Unity float — serialized with a trailing .0)"
     },
     "modded": {
       "type": "boolean",
-      "description": "La partie a été jouée avec des mods actifs"
+      "description": "The game was played with mods enabled"
     },
     "version": {
       "type": "string",
-      "description": "Version du jeu au moment de la sauvegarde (ex: '1.618')"
+      "description": "Game version at the time of the save (e.g. '1.618')"
     },
     "mode": {
       "type": "string",
-      "description": "Mode de jeu (ex: 'Standard', 'Survival')"
+      "description": "Game mode (e.g. 'Standard', 'Survival')"
     },
     "dyingConsequencesLabel": {
       "type": "string",
-      "description": "Conséquences de la mort du joueur (ex: 'DropSomeItems', 'DropAll', 'NoDrop')"
+      "description": "Consequences of the player's death (e.g. 'DropSomeItems', 'DropAll', 'NoDrop')"
     },
     "startLocationLabel": {
       "type": "string",
-      "description": "Zone de départ de la partie (ex: 'Standard')"
+      "description": "Starting area of the game (e.g. 'Standard')"
     },
     "worldSeed": {
       "type": "integer",
-      "description": "Graine de génération procédurale du monde"
+      "description": "Procedural world generation seed"
     },
     "hasPlayedIntro": {
       "type": "boolean",
-      "description": "L'intro cinématique a déjà été jouée"
+      "description": "The intro cinematic has already been played"
     },
     "gameStartLocation": {
       "type": "string",
-      "description": "Localisation initiale du joueur en début de partie"
+      "description": "Initial location of the player at the start of the game"
     }
   }
 }

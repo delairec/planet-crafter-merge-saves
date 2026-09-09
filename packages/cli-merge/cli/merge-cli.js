@@ -11,9 +11,11 @@ import {
   renderMergeWarnings,
   renderNoValidFolders,
   renderProcessingFolder,
+  renderSkippedFolder,
   renderUnexpectedError
 } from './renderMergeCliOutput.js';
 
+const MERGEABLE_SAVE_FILES_COUNT = 2;
 const NO_VALID_FOLDERS_EXIT_CODE = 2;
 const UNEXPECTED_ERROR_EXIT_CODE = 1;
 
@@ -36,8 +38,12 @@ export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirec
     const results = [];
     for (const folder of folders) {
       const files = await readDirectory(joinPath(inputDir, folder));
-      if (isValidSaveFolderContent(files)) {
+      const jsonFileCount = files.filter(isJson).length;
+
+      if (jsonFileCount === MERGEABLE_SAVE_FILES_COUNT) {
         results.push(folder);
+      } else {
+        renderSkippedFolder(folder, jsonFileCount);
       }
     }
     return results;
@@ -46,34 +52,24 @@ export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirec
   async function processFolder(folder) {
     renderProcessingFolder(folder);
     const folderPath = joinPath(inputDir, folder);
-    const files = (await readDirectory(folderPath)).filter(isJson).sort();
+    const [fileNameA, fileNameB] = (await readDirectory(folderPath)).filter(isJson).sort();
 
-    let mergedFileName = files[0];
-    let mergedContent = await readTextFile(joinPath(folderPath, files[0]));
+    const viewModel = await MergeSaveFilesController.mergeSaveFiles({
+      fileNameA,
+      contentA: await readTextFile(joinPath(folderPath, fileNameA)),
+      fileNameB,
+      contentB: await readTextFile(joinPath(folderPath, fileNameB)),
+      saveDisplayName: folder
+    });
 
-    for (let index = 1; index < files.length; index++) {
-      const nextFileName = files[index];
-      const nextContent = await readTextFile(joinPath(folderPath, nextFileName));
-      const viewModel = await MergeSaveFilesController.mergeSaveFiles({
-        fileNameA: mergedFileName,
-        contentA: mergedContent,
-        fileNameB: nextFileName,
-        contentB: nextContent,
-        saveDisplayName: folder
-      });
+    renderMergeWarnings(folder, viewModel.saveAWarnings, viewModel.saveBWarnings);
 
-      renderMergeWarnings(folder, viewModel.saveAWarnings, viewModel.saveBWarnings);
-
-      if (viewModel.status !== 'success') {
-        renderMergeFailed(folder, viewModel.saveAErrors, viewModel.saveBErrors);
-        return;
-      }
-
-      mergedFileName = viewModel.fileName;
-      mergedContent = viewModel.content;
+    if (viewModel.status !== 'success') {
+      renderMergeFailed(folder, viewModel.saveAErrors, viewModel.saveBErrors);
+      return;
     }
 
-    await writeOutput(folder, mergedFileName, mergedContent);
+    await writeOutput(folder, viewModel.fileName, viewModel.content);
   }
 
   async function writeOutput(folder, outputFileName, content) {
@@ -102,10 +98,6 @@ export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirec
     }
     renderDone();
     exitProcess(0);
-  }
-
-  function isValidSaveFolderContent(files) {
-    return files.filter(isJson).length >= 2;
   }
 
   return {isEntryPoint, main, exitProcess};

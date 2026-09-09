@@ -1,19 +1,19 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "section6-messages.schema.json",
-  "title": "Section 6 — Messages lus",
-  "description": "Message de lore lu par le joueur. Clé de domaine : stringId. Lors du merge, true est prioritaire sur false.",
+  "title": "Section 6 — Read messages",
+  "description": "Lore message read by the player. Domain key: stringId. When merging, true takes precedence over false.",
   "type": "object",
   "required": ["stringId", "isRead"],
   "additionalProperties": false,
   "properties": {
     "stringId": {
       "type": "string",
-      "description": "Identifiant unique du message (ex: 'Message_YouAreAConvict')"
+      "description": "Unique identifier of the message (e.g. 'Message_YouAreAConvict')"
     },
     "isRead": {
       "type": "boolean",
-      "description": "true si le message a été lu par le joueur"
+      "description": "true when the message has been read by the player"
     }
   }
 }

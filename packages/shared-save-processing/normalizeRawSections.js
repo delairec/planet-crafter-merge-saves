@@ -17,11 +17,6 @@ const LEGACY_SPLIT_PARTS_COUNT = LEGACY_SECTION_COUNT + 1; // + trailing reserve
 const LEGACY_TERRAIN_LAYERS_SECTION_INDEX = 9;
 const LEGACY_WORLD_EVENTS_SECTION_INDEX = 10;
 
-/**
- * Warning codes reported when a save had to be adapted to the current format. `formatSaveWarning`
- * (core-mapping presentation) maps each code to the sentence shown to the user; the code itself is
- * never displayed.
- */
 export const SAVE_WARNING_CODES = /** @type {const} */ ({
   LEGACY_SAVE_FORMAT: 'legacy-save-format'
 });
