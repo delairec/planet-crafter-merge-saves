@@ -3,7 +3,7 @@
 > ❗Docs written by AI from save file analysis (proofread, but still can include mistakes)
 
 ---
-**JSON Schemas** : each section has a validation schema in [`packages/shared-save-processing/schemas/`](../packages/shared-save-processing/schemas/).
+**JSON Schemas** : each section has a validation schema in [`packages/shared-save-processing/schemas/`](../packages/shared-save-processing/schemas/), and validation applies every one of the ten, entry by entry. The world objects section is no exception, although it reaches validation as a generator: its entries meet their schema one at a time as the section is walked, so a save of any size only ever holds one world object in memory.
 The root schema [`save-file.schema.json`](../packages/shared-save-processing/schemas/save-file.schema.json) validates a fully parsed save (array of 11 sections, indexes 0 to 10).
 
 ## General structure
@@ -78,24 +78,27 @@ erDiagram
         string  rot            "optional — quaternion"
         int     planet         FK "numeric planet id"
         string  count          "optional — quantity (e.g. ores)"
-        float   grwth          "optional — growth (plants)"
-        float   pnls           "optional — power output (solar panels)"
+        int     grwth          "optional — growth (plants)"
+        string  pnls           "optional — power output (solar panels)"
         string  color          "optional — RGBA color"
         int     trtInd         "optional — terraformation index"
         int     liId           "optional — linked list id"
+        int     liPlanet       "optional — planet of the linked inventory"
         string  text           "optional — displayed text"
         string  liGrps         "optional — list groups"
         int     linkedWo       "optional — linked WorldObject id"
         string  siIds          "optional — sub-inventory ids"
-        float   trtVal         "optional — terraformation value"
+        string  woIds          FK "optional — comma-separated WorldObject ids"
+        int     trtVal         "optional — terraformation value"
         float   hunger         "optional — hunger (animals)"
-        string  set            "optional — configuration set"
+        int     set            "optional — configuration set"
     }
 
     PLAYER ||--o{ INVENTORY : "inventoryId → id"
     PLAYER ||--o{ INVENTORY : "equipmentId → id"
     INVENTORY ||--o{ WORLD_OBJECT : "woIds → id"
     WORLD_OBJECT ||--o| WORLD_OBJECT : "linkedWo → id"
+    WORLD_OBJECT ||--o{ WORLD_OBJECT : "woIds → id"
 ```
 
 ---
@@ -161,28 +164,40 @@ erDiagram
 
 **Cardinality:** N entries (buildings, resources, plants…). Domain key: `id`.
 
-All properties except `id` and `gId` are optional depending on object type.
+All properties except `id` and `gId` are optional depending on object type. `id` and `gId` are the only two
+carried by every entry of the ten reference saves (190338 world objects); the next most frequent, `pos` and
+`planet`, are on 14.31% of them.
 
 | Property   | Type     | Description                                                                                 |
 |------------|----------|---------------------------------------------------------------------------------------------|
 | `id`       | `int`    | Unique object ID                                                                            |
 | `gId`      | `string` | Game ID — object type (e.g. `"WindTurbineT1"`)                                              |
-| `pos`      | `string` | 3D position `"x,y,z"`                                                                       |
+| `pos`      | `string` | 3D position `"x,y,z"` — an object that holds one also names its `planet`                     |
 | `rot`      | `string` | Quaternion rotation `"x,y,z,w"`                                                             |
-| `planet`   | `int`    | Planet numeric ID (e.g. `110910045` for Toxicity)                                           |
+| `planet`   | `int`    | Planet numeric ID, of either sign (e.g. `-1140328421` for Prime, `110910045` for Toxicity)  |
 | `count`    | `string` | Amount or cumulative state (e.g. ores in a vein `"0,125"`)                                  |
 | `grwth`    | `int`    | Growth progression (plants)                                                                 |
 | `pnls`     | `string` | Produced power (solar panels, generators)                                                   |
 | `color`    | `string` | RGBA color of object                                                                        |
 | `trtInd`   | `int`    | Associated terraformation stage index                                                       |
 | `liId`     | `int`    | Linked list id (logistics / drones)                                                         |
+| `liPlanet` | `int`    | Planet numeric ID of the linked inventory `liId`, not the planet the object stands on       |
 | `text`     | `string` | Displayed text (signs, panels)                                                              |
 | `liGrps`   | `string` | Comma separated list of associated object types (item generation, blueprint)                |
 | `linkedWo` | `int`    | → `WorldObject.id` — associated world object (e.g. toxic water generator ↔ associated lake) |
 | `siIds`    | `string` | Comma separated list of generated items (e.g. beans generated by a farm)                    |
-| `trtVal`   | `int`    | Terraformation contribution value                                                           |
-| `hunger`   | `float`  | Animal hunger                                                                               |
+| `woIds`    | `string` | → `WorldObject.id` — comma separated ids of the world objects held (see `GR-ID-3`)          |
+| `trtVal`   | `int`    | Terraformation contribution value — an object that holds one also names its `trtInd`        |
+| `hunger`   | `float`  | Animal hunger, from `-100` to `100`                                                         |
 | `set`      | `int`    | Equipment set identifier                                                                    |
+
+**What the reference saves say about the rarest three:** `liPlanet` appears 21 times, every time on an
+`InterplanetaryExchangePlatform1` and every time naming a planet other than the object's own — an exchange
+platform points at an inventory sitting on another planet. `hunger` appears 345 times, on entries of `gId`
+`DNASequence` only, between `-100` and `94.22`; the bounds the schema states are the symmetric scale the game
+is assumed to work on (an animal yields a DNA sequence while its hunger is positive) rather than a documented
+range, and the first legitimate save they reject lifts them. `woIds` is on no world object of the ten saves,
+but the merge remaps it (`GR-ID-3`), so the schema declares it rather than reject a save the merge handles.
 
 **Planet numeric IDs:** `planet` (here) as well as `WorldEvent.planet` (see below) reference a planet using a
 numeric ID rather than the textual `planetId` used elsewhere (`TerraformationLevel.planetId`,

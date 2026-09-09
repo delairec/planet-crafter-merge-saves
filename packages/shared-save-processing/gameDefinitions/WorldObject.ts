@@ -4,12 +4,19 @@ export interface WorldObject {
   pos?: string;
   rot?: string;
   planet?: number;
-  liId?: number;
-  woIds?: string;
-  siIds?: string;
-  linkedWo?: number;
-  hunger?: number;
-  grwth?: number;
   count?: string;
+  grwth?: number;
+  pnls?: string;
+  color?: string;
+  trtInd?: number;
+  liId?: number;
+  liPlanet?: number;
   text?: string;
+  liGrps?: string;
+  linkedWo?: number;
+  siIds?: string;
+  woIds?: string;
+  trtVal?: number;
+  hunger?: number;
+  set?: number;
 }

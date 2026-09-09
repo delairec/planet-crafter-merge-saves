@@ -2,10 +2,15 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "section3-world-objects.schema.json",
   "title": "Section 3 — World objects",
-  "description": "World object (building, resource, plant, animal…). Domain key: id. Only id and gId are always present.",
+  "description": "World object (building, resource, plant, animal…). Domain key: id. Only id and gId are always present: every other property was observed on 14.31% of the entries at most (survey of 190338 world objects, ten reference saves, 2026-09-10).",
   "type": "object",
   "required": ["id", "gId"],
   "additionalProperties": false,
+  "dependencies": {
+    "liPlanet": ["liId"],
+    "pos": ["planet"],
+    "trtVal": ["trtInd"]
+  },
   "properties": {
     "id": {
       "type": "integer",
@@ -18,7 +23,7 @@
     "pos": {
       "type": "string",
       "pattern": "^-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*$",
-      "description": "3D position of the object, formatted as 'x,y,z'"
+      "description": "3D position of the object, formatted as 'x,y,z'. An object that holds a position also names the planet it stands on."
     },
     "rot": {
       "type": "string",
@@ -26,7 +31,7 @@
     },
     "planet": {
       "type": "integer",
-      "description": "Numeric planet id (e.g. 110910045 for Toxicity)"
+      "description": "Numeric planet id, a signed integer of either sign: four of the five values observed are negative (-1140328421 for Prime, 110910045 for Toxicity, -1016990411 for Selenea, -486276833 for Humble, -1291310150 for Aqualis)"
     },
     "count": {
       "type": "string",
@@ -52,6 +57,10 @@
       "type": "integer",
       "description": "Id of an internal list (logistics, drones)"
     },
+    "liPlanet": {
+      "type": "integer",
+      "description": "Numeric planet id of the linked inventory `liId`, which is not the planet the object itself stands on: the two differ on all 21 occurrences observed, every one of them on an InterplanetaryExchangePlatform1. An object that names a linked planet also names the linked inventory."
+    },
     "text": {
       "type": "string",
       "description": "Text displayed on the object (signs, panels)"
@@ -68,14 +77,19 @@
       "type": "string",
       "description": "CSV ids of the sub-inventories internal to the object"
     },
+    "woIds": {
+      "type": "string",
+      "description": "→ WorldObject.id — CSV ids of the world objects the object holds, remapped by the merge (GR-ID-3 in docs/game-rules.md). Not observed in the ten reference saves, where an object's contents are reached through its inventory instead."
+    },
     "trtVal": {
       "type": "integer",
-      "description": "Numeric contribution to terraformation — stored as an integer by Unity"
+      "description": "Numeric contribution to terraformation — stored as an integer by Unity. An object that holds a contribution also names the stage it contributes to."
     },
     "hunger": {
       "type": "number",
-      "minimum": 0,
-      "description": "Hunger level of an animal (Unity float — serialized with a trailing .0)"
+      "minimum": -100,
+      "maximum": 100,
+      "description": "Hunger level of an animal, observed on entries of gId DNASequence only — 345 occurrences over the 190338 world objects surveyed, ranging from -100 to 94.22. The bounds are the symmetric scale the game is assumed to work on, an animal yielding a DNA sequence while its hunger is positive; they come from that reading rather than from a source, and the first legitimate save they reject lifts them. (Unity float — serialized with a trailing .0)"
     },
     "set": {
       "type": "integer",
@@ -83,4 +97,3 @@
     }
   }
 }
-

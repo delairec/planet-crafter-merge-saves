@@ -1,7 +1,7 @@
 import {parseSaveSections} from 'shared-save-processing/parseSaveSections.js';
 import {verifySectionCount} from 'shared-save-processing/verifySectionCount.js';
 import {PLAYERS_SECTION_INDEX, WORLD_OBJECTS_SECTION_INDEX} from 'shared-save-processing/sectionIndexes.js';
-import {validateSchemas} from './validateSchemas.js';
+import {validateSchemas, validateSectionEntry} from './validateSchemas.js';
 import {validateFloatSerialization} from '../domain/rules/validateFloatSerialization.ts';
 import {validateUniqueHost} from '../domain/rules/validateUniqueHost.ts';
 import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue.ts';
@@ -30,11 +30,12 @@ export function validateSaveContent(mergedSave) {
   }
 
   const {sections, errors: parseErrors, warnings} = parseSaveSections(mergedSave);
-  readWorldObjectsSection(sections[WORLD_OBJECTS_SECTION_INDEX]);
+  const worldObjectIssues = validateWorldObjectsSection(sections[WORLD_OBJECTS_SECTION_INDEX]);
 
   const errors = parseErrors.map(toInvalidJsonIssue);
 
   errors.push(...validateSchemas(sections));
+  errors.push(...worldObjectIssues);
   errors.push(...validateFloatSerialization(mergedSave));
   errors.push(...validateUniqueHost(sections[PLAYERS_SECTION_INDEX]));
 
@@ -42,18 +43,23 @@ export function validateSaveContent(mergedSave) {
 }
 
 /**
- * The world objects section is a generator, so the lines it cannot read are only reported once it
- * has been walked. No schema covers that section and no rule reads its entries, so validation
- * walks it and keeps nothing: every unreadable line is reported while a single entry at a time is
- * held in memory.
+ * The world objects section is a generator, so both the lines it cannot read and the entries
+ * breaking its schema are only discovered once it has been walked. Each entry is checked as it
+ * goes past and none is kept: a single entry at a time is held in memory, whatever the size of the
+ * section — 28425 objects on the largest of the reference saves in `input/`.
  * @param {() => Generator<unknown>} createWorldObjects
+ * @returns {import('../application/ports/ValidationIssue').ValidationIssue[]}
  */
-function readWorldObjectsSection(createWorldObjects) {
-  const worldObjects = createWorldObjects();
+function validateWorldObjectsSection(createWorldObjects) {
+  const issues = [];
+  let entryIndex = 0;
 
-  while (!worldObjects.next().done) {
-    // walking the section is what reports its unreadable lines; its entries are of no use here
+  for (const worldObject of createWorldObjects()) {
+    issues.push(...validateSectionEntry(WORLD_OBJECTS_SECTION_INDEX, worldObject, entryIndex));
+    entryIndex++;
   }
+
+  return issues;
 }
 
 /**
