@@ -1,11 +1,11 @@
 /** @import { SaveParseError } from './gameDefinitions' */
 
-import {CANONICAL_DATA_SECTIONS} from './sectionIndexes.js';
+import {SAVE_SECTIONS_COUNT} from './sectionIndexes.js';
 
-const CANONICAL_PARTS = CANONICAL_DATA_SECTIONS + 1; // + trailing reserved part
+const SAVE_SECTIONS_PARTS_COUNT = SAVE_SECTIONS_COUNT + 1; // + trailing reserved part
 
-const LEGACY_DATA_SECTIONS = 11; // real sections when Terrain Layers still existed
-const LEGACY_PARTS = LEGACY_DATA_SECTIONS + 1; // + trailing reserved part
+const LEGACY_SAVE_SECTIONS_COUNT = 11; // real sections when Terrain Layers still existed
+const LEGACY_SAVE_SECTIONS_PARTS_COUNT = LEGACY_SAVE_SECTIONS_COUNT + 1; // + trailing reserved part
 
 /**
  * @param {string[]} rawParts - result of `save.split('@')`
@@ -15,8 +15,8 @@ const LEGACY_PARTS = LEGACY_DATA_SECTIONS + 1; // + trailing reserved part
 export function verifySectionCount(rawParts) {
   const errors = [];
 
-  if (rawParts.length !== CANONICAL_PARTS && rawParts.length !== LEGACY_PARTS) {
-    errors.push({detail: `Expected ${CANONICAL_PARTS} sections but found ${rawParts.length}`});
+  if (rawParts.length !== SAVE_SECTIONS_PARTS_COUNT && rawParts.length !== LEGACY_SAVE_SECTIONS_PARTS_COUNT) {
+    errors.push({detail: `Expected ${SAVE_SECTIONS_PARTS_COUNT} sections but found ${rawParts.length}`});
   }
 
   return errors;

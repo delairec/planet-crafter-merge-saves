@@ -9,5 +9,5 @@ export const STORY_EVENTS_SECTION_INDEX = 7;
 export const SAVE_CONFIGURATION_SECTION_INDEX = 8;
 export const WORLD_EVENTS_SECTION_INDEX = 9;
 
-export const CANONICAL_DATA_SECTIONS = 10; // real sections of the current format, indexes 0 to 9
-export const RESERVED_TRAILING_SECTION_INDEX = CANONICAL_DATA_SECTIONS; // empty part produced by the terminating '@'
+export const SAVE_SECTIONS_COUNT = 10; // real sections of the current format, indexes 0 to 9
+export const RESERVED_TRAILING_SECTION_INDEX = SAVE_SECTIONS_COUNT; // empty part produced by the terminating '@'
