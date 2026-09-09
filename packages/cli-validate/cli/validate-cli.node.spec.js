@@ -7,10 +7,6 @@ import {createLegacyFakeSaveContent} from 'shared-save-processing/testing/create
 import {VALID_SAVE_CONTENT} from '../testing/fakeValidSaveContent.js';
 import {SAVE_CONTENT_WITH_INVALID_ENTRY} from '../testing/fakeSaveContentWithInvalidEntry.js';
 
-// Runs the published `node:validate` command as a real Node process. The in-memory specs of this
-// package inject fake adapters under Bun and never reach Node's ESM resolver, which is the only
-// judge of a missing file extension: they cannot tell whether the command still starts.
-
 const REPOSITORY_ROOT = fileURLToPath(new URL('../../..', import.meta.url));
 const NODE_LOADER_PATH = join(REPOSITORY_ROOT, 'scripts/node/register.js');
 const VALIDATE_CLI_PATH = join(REPOSITORY_ROOT, 'packages/cli-validate/cli/validate-cli.js');

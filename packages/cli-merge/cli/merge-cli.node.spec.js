@@ -6,11 +6,6 @@ import {fileURLToPath} from 'node:url';
 import {createFakeSaveContent, createLegacyFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
 import {createGlobalMetadata} from 'shared-save-processing/testing/createSaveRecords.js';
 
-// Runs the published `node:merge` command as a real Node process. The in-memory specs of this package
-// inject fake adapters under Bun: they exercise neither Node's ESM resolver nor the Node filesystem
-// adapter, so they cannot tell whether the command starts, writes where it says it does, or loses the
-// content of a save on the way.
-
 const REPOSITORY_ROOT = fileURLToPath(new URL('../../..', import.meta.url));
 const NODE_LOADER_PATH = join(REPOSITORY_ROOT, 'scripts/node/register.js');
 const MERGE_CLI_PATH = join(REPOSITORY_ROOT, 'packages/cli-merge/cli/merge-cli.js');
