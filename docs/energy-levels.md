@@ -312,11 +312,15 @@ is typed `Record<WorldObjectName, string>`, so a label for an unknown name and a
 type errors: the two files can no longer drift apart. The 25 labels added on 2026-09-09 come from the label file
 above.
 
-**Open point — label wording.** 178 of the 614 labels this repository shares with the label file differ in more
-than word order or case, and the repository's wording is often the more useful of the two: it disambiguates names
+**Label wording.** 178 of the 614 labels this repository shares with the label file differ in more than word
+order or case, and the repository's wording is deliberately the more precise of the two: it disambiguates names
 the game repeats (`GoldenEffigie1..9` are all "Golden effigy" in the game, `WreckEntryLocked1..5` all "Access
-Console") and carries bonus percentages the label file does not print. The labels were therefore left as they are.
-Two of the differences are identity discrepancies rather than wording, and are worth settling before the labels are
-trusted: `GeneticManipulator1` ("DNA Manipulator" here, "Tree seed sequencer" in the label file, no wiki page under
-either name) and `DebrisContainer1` ("Debris" here, "Container from space" in the label file). The first also
-carries an energy value (117.5 kW) whose source predates this cross-check.
+Console") and carries bonus percentages the label file does not print. That precision is kept, so the wording is
+not realigned on the label file.
+
+Two of the differences were identity discrepancies rather than wording, and the label file's name was adopted for
+both: `GeneticManipulator1` is **Tree seed sequencer** (formerly "DNA Manipulator") — which is what the machine
+does in-game, the older name most likely predating a game update — and `DebrisContainer1` is **Container from
+space** (formerly "Debris"). `GeneticManipulator1` carries an energy value (117.5 kW) collected before this
+cross-check, and no page was identified for it: the value is unconfirmed, though the machine's identity no longer
+is.

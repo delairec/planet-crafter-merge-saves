@@ -13,7 +13,7 @@ const powerProducersWorldObjectLabels = {
   EnergyGenerator5: 'Nuclear Reactor T2',
   EnergyGenerator6: 'Nuclear Fusion generator',
   FusionGenerator1: 'Fusion reactor',
-} as const satisfies Partial<Record<WorldObjectName, string>>;
+} satisfies Partial<Record<WorldObjectName, string>>;
 
 const powerConsumersWorldObjectLabels = {
   // Optimizers
@@ -103,7 +103,7 @@ const powerConsumersWorldObjectLabels = {
   VehicleCrafter1: 'Vehicle station',
   LaunchPlatform: 'Launch Platform',
   Biolab: 'Biolab',
-  GeneticManipulator1: 'DNA Manipulator',
+  GeneticManipulator1: 'Tree seed sequencer',
   Incubator1: 'Incubator',
   Incubator2: 'T2 Incubator',
   GeneticExtractor1: 'Genetic extractor',
@@ -138,7 +138,7 @@ const powerConsumersWorldObjectLabels = {
   InsideLamp1: 'Area Lamp',
   InsideLamp2: 'Intense area lamp',
 
-} as const satisfies Partial<Record<WorldObjectName, string>>;
+} satisfies Partial<Record<WorldObjectName, string>>;
 
 const otherWorldObjectLabels = {
   // Equipments
@@ -662,7 +662,7 @@ const otherWorldObjectLabels = {
   WreckWardrobe: 'Spacesuits locker',
   WardenAustel: 'Warden\'s altar',
   StarformContainer: 'Starform Crate',
-  DebrisContainer1: 'Debris',
+  DebrisContainer1: 'Container from space',
   // is procedural wreck related to portal generator?
   ProceduralWreckContainer1: 'Storage crate T1',
   ProceduralWreckContainer2: 'Storage crate T2',
@@ -736,7 +736,7 @@ const otherWorldObjectLabels = {
   Poster7: 'Poster G',
   Poster8: 'Poster H',
   Poster9: 'Poster I',
-} as const satisfies Partial<Record<WorldObjectName, string>>;
+} satisfies Partial<Record<WorldObjectName, string>>;
 
 export const worldObjectLabels: Record<WorldObjectName, string> = {
   ...powerProducersWorldObjectLabels,
