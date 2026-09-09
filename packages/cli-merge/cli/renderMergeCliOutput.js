@@ -55,6 +55,15 @@ export function renderMergeWarnings(folder, saveAWarnings, saveBWarnings) {
   for (const warning of saveBWarnings) console.error(`  [save B] ${formatMessageLine(warning)}`);
 }
 
+/**
+ * Reports a folder left out of the merge because it does not hold the two save files a merge takes.
+ * @param {string} folder
+ * @param {number} jsonFileCount
+ */
+export function renderSkippedFolder(folder, jsonFileCount) {
+  console.error(`⚠ Folder "${folder}" was skipped: it holds ${jsonFileCount} JSON save file(s), exactly two are required.`);
+}
+
 /** @param {string} inputDir */
 export function renderNoValidFolders(inputDir) {
   console.error(`No folder in "${inputDir}" contains exactly two JSON save files to merge.`);

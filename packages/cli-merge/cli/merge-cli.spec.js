@@ -62,6 +62,20 @@ describe('Merge CLI', () => {
       // Assert
       expect(writeTextFile).not.toHaveBeenCalled();
     });
+
+    it('should warn that the folder was skipped and how many save files it holds', async () => {
+      // Arrange
+      readDirectory.mockResolvedValueOnce([INPUT_SUBFOLDER_ALPHA]);
+      readDirectory.mockResolvedValueOnce(['only-one.json']);
+
+      // Act
+      await main();
+
+      // Assert
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '⚠ Folder "Alpha" was skipped: it holds 1 JSON save file(s), exactly two are required.'
+      );
+    });
   });
 
   describe('When an input folder contains exactly two JSON files', () => {
@@ -228,6 +242,21 @@ describe('Merge CLI', () => {
 
       // Assert
       expect(writeTextFile).not.toHaveBeenCalled();
+    });
+
+    it('should warn that the folder was skipped and how many save files it holds', async () => {
+      // Arrange
+      readDirectory.mockResolvedValueOnce([INPUT_SUBFOLDER_ALPHA]);
+      readDirectory.mockResolvedValueOnce([SAVE_A_FILENAME, SAVE_B_FILENAME, SAVE_C_FILENAME]);
+      readTextFile.mockResolvedValue(FAKE_SAVE_STRING_A);
+
+      // Act
+      await main();
+
+      // Assert
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '⚠ Folder "Alpha" was skipped: it holds 3 JSON save file(s), exactly two are required.'
+      );
     });
   });
 

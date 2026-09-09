@@ -11,9 +11,11 @@ import {
   renderMergeWarnings,
   renderNoValidFolders,
   renderProcessingFolder,
+  renderSkippedFolder,
   renderUnexpectedError
 } from './renderMergeCliOutput.js';
 
+const MERGEABLE_SAVE_FILES_COUNT = 2;
 const NO_VALID_FOLDERS_EXIT_CODE = 2;
 const UNEXPECTED_ERROR_EXIT_CODE = 1;
 
@@ -36,8 +38,12 @@ export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirec
     const results = [];
     for (const folder of folders) {
       const files = await readDirectory(joinPath(inputDir, folder));
-      if (isValidSaveFolderContent(files)) {
+      const jsonFileCount = files.filter(isJson).length;
+
+      if (jsonFileCount === MERGEABLE_SAVE_FILES_COUNT) {
         results.push(folder);
+      } else {
+        renderSkippedFolder(folder, jsonFileCount);
       }
     }
     return results;
@@ -92,10 +98,6 @@ export function initMergeCli({isEntryPoint, readTextFile, exitProcess, readDirec
     }
     renderDone();
     exitProcess(0);
-  }
-
-  function isValidSaveFolderContent(files) {
-    return files.filter(isJson).length === 2;
   }
 
   return {isEntryPoint, main, exitProcess};

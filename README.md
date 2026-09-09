@@ -232,7 +232,7 @@ TypeScript syntax Node cannot strip on its own (type-only imports, constructor p
 Create one sub-folder per desired merge.
 
 > ❗ Each sub-folder must contain **exactly 2 `.json` files**. A sub-folder holding any other number of `.json`
-> files is skipped.
+> files is skipped, with a warning on stderr naming it and the number of save files it holds.
 
 **The sub-folder name becomes the `saveDisplayName`** of the resulting save.
 This is the name you'll see when you'll be selecting your save in the game.
