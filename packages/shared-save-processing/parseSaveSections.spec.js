@@ -1,6 +1,13 @@
 import {describe, it, expect, spyOn} from 'bun:test';
 import {parseSaveSections} from './parseSaveSections.js';
 import {createFakeSaveString, createLegacyFakeSaveString} from './testing/createFakeSaveString.js';
+import {
+  INVENTORIES_SECTION_INDEX,
+  PLAYERS_SECTION_INDEX,
+  RESERVED_TRAILING_SECTION_INDEX,
+  WORLD_EVENTS_SECTION_INDEX,
+  WORLD_OBJECTS_SECTION_INDEX
+} from './sectionIndexes.js';
 
 describe('utils/parseSaveSections', () => {
   const expectedGlobalMetadata = {
@@ -94,7 +101,7 @@ describe('utils/parseSaveSections', () => {
     const {sections} = parseSaveSections(save);
 
     // Assert
-    const [, , players] = sections;
+    const players = sections[PLAYERS_SECTION_INDEX];
     expect(players).toEqual([expectedPlayer]);
   });
 
@@ -106,7 +113,7 @@ describe('utils/parseSaveSections', () => {
     const {sections} = parseSaveSections(save);
 
     // Assert
-    const [, , , worldObjectsFactory] = sections;
+    const worldObjectsFactory = sections[WORLD_OBJECTS_SECTION_INDEX];
     expect([...worldObjectsFactory()]).toEqual([expectedWorldObject]);
   });
 
@@ -118,7 +125,7 @@ describe('utils/parseSaveSections', () => {
     const {sections} = parseSaveSections(save);
 
     // Assert
-    const [, , , , inventories] = sections;
+    const inventories = sections[INVENTORIES_SECTION_INDEX];
     expect(inventories).toEqual([expectedInventory]);
   });
 
@@ -130,7 +137,7 @@ describe('utils/parseSaveSections', () => {
     const {sections} = parseSaveSections(save);
 
     // Assert
-    const [, , , , inventories] = sections;
+    const inventories = sections[INVENTORIES_SECTION_INDEX];
     expect(inventories).toEqual([]);
   });
 
@@ -143,12 +150,12 @@ describe('utils/parseSaveSections', () => {
 
       // Act
       const {sections, errors} = parseSaveSections(save);
-      const [, , , worldObjectsFactory] = sections;
+      const worldObjectsFactory = sections[WORLD_OBJECTS_SECTION_INDEX];
       [...worldObjectsFactory()];
 
       // Assert
       expect(errors).toEqual([
-        {detail: 'Invalid JSON: {not valid json', section: 3, entryIndex: 0}
+        {detail: 'Invalid JSON: {not valid json', section: WORLD_OBJECTS_SECTION_INDEX, entryIndex: 0}
       ]);
       expect(consoleLogSpy).not.toHaveBeenCalled();
     });
@@ -162,7 +169,7 @@ describe('utils/parseSaveSections', () => {
     const {sections} = parseSaveSections(save);
 
     // Assert
-    const [, , , worldObjectsFactory] = sections;
+    const worldObjectsFactory = sections[WORLD_OBJECTS_SECTION_INDEX];
     expect([...worldObjectsFactory()]).toEqual([]);
   });
 
@@ -175,7 +182,7 @@ describe('utils/parseSaveSections', () => {
     const {sections} = parseSaveSections(save);
 
     // Assert
-    const [, , , , , , , , , worldEvents] = sections;
+    const worldEvents = sections[WORLD_EVENTS_SECTION_INDEX];
     expect(worldEvents).toEqual([expectedWorldEvent]);
   });
 
@@ -204,7 +211,7 @@ describe('utils/parseSaveSections', () => {
 
       // Assert
       expect(errors).toEqual([
-        {detail: 'Invalid JSON: {not valid json', section: 4, entryIndex: 1}
+        {detail: 'Invalid JSON: {not valid json', section: INVENTORIES_SECTION_INDEX, entryIndex: 1}
       ]);
     });
 
@@ -218,7 +225,7 @@ describe('utils/parseSaveSections', () => {
       const {sections} = parseSaveSections(save);
 
       // Assert
-      const [, , , , inventories] = sections;
+      const inventories = sections[INVENTORIES_SECTION_INDEX];
       expect(inventories).toEqual([expectedInventory]);
     });
   });
@@ -243,7 +250,7 @@ describe('utils/parseSaveSections', () => {
       const {sections} = parseSaveSections(save);
 
       // Assert
-      const reservedTrailingSection = sections[10];
+      const reservedTrailingSection = sections[RESERVED_TRAILING_SECTION_INDEX];
       expect(reservedTrailingSection).toEqual([]);
     });
   });
@@ -285,7 +292,7 @@ describe('utils/parseSaveSections', () => {
       const {sections} = parseSaveSections(save);
 
       // Assert
-      const [, , , , , , , , , worldEvents] = sections;
+      const worldEvents = sections[WORLD_EVENTS_SECTION_INDEX];
       expect(worldEvents).toEqual([expectedWorldEvent]);
     });
   });

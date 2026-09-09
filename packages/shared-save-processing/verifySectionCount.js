@@ -1,7 +1,8 @@
 /** @import { SaveParseError } from './gameDefinitions' */
 
-const CANONICAL_SECTION_COUNT = 10; // real sections in the current save format
-const CANONICAL_SPLIT_PARTS_COUNT = CANONICAL_SECTION_COUNT + 1; // + trailing reserved part
+import {SECTION_COUNT} from './sectionIndexes.js';
+
+const CANONICAL_SPLIT_PARTS_COUNT = SECTION_COUNT + 1; // + trailing reserved part
 
 const LEGACY_SECTION_COUNT = 11; // real sections when Terrain Layers still existed
 const LEGACY_SPLIT_PARTS_COUNT = LEGACY_SECTION_COUNT + 1; // + trailing reserved part
