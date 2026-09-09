@@ -1,5 +1,8 @@
 import {WorldObjectName} from './worldObjectNames';
 
+// Every value below, its in-game machine and the page it was read from are recorded in
+// docs/energy-levels.md, "Base energy values".
+
 export const energyProductionLevelsByWorldObjectName: Partial<Record<WorldObjectName, number>> = {
   EnergyGenerator1: 1.2,
   WindTurbine1: 290,
@@ -37,11 +40,6 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   RecyclingMachine: 12.5,
   RecyclingMachine2: 283,
   Destructor1: 18,
-  // Rule EN-BASE-2: additional consumers, cross-checked against the wiki (Craft Stations,
-  // Atmosphere Purifiers, Detoxification Machines, Toxic Water Collectors, Water Collectors,
-  // Vegetubes, Algae Generators, Food Growers, Biodomes, Base Building, Beehives), previously
-  // missing from this table and causing the computed consumption to fall well short of the
-  // in-game HUD value.
   AirPurificationMachine1: 1.1,
   AirPurificationMachine2: 12,
   AirPurificationMachine3: 35,
@@ -64,6 +62,7 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   GeneticManipulator1: 117.5,
   Biolab: 40,
   Incubator1: 215,
+  Incubator2: 715,
   AutoCrafter1: 155,
   CraftStation1: 0.5,
   CraftStation2: 12.5,
@@ -75,6 +74,7 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   ButterflyDome1: 139,
   LaunchPlatform: 55,
   InsideLamp1: 1.2,
+  InsideLamp2: 25,
   Beacon: 0.25,
   OutsideLamp1: 0.3,
   ScreenUnlockables: 0.2,
@@ -89,6 +89,33 @@ export const energyConsumptionLevelsByWorldObjectName: Partial<Record<WorldObjec
   ScreenToxic1: 2,
   biodome: 37,
   Biodome2: 75,
+  FishFarm1: 155.5,
+  FishFarm2: 185,
+  Aquarium1: 75,
+  Aquarium2: 225,
+  ButterflyFarm1: 30,
+  ButterflyFarm2: 45,
+  ButterflyFarm3: 196,
+  Farm1: 45.5,
+  Farm2: 165,
+  AmphibiansFarm1: 155,
+  AnimalShelter1: 270,
+  AnimalFeeder1: 95,
+  Ecosystem1: 325,
+  SilkGenerator: 38,
+  WaterLifeCollector1: 105.5,
+  GeneticSynthetizer1: 292,
+  GeneticExtractor1: 317.5,
+  OreBreaker1: 2.6,
+  OreBreaker2: 21,
+  OreBreaker3: 125,
+  HarvestingRobot1: 120,
+  DroneStation1: 850,
+  PortalGenerator1: 1890,
+  InterplanetaryExchangePlatform1: 375,
+  PlanetaryDeliveryDepot1: 450,
+  DeparturePlatform: 265,
+  DeparturePlatformHumble: 265,
   Optimizer1: 50,
   Optimizer2: 150
 };

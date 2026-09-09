@@ -3,8 +3,7 @@ import {computeEnergyProductionLevel} from './computeEnergyProductionLevel';
 import {PlacedWorldObjectEntity} from '../entities/PlacedWorldObjectEntity';
 import {WorldObjectEntity} from '../entities/WorldObjectEntity';
 import {InventoryEntity} from '../entities/InventoryEntity';
-import {WorldObjectName} from '../worldObjectNames';
-import {energyProductionLevelsByWorldObjectName} from '../energyLevelsByWorldObjectName';
+import {WorldObjectName, worldObjectNamesByEnergyRole} from '../worldObjectNames';
 
 describe('computeEnergyProductionLevel', () => {
   it('should sum the base production of positioned world objects with known production levels', () => {
@@ -83,18 +82,28 @@ describe('computeEnergyProductionLevel', () => {
     expect(productionLevel).toBe(threeTimesTheProducerBaseLevel);
   });
 
-  const producerNames = Object.keys(energyProductionLevelsByWorldObjectName) as WorldObjectName[];
+  const {producing, withoutKnownEnergyLevel} = worldObjectNamesByEnergyRole;
 
-  it.each(producerNames)('should recognize %s as a producer (Rule EN-BASE-2)', (name) => {
-    // Arrange
+  const producedAlone = (name: WorldObjectName): number => {
     const producer: PlacedWorldObjectEntity = {id: name, name, position: [0, 0, 0], planetId: 1};
-    const noInventories: InventoryEntity[] = [];
 
+    return computeEnergyProductionLevel([producer], [producer], []);
+  };
+
+  it.each([...producing])('should read a strictly positive production level for %s', (name) => {
     // Act
-    const productionLevel = computeEnergyProductionLevel([producer], [producer], noInventories);
+    const productionLevel = producedAlone(name);
 
     // Assert
     expect(productionLevel).toBeGreaterThan(0);
+  });
+
+  it('should produce nothing for the world objects without a known energy level', () => {
+    // Act
+    const producers = withoutKnownEnergyLevel.filter((name) => producedAlone(name) > 0);
+
+    // Assert
+    expect(producers).toEqual([]);
   });
 
   it('should return zero for an empty list of positioned world objects', () => {
