@@ -43,7 +43,7 @@ describe('SaveFilesMergerService', () => {
     it('should point that world object to the renumbered inventory and leave the save-A one untouched', () => {
       // Arrange
       const service = new SaveFilesMergerService();
-      const player = createPlayer({id: 1, name: 'PlayerA', inventoryId: 10, equipmentId: 11});
+      const player = createPlayer({id: '1', name: 'PlayerA', inventoryId: 10, equipmentId: 11});
       const contentA = createFakeSaveString({
         players: [player],
         inventories: [createInventory({id: 10, woIds: '', size: 20}), createEquipment({id: 11, woIds: '', size: 10}), createInventory({id: 50, woIds: '100', size: 35})],

@@ -8,8 +8,9 @@
   "additionalProperties": false,
   "properties": {
     "id": {
-      "type": "integer",
-      "description": "Player Steam ID (primary key, int64)"
+      "type": "string",
+      "pattern": "^-?[0-9]+$",
+      "description": "Player Steam ID (primary key, int64). The save file holds it as a bare decimal literal; the tool carries it as that exact text, a double being unable to represent it."
     },
     "name": {
       "type": "string",

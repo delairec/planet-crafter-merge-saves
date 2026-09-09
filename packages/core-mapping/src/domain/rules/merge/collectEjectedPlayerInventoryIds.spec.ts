@@ -55,7 +55,7 @@ describe('collectEjectedPlayerInventoryIds', () => {
       const playersA: Player[] = [createPlayer({name: 'Nikowa'})];
       const playersB: Player[] = [
         createPlayer({name: 'Nikowa', inventoryId: 50, equipmentId: 51}),
-        createPlayer({id: 999, name: 'Chileny', inventoryId: 60, equipmentId: 61})
+        createPlayer({id: '999', name: 'Chileny', inventoryId: 60, equipmentId: 61})
       ];
       const inventoriesB: Inventory[] = [
         createInventory({id: 50, woIds: '900', size: 20}),

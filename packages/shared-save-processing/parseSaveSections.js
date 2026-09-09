@@ -1,8 +1,10 @@
+/// <reference path="./jsonSourceTextAccess.d.ts" />
 /** @import { ParsedSave, SaveParseError } from './gameDefinitions' */
 
 import {normalizeRawSections} from './normalizeRawSections.js';
 import {verifySectionCount} from './verifySectionCount.js';
-import {WORLD_OBJECTS_SECTION_INDEX} from './sectionIndexes.js';
+import {PLAYERS_SECTION_INDEX, WORLD_OBJECTS_SECTION_INDEX} from './sectionIndexes.js';
+import {keepInt64IdentifierText} from './int64Identifiers.js';
 
 /** Head of the offending line, enough to recognise it without printing a whole entry. */
 const REPORTED_LINE_LENGTH = 60;
@@ -47,6 +49,22 @@ function isWorldObjectsSection(sectionIndex) {
 }
 
 /**
+ * The players section is the only one read through the source text access of `JSON.parse`: it is
+ * the only one carrying an int64 identifier, and a reviver is called for every key/value pair of
+ * the line — the world objects section alone holds more than a hundred thousand of them.
+ * @param {string} line
+ * @param {number} sectionIndex
+ * @returns {unknown}
+ */
+function parseEntry(line, sectionIndex) {
+  if (sectionIndex === PLAYERS_SECTION_INDEX) {
+    return JSON.parse(line, keepInt64IdentifierText);
+  }
+
+  return JSON.parse(line);
+}
+
+/**
  * Lines of a section, in the order the file holds them. Trimming the section is what makes a real
  * save readable: the part the terminating `@` reserves holds nothing, and the game writes a line
  * break before the first entry of a section.
@@ -72,7 +90,7 @@ function* createSectionEntriesGenerator(section, sectionIndex, errors) {
     let entry;
 
     try {
-      entry = JSON.parse(line);
+      entry = parseEntry(line, sectionIndex);
     } catch {
       errors.push({
         detail: `Invalid JSON: ${line.slice(0, REPORTED_LINE_LENGTH)}`,

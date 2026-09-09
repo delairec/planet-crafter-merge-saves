@@ -6,7 +6,7 @@ describe('Merge players', () => {
   const basePlayer = createPlayer();
 
   const playerFromSaveA = {...basePlayer};
-  const playerFromSaveB = {...basePlayer, id: 76561190000000030, name: 'Chileny', host: false};
+  const playerFromSaveB = {...basePlayer, id: '76561190000000030', name: 'Chileny', host: false};
 
   describe('When players are unique', () => {
     it('should keep the players of each save under their own origin', () => {
@@ -21,8 +21,8 @@ describe('Merge players', () => {
   describe('When the same player appears in both saves with a different id', () => {
     it('should deduplicate by name and take the player from save A', () => {
       // Arrange
-      const playerInSaveA = {...playerFromSaveA, id: 11111, playerGaugeOxygen: 150.0};
-      const playerInSaveB = {...playerFromSaveA, id: 22222, playerGaugeOxygen: 280.0};
+      const playerInSaveA = {...playerFromSaveA, id: '11111', playerGaugeOxygen: 150.0};
+      const playerInSaveB = {...playerFromSaveA, id: '22222', playerGaugeOxygen: 280.0};
 
       // Act
       const result = mergePlayers([playerInSaveA], [playerInSaveB]);
@@ -67,7 +67,7 @@ describe('Merge players', () => {
   describe('When a save B player carries the save A host identifier', () => {
     it('should mark only the save A host', () => {
       // Arrange
-      const steamIdentifierSharedByBothPlayers = 76561190000000030;
+      const steamIdentifierSharedByBothPlayers = '76561190000000030';
       const hostInSaveA = {...playerFromSaveA, id: steamIdentifierSharedByBothPlayers, host: true};
       const hostInSaveB = {...playerFromSaveB, id: steamIdentifierSharedByBothPlayers, name: 'Anya', host: true};
 
@@ -85,7 +85,7 @@ describe('Merge players', () => {
   describe('When two save A players share an identifier', () => {
     it('should mark only the player flagged as host in save A', () => {
       // Arrange
-      const steamIdentifierSharedByBothPlayers = 76561190000000000;
+      const steamIdentifierSharedByBothPlayers = '76561190000000000';
       const hostInSaveA = {...playerFromSaveA, id: steamIdentifierSharedByBothPlayers, host: true};
       const guestInSaveA = {...playerFromSaveA, id: steamIdentifierSharedByBothPlayers, name: 'Chileny', host: false};
       const noPlayersFromSaveB: never[] = [];

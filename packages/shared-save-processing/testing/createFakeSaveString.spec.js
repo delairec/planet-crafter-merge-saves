@@ -33,7 +33,7 @@ describe('createFakeSaveString', () => {
 
   it('should serialize the provided entries for a given section', () => {
     // Arrange
-    const player = createPlayer({id: 1, name: 'Nikowa'});
+    const player = createPlayer({id: '1', name: 'Nikowa'});
 
     // Act
     const save = createFakeSaveString({players: [player]});

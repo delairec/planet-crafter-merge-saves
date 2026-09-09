@@ -1,5 +1,7 @@
 /** @import { TerraformationLevel, Player, WorldObject } from './gameDefinitions' */
 
+import {isRawIntegerField} from './int64Identifiers.js';
+
 const FLOAT_FIELDS = Object.freeze(new Set([
   'unitOxygenLevel', 'unitHeatLevel', 'unitPressureLevel', 'unitPlantsLevel',
   'unitInsectsLevel', 'unitAnimalsLevel', 'unitPurificationLevel',
@@ -8,7 +10,8 @@ const FLOAT_FIELDS = Object.freeze(new Set([
 ]));
 
 /**
- * Like JSON.stringify but preserves `.0` suffix for known float fields (Unity serialization).
+ * Like JSON.stringify but preserves the `.0` suffix of the known float fields (Unity
+ * serialization) and writes an int64 identifier as the bare decimal text it holds.
  * Entries are flat wire records, serialized field by field so that a field value is never
  * reinterpreted from the text of another field.
  * @param {TerraformationLevel | Player | WorldObject | Record<string, unknown>} entry
@@ -51,6 +54,10 @@ function stringifyValue(key, value) {
 
   if (FLOAT_FIELDS.has(key) && typeof value === 'number' && Number.isInteger(value)) {
     return `${value}.0`;
+  }
+
+  if (isRawIntegerField(key, value)) {
+    return `${value}`;
   }
 
   return JSON.stringify(value);

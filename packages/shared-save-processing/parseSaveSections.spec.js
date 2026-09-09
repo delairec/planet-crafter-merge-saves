@@ -18,7 +18,7 @@ describe('utils/parseSaveSections', () => {
     openedInstanceTimeLeft: 0
   };
   const expectedPlayer = {
-    id: 1,
+    id: '1',
     name: 'Nikowa',
     inventoryId: 44,
     equipmentId: 45,

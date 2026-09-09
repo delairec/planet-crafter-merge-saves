@@ -10,8 +10,8 @@ describe('Rewrite references', () => {
   describe('When both saves have a player on a renumbered inventory', () => {
     it('should point the save B player at the new inventory id', () => {
       // Arrange
-      const playerFromSaveB = createPlayer({id: 2, inventoryId: 10, equipmentId: 11});
-      const players = {fromSaveA: [createPlayer({id: 1, inventoryId: 10, equipmentId: 11})], fromSaveB: [playerFromSaveB]};
+      const playerFromSaveB = createPlayer({id: '2', inventoryId: 10, equipmentId: 11});
+      const players = {fromSaveA: [createPlayer({id: '1', inventoryId: 10, equipmentId: 11})], fromSaveB: [playerFromSaveB]};
 
       // Act
       const result = rewritePlayerReferences(players, inventory10BecameInventory51);
@@ -22,8 +22,8 @@ describe('Rewrite references', () => {
 
     it('should leave the save A player pointing at the id it always used', () => {
       // Arrange
-      const playerFromSaveA = createPlayer({id: 1, inventoryId: 10, equipmentId: 11});
-      const players = {fromSaveA: [playerFromSaveA], fromSaveB: [createPlayer({id: 2, inventoryId: 10, equipmentId: 11})]};
+      const playerFromSaveA = createPlayer({id: '1', inventoryId: 10, equipmentId: 11});
+      const players = {fromSaveA: [playerFromSaveA], fromSaveB: [createPlayer({id: '2', inventoryId: 10, equipmentId: 11})]};
 
       // Act
       const result = rewritePlayerReferences(players, inventory10BecameInventory51);
@@ -36,8 +36,8 @@ describe('Rewrite references', () => {
   describe('When no save A player uses the renumbered inventory id', () => {
     it('should still point the save B player at its own renumbered inventory', () => {
       // Arrange
-      const playerFromSaveB = createPlayer({id: 2, inventoryId: 10, equipmentId: 11});
-      const players = {fromSaveA: [createPlayer({id: 1, inventoryId: 30, equipmentId: 31})], fromSaveB: [playerFromSaveB]};
+      const playerFromSaveB = createPlayer({id: '2', inventoryId: 10, equipmentId: 11});
+      const players = {fromSaveA: [createPlayer({id: '1', inventoryId: 30, equipmentId: 31})], fromSaveB: [playerFromSaveB]};
 
       // Act
       const result = rewritePlayerReferences(players, inventory10BecameInventory51);
