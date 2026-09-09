@@ -1,7 +1,10 @@
 import {afterEach, beforeEach, describe, expect, it} from 'bun:test';
+import {spawn} from 'node:child_process';
+import {once} from 'node:events';
 import {mkdir, mkdtemp, readFile, rm, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
+import {text} from 'node:stream/consumers';
 import {fileURLToPath} from 'node:url';
 import {createFakeSaveContent, createLegacyFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
 import {createGlobalMetadata} from 'shared-save-processing/testing/createSaveRecords.js';
@@ -43,16 +46,15 @@ function createLegacySaveUnlockingOnly(unlockedGroup) {
  * @returns {Promise<{exitCode: number, stdout: string, stderr: string}>}
  */
 async function runMergeCliUnderNode(inputDirectory, outputDirectory) {
-  const cliProcess = Bun.spawn({
-    cmd: ['node', '--import', NODE_LOADER_PATH, MERGE_CLI_PATH, '--platform=node', `--input=${inputDirectory}`, `--output=${outputDirectory}`],
-    cwd: REPOSITORY_ROOT,
-    stdout: 'pipe',
-    stderr: 'pipe'
-  });
-  const [stdout, stderr, exitCode] = await Promise.all([
-    new Response(cliProcess.stdout).text(),
-    new Response(cliProcess.stderr).text(),
-    cliProcess.exited
+  const cliProcess = spawn(
+    'node',
+    ['--import', NODE_LOADER_PATH, MERGE_CLI_PATH, '--platform=node', `--input=${inputDirectory}`, `--output=${outputDirectory}`],
+    {cwd: REPOSITORY_ROOT}
+  );
+  const [stdout, stderr, [exitCode]] = await Promise.all([
+    text(cliProcess.stdout),
+    text(cliProcess.stderr),
+    once(cliProcess, 'close')
   ]);
 
   return {exitCode, stdout, stderr};
