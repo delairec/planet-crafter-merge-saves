@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section6-messages.schema.json",
+  "title": "Section 6 — Read messages",
+  "description": "Lore message read by the player. Domain key: stringId. When merging, true takes precedence over false.",
+  "type": "object",
+  "required": ["stringId", "isRead"],
+  "additionalProperties": false,
+  "properties": {
+    "stringId": {
+      "type": "string",
+      "description": "Unique identifier of the message (e.g. 'Message_YouAreAConvict')"
+    },
+    "isRead": {
+      "type": "boolean",
+      "description": "true when the message has been read by the player"
+    }
+  }
+}
+

@@ -33,7 +33,8 @@
 - The current save format (11 sections) is the only format used internally. Legacy saves (12 sections, still
   containing the Terrain Layers section removed by a game update) are only supported at the user-input boundary
   (loading a save file): they are automatically adapted to the current format, and a warning is reported to the
-  user — see [`docs/save-format.md`](./save-format.md#appendix--legacy-format-before-the-terrain-layers-section-was-removed).
+  user — including when such a save is merged, since the merged file is written in the current format —
+  see [`docs/save-format.md`](./save-format.md#appendix--legacy-format-before-the-terrain-layers-section-was-removed).
 
 ---
 
@@ -46,7 +47,7 @@
 
 **Rationale:** Prime is the original/primary planet. Treating it as save A ensures its state is preserved on conflict.
 
-**Implementation:** `src/merge/determineSaveOrder.js`
+**Implementation:** `packages/core-mapping/src/domain/rules/merge/determineSaveOrder.ts`
 
 ---
 
@@ -60,7 +61,7 @@
 
 **Rule GR-META-4:** `openedInstanceSeed` and `openedInstanceTimeLeft` = value from save A.
 
-**Implementation:** `src/merge/mergeGlobalMetadata.js`
+**Implementation:** `packages/core-mapping/src/domain/rules/merge/mergeGlobalMetadata.ts`
 
 ---
 
@@ -77,7 +78,7 @@
 - If only one save has `-1`, the output is the non-negative value from the other save.
 - If neither save has `-1`, `Math.max` applies as normal (covered by GR-TERRA-2).
 
-**Implementation:** `src/merge/mergeTerraformationLevels.js`
+**Implementation:** `packages/core-mapping/src/domain/rules/merge/mergeTerraformationLevels.ts`
 
 ---
 
@@ -87,13 +88,13 @@
 
 **Rule GR-PLAYER-1:** Players are deduplicated by `name`. When the same name appears in both saves, the **entire** player object from save A is kept; no field-level merge is performed. The save-B version is discarded (including its inventory and equipment).
 
-**Rule GR-PLAYER-2:** Exactly one player in the output may have `host === true`: the player who was host in save A. All other `host` fields are set to `false`.
+**Rule GR-PLAYER-2:** At most one player in the output has `host === true`: the save A entry flagged as host, identified by its position in save A and never by its `id` (a Steam account identifier, reused across saves and not unique). When save A holds no player entry, the first save B host is retained: that is the only merge input without a save A host, a save whose player section is not empty and flags no host being rejected as invalid before the merge. Every other `host` field is set to `false`.
 
 **Rule GR-PLAYER-3:** Players from save B whose `name` does not exist in save A are appended to the merged list.
 
 **Rule GR-PLAYER-4:** Players from older saves may be missing `cameraView`, `totalCraftedObjects` or `totalTerraTokenEarned` (fields added by a later game update). Any missing field defaults to `0` in the merged output.
 
-**Implementation:** `src/merge/mergePlayers.js`
+**Implementation:** `packages/core-mapping/src/domain/rules/merge/mergePlayers.ts`
 
 ---
 
@@ -107,9 +108,9 @@
 
 **Rule GR-WO-3 (orphan removal):** Before merging, world objects that belong to the inventories of **ejected players** from save B (players whose `name` already exists in save A) are removed. See GR-PLAYER-1.
 
-**Rule GR-WO-4:** After the main merge, remaining id conflicts across the combined list are resolved by the id conflict resolution step (section 14).
+**Rule GR-WO-4:** After the main merge, remaining id conflicts across the combined list are resolved by the id conflict resolution step ([section 13](#13-id-conflict-resolution)).
 
-**Implementation:** `src/merge/mergeWorldObjects.js`, `src/merge/collectEjectedPlayerInventoryIds.js`
+**Implementation:** `packages/core-mapping/src/domain/rules/merge/mergeWorldObjects.ts`, `packages/core-mapping/src/domain/rules/merge/collectEjectedPlayerInventoryIds.ts`
 
 ---
 
@@ -121,9 +122,9 @@
 
 **Rule GR-INV-2:** All inventories from save B are kept, **except** inventories whose `id` matches the `inventoryId` or `equipmentId` of an ejected player (see GR-PLAYER-1 and GR-WO-3).
 
-**Rule GR-INV-3:** Duplicate `id` values across saves are not treated as the same logical object; they are remapped by the id conflict resolution step (section 14).
+**Rule GR-INV-3:** Duplicate `id` values across saves are not treated as the same logical object; they are remapped by the id conflict resolution step ([section 13](#13-id-conflict-resolution)).
 
-**Implementation:** `src/merge/mergeInventories.js`
+**Implementation:** `packages/core-mapping/src/domain/rules/merge/mergeInventories.ts`
 
 ---
 
@@ -131,7 +132,7 @@
 
 **Rule GR-STAT-1:** Every numeric field is summed: `craftedObjects`, `totalSaveFileLoad`, `totalSaveFileTime`.
 
-**Implementation:** `src/merge/mergeStatistics.js`
+**Implementation:** `packages/core-mapping/src/domain/rules/merge/mergeStatistics.ts`
 
 ---
 
@@ -145,7 +146,7 @@
 
 **Rule GR-MSG-3:** Messages from save B whose `stringId` is not in save A are appended to the output.
 
-**Implementation:** `src/merge/mergeMailboxes.js`
+**Implementation:** `packages/core-mapping/src/domain/rules/merge/mergeMailboxes.ts`
 
 ---
 
@@ -157,7 +158,7 @@
 
 **Rule GR-STORY-2:** Save A's ordering is preserved; save B entries not present in save A are appended.
 
-**Implementation:** `src/merge/mergeStoryEvents.js`
+**Implementation:** `packages/core-mapping/src/domain/rules/merge/mergeStoryEvents.ts`
 
 ---
 
@@ -169,7 +170,7 @@
 
 **Rule GR-CFG-3:** Save B's configuration object is entirely discarded.
 
-**Implementation:** `src/merge/mergeSaveConfigurations.js`
+**Implementation:** `packages/core-mapping/src/domain/rules/merge/mergeSaveConfigurations.ts`
 
 ---
 
@@ -181,7 +182,7 @@
 
 **Rule GR-EVT-2:** World events from save B whose triplet is not present in save A are appended.
 
-**Implementation:** `src/merge/mergeWorldEvents.js`
+**Implementation:** `packages/core-mapping/src/domain/rules/merge/mergeWorldEvents.ts`
 
 ---
 
@@ -189,7 +190,7 @@
 
 **Rule GR-ID-1:** After all sections are merged, every `id` in the combined inventory + world object list must be unique.
 
-**Rule GR-ID-2:** When a duplicate `id` is found (same numeric value used for two different logical objects — one from each save), the **later-encountered** entry receives a new id generated from a monotonically increasing sequence seeded above the current maximum id.
+**Rule GR-ID-2:** When a duplicate `id` is found (same numeric value used for two different logical objects — one from each save), the **later-encountered** entry receives a new id generated from a monotonically increasing sequence. The sequence is seeded, before a single id is handed out, above the maximum id of *every* section sharing the numbering space GR-ID-1 governs — inventories **and** world objects. Seeding on the inventories alone would let the first generated id land on an id a world object already carries.
 
 **Rule GR-ID-3:** All back-references are updated to match remapped ids:
 - `Player.inventoryId` and `Player.equipmentId` → remapped inventory ids.
@@ -199,9 +200,14 @@
 - `WorldObject.woIds` (CSV) → remapped world object ids.
 - `Inventory.woIds` (CSV) → remapped world object ids.
 
-**Rule GR-ID-4:** Id conflict resolution runs on the raw serialized string produced by the main merge, re-parses it, and returns a new serialized string. It is the last step before the output is written.
+Only save B entries carry rewritten references. A save A entry keeps the ids it always used: they
+are authoritative, so they still designate the same entry after the merge.
 
-**Rule GR-ID-5:** `WorldObject.liId` and `WorldObject.siIds` remapping is **save-origin-aware**. When an inventory id was duplicated across both saves (save A's inventory keeps the original id; save B's gets a new id), a world object from save A must keep its `liId`/`siIds` pointing to the original id, while a world object from save B must point to the remapped (new) id. To enable this, `mergeWorldObjects` collects the set of world object ids that originated from save A (`saveAWorldObjectIds`) and passes it through `merge()` to `resolveIdConflicts()`. A world object whose id is in `saveAWorldObjectIds` is treated as an A-origin object; all others are treated as B-origin.
+**Rule GR-ID-4:** Id conflict resolution runs on the merged sections, as structured entries, and returns merged sections. It is the last step before the sections are serialized and written.
 
-**Implementation:** `src/utils/resolveIdConflicts.js`, `src/merge/mergeWorldObjects.js`, `src/merge/merge.js`
+**Rule GR-ID-5:** Reference rewriting is **save-origin-aware**. When an inventory id was duplicated across both saves (save A's inventory keeps the original id; save B's gets a new id), a world object from save A keeps its `liId`/`siIds` pointing to the original id, while a world object from save B points to the remapped (new) id. The origin is carried by the merged sections themselves: the three sections holding identifiers (players, inventories, world objects) keep their entries grouped as `fromSaveA` / `fromSaveB`, so it never has to be reconstructed.
+
+**Rule GR-ID-6:** A `Player.id` is never regenerated. It is a Steam account identifier, not a save-local one: the game reuses it from one save to the next, no entry back-references it, and two players sharing it across the two saves is therefore not a conflict. Players neither seed the sequence of GR-ID-2 nor draw from it — seeding on them would be impossible anyway, their values sitting beyond `Number.MAX_SAFE_INTEGER`, where `id + 1 === id` makes a sequence hand out one and the same id forever.
+
+**Implementation:** `packages/core-mapping/src/domain/rules/merge/resolveIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/createIdSequence.ts`, `packages/core-mapping/src/domain/rules/merge/resolveInventoryIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/resolveWorldObjectIdConflicts.ts`, `packages/core-mapping/src/domain/rules/merge/rewriteReferences.ts`
 

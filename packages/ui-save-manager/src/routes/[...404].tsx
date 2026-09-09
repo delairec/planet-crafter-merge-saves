@@ -1,5 +1,5 @@
 import {A} from "@solidjs/router";
-import {notFoundRouteTitle} from "../../../util-messages/notFoundRouteMessages";
+import {notFoundRouteTitle} from "~/messages/notFoundRouteMessages";
 
 export default function NotFound() {
   return (

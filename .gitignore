@@ -4,15 +4,23 @@
 
 # package manager
 node_modules/
+package-lock.json
 
 # generated
 output/
+.output/
+playwright-report/
+test-results/
+blob-report/
 
-# user input
-input/
+# user input: no trailing slash, so the rule also covers the symlink a linked worktree points
+# at the folder of the main checkout
+input
 
 # other
+.claude/
 .github/agents
 next-steps.txt
-/AGENTS.md
-/.do-not-commit/**
+
+# private agent context (satellite repository .do-not-commit)
+/.do-not-commit/

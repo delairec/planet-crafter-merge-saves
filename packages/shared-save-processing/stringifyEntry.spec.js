@@ -1,0 +1,220 @@
+import {describe, it, expect} from 'bun:test';
+import {stringifyEntry} from './stringifyEntry.js';
+
+describe('stringifyEntry', () => {
+  describe('When a gauge or level field has a whole number value', () => {
+    it('should preserve the decimal notation for playerGaugeOxygen', () => {
+      // Arrange
+      const entry = {playerGaugeOxygen: 280};
+
+      // Act
+      const result = stringifyEntry(entry);
+
+      // Assert
+      expect(result).toBe('{"playerGaugeOxygen":280.0}');
+    });
+
+    it('should preserve the decimal notation for playerGaugeToxic', () => {
+      // Arrange
+      const entry = {playerGaugeToxic: 0};
+
+      // Act
+      const result = stringifyEntry(entry);
+
+      // Assert
+      expect(result).toBe('{"playerGaugeToxic":0.0}');
+    });
+
+    it('should preserve the decimal notation for playerGaugeThirst', () => {
+      // Arrange
+      const entry = {playerGaugeThirst: 100};
+
+      // Act
+      const result = stringifyEntry(entry);
+
+      // Assert
+      expect(result).toBe('{"playerGaugeThirst":100.0}');
+    });
+
+    it('should preserve the decimal notation for playerGaugeHealth', () => {
+      // Arrange
+      const entry = {playerGaugeHealth: 72};
+
+      // Act
+      const result = stringifyEntry(entry);
+
+      // Assert
+      expect(result).toBe('{"playerGaugeHealth":72.0}');
+    });
+
+    it('should preserve the decimal notation for unitOxygenLevel', () => {
+      // Arrange
+      const entry = {unitOxygenLevel: 2477136019456};
+
+      // Act
+      const result = stringifyEntry(entry);
+
+      // Assert
+      expect(result).toBe('{"unitOxygenLevel":2477136019456.0}');
+    });
+
+    it('should preserve the decimal notation for unitHeatLevel', () => {
+      // Arrange
+      const entry = {unitHeatLevel: 2219597103104};
+
+      // Act
+      const result = stringifyEntry(entry);
+
+      // Assert
+      expect(result).toBe('{"unitHeatLevel":2219597103104.0}');
+    });
+
+    it('should preserve the decimal notation for unitPurificationLevel', () => {
+      // Arrange
+      const entry = {unitPurificationLevel: 0};
+
+      // Act
+      const result = stringifyEntry(entry);
+
+      // Assert
+      expect(result).toBe('{"unitPurificationLevel":0.0}');
+    });
+
+    it('should preserve the decimal notation for hunger', () => {
+      // Arrange
+      const entry = {hunger: -100};
+
+      // Act
+      const result = stringifyEntry(entry);
+
+      // Assert
+      expect(result).toBe('{"hunger":-100.0}');
+    });
+  });
+
+  describe('When a gauge or level field already has a fractional value', () => {
+    it('should serialize it as-is', () => {
+      // Arrange
+      const entry = {playerGaugeThirst: 96.3858642578125};
+
+      // Act
+      const result = stringifyEntry(entry);
+
+      // Assert
+      expect(result).toBe('{"playerGaugeThirst":96.3858642578125}');
+    });
+  });
+
+  describe('When a gauge or level field is absent from the entry', () => {
+    it('should serialize the remaining fields only', () => {
+      // Arrange
+      const worldObjectWithoutHunger = {id: 12, gId: 'Sign1'};
+
+      // Act
+      const result = stringifyEntry(worldObjectWithoutHunger);
+
+      // Assert
+      expect(result).toBe('{"id":12,"gId":"Sign1"}');
+    });
+  });
+
+  describe('When a gauge or level field holds no value', () => {
+    it('should omit it from the serialized entry', () => {
+      // Arrange
+      const worldObjectWithoutHungerValue = {id: 12, hunger: undefined};
+
+      // Act
+      const result = stringifyEntry(worldObjectWithoutHungerValue);
+
+      // Assert
+      expect(result).toBe('{"id":12}');
+    });
+  });
+
+  describe('When a field is not a gauge or level field', () => {
+    it('should serialize integer values without decimal notation', () => {
+      // Arrange
+      const entry = {id: 42};
+
+      // Act
+      const result = stringifyEntry(entry);
+
+      // Assert
+      expect(result).toBe('{"id":42}');
+    });
+
+    it('should serialize string values normally', () => {
+      // Arrange
+      const entry = {name: 'Nikowa'};
+
+      // Act
+      const result = stringifyEntry(entry);
+
+      // Assert
+      expect(result).toBe('{"name":"Nikowa"}');
+    });
+  });
+
+  describe('When a text field contains the float notation marker', () => {
+    it('should serialize the text unchanged', () => {
+      // Arrange
+      const signWithMarkerLikeText = {id: 1, text: 'FLOAT:5', hunger: 3};
+
+      // Act
+      const result = stringifyEntry(signWithMarkerLikeText);
+
+      // Assert
+      expect(result).toBe('{"id":1,"text":"FLOAT:5","hunger":3.0}');
+    });
+  });
+
+  describe('When a field holds a nested value', () => {
+    it('should reject an entry carrying a nested object', () => {
+      // Arrange
+      const entryWithNestedObject = {id: 1, position: {x: 0, y: 0, z: 0}};
+
+      // Act
+      const serializeNestedObject = () => stringifyEntry(entryWithNestedObject);
+
+      // Assert
+      expect(serializeNestedObject).toThrow('Unexpected save data: field "position" holds a nested value, while save entries are expected to be flat.');
+    });
+
+    it('should reject an entry carrying a nested array', () => {
+      // Arrange
+      const entryWithNestedArray = {id: 1, inventory: [12, 13]};
+
+      // Act
+      const serializeNestedArray = () => stringifyEntry(entryWithNestedArray);
+
+      // Assert
+      expect(serializeNestedArray).toThrow('Unexpected save data: field "inventory" holds a nested value, while save entries are expected to be flat.');
+    });
+  });
+
+  describe('When a field holds an empty value', () => {
+    it('should serialize it as null', () => {
+      // Arrange
+      const worldObjectWithoutText = {id: 12, text: null};
+
+      // Act
+      const result = stringifyEntry(worldObjectWithoutText);
+
+      // Assert
+      expect(result).toBe('{"id":12,"text":null}');
+    });
+  });
+
+  describe('When entry has mixed fields', () => {
+    it('should apply decimal notation only to known gauge and level fields', () => {
+      // Arrange
+      const entry = {id: 1, playerGaugeOxygen: 370, playerGaugeThirst: 99.9, host: true};
+
+      // Act
+      const result = stringifyEntry(entry);
+
+      // Assert
+      expect(result).toBe('{"id":1,"playerGaugeOxygen":370.0,"playerGaugeThirst":99.9,"host":true}');
+    });
+  });
+});

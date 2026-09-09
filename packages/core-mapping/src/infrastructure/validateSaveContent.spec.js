@@ -1,0 +1,580 @@
+import {describe, expect, it} from 'bun:test';
+import {validateSaveContent} from './validateSaveContent.js';
+import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue.ts';
+import {createFakeSaveString, createLegacyFakeSaveString} from 'shared-save-processing/testing/createFakeSaveString.js';
+import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
+import {stringifyEntry} from 'shared-save-processing/stringifyEntry.js';
+import {
+  createEquipment,
+  createGlobalMetadata,
+  createInventory,
+  createMailboxMessage,
+  createPlayer,
+  createSaveConfiguration,
+  createStatistics,
+  createTerraformationLevel,
+  createWorldObject
+} from 'shared-save-processing/testing/createSaveRecords.js';
+import {
+  GLOBAL_METADATA_SECTION_INDEX,
+  INVENTORIES_SECTION_INDEX,
+  MAILBOX_MESSAGES_SECTION_INDEX,
+  PLAYERS_SECTION_INDEX,
+  SAVE_CONFIGURATION_SECTION_INDEX,
+  STATISTICS_SECTION_INDEX,
+  TERRAFORMATION_LEVELS_SECTION_INDEX,
+  WORLD_EVENTS_SECTION_INDEX,
+  WORLD_OBJECTS_SECTION_INDEX
+} from 'shared-save-processing/sectionIndexes.js';
+
+describe('validateSaveContent', () => {
+
+  describe('When the save meets every rule', () => {
+    it('should report the save as valid, with no error and no warning', () => {
+      // Arrange
+      const save = createFakeSaveContent();
+
+      // Act
+      const result = validateSaveContent(save);
+
+      // Assert
+      expect(result).toEqual({isValid: true, errors: [], warnings: []});
+    });
+  });
+
+  describe('When validating the overall save structure', () => {
+    describe('When an entry breaks a schema rule', () => {
+      it('should locate each error with its section and entry position', () => {
+        // Arrange
+        const save = createFakeSaveString({
+          globalMetadata: {
+            // @ts-expect-error intentionally invalid type to test validation
+            terraTokens: 'not-a-number',
+            allTimeTerraTokens: 200,
+            unlockedGroups: 'BootsSpeed1',
+            openedInstanceSeed: 0,
+            openedInstanceTimeLeft: 0
+          }
+        });
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: GLOBAL_METADATA_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+  });
+
+  describe('When validating the global metadata section', () => {
+    describe('When terraTokens is not an integer', () => {
+      it('should reject the save', () => {
+        // Arrange
+        // @ts-expect-error intentionally invalid type to test validation
+        const save = createFakeSaveString({globalMetadata: {...createGlobalMetadata(), terraTokens: 'abc'}});
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: GLOBAL_METADATA_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+
+    describe('When a required field is missing', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const {openedInstanceTimeLeft: _, ...metadataWithoutTimeLeft} = createGlobalMetadata();
+        // @ts-expect-error intentionally missing required field to test validation
+        const save = createFakeSaveString({globalMetadata: metadataWithoutTimeLeft});
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: GLOBAL_METADATA_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+  });
+
+  describe('When validating the terraformation levels section', () => {
+    describe('When planetId is missing', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const {planetId: _, ...levelWithoutPlanetId} = createTerraformationLevel();
+        const save = createFakeSaveContent({terraformationLevels: [levelWithoutPlanetId]});
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: TERRAFORMATION_LEVELS_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+
+    describe('When a level field is negative', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({
+          terraformationLevels: [createTerraformationLevel({unitOxygenLevel: -1})]
+        });
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: TERRAFORMATION_LEVELS_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+  });
+
+  describe('When validating the players section', () => {
+    describe('When a required player field is missing', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const {host: _, ...playerWithoutHost} = createPlayer();
+        const save = createFakeSaveContent({players: [playerWithoutHost]});
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toContainEqual(expect.objectContaining(
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: PLAYERS_SECTION_INDEX, entryIndex: 0}
+        ));
+      });
+    });
+
+    describe('When playerPosition has an invalid format', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({players: [createPlayer({playerPosition: 'bad-format'})]});
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: PLAYERS_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+
+    describe('When playerGaugeOxygen is negative', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({players: [createPlayer({playerGaugeOxygen: -1})]});
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: PLAYERS_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+
+    describe('When a player comes from an older save without cameraView, totalCraftedObjects and totalTerraTokenEarned', () => {
+      it('should accept the save', () => {
+        // Arrange
+        const {cameraView: _cameraView, totalCraftedObjects: _totalCraftedObjects, totalTerraTokenEarned: _totalTerraTokenEarned, ...legacyPlayer} = createPlayer();
+        const save = createFakeSaveContent({players: [legacyPlayer]});
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(true);
+      });
+    });
+  });
+
+  describe('When validating the inventories section', () => {
+    describe('When size is missing', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const {size: _, ...inventoryWithoutSize} = createInventory();
+        const save = createFakeSaveContent({inventories: [inventoryWithoutSize, createEquipment()]});
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: INVENTORIES_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+
+    describe('When size is negative', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({inventories: [createInventory({size: -1}), createEquipment()]});
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: INVENTORIES_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+  });
+
+  describe('When validating the statistics section', () => {
+    describe('When craftedObjects is negative', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({statistics: createStatistics({craftedObjects: -5})});
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: STATISTICS_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+  });
+
+  describe('When validating the save configuration section', () => {
+    describe('When saveDisplayName is missing', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const {saveDisplayName: _, ...configWithoutName} = createSaveConfiguration();
+        const save = createFakeSaveContent({saveConfiguration: configWithoutName});
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: SAVE_CONFIGURATION_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+
+    describe('When modifierTerraformationPace is negative', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({
+          saveConfiguration: createSaveConfiguration({modifierTerraformationPace: -1})
+        });
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: SAVE_CONFIGURATION_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+  });
+
+  describe('When validating the world events section', () => {
+    describe('When pos has an invalid format', () => {
+      it('should reject the save', () => {
+        // Arrange
+        const save = createFakeSaveContent({worldEvents: [{planet: 110910045, seed: 42, pos: 'bad-pos'}]});
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toMatchObject([
+          {code: VALIDATION_ISSUE_CODES.SCHEMA_VIOLATION, section: WORLD_EVENTS_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+  });
+
+  describe('When validating cross-section domain rules', () => {
+    describe('When validating decimal notation for gauge and level values', () => {
+      describe('When a gauge value is missing its decimal notation', () => {
+        it('should reject the save', () => {
+          // Arrange
+          const saveWithBadFloat = createFakeSaveContent().replace('"playerGaugeOxygen":280.0', '"playerGaugeOxygen":280');
+
+          // Act
+          const result = validateSaveContent(saveWithBadFloat);
+
+          // Assert
+          expect(result.isValid).toBe(false);
+          expect(result.errors).toEqual([{
+            code: VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION,
+            detail: 'Field "playerGaugeOxygen" has integer value serialized without .0 suffix (got: 280)'
+          }]);
+        });
+      });
+
+      describe('When every gauge value carries its decimal notation', () => {
+        it('should accept the save', () => {
+          // Arrange
+          const save = createFakeSaveContent();
+
+          // Act
+          const result = validateSaveContent(save);
+
+          // Assert
+          expect(result.isValid).toBe(true);
+          expect(result.errors).toEqual([]);
+        });
+      });
+
+      describe('When every gauge value is missing its decimal notation', () => {
+        it('should reject the save reporting one error per gauge', () => {
+          // Arrange
+          const playerWithAllIntegerGauges = createPlayer({
+            playerGaugeOxygen: 280,
+            playerGaugeThirst: 100,
+            playerGaugeHealth: 72,
+            playerGaugeToxic: 0
+          });
+          const saveWithBadFloats = createFakeSaveString({
+            globalMetadata: createGlobalMetadata(),
+            terraformationLevels: [createTerraformationLevel()],
+            players: [playerWithAllIntegerGauges],
+            inventories: [createInventory(), createEquipment()],
+            statistics: createStatistics(),
+            saveConfiguration: createSaveConfiguration()
+          }).replace(/"playerGaugeOxygen":280\.0/g, '"playerGaugeOxygen":280')
+            .replace(/"playerGaugeThirst":100\.0/g, '"playerGaugeThirst":100')
+            .replace(/"playerGaugeHealth":72\.0/g, '"playerGaugeHealth":72')
+            .replace(/"playerGaugeToxic":0\.0/g, '"playerGaugeToxic":0');
+
+          // Act
+          const result = validateSaveContent(saveWithBadFloats);
+
+          // Assert
+          expect(result.isValid).toBe(false);
+          expect(result.errors).toEqual([
+            {
+              code: VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION,
+              detail: 'Field "playerGaugeOxygen" has integer value serialized without .0 suffix (got: 280)'
+            },
+            {
+              code: VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION,
+              detail: 'Field "playerGaugeThirst" has integer value serialized without .0 suffix (got: 100)'
+            },
+            {
+              code: VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION,
+              detail: 'Field "playerGaugeHealth" has integer value serialized without .0 suffix (got: 72)'
+            },
+            {
+              code: VALIDATION_ISSUE_CODES.FLOAT_SERIALIZATION,
+              detail: 'Field "playerGaugeToxic" has integer value serialized without .0 suffix (got: 0)'
+            }
+          ]);
+        });
+      });
+    });
+
+    describe('When validating the unique host rule', () => {
+      describe('When no player is host', () => {
+        it('should report an error', () => {
+          // Arrange
+          const save = createFakeSaveContent({players: [createPlayer({host: false})]});
+
+          // Act
+          const result = validateSaveContent(save);
+
+          // Assert
+          expect(result.isValid).toBe(false);
+          expect(result.errors).toEqual([
+            {code: VALIDATION_ISSUE_CODES.UNIQUE_HOST, detail: 'Expected exactly one host player, found 0'}
+          ]);
+        });
+      });
+
+      describe('When more than one player is host', () => {
+        it('should report an error', () => {
+          // Arrange
+          const firstPlayer = createPlayer();
+          const secondPlayer = createPlayer({
+            id: 76561190000000030,
+            name: 'Chileny',
+            inventoryId: 3,
+            equipmentId: 4,
+            host: true
+          });
+          const save = createFakeSaveContent({
+            players: [firstPlayer, secondPlayer],
+            inventories: [createInventory(), createEquipment(), createInventory({id: 3, woIds: '', size: 20}), createEquipment({id: 4, woIds: '', size: 10})]
+          });
+
+          // Act
+          const result = validateSaveContent(save);
+
+          // Assert
+          expect(result.isValid).toBe(false);
+          expect(result.errors).toEqual([
+            {code: VALIDATION_ISSUE_CODES.UNIQUE_HOST, detail: 'Expected exactly one host player, found 2'}
+          ]);
+        });
+      });
+
+      describe('When exactly one player is host', () => {
+        it('should not report a host error', () => {
+          // Arrange
+          const save = createFakeSaveContent();
+
+          // Act
+          const result = validateSaveContent(save);
+
+          // Assert
+          expect(result.errors).toEqual([]);
+        });
+      });
+    });
+
+    describe('When validating the consistent planetId rule', () => {
+      describe('When two players are on different planets', () => {
+        it('should accept the save', () => {
+          // Arrange
+          const firstPlayer = createPlayer();
+          const playerOnOtherPlanet = createPlayer({
+            id: 76561190000000030,
+            name: 'Chileny',
+            inventoryId: 3,
+            equipmentId: 4,
+            host: false,
+            planetId: 'Prime'
+          });
+          const save = createFakeSaveContent({
+            players: [firstPlayer, playerOnOtherPlanet],
+            inventories: [createInventory(), createEquipment(), createInventory({id: 3, woIds: '', size: 20}), createEquipment({id: 4, woIds: '', size: 10})]
+          });
+
+          // Act
+          const result = validateSaveContent(save);
+
+          // Assert
+          expect(result.isValid).toBe(true);
+        });
+      });
+    });
+  });
+
+  describe('When the save uses the legacy format (still contains a Terrain Layers section removed by a game update)', () => {
+    it('should accept the save as valid (backward compatibility)', () => {
+      // Arrange
+      const save = createLegacyFakeSaveString({
+        globalMetadata: createGlobalMetadata(),
+        terraformationLevels: [createTerraformationLevel()],
+        players: [createPlayer()],
+        inventories: [createInventory(), createEquipment()],
+        statistics: createStatistics(),
+        saveConfiguration: createSaveConfiguration(),
+        terrainLayers: [{layerId: 'PC-Toxicity-Layer2', planet: 110910045, colorBase: '0.5-0.5-0.5-1'}]
+      });
+
+      // Act
+      const result = validateSaveContent(save);
+
+      // Assert
+      expect(result.isValid).toBe(true);
+    });
+
+    it('should report a warning explaining the save was adapted', () => {
+      // Arrange
+      const save = createLegacyFakeSaveString({
+        globalMetadata: createGlobalMetadata(),
+        terraformationLevels: [createTerraformationLevel()],
+        players: [createPlayer()],
+        inventories: [createInventory(), createEquipment()],
+        statistics: createStatistics(),
+        saveConfiguration: createSaveConfiguration(),
+        terrainLayers: [{layerId: 'PC-Toxicity-Layer2', planet: 110910045, colorBase: '0.5-0.5-0.5-1'}]
+      });
+
+      // Act
+      const result = validateSaveContent(save);
+
+      // Assert
+      expect(result.warnings.length).toBe(1);
+    });
+  });
+
+  describe('When a line of the save cannot be read as JSON', () => {
+    describe('When the unreadable line is in the world objects section', () => {
+      it('should reject the save, naming the world objects section and the position of the line', () => {
+        // Arrange
+        const readableWorldObject = createWorldObject({id: 101, gId: 'Backpack4'});
+        const save = createFakeSaveString({worldObjects: [readableWorldObject]})
+          .replace(stringifyEntry(readableWorldObject), '{not valid json');
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toEqual([
+          {code: VALIDATION_ISSUE_CODES.INVALID_JSON, detail: 'Invalid JSON: {not valid json', section: WORLD_OBJECTS_SECTION_INDEX, entryIndex: 0}
+        ]);
+      });
+    });
+
+    describe('When the unreadable line is surrounded by readable ones', () => {
+      it('should reject the save and report only the line it could not read', () => {
+        // Arrange
+        const unreadableMailboxMessage = createMailboxMessage({stringId: 'Message2', isRead: false});
+        const save = createFakeSaveContent({
+          mailboxes: [createMailboxMessage({stringId: 'Message1', isRead: true}), unreadableMailboxMessage, createMailboxMessage({stringId: 'Message3', isRead: false})]
+        }).replace(JSON.stringify(unreadableMailboxMessage), '{not valid json');
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toEqual([
+          {code: VALIDATION_ISSUE_CODES.INVALID_JSON, detail: 'Invalid JSON: {not valid json', section: MAILBOX_MESSAGES_SECTION_INDEX, entryIndex: 1}
+        ]);
+      });
+    });
+  });
+
+  describe('When the section count does not match any supported format', () => {
+    it('should report an error', () => {
+      // Arrange
+      const save = 'This is not @ a valid save string';
+
+      // Act
+      const result = validateSaveContent(save);
+
+      // Assert
+      expect(result.isValid).toBe(false);
+      expect(result.errors).toEqual([
+        {code: VALIDATION_ISSUE_CODES.INVALID_STRUCTURE, detail: `Expected 11 sections but found 2`}
+      ]);
+    });
+  });
+});

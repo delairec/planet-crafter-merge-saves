@@ -1,87 +1,77 @@
-import {Accessor, createEffect, createSignal, For} from "solid-js";
+import {For, Resource} from "solid-js";
 import FieldsGroup from "./structure/FieldsGroup";
-import {EnergyLevelsViewModel} from "../../../util-mapping/presentation/viewModels/EnergyLevelsViewModel";
-import {ParsedSections} from "../../../util-types/gameDefinitions";
-import {LoadEnergyLevelsSectionController} from "../../../util-mapping/controllers/LoadEnergyLevelsSectionController";
+import FieldsGroupGrid from "./structure/FieldsGroupGrid";
+import SectionState from "./structure/SectionState";
+import {EnergyLevelsViewModel} from "core-mapping/presentation/viewModels/EnergyLevelsViewModel";
 import {
-  energyLevelsSectionTitle,
+  energyLevelsSectionBoostedMachinesLabel,
+  energyLevelsSectionConsumptionTitle,
+  energyLevelsSectionContributionLabel,
+  energyLevelsSectionEnergyFusesLabel,
   energyLevelsSectionOptimizersTitle,
-  energyLevelsSectionProductionTitle
-} from "../../../util-messages/energyLevelsSectionMessages";
+  energyLevelsSectionProductionTitle,
+  energyLevelsSectionQuantityLabel,
+  energyLevelsSectionTitle,
+  energyLevelsSectionTotalLabel,
+  energyLevelsSectionUnitLabel,
+  energyLevelsSectionWorkInProgressLabel
+} from "~/messages/energyLevelsSectionMessages";
 
 interface EnergyLevelsProps {
-  sections: Accessor<ParsedSections>;
+  viewModel: Resource<EnergyLevelsViewModel>;
 }
 
-export default function EnergyLevelsSection({sections}: EnergyLevelsProps) {
-  const [planets, setPlanets] = createSignal<EnergyLevelsViewModel['planets']>([]);
-
-  createEffect(() => {
-    const {planets} = LoadEnergyLevelsSectionController.loadEnergyLevelsSection(sections());
-    setPlanets(planets);
-  });
-
+export default function EnergyLevelsSection({viewModel}: EnergyLevelsProps) {
   return (
-    <div>
-      <h3>{energyLevelsSectionTitle}</h3>
-      <For each={planets()}>
-        {(planet) => (
-          <div>
-            <h4>{planet.planetId}</h4>
-            <div class="fields-group-container">
-              <FieldsGroup columns={() => planet.energyLevels.columns}/>
-            </div>
+    <SectionState title={energyLevelsSectionTitle} resource={viewModel}>
+      {(energyLevels) => (
+        <div>
+          <h3>{energyLevelsSectionTitle}</h3>
+          <For each={energyLevels().planets}>
+            {(planet) => (
+              <div>
+                <h4>{planet.planetId}</h4>
+                <div class="fields-group-container">
+                  <FieldsGroup columns={() => planet.energyLevels.columns}/>
+                </div>
 
-            <h5>{energyLevelsSectionOptimizersTitle}</h5>
-            <div class="grid-container">
-              <For each={planet.optimizers}>
-                {(optimizer) => (
-                  <div class="grid-item">
-                    <h5>{optimizer.label}</h5>
-                    <FieldsGroup columns={() => [
-                      {header: 'Energy Fuses', values: [optimizer.fuseCount]},
-                      {header: 'Boosted machines', values: [optimizer.boostedMachines]},
-                      {header: 'Contribution', values: [optimizer.contribution]}
-                    ]}/>
-                  </div>
-                )}
-              </For>
-            </div>
+                <FieldsGroupGrid
+                  title={energyLevelsSectionOptimizersTitle}
+                  items={planet.optimizers}
+                  itemLabel={(optimizer) => optimizer.label}
+                  columns={(optimizer) => [
+                    {header: energyLevelsSectionEnergyFusesLabel, values: [optimizer.fuseCount]},
+                    {header: energyLevelsSectionBoostedMachinesLabel, values: [optimizer.boostedMachines]},
+                    {header: energyLevelsSectionContributionLabel, values: [optimizer.contribution]}
+                  ]}
+                />
 
-            <h5>{energyLevelsSectionProductionTitle}</h5>
-            <div class="grid-container">
-              <For each={planet.productionBreakdown}>
-                {(row) => (
-                  <div class="grid-item">
-                    <h5>{row.label}</h5>
-                    <FieldsGroup columns={() => [
-                      {header: 'Quantity', values: [row.quantity]},
-                      {header: 'Unit', values: [row.unitLevel]},
-                      {header: 'Total', values: [row.totalLevel]}
-                    ]}/>
-                  </div>
-                )}
-              </For>
-            </div>
+                <FieldsGroupGrid
+                  title={energyLevelsSectionProductionTitle}
+                  items={planet.productionBreakdown}
+                  itemLabel={(row) => row.label}
+                  columns={(row) => [
+                    {header: energyLevelsSectionQuantityLabel, values: [row.quantity]},
+                    {header: energyLevelsSectionUnitLabel, values: [row.unitLevel]},
+                    {header: energyLevelsSectionTotalLabel, values: [row.totalLevel]}
+                  ]}
+                />
 
-            <h5>Consumption 🚧 Work In Progress</h5>
-            <div class="grid-container">
-              <For each={planet.consumptionBreakdown}>
-                {(row) => (
-                  <div class="grid-item">
-                    <h5>{row.label}</h5>
-                    <FieldsGroup columns={() => [
-                      {header: 'Quantity', values: [row.quantity]},
-                      {header: 'Unit', values: [row.unitLevel]},
-                      {header: 'Total', values: [row.totalLevel]}
-                    ]}/>
-                  </div>
-                )}
-              </For>
-            </div>
-          </div>
-        )}
-      </For>
-    </div>
+                <FieldsGroupGrid
+                  title={`${energyLevelsSectionConsumptionTitle} ${energyLevelsSectionWorkInProgressLabel}`}
+                  items={planet.consumptionBreakdown}
+                  itemLabel={(row) => row.label}
+                  columns={(row) => [
+                    {header: energyLevelsSectionQuantityLabel, values: [row.quantity]},
+                    {header: energyLevelsSectionUnitLabel, values: [row.unitLevel]},
+                    {header: energyLevelsSectionTotalLabel, values: [row.totalLevel]}
+                  ]}
+                />
+              </div>
+            )}
+          </For>
+        </div>
+      )}
+    </SectionState>
   );
 }

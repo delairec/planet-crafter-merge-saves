@@ -1,6 +1,6 @@
 import {Accessor, For} from "solid-js";
 
-interface Column {
+export interface Column {
   header: string,
   values: string[]
 }

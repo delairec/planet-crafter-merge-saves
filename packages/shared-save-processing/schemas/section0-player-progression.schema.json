@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section0-player-progression.schema.json",
+  "title": "Section 0 — Player progression",
+  "description": "Terraformation tokens and unlocked research groups. Holds a single entry.",
+  "type": "object",
+  "required": ["terraTokens", "allTimeTerraTokens", "unlockedGroups", "openedInstanceSeed", "openedInstanceTimeLeft"],
+  "additionalProperties": false,
+  "properties": {
+    "terraTokens": {
+      "type": "integer",
+      "description": "Terraformation tokens currently available"
+    },
+    "allTimeTerraTokens": {
+      "type": "integer",
+      "description": "Total tokens earned since the beginning of the game"
+    },
+    "unlockedGroups": {
+      "type": "string",
+      "description": "CSV list of unlocked research groups (e.g. 'BootsSpeed1,Jetpack2')"
+    },
+    "openedInstanceSeed": {
+      "type": "integer",
+      "description": "Seed of the opened dungeon instance (0 = no active instance)"
+    },
+    "openedInstanceTimeLeft": {
+      "type": "integer",
+      "description": "Time left on the opened dungeon instance, in seconds"
+    }
+  }
+}
+

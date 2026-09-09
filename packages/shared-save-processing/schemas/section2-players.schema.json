@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section2-players.schema.json",
+  "title": "Section 2 — Players",
+  "description": "Player data. Deduplication key: id (Steam ID) and name.",
+  "type": "object",
+  "required": ["id", "name", "inventoryId", "equipmentId", "playerPosition", "playerRotation", "playerGaugeOxygen", "playerGaugeThirst", "playerGaugeHealth", "playerGaugeToxic", "host", "planetId"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Player Steam ID (primary key, int64)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Player Steam name (deduplication key)"
+    },
+    "inventoryId": {
+      "type": "integer",
+      "description": "→ Section 4 Inventory.id — the player's personal inventory"
+    },
+    "equipmentId": {
+      "type": "integer",
+      "description": "→ Section 4 Inventory.id — the equipment worn by the player"
+    },
+    "playerPosition": {
+      "type": "string",
+      "pattern": "^-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*$",
+      "description": "3D position of the player, formatted as 'x,y,z'"
+    },
+    "playerRotation": {
+      "type": "string",
+      "pattern": "^-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*$",
+      "description": "Quaternion rotation of the player, formatted as 'x,y,z,w'"
+    },
+    "playerGaugeOxygen": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Oxygen gauge level (Unity float — serialized with a trailing .0)"
+    },
+    "playerGaugeThirst": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Hydration gauge level (Unity float — serialized with a trailing .0)"
+    },
+    "playerGaugeHealth": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Health gauge level (Unity float — serialized with a trailing .0)"
+    },
+    "playerGaugeToxic": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Player toxicity level (Unity float — serialized with a trailing .0; lower is better)"
+    },
+    "host": {
+      "type": "boolean",
+      "description": "true when this player hosts the session. Only one player can be the host."
+    },
+    "planetId": {
+      "type": "string",
+      "description": "Planet the player is currently on (must match the host's planet)"
+    },
+    "cameraView": {
+      "type": "integer",
+      "description": "Player camera view (added by a game update)"
+    },
+    "totalCraftedObjects": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of objects crafted by the player (added by a game update)"
+    },
+    "totalTerraTokenEarned": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of terra tokens earned by the player (added by a game update)"
+    }
+  }
+}
+

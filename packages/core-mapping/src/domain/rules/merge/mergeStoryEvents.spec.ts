@@ -1,0 +1,32 @@
+import {describe, it, expect} from 'bun:test';
+import {mergeStoryEvents} from './mergeStoryEvents';
+import {createStoryEvent} from 'shared-save-processing/testing/createSaveRecords.js';
+
+describe('Merge story events', () => {
+  const storyEventA = createStoryEvent({stringId: 'StoryEvent-FirstMessageClick'});
+  const storyEventB = createStoryEvent({stringId: 'StoryEvent-Toxicity-InfosGoo'});
+  const storyEventShared = createStoryEvent({stringId: 'StoryEvent-Shared'});
+
+  describe('When story events are unique', () => {
+    it('should concat story events from both saves', () => {
+      // Act
+      const result = mergeStoryEvents([storyEventA], [storyEventB]);
+
+      // Assert
+      expect(result).toEqual([
+        {stringId: 'StoryEvent-FirstMessageClick'},
+        {stringId: 'StoryEvent-Toxicity-InfosGoo'}
+      ]);
+    });
+  });
+
+  describe('When a story event appears in both saves', () => {
+    it('should deduplicate story events', () => {
+      // Act
+      const result = mergeStoryEvents([storyEventShared], [storyEventShared]);
+
+      // Assert
+      expect(result).toEqual([{stringId: 'StoryEvent-Shared'}]);
+    });
+  });
+});

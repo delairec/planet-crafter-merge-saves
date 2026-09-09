@@ -68,6 +68,24 @@ code {
     color: var(--muted);
 }
 
+/* A validation message reads like a stack frame: the message, then its origin on the line below. */
+.validation-message + .validation-message {
+    margin-top: 0.5rem;
+}
+
+.validation-message code {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    padding: 0.5rem 0.75rem;
+}
+
+.validation-message-location {
+    display: block;
+    padding-left: 2ch;
+    color: var(--subtle);
+}
+
 
 pre {
     padding: 1rem;

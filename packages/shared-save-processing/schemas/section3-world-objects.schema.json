@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section3-world-objects.schema.json",
+  "title": "Section 3 — World objects",
+  "description": "World object (building, resource, plant, animal…). Domain key: id. Only id and gId are always present.",
+  "type": "object",
+  "required": ["id", "gId"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Unique identifier of the object within the save"
+    },
+    "gId": {
+      "type": "string",
+      "description": "Game ID — type/prefab of the object (e.g. 'WindTurbineT1', 'EscapePodToxicity')"
+    },
+    "pos": {
+      "type": "string",
+      "pattern": "^-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*,-?[0-9]+\\.?[0-9]*$",
+      "description": "3D position of the object, formatted as 'x,y,z'"
+    },
+    "rot": {
+      "type": "string",
+      "description": "Quaternion rotation of the object, formatted as 'x,y,z,w'"
+    },
+    "planet": {
+      "type": "integer",
+      "description": "Numeric planet id (e.g. 110910045 for Toxicity)"
+    },
+    "count": {
+      "type": "string",
+      "description": "Accumulated quantity or state (e.g. '0,125' for an ore deposit)"
+    },
+    "grwth": {
+      "type": "integer",
+      "description": "Growth progress (plants) — stored as an integer by Unity"
+    },
+    "pnls": {
+      "type": "string",
+      "description": "Power produced (solar panels, generators)"
+    },
+    "color": {
+      "type": "string",
+      "description": "RGBA color of the object"
+    },
+    "trtInd": {
+      "type": "integer",
+      "description": "Index of the associated terraformation stage"
+    },
+    "liId": {
+      "type": "integer",
+      "description": "Id of an internal list (logistics, drones)"
+    },
+    "text": {
+      "type": "string",
+      "description": "Text displayed on the object (signs, panels)"
+    },
+    "liGrps": {
+      "type": "string",
+      "description": "Logistic groups associated with the object"
+    },
+    "linkedWo": {
+      "type": "integer",
+      "description": "→ WorldObject.id — id of the linked world object (e.g. machine ↔ inventory)"
+    },
+    "siIds": {
+      "type": "string",
+      "description": "CSV ids of the sub-inventories internal to the object"
+    },
+    "trtVal": {
+      "type": "integer",
+      "description": "Numeric contribution to terraformation — stored as an integer by Unity"
+    },
+    "hunger": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Hunger level of an animal (Unity float — serialized with a trailing .0)"
+    },
+    "set": {
+      "type": "integer",
+      "description": "Equipment set identifier"
+    }
+  }
+}
+

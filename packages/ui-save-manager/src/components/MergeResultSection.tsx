@@ -1,12 +1,14 @@
 import {Accessor, createEffect, createSignal, onCleanup, Show} from 'solid-js';
-import {MergeResultViewModel} from '../../../util-mapping/presentation/viewModels/MergeResultViewModel';
+import {MergeResultViewModel} from 'core-mapping/presentation/viewModels/MergeResultViewModel';
 import {
   mergeResultSectionDownloadLinkLabel,
   mergeResultSectionFileCreatedMessage,
   mergeResultSectionSaveAInvalidMessage,
+  mergeResultSectionSaveAWarningsTitle,
   mergeResultSectionSaveBInvalidMessage,
+  mergeResultSectionSaveBWarningsTitle,
   mergeResultSectionSuccessMessage
-} from '../../../util-messages/mergeResultSectionMessages';
+} from '~/messages/mergeResultSectionMessages';
 import ValidationMessagesList from "~/components/validation/ValidationMessagesList";
 
 interface MergeResultSectionProps {
@@ -16,6 +18,9 @@ interface MergeResultSectionProps {
 export default function MergeResultSection(props: MergeResultSectionProps) {
   const [downloadUrl, setDownloadUrl] = createSignal<string | null>(null);
   let downloadFileUrl: string | null = null;
+
+  const isSuccess = () => props.result()?.status === 'success';
+  const isInvalid = () => props.result()?.status === 'validationError';
 
   createEffect(() => {
     const result = props.result();
@@ -36,7 +41,16 @@ export default function MergeResultSection(props: MergeResultSectionProps) {
 
   return (
     <Show when={props.result()}>
-      <Show when={props.result()!.status === 'success'}>
+      <Show when={props.result()!.saveAWarnings.length > 0}>
+        <ValidationMessagesList title={mergeResultSectionSaveAWarningsTitle} severity="warning"
+                                messages={props.result()!.saveAWarnings}/>
+      </Show>
+      <Show when={props.result()!.saveBWarnings.length > 0}>
+        <ValidationMessagesList title={mergeResultSectionSaveBWarningsTitle} severity="warning"
+                                messages={props.result()!.saveBWarnings}/>
+      </Show>
+
+      <Show when={isSuccess()}>
         <p class="text-color-success">{mergeResultSectionSuccessMessage}</p>
         <p>{mergeResultSectionFileCreatedMessage} <code>{props.result()!.fileName}</code> <a class="button-link"
                                                                                              href={downloadUrl() ?? undefined}
@@ -44,15 +58,15 @@ export default function MergeResultSection(props: MergeResultSectionProps) {
         </p>
       </Show>
 
-      <Show when={props.result()!.status === 'validationError'}>
+      <Show when={isInvalid()}>
         <div>
-          <Show when={props.result()!.saveAErrorMessages.length > 0}>
+          <Show when={props.result()!.saveAErrors.length > 0}>
             <ValidationMessagesList title={mergeResultSectionSaveAInvalidMessage} severity="danger"
-                                    messages={props.result()!.saveAErrorMessages}/>
+                                    messages={props.result()!.saveAErrors}/>
           </Show>
-          <Show when={props.result()!.saveBErrorMessages.length > 0}>
+          <Show when={props.result()!.saveBErrors.length > 0}>
             <ValidationMessagesList title={mergeResultSectionSaveBInvalidMessage} severity="danger"
-                                    messages={props.result()!.saveBErrorMessages}/>
+                                    messages={props.result()!.saveBErrors}/>
           </Show>
         </div>
       </Show>

@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section1-terraformation-levels.schema.json",
+  "title": "Section 1 — Terraformation levels",
+  "description": "Terraformation progress indicators for the planet. Holds a single entry.",
+  "type": "object",
+  "required": ["planetId", "unitOxygenLevel", "unitHeatLevel", "unitPressureLevel", "unitPlantsLevel", "unitInsectsLevel", "unitAnimalsLevel", "unitPurificationLevel"],
+  "additionalProperties": false,
+  "properties": {
+    "planetId": {
+      "type": "string",
+      "description": "Textual planet identifier (e.g. 'Toxicity')"
+    },
+    "unitOxygenLevel": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Oxygen level in raw units (Unity float — serialized with a trailing .0)"
+    },
+    "unitHeatLevel": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Heat level in raw units (Unity float — serialized with a trailing .0)"
+    },
+    "unitPressureLevel": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Atmospheric pressure level in raw units (Unity float — serialized with a trailing .0)"
+    },
+    "unitPlantsLevel": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Plant level in raw units (Unity float — serialized with a trailing .0)"
+    },
+    "unitInsectsLevel": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Insect level in raw units (Unity float — serialized with a trailing .0)"
+    },
+    "unitAnimalsLevel": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Animal level in raw units (Unity float — serialized with a trailing .0)"
+    },
+    "unitPurificationLevel": {
+      "type": "number",
+      "minimum": -1,
+      "description": "Purification level in raw units (Unity float — serialized with a trailing .0). -1 is a sentinel value meaning purification is not unlocked yet."
+    }
+  }
+}
+

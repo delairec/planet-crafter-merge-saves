@@ -2,7 +2,7 @@ import {Router, RouteSectionProps} from "@solidjs/router";
 import {FileRoutes} from "@solidjs/start/router";
 import "./app.css";
 import {Component, Suspense} from "solid-js";
-import {appName} from "../../util-messages/appMessages";
+import {appName} from "~/messages/appMessages";
 
 const Layout: Component<RouteSectionProps> = (props) => {
   return (

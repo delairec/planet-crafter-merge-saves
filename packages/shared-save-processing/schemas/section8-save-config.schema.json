@@ -1,0 +1,121 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section8-save-config.schema.json",
+  "title": "Section 8 — Save configuration",
+  "description": "Game settings and modifiers. Holds a single entry. saveDisplayName is set from the merge function parameter.",
+  "type": "object",
+  "required": [
+    "saveDisplayName", "planetId", "unlockedSpaceTrading", "unlockedOreExtrators",
+    "unlockedTeleporters", "unlockedDrones", "unlockedAutocrafter", "unlockedEverything",
+    "freeCraft", "preInterplanetarySave", "randomizeMineables", "modifierTerraformationPace",
+    "modifierPowerConsumption", "modifierGaugeDrain", "modifierMeteoOccurence",
+    "modifierMultiplayerTerraformationFactor", "modded", "version", "mode",
+    "dyingConsequencesLabel", "startLocationLabel", "worldSeed", "hasPlayedIntro",
+    "gameStartLocation"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "saveDisplayName": {
+      "type": "string",
+      "description": "Display name of the save (merge function parameter)"
+    },
+    "planetId": {
+      "type": "string",
+      "description": "Textual planet identifier (e.g. 'Toxicity')"
+    },
+    "unlockedSpaceTrading": {
+      "type": "boolean",
+      "description": "Space trade unlocked"
+    },
+    "unlockedOreExtrators": {
+      "type": "boolean",
+      "description": "Ore extractors unlocked (game typo kept as is)"
+    },
+    "unlockedTeleporters": {
+      "type": "boolean",
+      "description": "Teleporters unlocked"
+    },
+    "unlockedDrones": {
+      "type": "boolean",
+      "description": "Drones unlocked"
+    },
+    "unlockedAutocrafter": {
+      "type": "boolean",
+      "description": "Auto-crafter unlocked"
+    },
+    "unlockedEverything": {
+      "type": "boolean",
+      "description": "Everything unlocked (developer mode)"
+    },
+    "freeCraft": {
+      "type": "boolean",
+      "description": "Free crafting enabled"
+    },
+    "preInterplanetarySave": {
+      "type": "boolean",
+      "description": "Save created before the interplanetary system was introduced"
+    },
+    "randomizeMineables": {
+      "type": "boolean",
+      "description": "Mineable resources placed randomly"
+    },
+    "modifierTerraformationPace": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Terraformation speed multiplier (Unity float — serialized with a trailing .0; 1.0 = normal)"
+    },
+    "modifierPowerConsumption": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Energy consumption multiplier (Unity float — serialized with a trailing .0; 1.0 = normal)"
+    },
+    "modifierGaugeDrain": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Player gauge depletion multiplier (Unity float — serialized with a trailing .0; 1.0 = normal)"
+    },
+    "modifierMeteoOccurence": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Weather event frequency multiplier (Unity float — serialized with a trailing .0; 1.0 = normal)"
+    },
+    "modifierMultiplayerTerraformationFactor": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Terraformation contribution factor in multiplayer (Unity float — serialized with a trailing .0)"
+    },
+    "modded": {
+      "type": "boolean",
+      "description": "The game was played with mods enabled"
+    },
+    "version": {
+      "type": "string",
+      "description": "Game version at the time of the save (e.g. '1.618')"
+    },
+    "mode": {
+      "type": "string",
+      "description": "Game mode (e.g. 'Standard', 'Survival')"
+    },
+    "dyingConsequencesLabel": {
+      "type": "string",
+      "description": "Consequences of the player's death (e.g. 'DropSomeItems', 'DropAll', 'NoDrop')"
+    },
+    "startLocationLabel": {
+      "type": "string",
+      "description": "Starting area of the game (e.g. 'Standard')"
+    },
+    "worldSeed": {
+      "type": "integer",
+      "description": "Procedural world generation seed"
+    },
+    "hasPlayedIntro": {
+      "type": "boolean",
+      "description": "The intro cinematic has already been played"
+    },
+    "gameStartLocation": {
+      "type": "string",
+      "description": "Initial location of the player at the start of the game"
+    }
+  }
+}
+

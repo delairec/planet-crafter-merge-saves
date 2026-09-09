@@ -1,6 +1,6 @@
 // @refresh reload
 import { createHandler, StartServer } from "@solidjs/start/server";
-import { appName } from "../../util-messages/appMessages";
+import { appName } from "~/messages/appMessages";
 
 export default createHandler(() => (
   <StartServer

@@ -2,97 +2,51 @@ import {createSignal, onMount, Show} from 'solid-js';
 import PlayersSection from '../components/PlayersSection';
 import GlobalProgressionSection from "../components/GlobalProgressionSection";
 import TerraformationLevelsSection from '../components/TerraformationLevelsSection';
-import {parseSaveSections} from "../../../util-parsing/parseSaveSections";
 import SaveConfigurationSection from "../components/SaveConfigurationSection";
-import {ParsedSections} from "../../../util-types/gameDefinitions";
 import EnergyLevelsSection from "~/components/EnergyLevelsSection";
 import MergeSection from "~/components/MergeSection";
 import MergeResultSection from "~/components/MergeResultSection";
-import {MergeResultViewModel} from "../../../util-mapping/presentation/viewModels/MergeResultViewModel";
-import {hasJsonExtension} from "../../../util-parsing/hasJsonExtension";
-import {SaveValidatorService} from "../../../util-mapping/infrastructure/SaveValidatorService";
 import {
   displayRouteDisplayTitle,
   displayRouteErrorsTitle,
+  displayRouteFileInputLabel,
   displayRouteLoadingLabel,
   displayRouteParsedDataPlaceholder,
   displayRouteSubmitButtonLabel,
   displayRouteVisualizationTitle,
   displayRouteWarningsTitle
-} from "../../../util-messages/displayRouteMessages";
-import {invalidExtensionErrorMessage} from "../../../util-messages/validationMessages";
+} from "~/messages/displayRouteMessages";
 import ValidationMessagesList from "~/components/validation/ValidationMessagesList";
+import Spinner from "~/components/structure/Spinner";
 import HomeDisclaimer from "~/components/HomeDisclaimer";
+import {useLoadSaveFile} from "~/lib/useLoadSaveFile";
+import {useSectionViewModels} from "~/lib/useSectionViewModels";
 
 export default function Home() {
   let fileInputElement!: HTMLInputElement;
 
-  const [file, setFile] = createSignal<File | null>(null);
-  const [sections, setSections] = createSignal<ParsedSections | null>(null);
-  const [errors, setErrors] = createSignal<string[]>([]);
-  const [warnings, setWarnings] = createSignal<string[]>([]);
   const [isReady, setIsReady] = createSignal<boolean>(false);
-  const [mergeResult, setMergeResult] = createSignal<MergeResultViewModel | null>(null);
+  onMount(() => setIsReady(true));
 
-  onMount(() => {
-    setIsReady(true);
-  });
+  const {
+    file,
+    sections,
+    errors,
+    warnings,
+    mergeResult,
+    isLoading,
+    handleFileChange,
+    handleSubmit,
+    handleSubmitMerge
+  } = useLoadSaveFile();
+  const viewModels = useSectionViewModels(sections);
 
-  const resetDisplayFields = () => {
-    setErrors([]);
-    setWarnings([]);
-    setSections(null);
-    setMergeResult(null);
-  }
-
-  const handleFileChange = (event: Event) => {
-    resetDisplayFields();
-
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      setFile(input.files[0]);
-    }
-  };
-
-  const handleSubmit = () => {
-    resetDisplayFields();
-    const fileInput = file();
-
-    if (fileInput) {
-      if (!hasJsonExtension(fileInput.name)) {
-        setErrors([invalidExtensionErrorMessage]);
-        setWarnings([]);
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const content = event.target?.result as string;
-        const validation = new SaveValidatorService().validate(content);
-        if (!validation.isValid) {
-          setSections(null);
-          setErrors(validation.errorMessages);
-          setWarnings([]);
-          return;
-        }
-
-        const {sections, errors, warnings} = parseSaveSections(content);
-        setSections(sections);
-        setErrors(errors);
-        setWarnings(warnings);
-      };
-      reader.readAsText(fileInput);
-    }
-  };
-
-  const handleSubmitMerge = (result: MergeResultViewModel) => {
-    resetDisplayFields();
+  const handleMergeResult: typeof handleSubmitMerge = (result) => {
+    handleSubmitMerge(result);
     if (fileInputElement) {
       fileInputElement.value = '';
     }
-
-    setMergeResult(result);
-  }
+  };
 
   return (
     <Show when={isReady()} fallback={<p class="text-color-muted">{displayRouteLoadingLabel}</p>}>
@@ -101,10 +55,15 @@ export default function Home() {
         <HomeDisclaimer/>
 
         <h2>{displayRouteDisplayTitle}</h2>
-        <input ref={fileInputElement} type="file" accept="application/json" onChange={handleFileChange}/>
-        <button onClick={handleSubmit} disabled={!file()}>{displayRouteSubmitButtonLabel}</button>
+        <p><label>{displayRouteFileInputLabel}<input ref={fileInputElement} type="file"
+                                                    accept="application/json"
+                                                    onChange={handleFileChange}/></label></p>
+        <button onClick={handleSubmit} disabled={!file() || isLoading()}>{displayRouteSubmitButtonLabel}</button>
+        <Show when={isLoading()}>
+          <Spinner/>
+        </Show>
 
-        <MergeSection onMergeResult={handleSubmitMerge}/>
+        <MergeSection onMergeResult={handleMergeResult}/>
 
         <h2>{displayRouteVisualizationTitle}</h2>
 
@@ -126,12 +85,12 @@ export default function Home() {
 
         <Show when={sections() && !errors().length}>
           <div class="grid-container">
-            <SaveConfigurationSection sections={() => sections()!}/>
-            <GlobalProgressionSection sections={() => sections()!}/>
+            <SaveConfigurationSection viewModel={viewModels.saveConfiguration}/>
+            <GlobalProgressionSection viewModel={viewModels.globalProgression}/>
           </div>
-          <EnergyLevelsSection sections={() => sections()!}/>
-          <TerraformationLevelsSection sections={() => sections()!}/>
-          <PlayersSection sections={() => sections()!}/>
+          <EnergyLevelsSection viewModel={viewModels.energyLevels}/>
+          <TerraformationLevelsSection viewModel={viewModels.terraformationLevels}/>
+          <PlayersSection viewModel={viewModels.players}/>
         </Show>
       </main>
     </Show>

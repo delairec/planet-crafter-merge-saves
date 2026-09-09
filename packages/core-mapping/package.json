@@ -1,0 +1,18 @@
+{
+  "name": "core-mapping",
+  "version": "1.0.0",
+  "description": "Domain/application/infrastructure/presentation mapping for Planet Crafter save files",
+  "type": "module",
+  "scripts": {
+    "test": "bun test",
+    "lint:types": "tsc --noEmit"
+  },
+  "exports": {
+    "./controllers/*": "./src/controllers/*.ts",
+    "./presentation/viewModels/*": "./src/presentation/viewModels/*.ts"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "shared-save-processing": "*"
+  }
+}

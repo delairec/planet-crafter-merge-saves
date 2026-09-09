@@ -3,8 +3,8 @@
 > ❗Docs written by AI from save file analysis (proofread, but still can include mistakes)
 
 ---
-**JSON Schemas** : each section has a validation schema in [`docs/schemas/`](./schemas/).
-The root schema [`save-file.schema.json`](./schemas/save-file.schema.json) validates a fully parsed save (array of 11 sections).
+**JSON Schemas** : each section has a validation schema in [`packages/shared-save-processing/schemas/`](../packages/shared-save-processing/schemas/).
+The root schema [`save-file.schema.json`](../packages/shared-save-processing/schemas/save-file.schema.json) validates a fully parsed save (array of 11 sections, indexes 0 to 10).
 
 ## General structure
 
@@ -20,13 +20,24 @@ The file ends with `@`.
 > shifting World Events to index 10), which a game update removed. Legacy saves in that older format are only
 > supported at the user-input boundary (loading a save file): they are automatically adapted to the current
 > 11-section format described below, discarding the Terrain Layers data, and a warning is reported to the user.
-> See `packages/util-parsing/normalizeSaveSections.js`.
+> Validation detects the adaptation and is the single source of that warning, on every outcome and in every flow
+> (displaying a save, merging saves, `bun validate`, `bun merge`). The warning travels as the code defined in
+> `packages/shared-save-processing/normalizeRawSections.js` and is turned into the sentence shown to the user by
+> `packages/core-mapping/src/presentation/formatSaveWarning.ts`.
 
 ```
 entry1|
 entry2|
 entry3
 ```
+
+A section is read line by line, and a line that is not valid JSON is **reported and located**, never ignored:
+`packages/shared-save-processing/parseSaveSections.js` is the single reader of this format and reports
+`{detail, section, entryIndex}` for every line it could not read, keeping the readable entries around it.
+Validation turns those reports into located errors (`bun validate` exits 1 and names the section and the entry
+position), and merging refuses to write a save whose input carries one. Blank sections stay silent: each section is
+trimmed first, which covers the reserved part the terminating `@` produces and the line break the game writes before
+the first entry of a section.
 
 ---
 
@@ -332,6 +343,6 @@ was at index 11.
 | `colorBaseLerp`   | `int`    | Base color intensity (≥ 0)                    |
 | `colorCustomLerp` | `int`    | Custom color intensity (≥ 0)                  |
 
-This section no longer exists in the current save format. When a legacy save is loaded, its Terrain Layers data is
-discarded and the user is warned that their save was adapted from an old format.
+This section no longer exists in the current save format. When a legacy save is loaded or merged, its Terrain Layers
+data is discarded and the user is warned that their save was adapted from an old format.
 

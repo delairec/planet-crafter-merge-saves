@@ -3,22 +3,34 @@
   "version": "1.0.0",
   "description": "A set of tools to manipulate Planet Crafter save files",
   "packageManager": "bun@1.3.14",
+  "private": true,
   "workspaces": {
     "packages": [
       "packages/cli-merge",
       "packages/cli-validate",
-      "packages/ui-save-manager"
+      "packages/core-mapping",
+      "packages/shared-platforms",
+      "packages/shared-save-processing",
+      "packages/ui-save-manager",
+      "packages/util-types"
     ]
   },
   "type": "module",
-  "main": "packages/cli-merge/cli/merge-cli.js",
   "scripts": {
+    "postinstall": "sh scripts/sync-private-context.sh",
+    "private:sync": "sh scripts/sync-private-context.sh",
     "clean": "rm -rf node_modules",
     "test": "bun test",
     "test:watch": "bun test --watch",
-    "lint:types": "tsc --noEmit",
+    "test:ui": "bun run --filter ui-save-manager test:ui",
+    "test:ui:install": "bun run --filter ui-save-manager test:ui:install",
+    "lint:types": "tsc --noEmit && bun run --filter './packages/*' lint:types",
     "build:ui": "bun run --filter ui-save-manager build",
-    "audit:quality": "bun run fallow:quality && bun run fallow:health",
+    "audit:quality": "bun run check:guards && bun run fallow:quality && bun run fallow:health",
+    "check:guards": "bun run check:assertions && bun run check:fixtures && bun run check:dependencies",
+    "check:assertions": "bun scripts/check-test-assertions.ts",
+    "check:fixtures": "bun scripts/check-fixture-typing.ts",
+    "check:dependencies": "bun scripts/check-package-dependencies.ts",
     "fallow:quality": "fallow audit --config ./fallow.toml --base master --no-cache --ci",
     "fallow:quality:local": "fallow audit --config ./fallow.toml --base master --no-cache",
     "fallow:health": "fallow health --config ./fallow.toml --base master --no-cache --ci",
@@ -32,29 +44,21 @@
     "test:merge": "bun test --filter cli-merge",
     "validate": "bun run --filter cli-validate validate",
     "test:validate": "bun test --filter cli-validate",
-    "node:merge": "node packages/cli-merge/cli/merge-cli.js --platform=node",
-    "node:validate": "node packages/cli-validate/cli/validate-cli.js --platform=node"
-  },
-  "catalogs": {
-    "typescript": {
-      "@types/bun": "^1.3.14",
-      "typescript": "^7.0.2"
-    },
-    "testing": {
-      "ajv": "^8.20.0"
-    }
+    "node:merge": "node --import ./scripts/node/register.js packages/cli-merge/cli/merge-cli.js --platform=node",
+    "node:validate": "node --import ./scripts/node/register.js packages/cli-validate/cli/validate-cli.js --platform=node"
   },
   "devDependencies": {
-    "@types/bun": "catalog:typescript",
-    "fallow": "3.14.0",
-    "typescript": "catalog:typescript",
-    "ui-save-manager": "workspace:*"
+    "@types/bun": "^1.3.14",
+    "esbuild": "^0.28.2",
+    "fallow": "^3.20.0",
+    "typescript": "^7.0.2"
   },
   "engines": {
-    "node": ">=22",
+    "node": ">=23.6.0",
     "bun": ">=1.3.14"
   },
-  "dependencies": {
-    "bun": "^1.3.14"
+  "overrides": {
+    "fast-uri": "^3.1.6",
+    "browserslist": "^4.28.7"
   }
 }

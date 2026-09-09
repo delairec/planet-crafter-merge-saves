@@ -1,31 +1,24 @@
-import {Accessor, createEffect, createSignal} from "solid-js";
-import {LoadGlobalProgressionSectionController} from "../../../util-mapping/controllers/LoadGlobalProgressionSectionController";
+import {Resource} from "solid-js";
 import FieldsGroup from "./structure/FieldsGroup";
-import {GlobalProgressionViewModel} from "../../../util-mapping/presentation/viewModels/GlobalProgressionViewModel";
-import {ParsedSections} from "../../../util-types/gameDefinitions";
-import {globalProgressionSectionTitle} from "../../../util-messages/globalProgressionSectionMessages";
+import SectionState from "./structure/SectionState";
+import {GlobalProgressionViewModel} from "core-mapping/presentation/viewModels/GlobalProgressionViewModel";
+import {globalProgressionSectionTitle} from "~/messages/globalProgressionSectionMessages";
 
 interface GlobalProgressionProps {
-  sections: Accessor<ParsedSections>;
+  viewModel: Resource<GlobalProgressionViewModel>;
 }
 
-export default function GlobalProgressionSection({sections}: GlobalProgressionProps) {
-  const [statisticsColumns, setStatisticsColumns] = createSignal<GlobalProgressionViewModel['statistics']['columns']>([]);
-  const [title, setTitle] = createSignal<string | null>(null);
-
-  createEffect(() => {
-    const {statistics} = LoadGlobalProgressionSectionController.loadGlobalProgressionSection(sections());
-    setStatisticsColumns(statistics.columns);
-    setTitle(title);
-  });
-
+export default function GlobalProgressionSection({viewModel}: GlobalProgressionProps) {
   return (
-    <div>
-      <h3>{globalProgressionSectionTitle}</h3>
-      <div class="fields-group-container">
-        <FieldsGroup columns={statisticsColumns}/>
-      </div>
-    </div>
-  )
-    ;
+    <SectionState title={globalProgressionSectionTitle} resource={viewModel}>
+      {(globalProgression) => (
+        <div>
+          <h3>{globalProgressionSectionTitle}</h3>
+          <div class="fields-group-container">
+            <FieldsGroup columns={() => globalProgression().statistics.columns}/>
+          </div>
+        </div>
+      )}
+    </SectionState>
+  );
 }

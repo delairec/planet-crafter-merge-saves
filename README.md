@@ -15,19 +15,47 @@ In progress:
 Planned:
 - **Fix corrupted saves**: a tool to attempt to recover data from corrupted save files thanks to analysis.
 
+## Project Structure
+
+This is a Bun workspace monorepo, organized around Clean Architecture package prefixes:
+
+| Package                  | Role                                                                                                                    |
+|--------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| `shared-save-processing` | Save file wire format: types, parsing, serialization and JSON schemas.                                                  |
+| `shared-platforms`       | Runtime platform adapters (filesystem/process) for Bun and Node.                                                        |
+| `util-types`             | `RuntimePlatform` contract type, consumed (type-only) by `shared-platforms`.                                            |
+| `core-mapping`           | Domain/application/infrastructure/presentation layers: merge and validation engines, use cases, controllers, presenters. |
+| `cli-merge`              | Thin CLI: parses `--input`/`--output` arguments and delegates to `core-mapping`.                                        |
+| `cli-validate`           | Thin CLI: parses `--file` argument and delegates to `core-mapping`.                                                     |
+| `ui-save-manager`        | SolidStart UI to visualize save files, consuming `core-mapping` controllers.                                            |
+
+The prefix of a package name sets what it is allowed to depend on. A type-only import counts as a dependency.
+
+| Prefix     | May depend on                  |
+|------------|--------------------------------|
+| `util-*`   | nothing                        |
+| `shared-*` | `util-*`                       |
+| `core-*`   | `shared-*`, `util-*`           |
+| `cli-*`    | `shared-*`, `util-*`, `core-*` |
+| `ui-*`     | `shared-*`, `util-*`, `core-*` |
+
+`bun run check:dependencies` enforces this matrix.
 
 ## Merge and Validate tools
 Merges two **Planet Crafter** save files into a single one, preserving as much information as possible.
 
 ### Prerequisites
 
-Using [Bun](https://bun.sh) `v1.3.10` by default.
+Using [Bun](https://bun.sh) `v1.3.14` by default.
 
 ### Installation
 
 ```
 bun install
 ```
+
+The install hook `scripts/sync-private-context.sh` clones the private agent context repository when the account has
+access to it. Contributors without access get a skip message and an otherwise normal install.
 
 ### Scripts
 
@@ -38,6 +66,12 @@ bun merge
 ```
 
 Generates the merged saves in output directory, by processing all subfolders from input folder.
+
+```
+bun merge -- --input=<directory> --output=<directory>
+```
+
+Overrides the default `input` and `output` directories.
 
 ```
 bun validate -- --file=<filepath>
@@ -55,11 +89,43 @@ bun test:watch
 
 Execute all the unit tests of the project. Use `watch` to enable automatic run on save.
 
+Mocks and spies are restored between tests by a global `afterEach`, so no test has to clean up after itself. It comes
+from `testSetup.ts`, preloaded through the `bunfig.toml` sitting next to it: one at the repository root, one in each
+package. Bun resolves `bunfig.toml` from the working directory only, without looking at parent directories, so the
+preload silently does not apply when tests are run from any other directory — a deeper folder inside a package, or an
+IDE run configuration whose working directory is the folder of the test file.
+
+```
+bun test testIsolation.spec.ts
+```
+
+Checks that the preload actually applies. Run it with the working directory you want to check (the repository root, a
+package folder, an IDE run configuration): it fails when mocks are not restored between tests in that context.
+
+In an IDE, a generated run configuration usually takes the folder of the test file as its working directory, which is
+deeper than any `bunfig.toml`. In IntelliJ, set the environment variable below on the Bun *configuration template*
+(Run > Edit Configurations > Edit configuration templates…), so that every run configuration created afterwards loads
+the setup whatever its working directory:
+
+```
+BUN_OPTIONS=--preload=<absolute path>/testSetup.ts
+```
+
+`BUN_OPTIONS` prepends CLI arguments to every Bun invocation, and a CLI flag wins over `bunfig.toml`. It applies to run
+configurations created after the change only, so delete the temporary ones already generated. It lives in
+`.idea/workspace.xml`, which is git-ignored: it is a per-developer setting, not shared and not used by the CI, where
+`bunfig.toml` remains the source of truth.
+
 ```
 bun run lint:types
 ```
 
-Checks typings in all the project files (using `tsc --noEmit` under the hood).
+Checks typings in all the project files (using `tsc --noEmit` under the hood). Every package owns a `tsconfig.json`
+extending the root one and its own `lint:types` script, which the root script chains over the workspace: each package
+is therefore checked as a separate program, with the libraries it is entitled to. Only `ui-*` declares the DOM
+libraries, so a browser global referenced from a `core-*` or a `cli-*` package fails the check instead of resolving
+silently, and the `.tsx` files of the UI are covered. `ui-save-manager` runs two programs, its own and the one of
+`e2e/`, the Playwright types belonging to the scenarios alone.
 
 ```
 bun run audit
@@ -69,6 +135,94 @@ Audits production and development dependencies. The two Picomatch advisories are
 `micromatch` still requires the affected 2.x dependency transitively; they should be removed as soon as that upstream
 constraint is updated.
 
+```
+bun run audit:quality
+```
+
+Runs `check:guards`, then the [Fallow](https://github.com/fallow-rs/fallow) audit and health reports (dead files,
+unused exports, unresolved imports) against `master`. This is the whole gate in one command, for a working copy. The
+CI covers the same ground in two jobs, each running the half it is equipped for: `guards` runs `check:guards`, and
+`fallow` runs the audit and the health report through the Fallow action, which scopes them to the base of the pull
+request and renders them into the run summary.
+
+```
+bun run check:guards
+```
+
+Runs the three guard scripts of this repository — `check:assertions`, `check:fixtures` and `check:dependencies` —
+which enforce conventions no off-the-shelf linter knows about. They read no git history and take a fraction of a
+second, so they are the half of `audit:quality` to run while writing code.
+
+```
+bun run check:assertions
+```
+
+Fails on any spec asserting a fabricated boolean (`expect(list.some(...)).toBeTruthy()`, `expect(a > b).toBe(true)`):
+a matcher applies to the value itself so that a failure shows the actual data. Boolean matchers stay legitimate on
+business booleans such as `expect(player.host).toBe(true)`. Every `*.spec.{js,ts,tsx}` file of the repository is
+scanned, outside dependencies and build outputs, and only the outermost asserted expression is read: a comparison
+written inside a callback (`expect(list.find(item => item.id === 1)).toBeTruthy()`) builds the asserted value, it is
+not the assertion. The check reads one line at a time, so an assertion spread over several lines escapes it.
+
+```
+bun run check:fixtures
+```
+
+Fails on any spec making a fixture compile instead of typing it: `as unknown`, `as never`, an `any` annotation —
+including the JSDoc forms `/** @type {any} */` and `@param {any}`, which a search for `: any` does not see — and
+`@ts-ignore`. A test fixture is built by its builder (`packages/shared-save-processing/testing/createSaveRecords.js`
+for the save records) so that a record gaining a field breaks the build rather than a test. An input that is illegal
+on purpose is declared with `@ts-expect-error`, which fails the day the error disappears, and the check requires that
+directive to carry the justification saying which invalidity is under test. String literals are masked before the
+line is read, so a forbidden form quoted in a message is not reported; like `check:assertions`, the check reads one
+line at a time, so a declaration spread over several lines escapes it.
+
+```
+bun run check:dependencies
+```
+
+Fails on any breach of the dependency matrix above. It reads the manifest of every workspace package and the package
+specifiers imported by its `.js`, `.ts` and `.tsx` sources, then reports a dependency declared on a forbidden prefix,
+an import of a forbidden prefix, an import of a workspace package the manifest does not declare, and a declared
+workspace dependency that is never imported. A dependency on a library outside the workspace is left to the Fallow
+audit. Type-only imports count, JSDoc `@import` directives included, so the check sees what `tsc` erases.
+
+#### Save Manager UI
+
+```
+bun run dev:ui
+```
+
+Starts the Save Manager UI in development mode.
+
+```
+bun run build:ui
+```
+
+Builds the UI for production. `bun run preview:ui` builds then serves the result, and `bun run clean:ui` removes the
+build output.
+
+```
+bun run test:ui:install
+```
+
+Downloads the three browser engines the scenario suite drives (Chromium, Firefox and WebKit). Run it once, and again
+after a Playwright upgrade. On a machine missing the system libraries the engines need, install them too with
+`bunx playwright install --with-deps chromium firefox webkit`, which asks for administrator rights.
+
+```
+bun run test:ui
+```
+
+Runs the UI scenarios of `packages/ui-save-manager/e2e/` against the production build, on the three engines. Nothing
+has to be started beforehand: the suite builds the application, serves it, waits for the port and stops it afterwards.
+The save files the scenarios load are generated fixtures versioned next to them, so the suite never depends on the
+content of `input/`.
+
+These scenarios are not part of `bun test`, which only collects unit tests: the `*.e2e.ts` suffix keeps the two
+runners apart. In the CI they run in their own workflow, on the pull requests targeting `master` and on manual
+dispatch — not on the pull requests targeting an integration branch.
+
 #### With Node.js
 
 If you prefer to run the scripts using Node.js instead of Bun, use the following commands:
@@ -77,13 +231,29 @@ If you prefer to run the scripts using Node.js instead of Bun, use the following
 npm run node:merge
 ```
 
-Equivalent to `bun merge`.
+Node.js counterpart of `bun merge`.
 
 ```
 npm run node:validate -- --file=<filepath>
 ```
 
-Equivalent to `bun validate`.
+Node.js counterpart of `bun validate`.
+
+`npm install` works without Bun: the workspace declares nothing npm cannot read. Run it once, then the two
+commands only need Node. A `package-lock.json` is yours to keep: the repository ignores it and maintains `bun.lock`
+only, and the CI runs under Bun.
+
+Both commands run the same sources as the Bun commands, straight from `packages/`, with no build step: `--import
+./scripts/node/register.js` installs two [module customization hooks](https://nodejs.org/api/module.html#customization-hooks)
+that resolve the extensionless relative imports and hand every `.ts` module to esbuild, which removes the
+TypeScript syntax Node cannot strip on its own (type-only imports, constructor parameter properties).
+
+Both are covered by execution tests: `packages/cli-validate/cli/validate-cli.node.spec.js` and
+`packages/cli-merge/cli/merge-cli.node.spec.js` spawn them as real Node processes on save files generated into a
+temporary directory, and assert their output, their exit code and the content of the merged save. They run with
+`bun test`, so a command that no longer starts under Node — or that loses the content of a save while still
+reporting success — fails the suite instead of reaching a release. Running them needs the Node version
+`engines.node` declares.
 
 
 ### Preparing data
@@ -92,7 +262,8 @@ Equivalent to `bun validate`.
 
 Create one sub-folder per desired merge.
 
-> ❗ Each sub-folder must contain **exactly 2 `.json` files**.
+> ❗ Each sub-folder must contain **exactly 2 `.json` files**. A sub-folder holding any other number of `.json`
+> files is skipped, with a warning on stderr naming it and the number of save files it holds.
 
 **The sub-folder name becomes the `saveDisplayName`** of the resulting save.
 This is the name you'll see when you'll be selecting your save in the game.
@@ -142,6 +313,9 @@ Note: the file is ending by `@`.
 
 #### Sections (in order)
 
+A save splits into **11 sections indexed 0 to 10**. Sections 0 to 9 carry the data; section 10 is the reserved empty
+part produced by the terminating `@`.
+
 | #  | Content                                               | Format                 |
 |----|-------------------------------------------------------|------------------------|
 | 0  | Global metadata (`terraTokens`, `unlockedGroups`…)    | Single JSON object     |
@@ -154,6 +328,7 @@ Note: the file is ending by `@`.
 | 7  | Triggered story events                                | `\|`-separated records |
 | 8  | Save configuration (`saveDisplayName`, `worldSeed`…)  | `\|`-separated records |
 | 9  | World events (asteroid / instance spawns)             | `\|`-separated records |
+| 10 | Reserved — always empty                               | Empty                  |
 
 #### Planet Identification
 
@@ -162,64 +337,23 @@ numeric planet id (e.g. `110910045` for Toxicity).
 
 ### Merge Logic
 
-> 📖 The authoritative specification for every merge decision is in **[`docs/game-rules.md`](./docs/game-rules.md)**.
-> The tables below are a human-readable summary; the business rules document is the source of truth.
+> 📖 **[`docs/game-rules.md`](./docs/game-rules.md) is the single source of truth for every merge decision.**
+> Each rule is numbered (`GR-*`), states the section it governs and names the module that implements it. This README
+> deliberately does not restate the rules: a second copy would drift from the implementation.
 
-The original saves remain untouched, and the result is generated in a separate folder.
+The original saves are never modified; the merged result is written to a separate output folder.
 
-#### Save A and Save B
-
-The saves have one "host planet" (= where the player started the game).
-Prime hosted save is prioritized as Save A, otherwise it follows alphabetical order.
-This order is important because in case of conflicting data, save A data will be kept and save B data will be lost.
-
-#### Global Metadata
-
-| Field                         | Strategy                                |
-|-------------------------------|-----------------------------------------|
-| `terraTokens`                 | **Sum** of both saves                   |
-| `allTimeTerraTokens`          | **Sum** of both saves                   |
-| `unlockedGroups`              | **Union** (no duplicates) of both lists |
-| `openedInstanceSeed/TimeLeft` | Value from save A                       |
-
-#### Players
-
-- **Union** by `id` — every unique player from both saves is kept.
-- On duplicate `id`, the version from **save A** takes precedence (this includes inventory and equipment).
-
-This means that the duplicated player's inventory and equipment from save B is lost.
-
-#### Planets present in BOTH saves
-
-> ❗ Not implemented, not tested.
-
-| Chosen strategy | World objects      | Terraformation levels     | Planet config            |
-|-----------------|--------------------|---------------------------|--------------------------|
-| `merge`         | Combined from both | **Maximum** of each value | Save A (source of truth) |
-| `keepA`         | Save A only        | Save A                    | Save A                   |
-| `keepB`         | Save B only        | Save B                    | Save B                   |
-
-#### Messages & Story Events
-
-- **Union** by `stringId`, no duplicates.
-- For messages: if `isRead: true` in either save → `isRead: true` in the result.
-
-#### Statistics
-
-| Field            | Strategy              |
-|------------------|-----------------------|
-| `craftedObjects` | **Sum** of both saves |
-
-#### Inventories
-
-When a player is removed from the list (deduplication), the corresponding inventory and all the associated world objects are remove as well.
-Otherwise, all inventories and objects are kept.
-
-#### Duplicated IDs
-
-When merging 2 saves, it is a common case to have the same ID used in both saves for different objects. Since we want to keep a maximum of
-information from both saves (and especially objects), we need a strategy to resolve id conflicts.
-Currently, the strategy retained is the following:
-
-- generate a new unique id for save B item
-- update all associated references from save B data
+| Topic                              | Rules                                                                                             |
+|------------------------------------|---------------------------------------------------------------------------------------------------|
+| Which save is A, which is B        | [Save order](./docs/game-rules.md#2-save-order) — `GR-ORDER-*`                                     |
+| Global metadata                    | [Section 0](./docs/game-rules.md#3-section-0--global-metadata) — `GR-META-*`                       |
+| Terraformation levels              | [Section 1](./docs/game-rules.md#4-section-1--terraformation-levels) — `GR-TERRA-*`                |
+| Players                            | [Section 2](./docs/game-rules.md#5-section-2--players) — `GR-PLAYER-*`                             |
+| World objects                      | [Section 3](./docs/game-rules.md#6-section-3--world-objects) — `GR-WO-*`                           |
+| Inventories & equipment            | [Section 4](./docs/game-rules.md#7-section-4--inventories--equipment) — `GR-INV-*`                 |
+| Statistics                         | [Section 5](./docs/game-rules.md#8-section-5--statistics) — `GR-STAT-*`                            |
+| Messages / mailbox                 | [Section 6](./docs/game-rules.md#9-section-6--messages--mailbox) — `GR-MSG-*`                      |
+| Story events                       | [Section 7](./docs/game-rules.md#10-section-7--story-events) — `GR-STORY-*`                        |
+| Save configuration                 | [Section 8](./docs/game-rules.md#11-section-8--save-configuration) — `GR-CFG-*`                    |
+| World events                       | [Section 9](./docs/game-rules.md#12-section-9--world-events) — `GR-EVT-*`                          |
+| Duplicated ids across saves        | [Id conflict resolution](./docs/game-rules.md#13-id-conflict-resolution) — `GR-ID-*`               |

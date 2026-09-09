@@ -10,9 +10,11 @@
     "lint:types": "tsc --noEmit",
     "validate": "bun --cwd ../.. packages/cli-validate/cli/validate-cli.js ",
     "validate:test": "bun test packages/cli-validate",
-    "node:validate": "node cli/validate-cli.js --platform=node"
+    "node:validate": "node --import ../../scripts/node/register.js cli/validate-cli.js --platform=node"
   },
   "dependencies": {
-    "ajv": "catalog:testing"
+    "core-mapping": "*",
+    "shared-platforms": "*",
+    "shared-save-processing": "*"
   }
 }

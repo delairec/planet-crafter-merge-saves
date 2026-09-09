@@ -1,0 +1,16 @@
+{
+  "name": "shared-platforms",
+  "version": "1.0.0",
+  "description": "Runtime platform adapters (fs/process) for bun and node",
+  "type": "module",
+  "exports": {
+    "./*": "./*"
+  },
+  "scripts": {
+    "test": "bun test",
+    "lint:types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "util-types": "*"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "section7-story-events.schema.json",
+  "title": "Section 7 — Triggered story events",
+  "description": "Story event triggered in the game. Domain key: stringId.",
+  "type": "object",
+  "required": ["stringId"],
+  "additionalProperties": false,
+  "properties": {
+    "stringId": {
+      "type": "string",
+      "description": "Unique identifier of the story event (e.g. 'StoryEvent-FirstMessageClick')"
+    }
+  }
+}
+

@@ -2,17 +2,25 @@
   "name": "ui-save-manager",
   "type": "module",
   "scripts": {
+    "lint:types": "tsc --noEmit && tsc --noEmit --project e2e",
     "dev": "vite dev",
     "build": "vite build",
-    "preview": "vite build && vite preview",
-    "clean": "rm -rf .output"
+    "preview": "vite build && PORT=4173 node .output/server/index.mjs",
+    "clean": "rm -rf .output",
+    "test:ui": "playwright test",
+    "test:ui:install": "playwright install chromium firefox webkit"
   },
   "dependencies": {
     "@solidjs/router": "^0.16.0",
     "@solidjs/start": "2.0.0",
+    "core-mapping": "*",
     "nitro": "3.0.260610-beta",
+    "shared-save-processing": "*",
     "solid-js": "^1.9.14",
     "vite": "^8.2.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
   },
   "engines": {
     "node": ">=22",

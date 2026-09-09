@@ -1,12 +1,14 @@
-import {createSignal} from 'solid-js';
-import {MergeSaveFilesController} from '../../../util-mapping/controllers/MergeSaveFilesController';
-import {MergeResultViewModel} from '../../../util-mapping/presentation/viewModels/MergeResultViewModel';
+import {createSignal, Show} from 'solid-js';
+import {MergeSaveFilesController} from 'core-mapping/controllers/MergeSaveFilesController';
+import {MergeResultViewModel} from 'core-mapping/presentation/viewModels/MergeResultViewModel';
+import Spinner from '~/components/structure/Spinner';
+import {yieldToPaint} from '~/lib/yieldToPaint';
 import {
   mergeButtonLabel,
   mergeSectionSaveALabel,
   mergeSectionSaveBLabel,
   mergeSectionTitle
-} from '../../../util-messages/mergeSectionMessages';
+} from '~/messages/mergeSectionMessages';
 
 interface MergeSectionProps {
   onMergeResult: (result: MergeResultViewModel) => void;
@@ -15,15 +17,7 @@ interface MergeSectionProps {
 export default function MergeSection(props: MergeSectionProps) {
   const [fileA, setFileA] = createSignal<File | null>(null);
   const [fileB, setFileB] = createSignal<File | null>(null);
-
-  function readFileAsText(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = () => reject(reader.error);
-      reader.readAsText(file);
-    });
-  }
+  const [isMerging, setIsMerging] = createSignal<boolean>(false);
 
   const handleMerge = async () => {
     const savedFileA = fileA();
@@ -32,10 +26,22 @@ export default function MergeSection(props: MergeSectionProps) {
       return;
     }
 
-    const [contentA, contentB] = await Promise.all([readFileAsText(savedFileA), readFileAsText(savedFileB)]);
-    const viewModel = MergeSaveFilesController.mergeSaveFiles(savedFileA.name, contentA, savedFileB.name, contentB);
+    setIsMerging(true);
+    try {
+      await yieldToPaint();
 
-    props.onMergeResult(viewModel);
+      const [contentA, contentB] = await Promise.all([savedFileA.text(), savedFileB.text()]);
+      const viewModel = await MergeSaveFilesController.mergeSaveFiles({
+        fileNameA: savedFileA.name,
+        contentA,
+        fileNameB: savedFileB.name,
+        contentB
+      });
+
+      props.onMergeResult(viewModel);
+    } finally {
+      setIsMerging(false);
+    }
   };
 
   return (
@@ -49,7 +55,10 @@ export default function MergeSection(props: MergeSectionProps) {
                                                  onChange={(event) => setFileB(event.currentTarget.files?.[0] ?? null)}/></label>
         </p>
       </div>
-      <button onClick={handleMerge} disabled={!fileA() || !fileB()}>{mergeButtonLabel}</button>
+      <button onClick={handleMerge} disabled={!fileA() || !fileB() || isMerging()}>{mergeButtonLabel}</button>
+      <Show when={isMerging()}>
+        <Spinner/>
+      </Show>
     </div>
   );
 }
