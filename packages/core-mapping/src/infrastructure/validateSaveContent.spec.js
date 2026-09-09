@@ -3,6 +3,7 @@ import {validateSaveContent} from './validateSaveContent.js';
 import {VALIDATION_ISSUE_CODES} from '../application/ports/ValidationIssue.ts';
 import {createFakeSaveString, createLegacyFakeSaveString} from 'shared-save-processing/testing/createFakeSaveString.js';
 import {createFakeSaveContent} from 'shared-save-processing/testing/createFakeSaveContent.js';
+import {stringifyEntry} from 'shared-save-processing/stringifyEntry.js';
 import {
   createEquipment,
   createGlobalMetadata,
@@ -506,6 +507,45 @@ describe('validateSaveContent', () => {
 
       // Assert
       expect(result.warnings.length).toBe(1);
+    });
+  });
+
+  describe('When a line of the save cannot be read as JSON', () => {
+    describe('When the unreadable line is in the world objects section', () => {
+      it('should reject the save, naming the world objects section and the position of the line', () => {
+        // Arrange
+        const readableWorldObject = {id: 101, gId: 'Backpack4'};
+        const save = createFakeSaveString({worldObjects: [readableWorldObject]})
+          .replace(stringifyEntry(readableWorldObject), '{not valid json');
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toEqual([
+          {code: VALIDATION_ISSUE_CODES.INVALID_JSON, detail: 'Invalid JSON: {not valid json', section: 3, entryIndex: 0}
+        ]);
+      });
+    });
+
+    describe('When the unreadable line is surrounded by readable ones', () => {
+      it('should reject the save and report only the line it could not read', () => {
+        // Arrange
+        const unreadableMailboxMessage = {stringId: 'Message2', isRead: false};
+        const save = createFakeSaveContent({
+          mailboxes: [{stringId: 'Message1', isRead: true}, unreadableMailboxMessage, {stringId: 'Message3', isRead: false}]
+        }).replace(JSON.stringify(unreadableMailboxMessage), '{not valid json');
+
+        // Act
+        const result = validateSaveContent(save);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.errors).toEqual([
+          {code: VALIDATION_ISSUE_CODES.INVALID_JSON, detail: 'Invalid JSON: {not valid json', section: 6, entryIndex: 1}
+        ]);
+      });
     });
   });
 
