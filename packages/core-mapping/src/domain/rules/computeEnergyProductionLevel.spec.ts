@@ -82,9 +82,6 @@ describe('computeEnergyProductionLevel', () => {
     expect(productionLevel).toBe(threeTimesTheProducerBaseLevel);
   });
 
-  // Symmetrical to the consumption guard: the energy roles declared in `worldObjectNames.ts` are
-  // what makes these fail — the first when a production entry is removed, the second when a name is
-  // given a production level without being moved into the producing group.
   const {producing, withoutKnownEnergyLevel} = worldObjectNamesByEnergyRole;
 
   const producedAlone = (name: WorldObjectName): number => {

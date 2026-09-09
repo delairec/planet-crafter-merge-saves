@@ -1,19 +1,7 @@
-// `gId` inventory of the game's world objects. Two sources, both dated 2026-09-09, and a name is
-// kept only if at least one of them attests it:
-//  - the `GROUP_NAME_<gId>=<display name>` keys (639) of the English label file shipped by the
-//    community mod "(UI) English Plus Translation", which overrides the game's vanilla English
-//    labels and is therefore keyed on the game's own group identifiers, for game version 2.102:
-//    https://github.com/akarnokd/ThePlanetCrafterMods/blob/3f10f457eb9dab78537a3b9dc9f1692679782391/UITranslationEnglishPlus/labels-engplus.txt
-//  - the `gId`s read in the six private reference saves (14 more, all of them unlabelled game
-//    scenery, blueprints or escape pods).
-// Names attested by neither were dropped: they came from manual collection and nothing corroborates
-// them. See docs/energy-levels.md, "World object names".
-//
-// The three groups below partition the list by energy role, which is what makes the guard in
-// `computeEnergyConsumptionLevel.spec.ts` able to fail: every name belongs to exactly one of them,
-// so a new `gId` cannot be added without an energy decision, and an entry cannot leave a table
-// without leaving its group. The third group means "no energy level established", not "no energy
-// cost" — the machines whose cost the sources do not settle are listed in docs/energy-levels.md.
+// `gId` inventory of the game's world objects, regenerated on 2026-09-09 from the pinned label file
+// https://github.com/akarnokd/ThePlanetCrafterMods/blob/3f10f457eb9dab78537a3b9dc9f1692679782391/UITranslationEnglishPlus/labels-engplus.txt
+// and from the reference saves. The attestation rule, what that file is exactly and what the three
+// groups below do and do not claim are in docs/energy-levels.md, "World object names and labels".
 
 const WORLD_OBJECT_NAMES_PRODUCING_ENERGY = [
   'EnergyGenerator1',
@@ -677,7 +665,7 @@ const WORLD_OBJECT_NAMES_WITHOUT_KNOWN_ENERGY_LEVEL = [
   'WreckRockExplodable',
 ] as const;
 
-export const WORLD_OBJECT_NAMES = [
+const WORLD_OBJECT_NAMES = [
   ...WORLD_OBJECT_NAMES_PRODUCING_ENERGY,
   ...WORLD_OBJECT_NAMES_CONSUMING_ENERGY,
   ...WORLD_OBJECT_NAMES_WITHOUT_KNOWN_ENERGY_LEVEL

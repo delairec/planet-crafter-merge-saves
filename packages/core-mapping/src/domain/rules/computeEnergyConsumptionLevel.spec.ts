@@ -32,10 +32,6 @@ describe('computeEnergyConsumptionLevel', () => {
     expect(result).toBe(0.5);
   });
 
-  // `worldObjectNames.ts` partitions every known `gId` into producing / consuming / no known energy
-  // level, so these two guards fail when a table entry is removed and when a name is priced without
-  // being moved into its group. What they do and do not prove of Rule EN-BASE-2 is in
-  // docs/energy-levels.md, "What the versioned guard covers".
   const {consuming, withoutKnownEnergyLevel} = worldObjectNamesByEnergyRole;
 
   const placedAlone = (name: WorldObjectName): PlacedWorldObjectEntity[] => [
